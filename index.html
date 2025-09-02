@@ -58,93 +58,178 @@
         <div class="preloader-particles" id="particles-bg"></div>
     </div>
 
-    <!-- Header -->
-    <header class="header" id="header">
-        <div class="header-container">
-            <div class="logo-section">
-                <a href="#" class="logo-link hvr-grow">
-                    <img src="images/logo.png" alt="Holistic Psychological Services" class="header-logo">
-                    <div class="logo-text-wrapper">
-                        <span class="logo-main">HOLISTIC</span>
-                        <span class="logo-sub">Psychological Services PLLC</span>
-                    </div>
-                </a>
+    <!-- Innovative Header Section -->
+<header class="floating-header" id="floatingHeader">
+    <!-- Background Effects -->
+    <div class="header-blur-bg"></div>
+    <div class="header-glow"></div>
+    
+    <!-- Main Header Container -->
+    <div class="header-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Holistic Psychological Services" class="header-logo">
+                <div class="logo-pulse"></div>
             </div>
-            
-            <!-- Desktop Navigation -->
-            <nav class="desktop-nav">
-                <ul class="nav-menu">
-                    <li><a href="#home" class="nav-link active hvr-underline-from-center">
-                        <i class="ri-home-4-line"></i>Home</a></li>
-                    <li><a href="#about" class="nav-link hvr-underline-from-center">
-                        <i class="fas fa-user-md"></i>About</a></li>
-                    <li><a href="#services" class="nav-link hvr-underline-from-center">
-                        <i class="bi bi-heart-pulse"></i>Services</a></li>
-                    <li><a href="#approach" class="nav-link hvr-underline-from-center">
-                        <i class="ri-seedling-line"></i>Our Approach</a></li>
-                    <li><a href="#testimonials" class="nav-link hvr-underline-from-center">
-                        <i class="fas fa-quote-left"></i>Testimonials</a></li>
-                    <li><a href="#contact" class="nav-link hvr-underline-from-center">
-                        <i class="ri-map-pin-line"></i>Contact</a></li>
-                </ul>
-            </nav>
-            
-            <!-- Header Actions -->
-            <div class="header-actions">
-                <a href="tel:(646)971-7325" class="header-phone hvr-pulse">
-                    <i class="ri-phone-line"></i>
-                    <span>(646) 971-7325</span>
-                </a>
-                <a href="#contact" class="btn btn-primary hvr-bounce-to-right">
-                    <i class="fas fa-calendar-check"></i>
-                    Book Consultation
-                </a>
-            </div>
-            
-            <!-- Mobile Menu Toggle -->
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-                <span class="hamburger-line"></span>
-            </button>
         </div>
         
-        <!-- Mobile Navigation -->
-        <div class="mobile-nav" id="mobileNav">
-            <div class="mobile-nav-container">
-                <div class="mobile-nav-header">
-                    <img src="images/logo.png" alt="Holistic Psychological Services" class="mobile-logo">
-                    <button class="mobile-nav-close" id="mobileNavClose">
-                        <i class="ri-close-line"></i>
-                    </button>
+        <!-- Navigation Capsule -->
+        <nav class="nav-capsule" id="navCapsule">
+            <div class="nav-track">
+                <a href="#home" class="nav-dot active" data-section="home">
+                    <i class="ri-home-4-line"></i>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a href="#about" class="nav-dot" data-section="about">
+                    <i class="ri-user-heart-line"></i>
+                    <span class="nav-label">About</span>
+                </a>
+                <a href="#services" class="nav-dot" data-section="services">
+                    <i class="ri-mental-health-line"></i>
+                    <span class="nav-label">Services</span>
+                </a>
+                <a href="#approach" class="nav-dot" data-section="approach">
+                    <i class="ri-seedling-line"></i>
+                    <span class="nav-label">Approach</span>
+                </a>
+                <a href="#contact" class="nav-dot" data-section="contact">
+                    <i class="ri-phone-line"></i>
+                    <span class="nav-label">Contact</span>
+                </a>
+                <div class="nav-indicator"></div>
+            </div>
+        </nav>
+        
+        <!-- Action Buttons -->
+        <div class="header-actions">
+            <!-- Phone Bubble -->
+            <a href="tel:(646)971-7325" class="phone-bubble">
+                <div class="phone-icon">
+                    <i class="ri-phone-fill"></i>
                 </div>
-                <ul class="mobile-nav-menu">
-                    <li><a href="#home" class="mobile-nav-link">
-                        <i class="ri-home-4-line"></i>Home</a></li>
-                    <li><a href="#about" class="mobile-nav-link">
-                        <i class="fas fa-user-md"></i>About</a></li>
-                    <li><a href="#services" class="mobile-nav-link">
-                        <i class="bi bi-heart-pulse"></i>Services</a></li>
-                    <li><a href="#approach" class="mobile-nav-link">
-                        <i class="ri-seedling-line"></i>Our Approach</a></li>
-                    <li><a href="#testimonials" class="mobile-nav-link">
-                        <i class="fas fa-quote-left"></i>Testimonials</a></li>
-                    <li><a href="#contact" class="mobile-nav-link">
-                        <i class="ri-map-pin-line"></i>Contact</a></li>
-                </ul>
-                <div class="mobile-nav-actions">
-                    <a href="tel:(646)971-7325" class="mobile-phone">
+                <div class="phone-info">
+                    <span class="phone-text">(646) 971-7325</span>
+                </div>
+                <div class="bubble-glow"></div>
+            </a>
+            
+            <!-- CTA Button -->
+            <a href="#contact" class="cta-floating">
+                <span class="cta-text">Book Session</span>
+                <div class="cta-icon">
+                    <i class="ri-calendar-check-line"></i>
+                </div>
+                <div class="cta-ripple"></div>
+            </a>
+        </div>
+        
+        <!-- Mobile Menu Trigger -->
+        <button class="mobile-trigger" id="mobileTrigger">
+            <div class="trigger-bars">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="trigger-glow"></div>
+        </button>
+    </div>
+    
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay">
+        <div class="mobile-content">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <div class="mobile-logo">
+                    <img src="images/logo.png" alt="Logo">
+                </div>
+                <button class="mobile-close" id="mobileClose">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <nav class="mobile-nav">
+                <a href="#home" class="mobile-link">
+                    <div class="mobile-link-icon">
+                        <i class="ri-home-4-line"></i>
+                    </div>
+                    <div class="mobile-link-text">
+                        <span class="mobile-link-title">Home</span>
+                        <span class="mobile-link-subtitle">Welcome</span>
+                    </div>
+                    <div class="mobile-link-arrow">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+                
+                <a href="#about" class="mobile-link">
+                    <div class="mobile-link-icon">
+                        <i class="ri-user-heart-line"></i>
+                    </div>
+                    <div class="mobile-link-text">
+                        <span class="mobile-link-title">About</span>
+                        <span class="mobile-link-subtitle">Our Story</span>
+                    </div>
+                    <div class="mobile-link-arrow">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+                
+                <a href="#services" class="mobile-link">
+                    <div class="mobile-link-icon">
+                        <i class="ri-mental-health-line"></i>
+                    </div>
+                    <div class="mobile-link-text">
+                        <span class="mobile-link-title">Services</span>
+                        <span class="mobile-link-subtitle">Therapy Options</span>
+                    </div>
+                    <div class="mobile-link-arrow">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+                
+                <a href="#approach" class="mobile-link">
+                    <div class="mobile-link-icon">
+                        <i class="ri-seedling-line"></i>
+                    </div>
+                    <div class="mobile-link-text">
+                        <span class="mobile-link-title">Approach</span>
+                        <span class="mobile-link-subtitle">Holistic Method</span>
+                    </div>
+                    <div class="mobile-link-arrow">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+                
+                <a href="#contact" class="mobile-link">
+                    <div class="mobile-link-icon">
                         <i class="ri-phone-line"></i>
-                        <span>(646) 971-7325</span>
-                    </a>
-                    <a href="#contact" class="btn btn-primary mobile-cta">
-                        <i class="fas fa-calendar-check"></i>
-                        Book Consultation
-                    </a>
-                </div>
+                    </div>
+                    <div class="mobile-link-text">
+                        <span class="mobile-link-title">Contact</span>
+                        <span class="mobile-link-subtitle">Get in Touch</span>
+                    </div>
+                    <div class="mobile-link-arrow">
+                        <i class="ri-arrow-right-line"></i>
+                    </div>
+                </a>
+            </nav>
+            
+            <!-- Mobile Actions -->
+            <div class="mobile-actions">
+                <a href="tel:(646)971-7325" class="mobile-phone">
+                    <i class="ri-phone-fill"></i>
+                    <span>(646) 971-7325</span>
+                </a>
+                <a href="#contact" class="mobile-cta">
+                    <span>Book Consultation</span>
+                    <i class="ri-arrow-right-line"></i>
+                </a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Main Content -->
     <main class="main">
