@@ -31,32 +31,76 @@
     <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
-    <!-- Preloader -->
-    <div class="preloader" id="preloader">
-        <div class="preloader-container">
-            <div class="logo-animation" data-aos="zoom-in">
-                <img src="images/logo.png" alt="Holistic Psychological Services" class="preloader-logo animate__animated animate__pulse animate__infinite">
-                <div class="growth-rings">
-                    <div class="ring ring-1"></div>
-                    <div class="ring ring-2"></div>
-                    <div class="ring ring-3"></div>
-                </div>
+    
+    <!-- Quick Shine Preloader -->
+<div class="shine-preloader" id="shinePreloader">
+    <!-- Background Effects -->
+    <div class="preloader-background">
+        <div class="gradient-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+        <div class="particle-field" id="particleField"></div>
+    </div>
+    
+    <!-- Main Preloader Content -->
+    <div class="preloader-content">
+        <!-- Logo Showcase -->
+        <div class="logo-showcase">
+            <div class="logo-container">
+                <div class="logo-glow-ring"></div>
+                <div class="logo-pulse-ring"></div>
+                <img src="images/logo.png" alt="Holistic Psychological Services" class="showcase-logo">
+                <div class="logo-shine"></div>
+                <div class="logo-reflection"></div>
             </div>
-            <div class="loading-content">
-                <h2 class="loading-title">Holistic Psychological Services</h2>
-                <p class="loading-subtitle">Nurturing growth and healing...</p>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
-                <div class="loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+            
+            <!-- Logo Enhancement Effects -->
+            <div class="enhancement-effects">
+                <div class="sparkle sparkle-1">✨</div>
+                <div class="sparkle sparkle-2">✨</div>
+                <div class="sparkle sparkle-3">✨</div>
+                <div class="sparkle sparkle-4">✨</div>
             </div>
         </div>
-        <div class="preloader-particles" id="particles-bg"></div>
+        
+        <!-- Dynamic Text -->
+        <div class="loading-text">
+            <div class="main-text">
+                <span class="text-line">HOLISTIC</span>
+                <span class="text-highlight">PSYCHOLOGICAL</span>
+                <span class="text-line">SERVICES</span>
+            </div>
+            <div class="sub-text">
+                <span class="typing-text" id="typingText"></span>
+                <span class="cursor">|</span>
+            </div>
+        </div>
+        
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-ring">
+                <svg class="progress-svg" viewBox="0 0 120 120">
+                    <circle class="progress-track" cx="60" cy="60" r="54"></circle>
+                    <circle class="progress-bar" cx="60" cy="60" r="54" id="progressCircle"></circle>
+                </svg>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+        </div>
     </div>
+    
+    <!-- Exit Animation Elements -->
+    <div class="exit-animation">
+        <div class="reveal-bars">
+            <div class="bar bar-1"></div>
+            <div class="bar bar-2"></div>
+            <div class="bar bar-3"></div>
+            <div class="bar bar-4"></div>
+            <div class="bar bar-5"></div>
+        </div>
+    </div>
+</div>
 
     <!-- Innovative Header Section -->
 <header class="floating-header" id="floatingHeader">
