@@ -6,187 +6,535 @@
 /* ========================================
    PRELOADER CONTROLLER
    ======================================== */
-class PreloaderController {
+class QuickShinePreloader {
     constructor() {
-        this.preloader = document.getElementById('preloader');
-        this.progressFill = document.querySelector('.progress-fill');
-        this.loadingTitle = document.querySelector('.loading-title');
-        this.loadingSubtitle = document.querySelector('.loading-subtitle');
-        this.particlesContainer = document.getElementById('particles-bg');
+        this.preloader = document.getElementById('shinePreloader');
+        this.progressCircle = document.getElementById('progressCircle');
+        this.progressPercentage = document.getElementById('progressPercentage');
+        this.typingText = document.getElementById('typingText');
+        this.particleField = document.getElementById('particleField');
         
-        this.loadingMessages = [
-            'Creating a safe space...',
-            'Preparing your journey...',
-            'Nurturing growth and healing...',
-            'Welcome to holistic wellness...'
+        // Timing configuration (fast but visible)
+        this.duration = 2500; // 2.5 seconds total
+        this.minShowTime = 1200; // Minimum time to show preloader
+        this.progressUpdateInterval = 50; // Update every 50ms for smooth animation
+        
+        // Text messages for typing effect
+        this.messages = [
+            'Creating your sanctuary...',
+            'Preparing holistic care...',
+            'Welcome to wellness...',
+            'Nurturing your journey...'
         ];
         
         this.currentMessageIndex = 0;
-        this.isLoaded = false;
+        this.currentProgress = 0;
+        this.startTime = Date.now();
+        this.isComplete = false;
+        this.particles = [];
         
         this.init();
     }
     
     init() {
-        this.initParticles();
+        if (!this.preloader) return;
+        
+        this.setupProgressGradient();
+        this.createParticles();
         this.startLoadingSequence();
-        this.simulateProgress();
+        this.setupEventListeners();
         
-        // Auto-hide after window load
-        window.addEventListener('load', () => {
-            setTimeout(() => this.hidePreloader(), 800);
-        });
-        
-        // Fallback hide after 5 seconds
-        setTimeout(() => {
-            if (!this.isLoaded) {
-                this.hidePreloader();
-            }
-        }, 5000);
+        // Auto-hide based on page load and minimum time
+        this.setupAutoHide();
     }
     
-    initParticles() {
-        if (typeof particlesJS !== 'undefined' && this.particlesContainer) {
-            particlesJS('particles-bg', {
-                particles: {
-                    number: {
-                        value: 30,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: ["#22c55e", "#06b6d4", "#8b5cf6"]
-                    },
-                    shape: {
-                        type: "circle",
-                        stroke: {
-                            width: 0,
-                            color: "#000000"
-                        }
-                    },
-                    opacity: {
-                        value: 0.3,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 1,
-                            opacity_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    size: {
-                        value: 3,
-                        random: true,
-                        anim: {
-                            enable: true,
-                            speed: 2,
-                            size_min: 0.1,
-                            sync: false
-                        }
-                    },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: "#22c55e",
-                        opacity: 0.2,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 1,
-                        direction: "none",
-                        random: false,
-                        straight: false,
-                        out_mode: "out",
-                        bounce: false
-                    }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: {
-                            enable: true,
-                            mode: "repulse"
-                        },
-                        onclick: {
-                            enable: true,
-                            mode: "push"
-                        },
-                        resize: true
-                    }
-                },
-                retina_detect: true
-            });
+    setupProgressGradient() {
+        // Create SVG gradient for progress circle
+        if (this.progressCircle) {
+            const svg = this.progressCircle.closest('svg');
+            if (svg && !svg.querySelector('defs')) {
+                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+                
+                gradient.setAttribute('id', 'progressGradient');
+                gradient.setAttribute('x1', '0%');
+                gradient.setAttribute('y1', '0%');
+                gradient.setAttribute('x2', '100%');
+                gradient.setAttribute('y2', '100%');
+                
+                const stops = [
+                    { offset: '0%', color: 'var(--primary-green)' },
+                    { offset: '50%', color: 'var(--primary-blue)' },
+                    { offset: '100%', color: 'var(--primary-purple)' }
+                ];
+                
+                stops.forEach(stop => {
+                    const stopElement = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                    stopElement.setAttribute('offset', stop.offset);
+                    stopElement.setAttribute('stop-color', stop.color);
+                    gradient.appendChild(stopElement);
+                });
+                
+                defs.appendChild(gradient);
+                svg.appendChild(defs);
+                
+                this.progressCircle.setAttribute('stroke', 'url(#progressGradient)');
+            }
         }
     }
     
-    startLoadingSequence() {
-        const changeMessage = () => {
-            if (this.currentMessageIndex < this.loadingMessages.length && !this.isLoaded) {
-                if (this.loadingSubtitle) {
-                    this.loadingSubtitle.style.opacity = '0';
+    createParticles() {
+        if (!this.particleField) return;
+        
+        const particleCount = 20;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: radial-gradient(circle, var(--primary-green), transparent);
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0;
+                will-change: transform, opacity;
+            `;
+            
+            // Random position
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            
+            this.particleField.appendChild(particle);
+            this.particles.push({
+                element: particle,
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                life: Math.random() * 3000 + 1000, // 1-4 seconds
+                birth: Date.now()
+            });
+        }
+        
+        this.animateParticles();
+    }
+    
+    animateParticles() {
+        const animate = () => {
+            if (!this.isComplete) {
+                this.particles.forEach(particle => {
+                    const age = Date.now() - particle.birth;
+                    const lifeRatio = age / particle.life;
                     
-                    setTimeout(() => {
-                        this.loadingSubtitle.textContent = this.loadingMessages[this.currentMessageIndex];
-                        this.loadingSubtitle.style.opacity = '1';
-                        this.currentMessageIndex++;
-                    }, 300);
-                }
+                    if (lifeRatio < 1) {
+                        // Update position
+                        particle.x += particle.vx;
+                        particle.y += particle.vy;
+                        
+                        // Wrap around screen
+                        if (particle.x < 0) particle.x = window.innerWidth;
+                        if (particle.x > window.innerWidth) particle.x = 0;
+                        if (particle.y < 0) particle.y = window.innerHeight;
+                        if (particle.y > window.innerHeight) particle.y = 0;
+                        
+                        // Update opacity (fade in/out)
+                        const opacity = Math.sin(lifeRatio * Math.PI) * 0.6;
+                        
+                        particle.element.style.left = particle.x + 'px';
+                        particle.element.style.top = particle.y + 'px';
+                        particle.element.style.opacity = opacity;
+                    } else {
+                        // Reset particle
+                        particle.birth = Date.now();
+                        particle.x = Math.random() * window.innerWidth;
+                        particle.y = Math.random() * window.innerHeight;
+                    }
+                });
                 
-                setTimeout(changeMessage, 1200);
+                requestAnimationFrame(animate);
             }
         };
         
-        setTimeout(changeMessage, 500);
+        animate();
     }
     
-    simulateProgress() {
-        if (!this.progressFill) return;
+    startLoadingSequence() {
+        // Start typing animation
+        this.startTypingAnimation();
         
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-            progress += Math.random() * 15 + 5;
+        // Start progress animation
+        this.animateProgress();
+        
+        // Trigger logo shine effects
+        this.triggerLogoEffects();
+    }
+    
+    startTypingAnimation() {
+        if (!this.typingText) return;
+        
+        const typeMessage = (message, callback) => {
+            let i = 0;
+            this.typingText.textContent = '';
             
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(progressInterval);
-                setTimeout(() => this.hidePreloader(), 500);
+            const typeChar = () => {
+                if (i < message.length) {
+                    this.typingText.textContent += message.charAt(i);
+                    i++;
+                    setTimeout(typeChar, 40); // Fast typing
+                } else if (callback) {
+                    setTimeout(callback, 300); // Brief pause before next message
+                }
+            };
+            
+            typeChar();
+        };
+        
+        const cycleMessages = () => {
+            if (!this.isComplete) {
+                const message = this.messages[this.currentMessageIndex];
+                typeMessage(message, () => {
+                    this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
+                    setTimeout(cycleMessages, 200);
+                });
+            }
+        };
+        
+        cycleMessages();
+    }
+    
+    animateProgress() {
+        const circumference = 2 * Math.PI * 54; // radius = 54
+        
+        const updateProgress = () => {
+            const elapsed = Date.now() - this.startTime;
+            const progress = Math.min((elapsed / this.duration) * 100, 100);
+            
+            this.currentProgress = progress;
+            
+            // Update circular progress
+            if (this.progressCircle) {
+                const offset = circumference - (progress / 100) * circumference;
+                this.progressCircle.style.strokeDashoffset = offset;
             }
             
-            this.progressFill.style.width = progress + '%';
-        }, 200);
+            // Update percentage text
+            if (this.progressPercentage) {
+                this.progressPercentage.textContent = Math.round(progress) + '%';
+            }
+            
+            // Continue animation
+            if (progress < 100 && !this.isComplete) {
+                setTimeout(updateProgress, this.progressUpdateInterval);
+            } else {
+                this.onProgressComplete();
+            }
+        };
+        
+        updateProgress();
+    }
+    
+    triggerLogoEffects() {
+        const logo = document.querySelector('.showcase-logo');
+        const logoShine = document.querySelector('.logo-shine');
+        
+        if (logo) {
+            // Enhanced hover-like effect
+            logo.style.transform = 'scale(1.05)';
+            logo.style.filter = 'brightness(1.2) saturate(1.3)';
+            
+            setTimeout(() => {
+                logo.style.transform = 'scale(1)';
+                logo.style.filter = 'brightness(1) saturate(1)';
+            }, 800);
+        }
+        
+        // Trigger additional shine effects
+        setTimeout(() => {
+            if (logoShine) {
+                logoShine.style.animationDuration = '1.5s';
+            }
+        }, 1000);
+    }
+    
+    onProgressComplete() {
+        // Small delay before hiding to show 100%
+        setTimeout(() => {
+            this.hidePreloader();
+        }, 300);
+    }
+    
+    setupEventListeners() {
+        // Force hide on window load after minimum time
+        window.addEventListener('load', () => {
+            const elapsed = Date.now() - this.startTime;
+            const remainingTime = Math.max(0, this.minShowTime - elapsed);
+            
+            setTimeout(() => {
+                if (!this.isComplete) {
+                    this.hidePreloader();
+                }
+            }, remainingTime);
+        });
+        
+        // Hide on any click after minimum time (emergency exit)
+        document.addEventListener('click', () => {
+            const elapsed = Date.now() - this.startTime;
+            if (elapsed > this.minShowTime && !this.isComplete) {
+                this.hidePreloader();
+            }
+        });
+        
+        // Hide on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const elapsed = Date.now() - this.startTime;
+                if (elapsed > this.minShowTime) {
+                    this.hidePreloader();
+                }
+            }
+        });
+    }
+    
+    setupAutoHide() {
+        // Fallback auto-hide after maximum duration
+        setTimeout(() => {
+            if (!this.isComplete) {
+                this.hidePreloader();
+            }
+        }, this.duration + 500);
     }
     
     hidePreloader() {
-        if (this.isLoaded || !this.preloader) return;
+        if (this.isComplete || !this.preloader) return;
         
-        this.isLoaded = true;
+        this.isComplete = true;
         
-        // GSAP animation if available
-        if (typeof gsap !== 'undefined') {
-            gsap.to(this.preloader, {
-                duration: 0.8,
-                opacity: 0,
-                y: -50,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    this.preloader.style.display = 'none';
-                }
-            });
-        } else {
+        // Trigger exit animation
+        this.preloader.classList.add('exiting');
+        
+        // Advanced exit animation
+        setTimeout(() => {
             this.preloader.classList.add('loaded');
+            
+            // Clean up after animation
             setTimeout(() => {
-                this.preloader.style.display = 'none';
-            }, 500);
+                this.cleanup();
+            }, 800);
+        }, 600);
+        
+        // Dispatch completion event
+        document.dispatchEvent(new CustomEvent('preloaderComplete', {
+            detail: { 
+                duration: Date.now() - this.startTime,
+                method: 'auto'
+            }
+        }));
+    }
+    
+    forceHide() {
+        if (this.isComplete) return;
+        
+        this.isComplete = true;
+        this.preloader.style.transition = 'all 0.5s ease';
+        this.preloader.classList.add('loaded');
+        
+        setTimeout(() => {
+            this.cleanup();
+        }, 500);
+        
+        document.dispatchEvent(new CustomEvent('preloaderComplete', {
+            detail: { 
+                duration: Date.now() - this.startTime,
+                method: 'forced'
+            }
+        }));
+    }
+    
+    cleanup() {
+        if (this.preloader) {
+            this.preloader.style.display = 'none';
         }
         
-        // Initialize other components after preloader
-        setTimeout(() => {
-            document.dispatchEvent(new CustomEvent('preloaderComplete'));
-        }, 300);
+        // Clear particles
+        this.particles = [];
+        
+        // Remove any remaining event listeners
+        document.removeEventListener('click', this.handleClick);
+        document.removeEventListener('keydown', this.handleKeydown);
+        
+        console.log('✨ Shine Preloader completed successfully');
     }
+    
+    // Public API methods
+    getProgress() {
+        return this.currentProgress;
+    }
+    
+    isCompleted() {
+        return this.isComplete;
+    }
+    
+    getRemainingTime() {
+        const elapsed = Date.now() - this.startTime;
+        return Math.max(0, this.duration - elapsed);
+    }
+}
+
+class ParticleEnhancer {
+    constructor(preloader) {
+        this.preloader = preloader;
+        this.canvas = null;
+        this.ctx = null;
+        this.particles = [];
+        
+        this.init();
+    }
+    
+    init() {
+        // Create canvas for better particle performance
+        this.canvas = document.createElement('canvas');
+        this.canvas.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        `;
+        
+        this.ctx = this.canvas.getContext('2d');
+        this.resizeCanvas();
+        
+        const particleField = document.getElementById('particleField');
+        if (particleField) {
+            particleField.appendChild(this.canvas);
+        }
+        
+        window.addEventListener('resize', () => this.resizeCanvas());
+        this.createParticles();
+        this.animate();
+    }
+    
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    createParticles() {
+        const count = 30;
+        
+        for (let i = 0; i < count; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * 1,
+                vy: (Math.random() - 0.5) * 1,
+                life: Math.random() * 200 + 100,
+                age: 0,
+                color: this.getRandomColor()
+            });
+        }
+    }
+    
+    getRandomColor() {
+        const colors = ['#00d884', '#0ea5e9', '#8b5cf6'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    animate() {
+        if (this.preloader.isCompleted()) return;
+        
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach(particle => {
+            particle.age++;
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Wrap around edges
+            if (particle.x < 0) particle.x = this.canvas.width;
+            if (particle.x > this.canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = this.canvas.height;
+            if (particle.y > this.canvas.height) particle.y = 0;
+            
+            // Calculate opacity
+            const lifeRatio = particle.age / particle.life;
+            const opacity = Math.sin(lifeRatio * Math.PI) * 0.6;
+            
+            // Draw particle
+            this.ctx.globalAlpha = opacity;
+            this.ctx.fillStyle = particle.color;
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, 1, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            // Reset particle if too old
+            if (particle.age >= particle.life) {
+                particle.age = 0;
+                particle.x = Math.random() * this.canvas.width;
+                particle.y = Math.random() * this.canvas.height;
+            }
+        });
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+let quickShinePreloader;
+let particleEnhancer;
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePreloader);
+} else {
+    initializePreloader();
+}
+
+function initializePreloader() {
+    quickShinePreloader = new QuickShinePreloader();
+    
+    // Add enhanced particles for better visual effect
+    setTimeout(() => {
+        particleEnhancer = new ParticleEnhancer(quickShinePreloader);
+    }, 100);
+}
+
+// Global API
+window.QuickShinePreloader = {
+    getInstance: () => quickShinePreloader,
+    hide: () => quickShinePreloader?.forceHide(),
+    getProgress: () => quickShinePreloader?.getProgress() || 0,
+    isComplete: () => quickShinePreloader?.isCompleted() || false
+};
+
+// Quick access function to hide preloader
+function hidePreloader() {
+    if (quickShinePreloader) {
+        quickShinePreloader.forceHide();
+    }
+}
+
+// Performance monitoring
+function getPreloaderPerformance() {
+    if (quickShinePreloader) {
+        return {
+            progress: quickShinePreloader.getProgress(),
+            isComplete: quickShinePreloader.isCompleted(),
+            remainingTime: quickShinePreloader.getRemainingTime()
+        };
+    }
+    return null;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        QuickShinePreloader,
+        ParticleEnhancer,
+        hidePreloader,
+        getPreloaderPerformance
+    };
 }
 
 /* ========================================
@@ -194,7 +542,7 @@ class PreloaderController {
    ======================================== */
 class FloatingHeaderController {
     constructor() {
-        this.header = document.getElementById('floatingHeader');
+        this. = document.getElementById('floating');
         this.navCapsule = document.getElementById('navCapsule');
         this.navTrack = this.navCapsule?.querySelector('.nav-track');
         this.navDots = document.querySelectorAll('.nav-dot');
@@ -213,7 +561,7 @@ class FloatingHeaderController {
     }
     
     init() {
-        if (!this.header) return;
+        if (!this.) return;
         
         this.setupScrollBehavior();
         this.setupNavigationIndicator();
@@ -245,25 +593,25 @@ class FloatingHeaderController {
         
         // Add scrolled class for visual changes
         if (currentScrollY > 50) {
-            this.header.classList.add('scrolled');
+            this..classList.add('scrolled');
         } else {
-            this.header.classList.remove('scrolled');
+            this..classList.remove('scrolled');
         }
         
-        // Hide/show header on scroll (optional)
+        // Hide/show  on scroll (optional)
         if (currentScrollY > this.lastScrollY && currentScrollY > 200) {
             // Scrolling down
             if (!this.isScrollingDown && !this.isMobileMenuOpen) {
                 this.isScrollingDown = true;
-                this.header.style.transform = 'translateX(-50%) translateY(-100px)';
-                this.header.style.opacity = '0.7';
+                this..style.transform = 'translateX(-50%) translateY(-100px)';
+                this..style.opacity = '0.7';
             }
         } else {
             // Scrolling up
             if (this.isScrollingDown) {
                 this.isScrollingDown = false;
-                this.header.style.transform = 'translateX(-50%) translateY(0)';
-                this.header.style.opacity = '1';
+                this..style.transform = 'translateX(-50%) translateY(0)';
+                this..style.opacity = '1';
             }
         }
         
@@ -389,9 +737,9 @@ class FloatingHeaderController {
         this.mobileOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Reset header position when menu opens
-        this.header.style.transform = 'translateX(-50%) translateY(0)';
-        this.header.style.opacity = '1';
+        // Reset  position when menu opens
+        this..style.transform = 'translateX(-50%) translateY(0)';
+        this..style.opacity = '1';
         this.isScrollingDown = false;
         
         // Animate mobile links
@@ -436,8 +784,8 @@ class FloatingHeaderController {
         const targetElement = document.querySelector(target);
         if (!targetElement) return;
         
-        const headerHeight = this.header.offsetHeight + 20; // Add some offset
-        const targetPosition = targetElement.offsetTop - headerHeight;
+        const Height = this..offsetHeight + 20; // Add some offset
+        const targetPosition = targetElement.offsetTop - Height;
         
         window.scrollTo({
             top: targetPosition,
@@ -498,17 +846,17 @@ class FloatingHeaderController {
     
     setupGlowEffect() {
         // Add subtle glow effect on hover
-        if (this.header) {
+        if (this.) {
             let glowTimeout;
             
-            this.header.addEventListener('mouseenter', () => {
+            this..addEventListener('mouseenter', () => {
                 clearTimeout(glowTimeout);
-                this.header.style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
+                this..style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
             });
             
-            this.header.addEventListener('mouseleave', () => {
+            this..addEventListener('mouseleave', () => {
                 glowTimeout = setTimeout(() => {
-                    this.header.style.filter = '';
+                    this..style.filter = '';
                 }, 300);
             });
         }
@@ -551,16 +899,16 @@ class FloatingHeaderController {
     }
     
     // Public methods for external control
-    showHeader() {
-        this.header.style.transform = 'translateX(-50%) translateY(0)';
-        this.header.style.opacity = '1';
+    show() {
+        this..style.transform = 'translateX(-50%) translateY(0)';
+        this..style.opacity = '1';
         this.isScrollingDown = false;
     }
     
-    hideHeader() {
+    hide() {
         if (!this.isMobileMenuOpen) {
-            this.header.style.transform = 'translateX(-50%) translateY(-100px)';
-            this.header.style.opacity = '0.7';
+            this..style.transform = 'translateX(-50%) translateY(-100px)';
+            this..style.opacity = '0.7';
             this.isScrollingDown = true;
         }
     }
@@ -587,19 +935,19 @@ class FloatingHeaderController {
    ======================================== */
 
 // Initialize when DOM is ready
-let floatingHeaderController;
+let floatingController;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        floatingHeaderController = new FloatingHeaderController();
+        floatingController = new FloatingController();
     });
 } else {
-    floatingHeaderController = new FloatingHeaderController();
+    floatingController = new FloatingController();
 }
 
 // Make it globally accessible for debugging
-window.FloatingHeaderController = FloatingHeaderController;
-window.floatingHeaderController = floatingHeaderController;
+window.FloatingController = FloatingController;
+window.floatingController = floatingHeaderController;
 
 /* ========================================
    UTILITY FUNCTIONS
