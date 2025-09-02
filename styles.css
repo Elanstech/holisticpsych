@@ -1287,47 +1287,46 @@ body {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .nav-capsule {
-        display: none;
+   
+      .nav-capsule {
+        display: none !important;
+    }
+    
+    .phone-bubble {
+        display: none !important;
     }
     
     .modern-menu-trigger {
-        display: flex;
+        display: flex !important;
     }
 }
 
 @media (max-width: 768px) {
     .floating-header {
-        width: calc(100% - 2rem);
-        height: 80px;
+        width: calc(100% - 1rem) !important;
+        height: 70px !important;
     }
     
     .floating-header.scrolled {
-        height: 70px;
+        height: 60px !important;
     }
     
     .header-container {
-        padding: 0 1.5rem;
-        gap: 1rem;
+        padding: 0 1rem !important;
     }
     
     .logo-container {
-        width: 80px;
-        height: 80px;
+        width: 60px !important;
+        height: 60px !important;
     }
     
-    .phone-bubble {
+    .cta-floating .cta-text {
         display: none;
     }
     
     .cta-floating {
-        padding: 1rem 1.5rem;
-        font-size: 14px;
-    }
-    
-    .modern-menu-trigger {
-        width: 50px;
-        height: 50px;
+        padding: 0.75rem 1rem !important;
+        min-width: 50px;
     }
 }
 
