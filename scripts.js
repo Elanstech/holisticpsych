@@ -39,7 +39,7 @@ class SleekPreloader {
         const increment = 100 / (this.duration / this.progressUpdateInterval);
         
         this.progressInterval = setInterval(() => {
-            progress += increment * (0.8 + Math.random() * 0.4); // Slight randomness for organic feel
+            progress += increment * (0.8 + Math.random() * 0.4);
             progress = Math.min(progress, 100);
             
             this.updateProgress(progress);
@@ -60,14 +60,12 @@ class SleekPreloader {
     }
     
     onProgressComplete() {
-        // Small delay to show 100% completion
         setTimeout(() => {
             this.hidePreloader();
         }, 400);
     }
     
     setupEventListeners() {
-        // Force hide on window load after minimum time
         window.addEventListener('load', () => {
             const elapsed = Date.now() - this.startTime;
             const remainingTime = Math.max(0, this.minShowTime - elapsed);
@@ -79,7 +77,6 @@ class SleekPreloader {
             }, remainingTime);
         });
         
-        // Hide on escape key (for debugging)
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const elapsed = Date.now() - this.startTime;
@@ -89,12 +86,10 @@ class SleekPreloader {
             }
         });
         
-        // Prevent scrolling while preloader is active
         document.body.style.overflow = 'hidden';
     }
     
     setupAutoComplete() {
-        // Fallback auto-hide after maximum duration
         setTimeout(() => {
             if (!this.isComplete) {
                 this.hidePreloader();
@@ -107,33 +102,25 @@ class SleekPreloader {
         
         this.isComplete = true;
         
-        // Clear any running intervals
         if (this.progressInterval) {
             clearInterval(this.progressInterval);
         }
         
-        // Trigger exit animation
         this.preloader.classList.add('exiting');
         
-        // Complete the progress bar
         if (this.progressFill) {
             this.progressFill.style.width = '100%';
         }
         
-        // Fade out after exit animation
         setTimeout(() => {
             this.preloader.classList.add('loaded');
-            
-            // Restore body scroll
             document.body.style.overflow = '';
             
-            // Clean up after transition
             setTimeout(() => {
                 this.cleanup();
             }, 800);
         }, 600);
         
-        // Dispatch completion event
         document.dispatchEvent(new CustomEvent('preloaderComplete', {
             detail: { 
                 duration: Date.now() - this.startTime,
@@ -147,16 +134,13 @@ class SleekPreloader {
         
         this.isComplete = true;
         
-        // Clear intervals
         if (this.progressInterval) {
             clearInterval(this.progressInterval);
         }
         
-        // Quick fade out
         this.preloader.style.transition = 'all 0.5s ease';
         this.preloader.classList.add('loaded');
         
-        // Restore body scroll
         document.body.style.overflow = '';
         
         setTimeout(() => {
@@ -176,7 +160,6 @@ class SleekPreloader {
             this.preloader.style.display = 'none';
         }
         
-        // Clear any remaining intervals
         if (this.progressInterval) {
             clearInterval(this.progressInterval);
         }
@@ -184,7 +167,6 @@ class SleekPreloader {
         console.log('✨ Sleek Preloader completed successfully');
     }
     
-    // Public API methods
     getProgress() {
         return this.currentProgress;
     }
@@ -198,91 +180,6 @@ class SleekPreloader {
         return Math.max(0, this.duration - elapsed);
     }
 }
-
-/* ========================================
-   INITIALIZATION
-   ======================================== */
-
-let sleekPreloader;
-
-// Initialize when DOM is ready
-function initializeSleekPreloader() {
-    sleekPreloader = new SleekPreloader();
-}
-
-// Check if DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeSleekPreloader);
-} else {
-    initializeSleekPreloader();
-}
-
-// Global API for external access
-window.SleekPreloader = {
-    getInstance: () => sleekPreloader,
-    hide: () => sleekPreloader?.forceHide(),
-    getProgress: () => sleekPreloader?.getProgress() || 0,
-    isComplete: () => sleekPreloader?.isCompleted() || false
-};
-
-// Quick access function to hide preloader
-function hideSleekPreloader() {
-    if (sleekPreloader) {
-        sleekPreloader.forceHide();
-    }
-}
-
-// Performance monitoring
-function getSleekPreloaderPerformance() {
-    if (sleekPreloader) {
-        return {
-            progress: sleekPreloader.getProgress(),
-            isComplete: sleekPreloader.isCompleted(),
-            remainingTime: sleekPreloader.getRemainingTime()
-        };
-    }
-    return null;
-}
-
-/* ========================================
-   SMOOTH INTEGRATION WITH EXISTING CODE
-   ======================================== */
-
-// Listen for preloader completion to initialize other components
-document.addEventListener('preloaderComplete', (event) => {
-    console.log('Preloader completed:', event.detail);
-    
-    // Initialize other components after preloader
-    setTimeout(() => {
-        // Trigger any additional initialization
-        if (typeof window.RefinedHeaderController !== 'undefined') {
-            // Header is already initialized in the original code
-        }
-        
-        // Add any other component initializations here
-        if (typeof AOS !== 'undefined') {
-            AOS.refresh();
-        }
-    }, 100);
-});
-
-// Graceful error handling
-window.addEventListener('error', (event) => {
-    console.warn('Preloader error, falling back to force hide:', event.error);
-    if (sleekPreloader && !sleekPreloader.isCompleted()) {
-        sleekPreloader.forceHide();
-    }
-});
-
-// Unhandled promise rejections
-window.addEventListener('unhandledrejection', (event) => {
-    console.warn('Preloader promise rejection:', event.reason);
-    if (sleekPreloader && !sleekPreloader.isCompleted()) {
-        setTimeout(() => {
-            sleekPreloader.forceHide();
-        }, 100);
-    }
-});
 
 /* ========================================
    FLOATING HEADER CONTROLLER
@@ -309,10 +206,6 @@ class RefinedHeaderController {
         this.activeNavIndex = 0;
         this.scrollThreshold = 50;
         
-        // Animation timing
-        this.menuAnimationDuration = 500;
-        this.staggerDelay = 100;
-        
         this.init();
     }
     
@@ -324,9 +217,7 @@ class RefinedHeaderController {
         this.setupModernMobileMenu();
         this.setupSmoothScrolling();
         this.setupScrollSpy();
-        this.setupEnhancedEffects();
         
-        // Set initial nav indicator position
         this.updateNavIndicator(0);
         
         console.log('✨ Refined Header Controller initialized');
@@ -351,22 +242,18 @@ class RefinedHeaderController {
     handleScroll() {
         const currentScrollY = window.pageYOffset;
         
-        // Add scrolled class for visual changes
         if (currentScrollY > this.scrollThreshold) {
             this.header.classList.add('scrolled');
         } else {
             this.header.classList.remove('scrolled');
         }
         
-        // Smooth hide/show header on scroll
         if (currentScrollY > this.lastScrollY && currentScrollY > 200) {
-            // Scrolling down
             if (!this.isScrollingDown && !this.isMobileMenuOpen) {
                 this.isScrollingDown = true;
                 this.hideHeader();
             }
         } else {
-            // Scrolling up
             if (this.isScrollingDown) {
                 this.isScrollingDown = false;
                 this.showHeader();
@@ -393,15 +280,12 @@ class RefinedHeaderController {
             dot.addEventListener('click', (e) => {
                 e.preventDefault();
                 
-                // Update active states
                 this.setActiveNavigation(index);
                 
-                // Smooth scroll to section
                 const target = dot.getAttribute('href');
                 this.scrollToSection(target);
             });
             
-            // Enhanced hover effects with micro-interactions
             dot.addEventListener('mouseenter', () => {
                 this.addHoverEffect(dot);
             });
@@ -427,13 +311,12 @@ class RefinedHeaderController {
     updateNavIndicator(index) {
         if (!this.navIndicator || !this.navTrack) return;
         
-        const positions = [8, 64, 120, 176, 232]; // Adjusted for new spacing
+        const positions = [8, 64, 120, 176, 232];
         const position = positions[index] || 8;
         
         this.navIndicator.style.left = position + 'px';
         this.navTrack.setAttribute('data-active', index);
         
-        // Add smooth scale animation
         this.navIndicator.style.transform = 'scale(1.15)';
         setTimeout(() => {
             this.navIndicator.style.transform = 'scale(1)';
@@ -452,14 +335,12 @@ class RefinedHeaderController {
     setupModernMobileMenu() {
         if (!this.modernMenuTrigger || !this.modernMobileOverlay) return;
         
-        // Mobile trigger click
         this.modernMenuTrigger.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             this.toggleModernMobileMenu();
         });
         
-        // Modern close button
         if (this.modernCloseBtn) {
             this.modernCloseBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -468,7 +349,6 @@ class RefinedHeaderController {
             });
         }
         
-        // Backdrop click to close
         if (this.overlayBackdrop) {
             this.overlayBackdrop.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -476,7 +356,6 @@ class RefinedHeaderController {
             });
         }
         
-        // Mobile navigation links
         this.mobileNavLinks.forEach((link, index) => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -485,29 +364,17 @@ class RefinedHeaderController {
                     this.scrollToSection(href);
                     this.closeModernMobileMenu();
                     
-                    // Update desktop nav indicator
                     this.updateDesktopNavFromMobile(href);
                 }
             });
-            
-            // Enhanced hover effects
-            link.addEventListener('mouseenter', () => {
-                this.addMobileLinkHover(link);
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                this.removeMobileLinkHover(link);
-            });
         });
         
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isMobileMenuOpen) {
                 this.closeModernMobileMenu();
             }
         });
         
-        // Close on window resize (desktop)
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024 && this.isMobileMenuOpen) {
                 this.closeModernMobileMenu();
@@ -526,24 +393,17 @@ class RefinedHeaderController {
     openModernMobileMenu() {
         this.isMobileMenuOpen = true;
         
-        // Update trigger state
         this.modernMenuTrigger.classList.add('active');
-        
-        // Show overlay
         this.modernMobileOverlay.classList.add('active');
         
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
         
-        // Keep header visible
         this.header.style.transform = 'translateX(-50%) translateY(0)';
         this.header.style.opacity = '1';
         this.isScrollingDown = false;
         
-        // Staggered animation for mobile links
         this.animateMobileLinksIn();
         
-        // Add subtle haptic feedback (if supported)
         if (navigator.vibrate) {
             navigator.vibrate(50);
         }
@@ -556,16 +416,11 @@ class RefinedHeaderController {
         
         this.isMobileMenuOpen = false;
         
-        // Update trigger state
         this.modernMenuTrigger.classList.remove('active');
-        
-        // Hide overlay
         this.modernMobileOverlay.classList.remove('active');
         
-        // Restore body scroll
         document.body.style.overflow = '';
         
-        // Reset mobile links animation
         this.animateMobileLinksOut();
         
         console.log('🎯 Modern mobile menu closed');
@@ -576,7 +431,7 @@ class RefinedHeaderController {
             setTimeout(() => {
                 link.style.opacity = '1';
                 link.style.transform = 'translateX(0)';
-            }, index * this.staggerDelay);
+            }, index * 100);
         });
     }
     
@@ -588,32 +443,7 @@ class RefinedHeaderController {
         });
     }
     
-    addMobileLinkHover(link) {
-        const icon = link.querySelector('.nav-link-icon');
-        const arrow = link.querySelector('.nav-link-arrow');
-        
-        if (icon) {
-            icon.style.transform = 'scale(1.1)';
-        }
-        if (arrow) {
-            arrow.style.transform = 'translateX(4px)';
-        }
-    }
-    
-    removeMobileLinkHover(link) {
-        const icon = link.querySelector('.nav-link-icon');
-        const arrow = link.querySelector('.nav-link-arrow');
-        
-        if (icon) {
-            icon.style.transform = 'scale(1)';
-        }
-        if (arrow) {
-            arrow.style.transform = 'translateX(0)';
-        }
-    }
-    
     setupSmoothScrolling() {
-        // Handle all navigation links
         const allNavLinks = document.querySelectorAll('a[href^="#"]');
         
         allNavLinks.forEach(link => {
@@ -634,7 +464,6 @@ class RefinedHeaderController {
         const headerHeight = this.header.offsetHeight + 30;
         const targetPosition = targetElement.offsetTop - headerHeight;
         
-        // Smooth scroll with easing
         this.smoothScrollTo(targetPosition);
     }
     
@@ -705,106 +534,6 @@ class RefinedHeaderController {
         }
     }
     
-    setupEnhancedEffects() {
-        // Logo hover enhancement
-        const logoContainer = document.querySelector('.logo-container');
-        if (logoContainer) {
-            logoContainer.addEventListener('mouseenter', () => {
-                this.addLogoHoverEffect();
-            });
-            
-            logoContainer.addEventListener('mouseleave', () => {
-                this.removeLogoHoverEffect();
-            });
-        }
-        
-        // Phone bubble interactions
-        const phoneBubble = document.querySelector('.phone-bubble');
-        if (phoneBubble) {
-            phoneBubble.addEventListener('mouseenter', () => {
-                this.triggerShimmerEffect(phoneBubble);
-            });
-        }
-        
-        // CTA button interactions
-        const ctaButton = document.querySelector('.cta-floating');
-        if (ctaButton) {
-            ctaButton.addEventListener('click', () => {
-                this.triggerWaveEffect(ctaButton);
-            });
-        }
-        
-        // Add parallax effect to header
-        this.setupHeaderParallax();
-    }
-    
-    addLogoHoverEffect() {
-        const logo = document.querySelector('.header-logo');
-        const shimmer = document.querySelector('.logo-shimmer');
-        
-        if (logo) {
-            logo.style.transform = 'scale(1.05) rotate(2deg)';
-            logo.style.filter = 'brightness(1.1) saturate(1.2)';
-        }
-    }
-    
-    removeLogoHoverEffect() {
-        const logo = document.querySelector('.header-logo');
-        
-        if (logo) {
-            logo.style.transform = 'scale(1) rotate(0deg)';
-            logo.style.filter = 'brightness(1) saturate(1)';
-        }
-    }
-    
-    triggerShimmerEffect(element) {
-        const shimmer = element.querySelector('.bubble-shimmer');
-        if (shimmer) {
-            shimmer.style.left = '-100%';
-            setTimeout(() => {
-                shimmer.style.left = '100%';
-            }, 100);
-        }
-    }
-    
-    triggerWaveEffect(element) {
-        const waves = element.querySelector('.cta-waves');
-        if (waves) {
-            waves.style.transform = 'translateX(-100%)';
-            setTimeout(() => {
-                waves.style.transform = 'translateX(100%)';
-            }, 50);
-            setTimeout(() => {
-                waves.style.transform = 'translateX(-100%)';
-            }, 600);
-        }
-    }
-    
-    setupHeaderParallax() {
-        let ticking = false;
-        
-        const parallaxScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const scrolled = window.pageYOffset;
-                    const parallax = scrolled * 0.1;
-                    
-                    // Subtle parallax effect on header glow
-                    const headerGlow = document.querySelector('.header-glow');
-                    if (headerGlow) {
-                        headerGlow.style.transform = `translateY(${parallax}px)`;
-                    }
-                    
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
-        
-        window.addEventListener('scroll', parallaxScroll, { passive: true });
-    }
-    
-    // Public API methods
     forceShowHeader() {
         this.showHeader();
         this.isScrollingDown = false;
@@ -826,7 +555,6 @@ class RefinedHeaderController {
     }
     
     destroy() {
-        // Clean up event listeners
         window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('keydown', this.handleKeydown);
@@ -835,148 +563,8 @@ class RefinedHeaderController {
     }
 }
 
-class HeaderUtilities {
-    static debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-    
-    static throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-    
-    static easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-    }
-    
-    static addRippleEffect(element, event) {
-        const ripple = document.createElement('div');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        `;
-        
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    }
-}
-
-let refinedHeaderController;
-
-// Initialize when DOM is ready
-function initializeRefinedHeader() {
-    refinedHeaderController = new RefinedHeaderController();
-    
-    // Add CSS for ripple animation if not present
-    if (!document.querySelector('#ripple-animation-css')) {
-        const style = document.createElement('style');
-        style.id = 'ripple-animation-css';
-        style.textContent = `
-            @keyframes ripple {
-                to {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-}
-
-// Check if DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeRefinedHeader);
-} else {
-    initializeRefinedHeader();
-}
-
-// Global API for external access
-window.RefinedHeaderController = {
-    getInstance: () => refinedHeaderController,
-    showHeader: () => refinedHeaderController?.forceShowHeader(),
-    hideHeader: () => refinedHeaderController?.forceHideHeader(),
-    setActiveNav: (index) => refinedHeaderController?.setActiveNavigation(index),
-    getActiveNav: () => refinedHeaderController?.getActiveNavIndex() || 0,
-    isMobileMenuOpen: () => refinedHeaderController?.isMobileMenuActive() || false
-};
-
-// Smooth scroll utility function
-function smoothScrollToSection(target, offset = 100) {
-    if (refinedHeaderController) {
-        refinedHeaderController.scrollToSection(target);
-    }
-}
-
-// Header visibility control
-function toggleRefinedHeaderVisibility(show = true) {
-    if (refinedHeaderController) {
-        if (show) {
-            refinedHeaderController.forceShowHeader();
-        } else {
-            refinedHeaderController.forceHideHeader();
-        }
-    }
-}
-
-// Graceful error handling
-window.addEventListener('error', (event) => {
-    if (event.error && event.error.message.includes('header')) {
-        console.warn('Header error handled gracefully:', event.error);
-    }
-});
-
-// Performance monitoring
-const headerPerformanceObserver = new PerformanceObserver((list) => {
-    const entries = list.getEntries();
-    entries.forEach(entry => {
-        if (entry.name.includes('header') && entry.duration > 100) {
-            console.warn(`Header operation took ${entry.duration}ms:`, entry.name);
-        }
-    });
-});
-
-// Start observing performance
-if (typeof PerformanceObserver !== 'undefined') {
-    headerPerformanceObserver.observe({ entryTypes: ['measure', 'navigation'] });
-}
-
-console.log('✨ Refined Header System loaded successfully');
-
-
 /* ========================================
-   HERO SLIDESHOW CONTROLLER
+   ENHANCED HERO SECTION CONTROLLER
    ======================================== */
 class EnhancedHeroController {
     constructor() {
@@ -990,22 +578,17 @@ class EnhancedHeroController {
         this.slideNavigation = document.querySelector('.slide-navigation');
         
         // Animation elements
-        this.floatingElements = document.querySelectorAll('.wellness-element');
         this.serviceItems = document.querySelectorAll('.service-item');
         this.scrollInvitation = document.querySelector('.scroll-invitation');
         
         // State management
         this.currentSlide = 0;
-        this.totalSlides = this.heroSlides.length;
+        this.totalSlides = Math.max(this.heroSlides.length, this.mobileSlides.length);
         this.isAutoPlaying = true;
         this.autoPlayInterval = null;
-        this.autoPlayDelay = 6000; // 6 seconds
+        this.autoPlayDelay = 4000; // 4 seconds
         this.isTransitioning = false;
         this.isMobile = window.innerWidth <= 1024;
-        
-        // Performance optimization
-        this.rafId = null;
-        this.resizeTimeout = null;
         
         this.init();
     }
@@ -1013,76 +596,45 @@ class EnhancedHeroController {
     init() {
         if (!this.heroSection) return;
         
+        console.log('Initializing Enhanced Hero Controller...');
+        console.log('Total slides found:', this.totalSlides);
+        
         this.setupSlideshow();
         this.setupEventListeners();
-        this.setupFloatingAnimations();
         this.setupServiceAnimations();
         this.setupScrollAnimations();
-        this.setupIntersectionObserver();
-        this.startAutoPlay();
+        
+        setTimeout(() => {
+            this.startAutoPlay();
+        }, 1000);
         
         console.log('✨ Enhanced Hero Controller initialized');
     }
     
     setupSlideshow() {
-        if (this.totalSlides === 0) return;
+        if (this.totalSlides === 0) {
+            console.warn('No slides found');
+            return;
+        }
         
-        // Initialize first slide
         this.setActiveSlide(0, false);
         
-        // Setup navigation dots
         this.slideDots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => {
                 e.preventDefault();
+                console.log('Dot clicked:', index);
                 this.goToSlide(index);
             });
             
-            // Keyboard accessibility
-            dot.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.goToSlide(index);
-                }
-            });
+            dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+            dot.setAttribute('role', 'button');
+            dot.setAttribute('tabindex', '0');
         });
         
-        // Touch/swipe support for mobile
-        this.setupTouchNavigation();
-    }
-    
-    setupTouchNavigation() {
-        if (!this.heroSection) return;
-        
-        let startX = 0;
-        let startY = 0;
-        let distX = 0;
-        let distY = 0;
-        let threshold = 100; // Minimum distance for swipe
-        let restraint = 100; // Maximum vertical distance
-        
-        this.heroSection.addEventListener('touchstart', (e) => {
-            const touchObj = e.changedTouches[0];
-            startX = touchObj.pageX;
-            startY = touchObj.pageY;
-        }, { passive: true });
-        
-        this.heroSection.addEventListener('touchend', (e) => {
-            const touchObj = e.changedTouches[0];
-            distX = touchObj.pageX - startX;
-            distY = touchObj.pageY - startY;
-            
-            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
-                if (distX > 0) {
-                    this.previousSlide();
-                } else {
-                    this.nextSlide();
-                }
-            }
-        }, { passive: true });
+        console.log('Slideshow setup complete');
     }
     
     setupEventListeners() {
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!this.isInViewport()) return;
             
@@ -1095,17 +647,10 @@ class EnhancedHeroController {
                     e.preventDefault();
                     this.nextSlide();
                     break;
-                case ' ':
-                    if (e.target === document.body) {
-                        e.preventDefault();
-                        this.toggleAutoPlay();
-                    }
-                    break;
             }
         });
         
-        // Pause on hover
-        if (this.heroSection) {
+        if (this.heroSection && !this.isMobile) {
             this.heroSection.addEventListener('mouseenter', () => {
                 this.pauseAutoPlay();
             });
@@ -1115,162 +660,61 @@ class EnhancedHeroController {
             });
         }
         
-        // Responsive handling
-        window.addEventListener('resize', this.debounce(() => {
-            const newIsMobile = window.innerWidth <= 1024;
-            if (newIsMobile !== this.isMobile) {
-                this.isMobile = newIsMobile;
-                this.handleResponsiveChange();
-            }
-        }, 250));
-        
-        // Visibility change handling
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.pauseAutoPlay();
-            } else {
+            } else if (this.isAutoPlaying) {
                 this.resumeAutoPlay();
             }
-        });
-    }
-    
-    handleResponsiveChange() {
-        // Reset slideshow for new layout
-        this.setActiveSlide(this.currentSlide, false);
-        
-        // Refresh floating animations
-        if (!this.isMobile) {
-            this.setupFloatingAnimations();
-        }
-    }
-    
-    setupFloatingAnimations() {
-        if (this.isMobile || !this.floatingElements.length) return;
-        
-        this.floatingElements.forEach((element, index) => {
-            // Reset any existing animations
-            element.style.animation = 'none';
-            
-            // Add enhanced floating animation with stagger
-            setTimeout(() => {
-                element.style.animation = `floatElement ${6 + index * 2}s ease-in-out infinite`;
-                element.style.animationDelay = `${index * 1.5}s`;
-            }, 100);
         });
     }
     
     setupServiceAnimations() {
         if (!this.serviceItems.length) return;
         
-        // Staggered entrance animations
         this.serviceItems.forEach((item, index) => {
             item.style.opacity = '0';
-            item.style.transform = 'translateY(30px)';
+            item.style.transform = 'translateY(20px)';
             
             setTimeout(() => {
-                item.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                item.style.transition = 'all 0.6s ease';
                 item.style.opacity = '1';
                 item.style.transform = 'translateY(0)';
-            }, 500 + (index * 150));
+            }, 300 + (index * 100));
         });
-        
-        // Enhanced hover effects
-        this.serviceItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                this.addServiceHoverEffect(item);
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                this.removeServiceHoverEffect(item);
-            });
-        });
-    }
-    
-    addServiceHoverEffect(item) {
-        const icon = item.querySelector('.service-icon');
-        const content = item.querySelector('.service-content');
-        
-        if (icon) {
-            icon.style.transform = 'scale(1.1) rotate(5deg)';
-        }
-        
-        if (content) {
-            content.style.transform = 'translateY(-2px)';
-        }
-    }
-    
-    removeServiceHoverEffect(item) {
-        const icon = item.querySelector('.service-icon');
-        const content = item.querySelector('.service-content');
-        
-        if (icon) {
-            icon.style.transform = 'scale(1) rotate(0deg)';
-        }
-        
-        if (content) {
-            content.style.transform = 'translateY(0)';
-        }
     }
     
     setupScrollAnimations() {
         if (!this.scrollInvitation) return;
         
-        // Animate scroll invitation on load
         setTimeout(() => {
             this.scrollInvitation.style.opacity = '1';
-            this.scrollInvitation.style.transform = 'translateX(-50%) translateY(0)';
-        }, 2000);
+        }, 1500);
         
-        // Hide scroll invitation on scroll
-        window.addEventListener('scroll', this.throttle(() => {
-            const scrollY = window.pageYOffset;
-            const opacity = Math.max(0, 1 - (scrollY / 300));
-            
-            if (this.scrollInvitation) {
-                this.scrollInvitation.style.opacity = opacity;
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.pageYOffset;
+                    const opacity = Math.max(0, 1 - (scrollY / 200));
+                    
+                    if (this.scrollInvitation) {
+                        this.scrollInvitation.style.opacity = opacity;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
-        }, 16));
+        }, { passive: true });
     }
     
-    setupIntersectionObserver() {
-        if (!('IntersectionObserver' in window)) return;
-        
-        const observerOptions = {
-            threshold: 0.3,
-            rootMargin: '0px 0px -10% 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.onHeroVisible();
-                } else {
-                    this.onHeroHidden();
-                }
-            });
-        }, observerOptions);
-        
-        if (this.heroSection) {
-            observer.observe(this.heroSection);
-        }
-    }
-    
-    onHeroVisible() {
-        if (!this.isAutoPlaying) {
-            this.startAutoPlay();
-        }
-    }
-    
-    onHeroHidden() {
-        this.pauseAutoPlay();
-    }
-    
-    goToSlide(index, animate = true) {
+    goToSlide(index) {
         if (this.isTransitioning || index === this.currentSlide || index < 0 || index >= this.totalSlides) {
             return;
         }
         
-        this.setActiveSlide(index, animate);
+        console.log('Going to slide:', index);
+        this.setActiveSlide(index, true);
     }
     
     setActiveSlide(index, animate = true) {
@@ -1278,81 +722,58 @@ class EnhancedHeroController {
         
         this.isTransitioning = true;
         
-        // Update desktop slides
         this.heroSlides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
         });
         
-        // Update mobile slides
         this.mobileSlides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
         });
         
-        // Update navigation dots
         this.slideDots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-            dot.setAttribute('aria-selected', i === index);
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
         });
         
         this.currentSlide = index;
         
-        // Reset transition flag after animation
         setTimeout(() => {
             this.isTransitioning = false;
-        }, animate ? 1500 : 100);
+        }, 500);
         
-        // Trigger slide change events
-        this.onSlideChange(index);
+        console.log('Active slide set to:', index);
     }
     
     nextSlide() {
         const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        console.log('Next slide:', nextIndex);
         this.goToSlide(nextIndex);
     }
     
     previousSlide() {
         const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+        console.log('Previous slide:', prevIndex);
         this.goToSlide(prevIndex);
-    }
-    
-    onSlideChange(index) {
-        // Add any slide-specific animations here
-        this.triggerSlideAnimations(index);
-        
-        // Dispatch custom event
-        document.dispatchEvent(new CustomEvent('heroSlideChange', {
-            detail: { 
-                currentSlide: index,
-                totalSlides: this.totalSlides
-            }
-        }));
-    }
-    
-    triggerSlideAnimations(index) {
-        // Add slide-specific entrance animations
-        const currentSlide = this.heroSlides[index];
-        if (!currentSlide) return;
-        
-        // Animate collage items with stagger
-        const collageItems = currentSlide.querySelectorAll('.collage-item');
-        collageItems.forEach((item, i) => {
-            item.style.transform = 'translateY(20px) scale(0.95)';
-            item.style.opacity = '0.7';
-            
-            setTimeout(() => {
-                item.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-                item.style.transform = 'translateY(0) scale(1)';
-                item.style.opacity = '1';
-            }, i * 200);
-        });
     }
     
     startAutoPlay() {
         if (this.autoPlayInterval || this.totalSlides <= 1) return;
         
+        console.log('Starting autoplay');
         this.isAutoPlaying = true;
         this.autoPlayInterval = setInterval(() => {
-            if (!this.isTransitioning && this.isInViewport()) {
+            if (!this.isTransitioning) {
                 this.nextSlide();
             }
         }, this.autoPlayDelay);
@@ -1360,23 +781,15 @@ class EnhancedHeroController {
     
     pauseAutoPlay() {
         if (this.autoPlayInterval) {
+            console.log('Pausing autoplay');
             clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = null;
         }
     }
     
     resumeAutoPlay() {
-        if (this.isAutoPlaying && !this.autoPlayInterval) {
-            this.startAutoPlay();
-        }
-    }
-    
-    toggleAutoPlay() {
-        if (this.isAutoPlaying) {
-            this.isAutoPlaying = false;
-            this.pauseAutoPlay();
-        } else {
-            this.isAutoPlaying = true;
+        if (this.isAutoPlaying && !this.autoPlayInterval && this.totalSlides > 1) {
+            console.log('Resuming autoplay');
             this.startAutoPlay();
         }
     }
@@ -1388,33 +801,6 @@ class EnhancedHeroController {
         return rect.top < window.innerHeight && rect.bottom > 0;
     }
     
-    // Utility methods
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-    
-    throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-    
-    // Public API methods
     getCurrentSlide() {
         return this.currentSlide;
     }
@@ -1428,205 +814,57 @@ class EnhancedHeroController {
     }
     
     destroy() {
-        // Clean up intervals and event listeners
         this.pauseAutoPlay();
-        
-        if (this.rafId) {
-            cancelAnimationFrame(this.rafId);
-        }
-        
-        if (this.resizeTimeout) {
-            clearTimeout(this.resizeTimeout);
-        }
-        
-        // Remove event listeners
-        window.removeEventListener('resize', this.handleResize);
-        window.removeEventListener('scroll', this.handleScroll);
-        document.removeEventListener('keydown', this.handleKeydown);
-        document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-        
         console.log('🗑️ Enhanced Hero Controller destroyed');
     }
 }
 
 /* ========================================
-   HERO ACCESSIBILITY ENHANCEMENTS
+   CONTACT FORM HANDLER
    ======================================== */
-class HeroAccessibilityController {
-    constructor(heroController) {
-        this.heroController = heroController;
+class ContactFormHandler {
+    constructor() {
+        this.phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        this.emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+        
         this.init();
     }
     
     init() {
-        this.setupAriaLabels();
-        this.setupKeyboardNavigation();
-        this.setupScreenReaderSupport();
-        this.setupReducedMotionSupport();
+        this.setupPhoneTracking();
+        this.setupEmailTracking();
     }
     
-    setupAriaLabels() {
-        const heroSection = document.querySelector('.enhanced-hero');
-        if (heroSection) {
-            heroSection.setAttribute('role', 'region');
-            heroSection.setAttribute('aria-label', 'Hero slideshow showcasing our services');
-        }
-        
-        const slideDots = document.querySelectorAll('.slide-dot');
-        slideDots.forEach((dot, index) => {
-            dot.setAttribute('role', 'button');
-            dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-            dot.setAttribute('tabindex', '0');
-        });
-    }
-    
-    setupKeyboardNavigation() {
-        const slideDots = document.querySelectorAll('.slide-dot');
-        
-        slideDots.forEach((dot, index) => {
-            dot.addEventListener('focus', () => {
-                dot.style.outline = '2px solid var(--primary-green)';
-                dot.style.outlineOffset = '2px';
-            });
-            
-            dot.addEventListener('blur', () => {
-                dot.style.outline = 'none';
+    setupPhoneTracking() {
+        this.phoneLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                this.trackEvent('contact', 'phone_click', '(646) 971-7325');
             });
         });
     }
     
-    setupScreenReaderSupport() {
-        // Announce slide changes to screen readers
-        document.addEventListener('heroSlideChange', (event) => {
-            const announcement = document.createElement('div');
-            announcement.setAttribute('aria-live', 'polite');
-            announcement.setAttribute('aria-atomic', 'true');
-            announcement.className = 'sr-only';
-            announcement.textContent = `Showing slide ${event.detail.currentSlide + 1} of ${event.detail.totalSlides}`;
-            
-            document.body.appendChild(announcement);
-            
-            setTimeout(() => {
-                document.body.removeChild(announcement);
-            }, 1000);
+    setupEmailTracking() {
+        this.emailLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                this.trackEvent('contact', 'email_click');
+            });
         });
     }
     
-    setupReducedMotionSupport() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            // Disable autoplay for users who prefer reduced motion
-            if (this.heroController) {
-                this.heroController.isAutoPlaying = false;
-                this.heroController.pauseAutoPlay();
-            }
-            
-            // Reduce animation durations
-            const style = document.createElement('style');
-            style.textContent = `
-                .enhanced-hero * {
-                    animation-duration: 0.01ms !important;
-                    animation-iteration-count: 1 !important;
-                    transition-duration: 0.01ms !important;
-                }
-            `;
-            document.head.appendChild(style);
+    trackEvent(category, action, label = '') {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', action, {
+                event_category: category,
+                event_label: label
+            });
         }
+        
+        console.log(`Event tracked: ${category} - ${action} - ${label}`);
     }
 }
 
 /* ========================================
-   INITIALIZATION & INTEGRATION
-   ======================================== */
-
-let enhancedHeroController;
-let heroAccessibilityController;
-
-function initializeEnhancedHero() {
-    try {
-        console.log('Initializing Enhanced Hero System...');
-        enhancedHeroController = new EnhancedHeroController();
-        
-        // Initialize accessibility enhancements
-        heroAccessibilityController = new HeroAccessibilityController(enhancedHeroController);
-        
-        // Global API
-        window.EnhancedHeroController = {
-            getInstance: () => enhancedHeroController,
-            goToSlide: (index) => enhancedHeroController?.goToSlide(index),
-            nextSlide: () => enhancedHeroController?.nextSlide(),
-            previousSlide: () => enhancedHeroController?.previousSlide(),
-            getCurrentSlide: () => enhancedHeroController?.getCurrentSlide() || 0,
-            getTotalSlides: () => enhancedHeroController?.getTotalSlides() || 0,
-        };
-        
-        console.log('✅ Enhanced Hero System initialized successfully');
-        
-    } catch (error) {
-        console.error('❌ Error initializing Enhanced Hero System:', error);
-        initializeBasicHero();
-    }
-}
-
-function initializeBasicHero() {
-    console.log('🔄 Initializing basic hero fallback');
-    
-    const heroSlides = document.querySelectorAll('.hero-slide');
-    const mobileSlides = document.querySelectorAll('.mobile-slide');
-    const dots = document.querySelectorAll('.slide-dot');
-    let currentSlide = 0;
-    const totalSlides = Math.max(heroSlides.length, mobileSlides.length);
-    
-    function showSlide(index) {
-        // Update desktop slides
-        heroSlides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-        });
-        
-        // Update mobile slides
-        mobileSlides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-        });
-        
-        // Update dots
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-        });
-        
-        currentSlide = index;
-        console.log('Basic hero - slide changed to:', index);
-    }
-    
-    // Dot navigation
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', (e) => {
-            e.preventDefault();
-            showSlide(index);
-        });
-    });
-    
-    // Auto-advance
-    if (totalSlides > 1) {
-        setInterval(() => {
-            const nextSlide = (currentSlide + 1) % totalSlides;
-            showSlide(nextSlide);
-        }, 4000);
-    }
-    
-    console.log('✅ Basic hero fallback initialized');
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeEnhancedHero);
-} else {
-    // Small delay to ensure all elements are rendered
-    setTimeout(initializeEnhancedHero, 100);
-}
-
-console.log('📄 Enhanced Hero System script loaded');
-
-/* ========================================
-   UTILITIES
+   UTILITY FUNCTIONS
    ======================================== */
 class UtilityFunctions {
     static debounce(func, wait) {
@@ -1683,96 +921,6 @@ class UtilityFunctions {
 }
 
 /* ========================================
-   CONTACT FORM HANDLER
-   ======================================== */
-class ContactFormHandler {
-    constructor() {
-        this.phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-        this.emailLinks = document.querySelectorAll('a[href^="mailto:"]');
-        
-        this.init();
-    }
-    
-    init() {
-        this.setupPhoneTracking();
-        this.setupEmailTracking();
-    }
-    
-    setupPhoneTracking() {
-        this.phoneLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                // Track phone clicks (for analytics)
-                this.trackEvent('contact', 'phone_click', '(646) 971-7325');
-            });
-        });
-    }
-    
-    setupEmailTracking() {
-        this.emailLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                // Track email clicks (for analytics)
-                this.trackEvent('contact', 'email_click');
-            });
-        });
-    }
-    
-    trackEvent(category, action, label = '') {
-        // Google Analytics tracking (if implemented)
-        if (typeof gtag !== 'undefined') {
-            gtag('event', action, {
-                event_category: category,
-                event_label: label
-            });
-        }
-        
-        // Console log for development
-        console.log(`Event tracked: ${category} - ${action} - ${label}`);
-    }
-}
-
-/* ========================================
-   PERFORMANCE MONITOR
-   ======================================== */
-class PerformanceMonitor {
-    constructor() {
-        this.init();
-    }
-    
-    init() {
-        this.monitorPageLoad();
-        this.monitorScrollPerformance();
-    }
-    
-    monitorPageLoad() {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
-                
-                console.log(`Page loaded in ${loadTime}ms`);
-                
-                // Track in analytics if needed
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'timing_complete', {
-                        name: 'page_load',
-                        value: Math.round(loadTime)
-                    });
-                }
-            }, 0);
-        });
-    }
-    
-    monitorScrollPerformance() {
-        let scrollCount = 0;
-        const throttledScroll = UtilityFunctions.throttle(() => {
-            scrollCount++;
-        }, 100);
-        
-        window.addEventListener('scroll', throttledScroll, { passive: true });
-    }
-}
-
-/* ========================================
    MAIN APPLICATION
    ======================================== */
 class HolisticPsychApp {
@@ -1784,7 +932,6 @@ class HolisticPsychApp {
     }
     
     init() {
-        // Wait for DOM to be ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initializeApp());
         } else {
@@ -1794,15 +941,12 @@ class HolisticPsychApp {
     
     initializeApp() {
         try {
-            // Initialize preloader first
             this.components.preloader = new SleekPreloader();
             
-            // Initialize other components after preloader
             document.addEventListener('preloaderComplete', () => {
                 this.initializeMainComponents();
             });
             
-            // Fallback initialization
             setTimeout(() => {
                 if (!this.isInitialized) {
                     this.initializeMainComponents();
@@ -1820,15 +964,12 @@ class HolisticPsychApp {
         
         try {
             this.components.header = new RefinedHeaderController();
-            this.components.heroSlideshow = new EnhancedHeroController();
-            this.components.scrollAnimations = new ScrollAnimationsController();
+            this.components.hero = new EnhancedHeroController();
             this.components.contactForm = new ContactFormHandler();
-            this.components.performanceMonitor = new PerformanceMonitor();
             
             this.isInitialized = true;
             console.log('✅ Holistic Psychology App initialized successfully');
             
-            // Dispatch custom event
             document.dispatchEvent(new CustomEvent('appInitialized', {
                 detail: { components: this.components }
             }));
@@ -1840,12 +981,10 @@ class HolisticPsychApp {
     }
     
     initializeFallback() {
-        // Basic functionality without external libraries
         console.log('🔄 Initializing fallback functionality');
         
-        // Basic mobile menu
-        const mobileToggle = document.getElementById('mobileTrigger');
-        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileToggle = document.getElementById('modernMenuTrigger');
+        const mobileOverlay = document.getElementById('modernMobileOverlay');
         
         if (mobileToggle && mobileOverlay) {
             mobileToggle.addEventListener('click', () => {
@@ -1854,7 +993,6 @@ class HolisticPsychApp {
             });
         }
         
-        // Basic smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1865,13 +1003,52 @@ class HolisticPsychApp {
             });
         });
         
-        // Hide preloader
         setTimeout(() => {
-            const preloader = document.getElementById('shinePreloader');
+            const preloader = document.getElementById('sleekPreloader');
             if (preloader) {
                 preloader.style.display = 'none';
             }
         }, 2000);
+        
+        // Basic slideshow fallback
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const mobileSlides = document.querySelectorAll('.mobile-slide');
+        const dots = document.querySelectorAll('.slide-dot');
+        let currentSlide = 0;
+        const totalSlides = Math.max(heroSlides.length, mobileSlides.length);
+        
+        function showSlide(index) {
+            heroSlides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            mobileSlides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            currentSlide = index;
+            console.log('Fallback slideshow - slide changed to:', index);
+        }
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSlide(index);
+            });
+        });
+        
+        if (totalSlides > 1) {
+            setInterval(() => {
+                const nextSlide = (currentSlide + 1) % totalSlides;
+                showSlide(nextSlide);
+            }, 4000);
+        }
+        
+        console.log('✅ Fallback functionality initialized');
     }
     
     getComponent(name) {
@@ -1880,36 +1057,98 @@ class HolisticPsychApp {
 }
 
 /* ========================================
-   UTILITY FUNCTIONS
+   INITIALIZATION
    ======================================== */
 
-// Smooth scroll utility
-function smoothScrollTo(target, offset = 100) {
-    const element = typeof target === 'string' ? document.querySelector(target) : target;
-    if (element) {
-        const targetPosition = element.offsetTop - offset;
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
+let sleekPreloader;
+let refinedHeaderController;
+let enhancedHeroController;
+
+function initializeSleekPreloader() {
+    sleekPreloader = new SleekPreloader();
+}
+
+function initializeRefinedHeader() {
+    refinedHeaderController = new RefinedHeaderController();
+}
+
+function initializeEnhancedHero() {
+    try {
+        console.log('Initializing Enhanced Hero System...');
+        enhancedHeroController = new EnhancedHeroController();
+        
+        window.EnhancedHeroController = {
+            getInstance: () => enhancedHeroController,
+            goToSlide: (index) => enhancedHeroController?.goToSlide(index),
+            nextSlide: () => enhancedHeroController?.nextSlide(),
+            previousSlide: () => enhancedHeroController?.previousSlide(),
+            getCurrentSlide: () => enhancedHeroController?.getCurrentSlide() || 0,
+            getTotalSlides: () => enhancedHeroController?.getTotalSlides() || 0,
+        };
+        
+        console.log('✅ Enhanced Hero System initialized successfully');
+        
+    } catch (error) {
+        console.error('❌ Error initializing Enhanced Hero System:', error);
     }
 }
 
-// Header visibility control
-function toggleHeaderVisibility(show = true) {
-    if (RefinedHeaderController) {
+// Check if DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeSleekPreloader();
+        initializeRefinedHeader();
+        
+        setTimeout(() => {
+            initializeEnhancedHero();
+        }, 500);
+    });
+} else {
+    initializeSleekPreloader();
+    initializeRefinedHeader();
+    
+    setTimeout(() => {
+        initializeEnhancedHero();
+    }, 500);
+}
+
+// Global API for external access
+window.SleekPreloader = {
+    getInstance: () => sleekPreloader,
+    hide: () => sleekPreloader?.forceHide(),
+    getProgress: () => sleekPreloader?.getProgress() || 0,
+    isComplete: () => sleekPreloader?.isCompleted() || false
+};
+
+window.RefinedHeaderController = {
+    getInstance: () => refinedHeaderController,
+    showHeader: () => refinedHeaderController?.forceShowHeader(),
+    hideHeader: () => refinedHeaderController?.forceHideHeader(),
+    setActiveNav: (index) => refinedHeaderController?.setActiveNavigation(index),
+    getActiveNav: () => refinedHeaderController?.getActiveNavIndex() || 0,
+    isMobileMenuOpen: () => refinedHeaderController?.isMobileMenuActive() || false
+};
+
+// Utility functions
+function smoothScrollToSection(target, offset = 100) {
+    if (refinedHeaderController) {
+        refinedHeaderController.scrollToSection(target);
+    }
+}
+
+function toggleRefinedHeaderVisibility(show = true) {
+    if (refinedHeaderController) {
         if (show) {
-            RefinedHeaderController.showHeader();
+            refinedHeaderController.forceShowHeader();
         } else {
-            RefinedHeaderController.hideHeader();
+            refinedHeaderController.forceHideHeader();
         }
     }
 }
 
-// Set active navigation programmatically
-function setActiveNavigation(index) {
-    if (RefinedHeaderController) {
-        RefinedHeaderController.setActiveNav(index);
+function hideSleekPreloader() {
+    if (sleekPreloader) {
+        sleekPreloader.forceHide();
     }
 }
 
@@ -1919,54 +1158,6 @@ const app = new HolisticPsychApp();
 // Make components globally accessible for debugging
 window.HolisticApp = app;
 window.UtilityFunctions = UtilityFunctions;
-
-// Additional CSS animations for fallback
-if (!window.CSS || !CSS.supports('animation', 'fadeInUp')) {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-        
-        .animate-fadeInUp {
-            animation: fadeInUp 0.8s ease-out;
-        }
-        
-        .animate-pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        .animate-slideInRight {
-            animation: slideInRight 0.3s ease-out;
-        }
-    `;
-    document.head.appendChild(style);
-}
 
 // Error handling
 window.addEventListener('error', (event) => {
@@ -1979,22 +1170,8 @@ window.addEventListener('error', (event) => {
     });
 });
 
-// Unhandled promise rejections
 window.addEventListener('unhandledrejection', (event) => {
     console.error('Unhandled Promise Rejection:', event.reason);
 });
 
-/* ========================================
-   EXPORT FOR MODULE SYSTEMS
-   ======================================== */
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        HolisticPsychApp,
-        SleekPreloader,
-        RefinedHeaderController,
-        EnhancedHeroController,
-        ScrollAnimationsController,
-        ContactFormHandler,
-        UtilityFunctions
-    };
-}
+console.log('✨ Holistic Psychology System loaded successfully');
