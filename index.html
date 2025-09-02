@@ -278,126 +278,197 @@
 
     <!-- Main Content -->
     <main class="main">
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero-background">
-                <!-- Swiper Slideshow -->
-                <div class="swiper hero-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide hero-slide">
-                            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
-                            <div class="slide-overlay"></div>
+        <!-- Enhanced Responsive Hero Section -->
+<section class="enhanced-hero" id="home">
+    <!-- Desktop Collage Background -->
+    <div class="desktop-hero-bg">
+        <div class="hero-slideshow">
+            <!-- Slide 1: Therapy Room Collage -->
+            <div class="hero-slide active" data-slide="0">
+                <div class="collage-container">
+                    <div class="collage-item main-image">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Peaceful therapy room">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-1">
+                        <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Comfortable seating">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-2">
+                        <img src="https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Natural lighting">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item accent-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Plants and wellness">
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+                <div class="slide-gradient-overlay"></div>
+            </div>
+            
+            <!-- Slide 2: Wellness Environment Collage -->
+            <div class="hero-slide" data-slide="1">
+                <div class="collage-container">
+                    <div class="collage-item main-image">
+                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Serene meditation space">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-1">
+                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Calming environment">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-2">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Natural elements">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item accent-image">
+                        <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wellness books">
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+                <div class="slide-gradient-overlay"></div>
+            </div>
+            
+            <!-- Slide 3: Manhattan Professional Collage -->
+            <div class="hero-slide" data-slide="2">
+                <div class="collage-container">
+                    <div class="collage-item main-image">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Manhattan office building">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-1">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Professional office">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item side-image-2">
+                        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Modern workspace">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="collage-item accent-image">
+                        <img src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Manhattan street view">
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+                <div class="slide-gradient-overlay"></div>
+            </div>
+        </div>
+        
+        <!-- Slide Navigation Dots -->
+        <div class="slide-navigation">
+            <button class="slide-dot active" data-slide="0"></button>
+            <button class="slide-dot" data-slide="1"></button>
+            <button class="slide-dot" data-slide="2"></button>
+        </div>
+    </div>
+    
+    <!-- Mobile Simple Background -->
+    <div class="mobile-hero-bg">
+        <div class="mobile-slideshow">
+            <div class="mobile-slide active">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Peaceful therapy environment">
+                <div class="mobile-overlay"></div>
+            </div>
+            <div class="mobile-slide">
+                <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Wellness and meditation">
+                <div class="mobile-overlay"></div>
+            </div>
+            <div class="mobile-slide">
+                <img src="https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Professional care environment">
+                <div class="mobile-overlay"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Wellness Elements -->
+    <div class="floating-wellness-elements">
+        <div class="wellness-element element-1">
+            <i class="ri-leaf-line"></i>
+        </div>
+        <div class="wellness-element element-2">
+            <i class="ri-heart-pulse-line"></i>
+        </div>
+        <div class="wellness-element element-3">
+            <i class="ri-seedling-line"></i>
+        </div>
+        <div class="wellness-element element-4">
+            <i class="ri-mental-health-line"></i>
+        </div>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="hero-content-wrapper">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text-content" data-aos="fade-up" data-aos-duration="1000">
+                    <h1 class="hero-main-title">
+                        <span class="title-line">Your Journey to</span>
+                        <span class="title-highlight">Mental Wellness</span>
+                        <span class="title-line">Begins Here</span>
+                    </h1>
+                    
+                    <p class="hero-description">
+                        Experience compassionate, evidence-based psychological services in the heart of Manhattan. 
+                        Our holistic approach honors your unique story while providing the professional care you deserve.
+                    </p>
+                    
+                    <div class="hero-features-list">
+                        <div class="feature-badge">
+                            <i class="ri-shield-check-line"></i>
+                            <span>Licensed & Trusted</span>
                         </div>
-                        <div class="swiper-slide hero-slide">
-                            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
-                            <div class="slide-overlay"></div>
+                        <div class="feature-badge">
+                            <i class="ri-time-line"></i>
+                            <span>Flexible Scheduling</span>
                         </div>
-                        <div class="swiper-slide hero-slide">
-                            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
-                            <div class="slide-overlay"></div>
+                        <div class="feature-badge">
+                            <i class="ri-user-heart-line"></i>
+                            <span>Personalized Care</span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Floating Elements -->
-                <div class="floating-elements">
-                    <div class="floating-leaf leaf-1">
-                        <i class="ri-leaf-line"></i>
-                    </div>
-                    <div class="floating-leaf leaf-2">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <div class="floating-leaf leaf-3">
-                        <i class="bi bi-tree"></i>
+                <div class="hero-actions" data-aos="fade-up" data-aos-delay="300">
+                    <a href="#contact" class="hero-primary-btn">
+                        <span class="btn-text">Schedule Consultation</span>
+                        <div class="btn-icon">
+                            <i class="ri-calendar-check-line"></i>
+                        </div>
+                        <div class="btn-glow"></div>
+                    </a>
+                    
+                    <a href="tel:(646)971-7325" class="hero-secondary-btn">
+                        <div class="phone-icon">
+                            <i class="ri-phone-line"></i>
+                        </div>
+                        <div class="phone-content">
+                            <span class="phone-label">Call Now</span>
+                            <span class="phone-number">(646) 971-7325</span>
+                        </div>
+                        <div class="phone-ripple"></div>
+                    </a>
+                </div>
+                
+                <div class="hero-location-info" data-aos="fade-up" data-aos-delay="500">
+                    <div class="location-badge">
+                        <i class="ri-map-pin-2-line"></i>
+                        <span>274 Madison Ave, Suite 905 • Manhattan, NY</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="hero-content">
-                <div class="container">
-                    <div class="hero-text" data-aos="fade-up" data-aos-duration="1000">
-                        <h1 class="hero-title animate__animated animate__fadeInUp">
-                            <span class="title-line">Nurturing Your</span>
-                            <span class="title-highlight">Mental Wellness</span>
-                            <span class="title-line">Through Holistic Care</span>
-                        </h1>
-                        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
-                            Experience personalized psychological services that honor your unique journey. 
-                            Located in the heart of Manhattan, we provide compassionate, evidence-based therapy 
-                            in a warm and welcoming environment.
-                        </p>
-                        <div class="hero-actions" data-aos="fade-up" data-aos-delay="400">
-                            <a href="#contact" class="btn btn-primary btn-large hvr-grow">
-                                <i class="fas fa-calendar-plus"></i>
-                                Schedule Consultation
-                            </a>
-                            <a href="#services" class="btn btn-secondary btn-large hvr-grow">
-                                <i class="ri-heart-pulse-line"></i>
-                                Explore Services
-                            </a>
-                        </div>
-                        <div class="hero-features" data-aos="fade-up" data-aos-delay="600">
-                            <div class="feature-item">
-                                <i class="fas fa-shield-alt"></i>
-                                <span>Licensed & Insured</span>
-                            </div>
-                            <div class="feature-item">
-                                <i class="ri-time-line"></i>
-                                <span>Flexible Scheduling</span>
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-user-shield"></i>
-                                <span>Confidential Care</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Scroll Indicator -->
-            <div class="scroll-indicator" data-aos="fade-in" data-aos-delay="1000">
-                <div class="scroll-mouse">
-                    <div class="scroll-wheel"></div>
-                </div>
-                <span class="scroll-text">Scroll to explore</span>
-            </div>
-        </section>
-
-        <!-- Quick Info Section -->
-        <section class="quick-info" data-aos="fade-up">
-            <div class="container">
-                <div class="info-grid">
-                    <div class="info-card hvr-float" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="info-icon">
-                            <i class="ri-map-pin-2-fill"></i>
-                        </div>
-                        <h3>Manhattan Location</h3>
-                        <p>274 Madison Ave, 9th Floor<br>Suite 905, New York, NY 10016</p>
-                    </div>
-                    <div class="info-card hvr-float" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="info-icon">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <h3>Ready to Help</h3>
-                        <p>Call us today<br>(646) 971-7325</p>
-                    </div>
-                    <div class="info-card hvr-float" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="info-icon">
-                            <i class="bi bi-heart-pulse-fill"></i>
-                        </div>
-                        <h3>Holistic Approach</h3>
-                        <p>Mind, body, and spirit<br>integrated healing</p>
-                    </div>
-                    <div class="info-card hvr-float" data-aos="zoom-in" data-aos-delay="400">
-                        <div class="info-icon">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <h3>Expert Care</h3>
-                        <p>Licensed professionals<br>with years of experience</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
+    </div>
+    
+    <!-- Scroll Invitation -->
+    <div class="scroll-invitation" data-aos="fade-in" data-aos-delay="800">
+        <div class="scroll-mouse">
+            <div class="mouse-wheel"></div>
+        </div>
+        <span class="scroll-text">Discover Our Services</span>
+        <div class="scroll-arrow">
+            <i class="ri-arrow-down-line"></i>
+        </div>
+    </div>
+</section>
     </main>
 
     <!-- External JavaScript Libraries -->
