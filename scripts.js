@@ -255,7 +255,7 @@ document.addEventListener('preloaderComplete', (event) => {
     // Initialize other components after preloader
     setTimeout(() => {
         // Trigger any additional initialization
-        if (typeof window.FloatingHeaderController !== 'undefined') {
+        if (typeof window.RefinedHeaderController !== 'undefined') {
             // Header is already initialized in the original code
         }
         
@@ -265,10 +265,6 @@ document.addEventListener('preloaderComplete', (event) => {
         }
     }, 100);
 });
-
-/* ========================================
-   ERROR HANDLING
-   ======================================== */
 
 // Graceful error handling
 window.addEventListener('error', (event) => {
@@ -291,22 +287,31 @@ window.addEventListener('unhandledrejection', (event) => {
 /* ========================================
    FLOATING HEADER CONTROLLER
    ======================================== */
-class FloatingHeaderController {
+class RefinedHeaderController {
     constructor() {
         this.header = document.getElementById('floatingHeader');
         this.navCapsule = document.getElementById('navCapsule');
         this.navTrack = this.navCapsule?.querySelector('.nav-track');
         this.navDots = document.querySelectorAll('.nav-dot');
         this.navIndicator = document.querySelector('.nav-indicator');
-        this.mobileTrigger = document.getElementById('mobileTrigger');
-        this.mobileOverlay = document.getElementById('mobileOverlay');
-        this.mobileClose = document.getElementById('mobileClose');
-        this.mobileLinks = document.querySelectorAll('.mobile-link');
         
+        // Modern mobile menu elements
+        this.modernMenuTrigger = document.getElementById('modernMenuTrigger');
+        this.modernMobileOverlay = document.getElementById('modernMobileOverlay');
+        this.modernCloseBtn = document.getElementById('modernCloseBtn');
+        this.mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        this.overlayBackdrop = document.querySelector('.overlay-backdrop');
+        
+        // State management
         this.lastScrollY = 0;
         this.isScrollingDown = false;
         this.isMobileMenuOpen = false;
         this.activeNavIndex = 0;
+        this.scrollThreshold = 50;
+        
+        // Animation timing
+        this.menuAnimationDuration = 500;
+        this.staggerDelay = 100;
         
         this.init();
     }
@@ -316,19 +321,21 @@ class FloatingHeaderController {
         
         this.setupScrollBehavior();
         this.setupNavigationIndicator();
-        this.setupMobileMenu();
+        this.setupModernMobileMenu();
         this.setupSmoothScrolling();
         this.setupScrollSpy();
-        this.setupGlowEffect();
+        this.setupEnhancedEffects();
         
         // Set initial nav indicator position
         this.updateNavIndicator(0);
+        
+        console.log('✨ Refined Header Controller initialized');
     }
     
     setupScrollBehavior() {
         let ticking = false;
         
-        window.addEventListener('scroll', () => {
+        const handleScroll = () => {
             if (!ticking) {
                 requestAnimationFrame(() => {
                     this.handleScroll();
@@ -336,37 +343,47 @@ class FloatingHeaderController {
                 });
                 ticking = true;
             }
-        }, { passive: true });
+        };
+        
+        window.addEventListener('scroll', handleScroll, { passive: true });
     }
     
     handleScroll() {
         const currentScrollY = window.pageYOffset;
         
         // Add scrolled class for visual changes
-        if (currentScrollY > 50) {
+        if (currentScrollY > this.scrollThreshold) {
             this.header.classList.add('scrolled');
         } else {
             this.header.classList.remove('scrolled');
         }
         
-        // Hide/show header on scroll (optional)
+        // Smooth hide/show header on scroll
         if (currentScrollY > this.lastScrollY && currentScrollY > 200) {
             // Scrolling down
             if (!this.isScrollingDown && !this.isMobileMenuOpen) {
                 this.isScrollingDown = true;
-                this.header.style.transform = 'translateX(-50%) translateY(-100px)';
-                this.header.style.opacity = '0.7';
+                this.hideHeader();
             }
         } else {
             // Scrolling up
             if (this.isScrollingDown) {
                 this.isScrollingDown = false;
-                this.header.style.transform = 'translateX(-50%) translateY(0)';
-                this.header.style.opacity = '1';
+                this.showHeader();
             }
         }
         
         this.lastScrollY = currentScrollY;
+    }
+    
+    hideHeader() {
+        this.header.style.transform = 'translateX(-50%) translateY(-120px)';
+        this.header.style.opacity = '0.8';
+    }
+    
+    showHeader() {
+        this.header.style.transform = 'translateX(-50%) translateY(0)';
+        this.header.style.opacity = '1';
     }
     
     setupNavigationIndicator() {
@@ -377,153 +394,232 @@ class FloatingHeaderController {
                 e.preventDefault();
                 
                 // Update active states
-                this.navDots.forEach(d => d.classList.remove('active'));
-                dot.classList.add('active');
-                
-                // Update indicator position
-                this.updateNavIndicator(index);
+                this.setActiveNavigation(index);
                 
                 // Smooth scroll to section
                 const target = dot.getAttribute('href');
                 this.scrollToSection(target);
-                
-                this.activeNavIndex = index;
             });
             
-            // Add hover effects
+            // Enhanced hover effects with micro-interactions
             dot.addEventListener('mouseenter', () => {
-                dot.style.transform = 'translateY(-3px) scale(1.1)';
+                this.addHoverEffect(dot);
             });
             
             dot.addEventListener('mouseleave', () => {
-                dot.style.transform = 'translateY(0) scale(1)';
+                this.removeHoverEffect(dot);
             });
         });
+    }
+    
+    addHoverEffect(dot) {
+        dot.style.transform = 'translateY(-3px) scale(1.1)';
+        dot.style.filter = 'brightness(1.2)';
+    }
+    
+    removeHoverEffect(dot) {
+        if (!dot.classList.contains('active')) {
+            dot.style.transform = 'translateY(0) scale(1)';
+            dot.style.filter = 'brightness(1)';
+        }
     }
     
     updateNavIndicator(index) {
         if (!this.navIndicator || !this.navTrack) return;
         
-        const positions = [8, 60, 112, 164, 216]; // Position for each nav item
+        const positions = [8, 64, 120, 176, 232]; // Adjusted for new spacing
         const position = positions[index] || 8;
         
         this.navIndicator.style.left = position + 'px';
         this.navTrack.setAttribute('data-active', index);
         
-        // Add a subtle animation
-        this.navIndicator.style.transform = 'scale(1.1)';
+        // Add smooth scale animation
+        this.navIndicator.style.transform = 'scale(1.15)';
         setTimeout(() => {
             this.navIndicator.style.transform = 'scale(1)';
         }, 200);
     }
     
-    setupMobileMenu() {
-        if (!this.mobileTrigger || !this.mobileOverlay) return;
+    setActiveNavigation(index) {
+        if (index >= 0 && index < this.navDots.length) {
+            this.navDots.forEach(dot => dot.classList.remove('active'));
+            this.navDots[index].classList.add('active');
+            this.updateNavIndicator(index);
+            this.activeNavIndex = index;
+        }
+    }
+    
+    setupModernMobileMenu() {
+        if (!this.modernMenuTrigger || !this.modernMobileOverlay) return;
         
         // Mobile trigger click
-        this.mobileTrigger.addEventListener('click', (e) => {
+        this.modernMenuTrigger.addEventListener('click', (e) => {
             e.preventDefault();
-            this.toggleMobileMenu();
+            e.stopPropagation();
+            this.toggleModernMobileMenu();
         });
         
-        // Mobile close button
-        if (this.mobileClose) {
-            this.mobileClose.addEventListener('click', (e) => {
+        // Modern close button
+        if (this.modernCloseBtn) {
+            this.modernCloseBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.closeMobileMenu();
+                e.stopPropagation();
+                this.closeModernMobileMenu();
             });
         }
         
-        // Mobile overlay click to close
-        this.mobileOverlay.addEventListener('click', (e) => {
-            if (e.target === this.mobileOverlay) {
-                this.closeMobileMenu();
-            }
-        });
+        // Backdrop click to close
+        if (this.overlayBackdrop) {
+            this.overlayBackdrop.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.closeModernMobileMenu();
+            });
+        }
         
         // Mobile navigation links
-        this.mobileLinks.forEach((link, index) => {
+        this.mobileNavLinks.forEach((link, index) => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                if (href.startsWith('#')) {
+                if (href && href.startsWith('#')) {
                     e.preventDefault();
                     this.scrollToSection(href);
-                    this.closeMobileMenu();
+                    this.closeModernMobileMenu();
                     
                     // Update desktop nav indicator
-                    this.updateDesktopNavForMobile(href);
+                    this.updateDesktopNavFromMobile(href);
                 }
             });
             
-            // Staggered animation on menu open
-            link.style.transitionDelay = (index * 0.1) + 's';
+            // Enhanced hover effects
+            link.addEventListener('mouseenter', () => {
+                this.addMobileLinkHover(link);
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                this.removeMobileLinkHover(link);
+            });
         });
         
-        // Close on escape key
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
+                this.closeModernMobileMenu();
             }
         });
         
-        // Close on window resize
+        // Close on window resize (desktop)
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024 && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
+                this.closeModernMobileMenu();
             }
         });
     }
     
-    toggleMobileMenu() {
+    toggleModernMobileMenu() {
         if (this.isMobileMenuOpen) {
-            this.closeMobileMenu();
+            this.closeModernMobileMenu();
         } else {
-            this.openMobileMenu();
+            this.openModernMobileMenu();
         }
     }
     
-    openMobileMenu() {
+    openModernMobileMenu() {
         this.isMobileMenuOpen = true;
-        this.mobileTrigger.classList.add('active');
-        this.mobileOverlay.classList.add('active');
+        
+        // Update trigger state
+        this.modernMenuTrigger.classList.add('active');
+        
+        // Show overlay
+        this.modernMobileOverlay.classList.add('active');
+        
+        // Prevent body scroll
         document.body.style.overflow = 'hidden';
         
-        // Reset header position when menu opens
+        // Keep header visible
         this.header.style.transform = 'translateX(-50%) translateY(0)';
         this.header.style.opacity = '1';
         this.isScrollingDown = false;
         
-        // Animate mobile links
-        this.mobileLinks.forEach((link, index) => {
-            setTimeout(() => {
-                link.style.transform = 'translateX(0)';
-                link.style.opacity = '1';
-            }, index * 100);
-        });
+        // Staggered animation for mobile links
+        this.animateMobileLinksIn();
+        
+        // Add subtle haptic feedback (if supported)
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+        
+        console.log('🎯 Modern mobile menu opened');
     }
     
-    closeMobileMenu() {
+    closeModernMobileMenu() {
+        if (!this.isMobileMenuOpen) return;
+        
         this.isMobileMenuOpen = false;
-        this.mobileTrigger.classList.remove('active');
-        this.mobileOverlay.classList.remove('active');
+        
+        // Update trigger state
+        this.modernMenuTrigger.classList.remove('active');
+        
+        // Hide overlay
+        this.modernMobileOverlay.classList.remove('active');
+        
+        // Restore body scroll
         document.body.style.overflow = '';
         
         // Reset mobile links animation
-        this.mobileLinks.forEach(link => {
-            link.style.transform = 'translateX(50px)';
+        this.animateMobileLinksOut();
+        
+        console.log('🎯 Modern mobile menu closed');
+    }
+    
+    animateMobileLinksIn() {
+        this.mobileNavLinks.forEach((link, index) => {
+            setTimeout(() => {
+                link.style.opacity = '1';
+                link.style.transform = 'translateX(0)';
+            }, index * this.staggerDelay);
+        });
+    }
+    
+    animateMobileLinksOut() {
+        this.mobileNavLinks.forEach((link, index) => {
             link.style.opacity = '0';
+            link.style.transform = 'translateX(50px)';
             link.style.transitionDelay = '0s';
         });
     }
     
+    addMobileLinkHover(link) {
+        const icon = link.querySelector('.nav-link-icon');
+        const arrow = link.querySelector('.nav-link-arrow');
+        
+        if (icon) {
+            icon.style.transform = 'scale(1.1)';
+        }
+        if (arrow) {
+            arrow.style.transform = 'translateX(4px)';
+        }
+    }
+    
+    removeMobileLinkHover(link) {
+        const icon = link.querySelector('.nav-link-icon');
+        const arrow = link.querySelector('.nav-link-arrow');
+        
+        if (icon) {
+            icon.style.transform = 'scale(1)';
+        }
+        if (arrow) {
+            arrow.style.transform = 'translateX(0)';
+        }
+    }
+    
     setupSmoothScrolling() {
-        // Handle all navigation links (both desktop and mobile)
+        // Handle all navigation links
         const allNavLinks = document.querySelectorAll('a[href^="#"]');
         
         allNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                if (href.length > 1) { // Not just "#"
+                if (href && href.length > 1) {
                     e.preventDefault();
                     this.scrollToSection(href);
                 }
@@ -535,13 +631,37 @@ class FloatingHeaderController {
         const targetElement = document.querySelector(target);
         if (!targetElement) return;
         
-        const headerHeight = this.header.offsetHeight + 20; // Add some offset
+        const headerHeight = this.header.offsetHeight + 30;
         const targetPosition = targetElement.offsetTop - headerHeight;
         
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
+        // Smooth scroll with easing
+        this.smoothScrollTo(targetPosition);
+    }
+    
+    smoothScrollTo(targetPosition) {
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        const duration = 800;
+        let startTime = null;
+        
+        const easeInOutCubic = (t) => {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        };
+        
+        const animation = (currentTime) => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+            
+            const ease = easeInOutCubic(progress);
+            window.scrollTo(0, startPosition + distance * ease);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animation);
+            }
+        };
+        
+        requestAnimationFrame(animation);
     }
     
     setupScrollSpy() {
@@ -569,117 +689,291 @@ class FloatingHeaderController {
         const navLink = document.querySelector(`.nav-dot[href="#${sectionId}"]`);
         if (!navLink) return;
         
-        // Find the index of the active nav item
         const navIndex = Array.from(this.navDots).indexOf(navLink);
         if (navIndex !== -1 && navIndex !== this.activeNavIndex) {
-            // Update active states
-            this.navDots.forEach(dot => dot.classList.remove('active'));
-            navLink.classList.add('active');
-            
-            // Update indicator
-            this.updateNavIndicator(navIndex);
-            this.activeNavIndex = navIndex;
+            this.setActiveNavigation(navIndex);
         }
     }
     
-    updateDesktopNavForMobile(href) {
+    updateDesktopNavFromMobile(href) {
         const navLink = document.querySelector(`.nav-dot[href="${href}"]`);
         if (navLink) {
             const navIndex = Array.from(this.navDots).indexOf(navLink);
             if (navIndex !== -1) {
-                this.navDots.forEach(dot => dot.classList.remove('active'));
-                navLink.classList.add('active');
-                this.updateNavIndicator(navIndex);
-                this.activeNavIndex = navIndex;
+                this.setActiveNavigation(navIndex);
             }
         }
     }
     
-    setupGlowEffect() {
-        // Add subtle glow effect on hover
-        if (this.header) {
-            let glowTimeout;
-            
-            this.header.addEventListener('mouseenter', () => {
-                clearTimeout(glowTimeout);
-                this.header.style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
+    setupEnhancedEffects() {
+        // Logo hover enhancement
+        const logoContainer = document.querySelector('.logo-container');
+        if (logoContainer) {
+            logoContainer.addEventListener('mouseenter', () => {
+                this.addLogoHoverEffect();
             });
             
-            this.header.addEventListener('mouseleave', () => {
-                glowTimeout = setTimeout(() => {
-                    this.header.style.filter = '';
-                }, 300);
+            logoContainer.addEventListener('mouseleave', () => {
+                this.removeLogoHoverEffect();
             });
         }
         
-        // Add ripple effect to CTA button
-        const ctaButton = document.querySelector('.cta-floating');
-        if (ctaButton) {
-            ctaButton.addEventListener('click', (e) => {
-                const ripple = ctaButton.querySelector('.cta-ripple');
-                if (ripple) {
-                    ripple.style.width = '0';
-                    ripple.style.height = '0';
-                    
-                    setTimeout(() => {
-                        ripple.style.width = '200px';
-                        ripple.style.height = '200px';
-                    }, 10);
-                    
-                    setTimeout(() => {
-                        ripple.style.width = '0';
-                        ripple.style.height = '0';
-                    }, 600);
-                }
-            });
-        }
-        
-        // Phone bubble glow effect
+        // Phone bubble interactions
         const phoneBubble = document.querySelector('.phone-bubble');
         if (phoneBubble) {
             phoneBubble.addEventListener('mouseenter', () => {
-                const glow = phoneBubble.querySelector('.bubble-glow');
-                if (glow) {
-                    glow.style.left = '-100%';
-                    setTimeout(() => {
-                        glow.style.left = '100%';
-                    }, 50);
-                }
+                this.triggerShimmerEffect(phoneBubble);
             });
+        }
+        
+        // CTA button interactions
+        const ctaButton = document.querySelector('.cta-floating');
+        if (ctaButton) {
+            ctaButton.addEventListener('click', () => {
+                this.triggerWaveEffect(ctaButton);
+            });
+        }
+        
+        // Add parallax effect to header
+        this.setupHeaderParallax();
+    }
+    
+    addLogoHoverEffect() {
+        const logo = document.querySelector('.header-logo');
+        const shimmer = document.querySelector('.logo-shimmer');
+        
+        if (logo) {
+            logo.style.transform = 'scale(1.05) rotate(2deg)';
+            logo.style.filter = 'brightness(1.1) saturate(1.2)';
         }
     }
     
-    // Public methods for external control
-    showHeader() {
-        this.header.style.transform = 'translateX(-50%) translateY(0)';
-        this.header.style.opacity = '1';
+    removeLogoHoverEffect() {
+        const logo = document.querySelector('.header-logo');
+        
+        if (logo) {
+            logo.style.transform = 'scale(1) rotate(0deg)';
+            logo.style.filter = 'brightness(1) saturate(1)';
+        }
+    }
+    
+    triggerShimmerEffect(element) {
+        const shimmer = element.querySelector('.bubble-shimmer');
+        if (shimmer) {
+            shimmer.style.left = '-100%';
+            setTimeout(() => {
+                shimmer.style.left = '100%';
+            }, 100);
+        }
+    }
+    
+    triggerWaveEffect(element) {
+        const waves = element.querySelector('.cta-waves');
+        if (waves) {
+            waves.style.transform = 'translateX(-100%)';
+            setTimeout(() => {
+                waves.style.transform = 'translateX(100%)';
+            }, 50);
+            setTimeout(() => {
+                waves.style.transform = 'translateX(-100%)';
+            }, 600);
+        }
+    }
+    
+    setupHeaderParallax() {
+        let ticking = false;
+        
+        const parallaxScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const parallax = scrolled * 0.1;
+                    
+                    // Subtle parallax effect on header glow
+                    const headerGlow = document.querySelector('.header-glow');
+                    if (headerGlow) {
+                        headerGlow.style.transform = `translateY(${parallax}px)`;
+                    }
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        
+        window.addEventListener('scroll', parallaxScroll, { passive: true });
+    }
+    
+    // Public API methods
+    forceShowHeader() {
+        this.showHeader();
         this.isScrollingDown = false;
     }
     
-    hideHeader() {
+    forceHideHeader() {
         if (!this.isMobileMenuOpen) {
-            this.header.style.transform = 'translateX(-50%) translateY(-100px)';
-            this.header.style.opacity = '0.7';
+            this.hideHeader();
             this.isScrollingDown = true;
         }
     }
     
-    setActiveNav(index) {
-        if (index >= 0 && index < this.navDots.length) {
-            this.navDots.forEach(dot => dot.classList.remove('active'));
-            this.navDots[index].classList.add('active');
-            this.updateNavIndicator(index);
-            this.activeNavIndex = index;
-        }
+    getActiveNavIndex() {
+        return this.activeNavIndex;
+    }
+    
+    isMobileMenuActive() {
+        return this.isMobileMenuOpen;
     }
     
     destroy() {
-        // Clean up event listeners if needed
+        // Clean up event listeners
         window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('keydown', this.handleKeydown);
+        
+        console.log('🗑️ Refined Header Controller destroyed');
     }
 }
+
+class HeaderUtilities {
+    static debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    static throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+    
+    static easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    }
+    
+    static addRippleEffect(element, event) {
+        const ripple = document.createElement('div');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        `;
+        
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+}
+
+let refinedHeaderController;
+
+// Initialize when DOM is ready
+function initializeRefinedHeader() {
+    refinedHeaderController = new RefinedHeaderController();
+    
+    // Add CSS for ripple animation if not present
+    if (!document.querySelector('#ripple-animation-css')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-animation-css';
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Check if DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeRefinedHeader);
+} else {
+    initializeRefinedHeader();
+}
+
+// Global API for external access
+window.RefinedHeaderController = {
+    getInstance: () => refinedHeaderController,
+    showHeader: () => refinedHeaderController?.forceShowHeader(),
+    hideHeader: () => refinedHeaderController?.forceHideHeader(),
+    setActiveNav: (index) => refinedHeaderController?.setActiveNavigation(index),
+    getActiveNav: () => refinedHeaderController?.getActiveNavIndex() || 0,
+    isMobileMenuOpen: () => refinedHeaderController?.isMobileMenuActive() || false
+};
+
+// Smooth scroll utility function
+function smoothScrollToSection(target, offset = 100) {
+    if (refinedHeaderController) {
+        refinedHeaderController.scrollToSection(target);
+    }
+}
+
+// Header visibility control
+function toggleRefinedHeaderVisibility(show = true) {
+    if (refinedHeaderController) {
+        if (show) {
+            refinedHeaderController.forceShowHeader();
+        } else {
+            refinedHeaderController.forceHideHeader();
+        }
+    }
+}
+
+// Graceful error handling
+window.addEventListener('error', (event) => {
+    if (event.error && event.error.message.includes('header')) {
+        console.warn('Header error handled gracefully:', event.error);
+    }
+});
+
+// Performance monitoring
+const headerPerformanceObserver = new PerformanceObserver((list) => {
+    const entries = list.getEntries();
+    entries.forEach(entry => {
+        if (entry.name.includes('header') && entry.duration > 100) {
+            console.warn(`Header operation took ${entry.duration}ms:`, entry.name);
+        }
+    });
+});
+
+// Start observing performance
+if (typeof PerformanceObserver !== 'undefined') {
+    headerPerformanceObserver.observe({ entryTypes: ['measure', 'navigation'] });
+}
+
+console.log('✨ Refined Header System loaded successfully');
+
 
 /* ========================================
    HERO SLIDESHOW CONTROLLER
@@ -1011,7 +1305,7 @@ class HolisticPsychApp {
         if (this.isInitialized) return;
         
         try {
-            this.components.header = new FloatingHeaderController();
+            this.components.header = new RefinedHeaderController();
             this.components.heroSlideshow = new HeroSlideshowController();
             this.components.scrollAnimations = new ScrollAnimationsController();
             this.components.contactForm = new ContactFormHandler();
@@ -1076,19 +1370,19 @@ class HolisticPsychApp {
    ======================================== */
 
 // Initialize when DOM is ready
-let floatingHeaderController;
+let RefinedHeaderController;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        floatingHeaderController = new FloatingHeaderController();
+        RefinedHeaderController = new RefinedHeaderController();
     });
 } else {
-    floatingHeaderController = new FloatingHeaderController();
+    RefinedHeaderController = new RefinedHeaderController();
 }
 
 // Make it globally accessible for debugging
-window.FloatingHeaderController = FloatingHeaderController;
-window.floatingHeaderController = floatingHeaderController;
+window.RefinedHeaderController = RefinedHeaderController;
+window.RefinedHeaderController = RefinedHeaderController;
 
 /* ========================================
    UTILITY FUNCTIONS
@@ -1108,19 +1402,19 @@ function smoothScrollTo(target, offset = 100) {
 
 // Header visibility control
 function toggleHeaderVisibility(show = true) {
-    if (floatingHeaderController) {
+    if (RefinedHeaderController) {
         if (show) {
-            floatingHeaderController.showHeader();
+            RefinedHeaderController.showHeader();
         } else {
-            floatingHeaderController.hideHeader();
+            RefinedHeaderController.hideHeader();
         }
     }
 }
 
 // Set active navigation programmatically
 function setActiveNavigation(index) {
-    if (floatingHeaderController) {
-        floatingHeaderController.setActiveNav(index);
+    if (RefinedHeaderController) {
+        RefinedHeaderController.setActiveNav(index);
     }
 }
 
@@ -1202,7 +1496,7 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         HolisticPsychApp,
         SleekPreloader,
-        FloatingHeaderController,
+        RefinedHeaderController,
         HeroSlideshowController,
         ScrollAnimationsController,
         ContactFormHandler,
