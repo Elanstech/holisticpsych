@@ -1366,25 +1366,6 @@ class HolisticPsychApp {
 }
 
 /* ========================================
-   INITIALIZATION
-   ======================================== */
-
-// Initialize when DOM is ready
-let RefinedHeaderController;
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        RefinedHeaderController = new RefinedHeaderController();
-    });
-} else {
-    RefinedHeaderController = new RefinedHeaderController();
-}
-
-// Make it globally accessible for debugging
-window.RefinedHeaderController = RefinedHeaderController;
-window.RefinedHeaderController = RefinedHeaderController;
-
-/* ========================================
    UTILITY FUNCTIONS
    ======================================== */
 
