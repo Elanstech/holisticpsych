@@ -6,32 +6,22 @@
 /* ========================================
    PRELOADER CONTROLLER
    ======================================== */
-class QuickShinePreloader {
+class SleekPreloader {
     constructor() {
-        this.preloader = document.getElementById('shinePreloader');
-        this.progressCircle = document.getElementById('progressCircle');
-        this.progressPercentage = document.getElementById('progressPercentage');
-        this.typingText = document.getElementById('typingText');
-        this.particleField = document.getElementById('particleField');
+        this.preloader = document.getElementById('sleekPreloader');
+        this.progressFill = document.getElementById('progressFill');
+        this.exitOverlay = document.querySelector('.exit-overlay');
         
-        // Timing configuration (fast but visible)
-        this.duration = 2500; // 2.5 seconds total
-        this.minShowTime = 1200; // Minimum time to show preloader
-        this.progressUpdateInterval = 50; // Update every 50ms for smooth animation
+        // Timing configuration
+        this.duration = 2800; // Total duration
+        this.minShowTime = 1500; // Minimum time to show preloader
+        this.progressUpdateInterval = 50; // Smooth progress updates
         
-        // Text messages for typing effect
-        this.messages = [
-            'Creating your sanctuary...',
-            'Preparing holistic care...',
-            'Welcome to wellness...',
-            'Nurturing your journey...'
-        ];
-        
-        this.currentMessageIndex = 0;
+        // State
         this.currentProgress = 0;
         this.startTime = Date.now();
         this.isComplete = false;
-        this.particles = [];
+        this.progressInterval = null;
         
         this.init();
     }
@@ -39,229 +29,41 @@ class QuickShinePreloader {
     init() {
         if (!this.preloader) return;
         
-        this.setupProgressGradient();
-        this.createParticles();
-        this.startLoadingSequence();
+        this.startProgressAnimation();
         this.setupEventListeners();
-        
-        // Auto-hide based on page load and minimum time
-        this.setupAutoHide();
+        this.setupAutoComplete();
     }
     
-    setupProgressGradient() {
-        // Create SVG gradient for progress circle
-        if (this.progressCircle) {
-            const svg = this.progressCircle.closest('svg');
-            if (svg && !svg.querySelector('defs')) {
-                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-                
-                gradient.setAttribute('id', 'progressGradient');
-                gradient.setAttribute('x1', '0%');
-                gradient.setAttribute('y1', '0%');
-                gradient.setAttribute('x2', '100%');
-                gradient.setAttribute('y2', '100%');
-                
-                const stops = [
-                    { offset: '0%', color: 'var(--primary-green)' },
-                    { offset: '50%', color: 'var(--primary-blue)' },
-                    { offset: '100%', color: 'var(--primary-purple)' }
-                ];
-                
-                stops.forEach(stop => {
-                    const stopElement = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-                    stopElement.setAttribute('offset', stop.offset);
-                    stopElement.setAttribute('stop-color', stop.color);
-                    gradient.appendChild(stopElement);
-                });
-                
-                defs.appendChild(gradient);
-                svg.appendChild(defs);
-                
-                this.progressCircle.setAttribute('stroke', 'url(#progressGradient)');
-            }
-        }
-    }
-    
-    createParticles() {
-        if (!this.particleField) return;
+    startProgressAnimation() {
+        let progress = 0;
+        const increment = 100 / (this.duration / this.progressUpdateInterval);
         
-        const particleCount = 12; // Reduced from 20 for cleaner look
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                background: radial-gradient(circle, var(--primary-green), transparent);
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: 0;
-                will-change: transform, opacity;
-            `;
+        this.progressInterval = setInterval(() => {
+            progress += increment * (0.8 + Math.random() * 0.4); // Slight randomness for organic feel
+            progress = Math.min(progress, 100);
             
-            // Random position
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
+            this.updateProgress(progress);
             
-            this.particleField.appendChild(particle);
-            this.particles.push({
-                element: particle,
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 1, // Slower movement
-                vy: (Math.random() - 0.5) * 1,
-                life: Math.random() * 4000 + 2000, // Longer life
-                birth: Date.now()
-            });
-        }
-        
-        this.animateParticles();
-    }
-    
-    animateParticles() {
-        const animate = () => {
-            if (!this.isComplete) {
-                this.particles.forEach(particle => {
-                    const age = Date.now() - particle.birth;
-                    const lifeRatio = age / particle.life;
-                    
-                    if (lifeRatio < 1) {
-                        // Update position
-                        particle.x += particle.vx;
-                        particle.y += particle.vy;
-                        
-                        // Wrap around screen
-                        if (particle.x < 0) particle.x = window.innerWidth;
-                        if (particle.x > window.innerWidth) particle.x = 0;
-                        if (particle.y < 0) particle.y = window.innerHeight;
-                        if (particle.y > window.innerHeight) particle.y = 0;
-                        
-                        // Update opacity (fade in/out)
-                        const opacity = Math.sin(lifeRatio * Math.PI) * 0.4; // Reduced opacity
-                        
-                        particle.element.style.left = particle.x + 'px';
-                        particle.element.style.top = particle.y + 'px';
-                        particle.element.style.opacity = opacity;
-                    } else {
-                        // Reset particle
-                        particle.birth = Date.now();
-                        particle.x = Math.random() * window.innerWidth;
-                        particle.y = Math.random() * window.innerHeight;
-                    }
-                });
-                
-                requestAnimationFrame(animate);
-            }
-        };
-        
-        animate();
-    }
-    
-    startLoadingSequence() {
-        // Start typing animation
-        this.startTypingAnimation();
-        
-        // Start progress animation
-        this.animateProgress();
-        
-        // Trigger logo shine effects
-        this.triggerLogoEffects();
-    }
-    
-    startTypingAnimation() {
-        if (!this.typingText) return;
-        
-        const typeMessage = (message, callback) => {
-            let i = 0;
-            this.typingText.textContent = '';
-            
-            const typeChar = () => {
-                if (i < message.length) {
-                    this.typingText.textContent += message.charAt(i);
-                    i++;
-                    setTimeout(typeChar, 40); // Fast typing
-                } else if (callback) {
-                    setTimeout(callback, 300); // Brief pause before next message
-                }
-            };
-            
-            typeChar();
-        };
-        
-        const cycleMessages = () => {
-            if (!this.isComplete) {
-                const message = this.messages[this.currentMessageIndex];
-                typeMessage(message, () => {
-                    this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
-                    setTimeout(cycleMessages, 200);
-                });
-            }
-        };
-        
-        cycleMessages();
-    }
-    
-    animateProgress() {
-        const circumference = 2 * Math.PI * 54; // radius = 54
-        
-        const updateProgress = () => {
-            const elapsed = Date.now() - this.startTime;
-            const progress = Math.min((elapsed / this.duration) * 100, 100);
-            
-            this.currentProgress = progress;
-            
-            // Update circular progress
-            if (this.progressCircle) {
-                const offset = circumference - (progress / 100) * circumference;
-                this.progressCircle.style.strokeDashoffset = offset;
-            }
-            
-            // Update percentage text
-            if (this.progressPercentage) {
-                this.progressPercentage.textContent = Math.round(progress) + '%';
-            }
-            
-            // Continue animation
-            if (progress < 100 && !this.isComplete) {
-                setTimeout(updateProgress, this.progressUpdateInterval);
-            } else {
+            if (progress >= 100) {
+                clearInterval(this.progressInterval);
                 this.onProgressComplete();
             }
-        };
-        
-        updateProgress();
+        }, this.progressUpdateInterval);
     }
     
-    triggerLogoEffects() {
-        const logo = document.querySelector('.showcase-logo');
-        const logoShine = document.querySelector('.logo-shine');
+    updateProgress(progress) {
+        this.currentProgress = progress;
         
-        if (logo) {
-            // Enhanced hover-like effect
-            logo.style.transform = 'scale(1.05)';
-            logo.style.filter = 'brightness(1.2) saturate(1.3)';
-            
-            setTimeout(() => {
-                logo.style.transform = 'scale(1)';
-                logo.style.filter = 'brightness(1) saturate(1)';
-            }, 800);
+        if (this.progressFill) {
+            this.progressFill.style.width = progress + '%';
         }
-        
-        // Trigger additional shine effects
-        setTimeout(() => {
-            if (logoShine) {
-                logoShine.style.animationDuration = '1.5s';
-            }
-        }, 1000);
     }
     
     onProgressComplete() {
-        // Small delay before hiding to show 100%
+        // Small delay to show 100% completion
         setTimeout(() => {
             this.hidePreloader();
-        }, 300);
+        }, 400);
     }
     
     setupEventListeners() {
@@ -277,15 +79,7 @@ class QuickShinePreloader {
             }, remainingTime);
         });
         
-        // Hide on any click after minimum time (emergency exit)
-        document.addEventListener('click', () => {
-            const elapsed = Date.now() - this.startTime;
-            if (elapsed > this.minShowTime && !this.isComplete) {
-                this.hidePreloader();
-            }
-        });
-        
-        // Hide on escape key
+        // Hide on escape key (for debugging)
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const elapsed = Date.now() - this.startTime;
@@ -294,15 +88,18 @@ class QuickShinePreloader {
                 }
             }
         });
+        
+        // Prevent scrolling while preloader is active
+        document.body.style.overflow = 'hidden';
     }
     
-    setupAutoHide() {
+    setupAutoComplete() {
         // Fallback auto-hide after maximum duration
         setTimeout(() => {
             if (!this.isComplete) {
                 this.hidePreloader();
             }
-        }, this.duration + 500);
+        }, this.duration + 800);
     }
     
     hidePreloader() {
@@ -310,14 +107,27 @@ class QuickShinePreloader {
         
         this.isComplete = true;
         
+        // Clear any running intervals
+        if (this.progressInterval) {
+            clearInterval(this.progressInterval);
+        }
+        
         // Trigger exit animation
         this.preloader.classList.add('exiting');
         
-        // Advanced exit animation
+        // Complete the progress bar
+        if (this.progressFill) {
+            this.progressFill.style.width = '100%';
+        }
+        
+        // Fade out after exit animation
         setTimeout(() => {
             this.preloader.classList.add('loaded');
             
-            // Clean up after animation
+            // Restore body scroll
+            document.body.style.overflow = '';
+            
+            // Clean up after transition
             setTimeout(() => {
                 this.cleanup();
             }, 800);
@@ -336,8 +146,18 @@ class QuickShinePreloader {
         if (this.isComplete) return;
         
         this.isComplete = true;
+        
+        // Clear intervals
+        if (this.progressInterval) {
+            clearInterval(this.progressInterval);
+        }
+        
+        // Quick fade out
         this.preloader.style.transition = 'all 0.5s ease';
         this.preloader.classList.add('loaded');
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
         
         setTimeout(() => {
             this.cleanup();
@@ -356,10 +176,12 @@ class QuickShinePreloader {
             this.preloader.style.display = 'none';
         }
         
-        // Clear particles
-        this.particles = [];
+        // Clear any remaining intervals
+        if (this.progressInterval) {
+            clearInterval(this.progressInterval);
+        }
         
-        console.log('✨ Shine Preloader completed successfully');
+        console.log('✨ Sleek Preloader completed successfully');
     }
     
     // Public API methods
@@ -377,152 +199,94 @@ class QuickShinePreloader {
     }
 }
 
-class ParticleEnhancer {
-    constructor(preloader) {
-        this.preloader = preloader;
-        this.canvas = null;
-        this.ctx = null;
-        this.particles = [];
-        
-        this.init();
-    }
-    
-    init() {
-        // Create canvas for better particle performance
-        this.canvas = document.createElement('canvas');
-        this.canvas.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        `;
-        
-        this.ctx = this.canvas.getContext('2d');
-        this.resizeCanvas();
-        
-        const particleField = document.getElementById('particleField');
-        if (particleField) {
-            particleField.appendChild(this.canvas);
-        }
-        
-        window.addEventListener('resize', () => this.resizeCanvas());
-        this.createParticles();
-        this.animate();
-    }
-    
-    resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    }
-    
-    createParticles() {
-        const count = 15; // Reduced from 30 for cleaner look
-        
-        for (let i = 0; i < count; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5, // Slower movement
-                vy: (Math.random() - 0.5) * 0.5,
-                life: Math.random() * 300 + 200, // Longer life
-                age: 0,
-                color: this.getRandomColor()
-            });
-        }
-    }
-    
-    getRandomColor() {
-        const colors = ['#00d884', '#0ea5e9', '#8b5cf6'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-    
-    animate() {
-        if (this.preloader.isCompleted()) return;
-        
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        this.particles.forEach(particle => {
-            particle.age++;
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            
-            // Wrap around edges
-            if (particle.x < 0) particle.x = this.canvas.width;
-            if (particle.x > this.canvas.width) particle.x = 0;
-            if (particle.y < 0) particle.y = this.canvas.height;
-            if (particle.y > this.canvas.height) particle.y = 0;
-            
-            // Calculate opacity
-            const lifeRatio = particle.age / particle.life;
-            const opacity = Math.sin(lifeRatio * Math.PI) * 0.4; // Reduced opacity
-            
-            // Draw particle
-            this.ctx.globalAlpha = opacity;
-            this.ctx.fillStyle = particle.color;
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, 1, 0, Math.PI * 2);
-            this.ctx.fill();
-            
-            // Reset particle if too old
-            if (particle.age >= particle.life) {
-                particle.age = 0;
-                particle.x = Math.random() * this.canvas.width;
-                particle.y = Math.random() * this.canvas.height;
-            }
-        });
-        
-        requestAnimationFrame(() => this.animate());
-    }
-}
+/* ========================================
+   INITIALIZATION
+   ======================================== */
 
-let quickShinePreloader;
-let particleEnhancer;
+let sleekPreloader;
 
 // Initialize when DOM is ready
+function initializeSleekPreloader() {
+    sleekPreloader = new SleekPreloader();
+}
+
+// Check if DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializePreloader);
+    document.addEventListener('DOMContentLoaded', initializeSleekPreloader);
 } else {
-    initializePreloader();
+    initializeSleekPreloader();
 }
 
-function initializePreloader() {
-    quickShinePreloader = new QuickShinePreloader();
-    
-    // Add enhanced particles for better visual effect
-    setTimeout(() => {
-        particleEnhancer = new ParticleEnhancer(quickShinePreloader);
-    }, 100);
-}
-
-// Global API
-window.QuickShinePreloader = {
-    getInstance: () => quickShinePreloader,
-    hide: () => quickShinePreloader?.forceHide(),
-    getProgress: () => quickShinePreloader?.getProgress() || 0,
-    isComplete: () => quickShinePreloader?.isCompleted() || false
+// Global API for external access
+window.SleekPreloader = {
+    getInstance: () => sleekPreloader,
+    hide: () => sleekPreloader?.forceHide(),
+    getProgress: () => sleekPreloader?.getProgress() || 0,
+    isComplete: () => sleekPreloader?.isCompleted() || false
 };
 
 // Quick access function to hide preloader
-function hidePreloader() {
-    if (quickShinePreloader) {
-        quickShinePreloader.forceHide();
+function hideSleekPreloader() {
+    if (sleekPreloader) {
+        sleekPreloader.forceHide();
     }
 }
 
 // Performance monitoring
-function getPreloaderPerformance() {
-    if (quickShinePreloader) {
+function getSleekPreloaderPerformance() {
+    if (sleekPreloader) {
         return {
-            progress: quickShinePreloader.getProgress(),
-            isComplete: quickShinePreloader.isCompleted(),
-            remainingTime: quickShinePreloader.getRemainingTime()
+            progress: sleekPreloader.getProgress(),
+            isComplete: sleekPreloader.isCompleted(),
+            remainingTime: sleekPreloader.getRemainingTime()
         };
     }
     return null;
 }
+
+/* ========================================
+   SMOOTH INTEGRATION WITH EXISTING CODE
+   ======================================== */
+
+// Listen for preloader completion to initialize other components
+document.addEventListener('preloaderComplete', (event) => {
+    console.log('Preloader completed:', event.detail);
+    
+    // Initialize other components after preloader
+    setTimeout(() => {
+        // Trigger any additional initialization
+        if (typeof window.FloatingHeaderController !== 'undefined') {
+            // Header is already initialized in the original code
+        }
+        
+        // Add any other component initializations here
+        if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+        }
+    }, 100);
+});
+
+/* ========================================
+   ERROR HANDLING
+   ======================================== */
+
+// Graceful error handling
+window.addEventListener('error', (event) => {
+    console.warn('Preloader error, falling back to force hide:', event.error);
+    if (sleekPreloader && !sleekPreloader.isCompleted()) {
+        sleekPreloader.forceHide();
+    }
+});
+
+// Unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+    console.warn('Preloader promise rejection:', event.reason);
+    if (sleekPreloader && !sleekPreloader.isCompleted()) {
+        setTimeout(() => {
+            sleekPreloader.forceHide();
+        }, 100);
+    }
+});
 
 /* ========================================
    FLOATING HEADER CONTROLLER
@@ -1223,7 +987,7 @@ class HolisticPsychApp {
     initializeApp() {
         try {
             // Initialize preloader first
-            this.components.preloader = new QuickShinePreloader();
+            this.components.preloader = new SleekPreloader();
             
             // Initialize other components after preloader
             document.addEventListener('preloaderComplete', () => {
@@ -1437,7 +1201,7 @@ window.addEventListener('unhandledrejection', (event) => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         HolisticPsychApp,
-        QuickShinePreloader,
+        SleekPreloader,
         FloatingHeaderController,
         HeroSlideshowController,
         ScrollAnimationsController,
