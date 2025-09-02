@@ -192,66 +192,38 @@ class PreloaderController {
 /* ========================================
    HEADER CONTROLLER
    ======================================== */
-class HeaderController {
+class FloatingHeaderController {
     constructor() {
-        this.header = document.getElementById('header');
-        this.mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        this.mobileNav = document.getElementById('mobileNav');
-        this.mobileNavClose = document.getElementById('mobileNavClose');
-        this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        this.header = document.getElementById('floatingHeader');
+        this.navCapsule = document.getElementById('navCapsule');
+        this.navTrack = this.navCapsule?.querySelector('.nav-track');
+        this.navDots = document.querySelectorAll('.nav-dot');
+        this.navIndicator = document.querySelector('.nav-indicator');
+        this.mobileTrigger = document.getElementById('mobileTrigger');
+        this.mobileOverlay = document.getElementById('mobileOverlay');
+        this.mobileClose = document.getElementById('mobileClose');
+        this.mobileLinks = document.querySelectorAll('.mobile-link');
         
         this.lastScrollY = 0;
         this.isScrollingDown = false;
         this.isMobileMenuOpen = false;
+        this.activeNavIndex = 0;
         
         this.init();
     }
     
     init() {
-        this.bindEvents();
+        if (!this.header) return;
+        
         this.setupScrollBehavior();
-        this.setupNavigation();
-    }
-    
-    bindEvents() {
-        // Mobile menu toggle
-        if (this.mobileMenuToggle) {
-            this.mobileMenuToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggleMobileMenu();
-            });
-        }
+        this.setupNavigationIndicator();
+        this.setupMobileMenu();
+        this.setupSmoothScrolling();
+        this.setupScrollSpy();
+        this.setupGlowEffect();
         
-        // Mobile menu close
-        if (this.mobileNavClose) {
-            this.mobileNavClose.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.closeMobileMenu();
-            });
-        }
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (this.isMobileMenuOpen && 
-                !this.mobileNav.contains(e.target) && 
-                !this.mobileMenuToggle.contains(e.target)) {
-                this.closeMobileMenu();
-            }
-        });
-        
-        // Escape key to close mobile menu
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
-            }
-        });
-        
-        // Window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024 && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
-            }
-        });
+        // Set initial nav indicator position
+        this.updateNavIndicator(0);
     }
     
     setupScrollBehavior() {
@@ -271,99 +243,136 @@ class HeaderController {
     handleScroll() {
         const currentScrollY = window.pageYOffset;
         
-        // Add/remove scrolled class
+        // Add scrolled class for visual changes
         if (currentScrollY > 50) {
             this.header.classList.add('scrolled');
         } else {
             this.header.classList.remove('scrolled');
         }
         
-        // Hide/show header on scroll
-        if (currentScrollY > this.lastScrollY && currentScrollY > 100) {
+        // Hide/show header on scroll (optional)
+        if (currentScrollY > this.lastScrollY && currentScrollY > 200) {
             // Scrolling down
-            if (!this.isScrollingDown) {
+            if (!this.isScrollingDown && !this.isMobileMenuOpen) {
                 this.isScrollingDown = true;
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(this.header, { y: -80, duration: 0.3 });
-                } else {
-                    this.header.style.transform = 'translateY(-80px)';
-                }
+                this.header.style.transform = 'translateX(-50%) translateY(-100px)';
+                this.header.style.opacity = '0.7';
             }
         } else {
             // Scrolling up
             if (this.isScrollingDown) {
                 this.isScrollingDown = false;
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(this.header, { y: 0, duration: 0.3 });
-                } else {
-                    this.header.style.transform = 'translateY(0)';
-                }
+                this.header.style.transform = 'translateX(-50%) translateY(0)';
+                this.header.style.opacity = '1';
             }
         }
         
         this.lastScrollY = currentScrollY;
     }
     
-    setupNavigation() {
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
+    setupNavigationIndicator() {
+        if (!this.navDots.length || !this.navIndicator) return;
+        
+        this.navDots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
                 
-                if (href.startsWith('#')) {
-                    e.preventDefault();
-                    this.navigateToSection(href);
-                    
-                    // Close mobile menu if open
-                    if (this.isMobileMenuOpen) {
-                        this.closeMobileMenu();
-                    }
-                    
-                    // Update active link
-                    this.updateActiveLink(link);
-                }
+                // Update active states
+                this.navDots.forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+                
+                // Update indicator position
+                this.updateNavIndicator(index);
+                
+                // Smooth scroll to section
+                const target = dot.getAttribute('href');
+                this.scrollToSection(target);
+                
+                this.activeNavIndex = index;
+            });
+            
+            // Add hover effects
+            dot.addEventListener('mouseenter', () => {
+                dot.style.transform = 'translateY(-3px) scale(1.1)';
+            });
+            
+            dot.addEventListener('mouseleave', () => {
+                dot.style.transform = 'translateY(0) scale(1)';
             });
         });
-        
-        // Update active link on scroll
-        this.setupScrollSpy();
     }
     
-    navigateToSection(target) {
-        const targetElement = document.querySelector(target);
-        if (targetElement) {
-            const headerHeight = this.header.offsetHeight;
-            const targetPosition = targetElement.offsetTop - headerHeight - 20;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+    updateNavIndicator(index) {
+        if (!this.navIndicator || !this.navTrack) return;
+        
+        const positions = [8, 60, 112, 164, 216]; // Position for each nav item
+        const position = positions[index] || 8;
+        
+        this.navIndicator.style.left = position + 'px';
+        this.navTrack.setAttribute('data-active', index);
+        
+        // Add a subtle animation
+        this.navIndicator.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            this.navIndicator.style.transform = 'scale(1)';
+        }, 200);
+    }
+    
+    setupMobileMenu() {
+        if (!this.mobileTrigger || !this.mobileOverlay) return;
+        
+        // Mobile trigger click
+        this.mobileTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.toggleMobileMenu();
+        });
+        
+        // Mobile close button
+        if (this.mobileClose) {
+            this.mobileClose.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.closeMobileMenu();
             });
         }
-    }
-    
-    setupScrollSpy() {
-        const sections = document.querySelectorAll('section[id]');
         
-        window.addEventListener('scroll', () => {
-            const scrollPosition = window.pageYOffset + 100;
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-                
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    this.updateActiveLink(document.querySelector(`[href="#${sectionId}"]`));
+        // Mobile overlay click to close
+        this.mobileOverlay.addEventListener('click', (e) => {
+            if (e.target === this.mobileOverlay) {
+                this.closeMobileMenu();
+            }
+        });
+        
+        // Mobile navigation links
+        this.mobileLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    this.scrollToSection(href);
+                    this.closeMobileMenu();
+                    
+                    // Update desktop nav indicator
+                    this.updateDesktopNavForMobile(href);
                 }
             });
-        }, { passive: true });
-    }
-    
-    updateActiveLink(activeLink) {
-        this.navLinks.forEach(link => link.classList.remove('active'));
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
+            
+            // Staggered animation on menu open
+            link.style.transitionDelay = (index * 0.1) + 's';
+        });
+        
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isMobileMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
+        
+        // Close on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024 && this.isMobileMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
     }
     
     toggleMobileMenu() {
@@ -376,30 +385,266 @@ class HeaderController {
     
     openMobileMenu() {
         this.isMobileMenuOpen = true;
-        this.mobileMenuToggle.classList.add('active');
-        this.mobileNav.classList.add('active');
+        this.mobileTrigger.classList.add('active');
+        this.mobileOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Animate menu items
-        const menuItems = this.mobileNav.querySelectorAll('.mobile-nav-link, .mobile-phone, .mobile-cta');
-        menuItems.forEach((item, index) => {
-            if (typeof gsap !== 'undefined') {
-                gsap.from(item, {
-                    x: 50,
-                    opacity: 0,
-                    duration: 0.3,
-                    delay: index * 0.1
-                });
-            }
+        // Reset header position when menu opens
+        this.header.style.transform = 'translateX(-50%) translateY(0)';
+        this.header.style.opacity = '1';
+        this.isScrollingDown = false;
+        
+        // Animate mobile links
+        this.mobileLinks.forEach((link, index) => {
+            setTimeout(() => {
+                link.style.transform = 'translateX(0)';
+                link.style.opacity = '1';
+            }, index * 100);
         });
     }
     
     closeMobileMenu() {
         this.isMobileMenuOpen = false;
-        this.mobileMenuToggle.classList.remove('active');
-        this.mobileNav.classList.remove('active');
+        this.mobileTrigger.classList.remove('active');
+        this.mobileOverlay.classList.remove('active');
         document.body.style.overflow = '';
+        
+        // Reset mobile links animation
+        this.mobileLinks.forEach(link => {
+            link.style.transform = 'translateX(50px)';
+            link.style.opacity = '0';
+            link.style.transitionDelay = '0s';
+        });
     }
+    
+    setupSmoothScrolling() {
+        // Handle all navigation links (both desktop and mobile)
+        const allNavLinks = document.querySelectorAll('a[href^="#"]');
+        
+        allNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.length > 1) { // Not just "#"
+                    e.preventDefault();
+                    this.scrollToSection(href);
+                }
+            });
+        });
+    }
+    
+    scrollToSection(target) {
+        const targetElement = document.querySelector(target);
+        if (!targetElement) return;
+        
+        const headerHeight = this.header.offsetHeight + 20; // Add some offset
+        const targetPosition = targetElement.offsetTop - headerHeight;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+    
+    setupScrollSpy() {
+        const sections = document.querySelectorAll('section[id]');
+        if (!sections.length) return;
+        
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '-20% 0px -60% 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.getAttribute('id');
+                    this.updateActiveNavFromSection(sectionId);
+                }
+            });
+        }, observerOptions);
+        
+        sections.forEach(section => observer.observe(section));
+    }
+    
+    updateActiveNavFromSection(sectionId) {
+        const navLink = document.querySelector(`.nav-dot[href="#${sectionId}"]`);
+        if (!navLink) return;
+        
+        // Find the index of the active nav item
+        const navIndex = Array.from(this.navDots).indexOf(navLink);
+        if (navIndex !== -1 && navIndex !== this.activeNavIndex) {
+            // Update active states
+            this.navDots.forEach(dot => dot.classList.remove('active'));
+            navLink.classList.add('active');
+            
+            // Update indicator
+            this.updateNavIndicator(navIndex);
+            this.activeNavIndex = navIndex;
+        }
+    }
+    
+    updateDesktopNavForMobile(href) {
+        const navLink = document.querySelector(`.nav-dot[href="${href}"]`);
+        if (navLink) {
+            const navIndex = Array.from(this.navDots).indexOf(navLink);
+            if (navIndex !== -1) {
+                this.navDots.forEach(dot => dot.classList.remove('active'));
+                navLink.classList.add('active');
+                this.updateNavIndicator(navIndex);
+                this.activeNavIndex = navIndex;
+            }
+        }
+    }
+    
+    setupGlowEffect() {
+        // Add subtle glow effect on hover
+        if (this.header) {
+            let glowTimeout;
+            
+            this.header.addEventListener('mouseenter', () => {
+                clearTimeout(glowTimeout);
+                this.header.style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
+            });
+            
+            this.header.addEventListener('mouseleave', () => {
+                glowTimeout = setTimeout(() => {
+                    this.header.style.filter = '';
+                }, 300);
+            });
+        }
+        
+        // Add ripple effect to CTA button
+        const ctaButton = document.querySelector('.cta-floating');
+        if (ctaButton) {
+            ctaButton.addEventListener('click', (e) => {
+                const ripple = ctaButton.querySelector('.cta-ripple');
+                if (ripple) {
+                    ripple.style.width = '0';
+                    ripple.style.height = '0';
+                    
+                    setTimeout(() => {
+                        ripple.style.width = '200px';
+                        ripple.style.height = '200px';
+                    }, 10);
+                    
+                    setTimeout(() => {
+                        ripple.style.width = '0';
+                        ripple.style.height = '0';
+                    }, 600);
+                }
+            });
+        }
+        
+        // Phone bubble glow effect
+        const phoneBubble = document.querySelector('.phone-bubble');
+        if (phoneBubble) {
+            phoneBubble.addEventListener('mouseenter', () => {
+                const glow = phoneBubble.querySelector('.bubble-glow');
+                if (glow) {
+                    glow.style.left = '-100%';
+                    setTimeout(() => {
+                        glow.style.left = '100%';
+                    }, 50);
+                }
+            });
+        }
+    }
+    
+    // Public methods for external control
+    showHeader() {
+        this.header.style.transform = 'translateX(-50%) translateY(0)';
+        this.header.style.opacity = '1';
+        this.isScrollingDown = false;
+    }
+    
+    hideHeader() {
+        if (!this.isMobileMenuOpen) {
+            this.header.style.transform = 'translateX(-50%) translateY(-100px)';
+            this.header.style.opacity = '0.7';
+            this.isScrollingDown = true;
+        }
+    }
+    
+    setActiveNav(index) {
+        if (index >= 0 && index < this.navDots.length) {
+            this.navDots.forEach(dot => dot.classList.remove('active'));
+            this.navDots[index].classList.add('active');
+            this.updateNavIndicator(index);
+            this.activeNavIndex = index;
+        }
+    }
+    
+    destroy() {
+        // Clean up event listeners if needed
+        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
+        document.removeEventListener('keydown', this.handleKeydown);
+    }
+}
+
+/* ========================================
+   INITIALIZATION
+   ======================================== */
+
+// Initialize when DOM is ready
+let floatingHeaderController;
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        floatingHeaderController = new FloatingHeaderController();
+    });
+} else {
+    floatingHeaderController = new FloatingHeaderController();
+}
+
+// Make it globally accessible for debugging
+window.FloatingHeaderController = FloatingHeaderController;
+window.floatingHeaderController = floatingHeaderController;
+
+/* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
+
+// Smooth scroll utility
+function smoothScrollTo(target, offset = 100) {
+    const element = typeof target === 'string' ? document.querySelector(target) : target;
+    if (element) {
+        const targetPosition = element.offsetTop - offset;
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Header visibility control
+function toggleHeaderVisibility(show = true) {
+    if (floatingHeaderController) {
+        if (show) {
+            floatingHeaderController.showHeader();
+        } else {
+            floatingHeaderController.hideHeader();
+        }
+    }
+}
+
+// Set active navigation programmatically
+function setActiveNavigation(index) {
+    if (floatingHeaderController) {
+        floatingHeaderController.setActiveNav(index);
+    }
+}
+
+/* ========================================
+   EXPORT FOR MODULE SYSTEMS
+   ======================================== */
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        FloatingHeaderController,
+        smoothScrollTo,
+        toggleHeaderVisibility,
+        setActiveNavigation
+    };
 }
 
 /* ========================================
@@ -732,7 +977,7 @@ class HolisticPsychApp {
         if (this.isInitialized) return;
         
         try {
-            this.components.header = new HeaderController();
+            this.components.header = new FloatingHeaderController();
             this.components.heroSlideshow = new HeroSlideshowController();
             this.components.scrollAnimations = new ScrollAnimationsController();
             this.components.contactForm = new ContactFormHandler();
