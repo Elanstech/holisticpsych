@@ -86,14 +86,14 @@ class QuickShinePreloader {
     createParticles() {
         if (!this.particleField) return;
         
-        const particleCount = 20;
+        const particleCount = 12; // Reduced from 20 for cleaner look
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.style.cssText = `
                 position: absolute;
-                width: 2px;
-                height: 2px;
+                width: 1px;
+                height: 1px;
                 background: radial-gradient(circle, var(--primary-green), transparent);
                 border-radius: 50%;
                 pointer-events: none;
@@ -110,9 +110,9 @@ class QuickShinePreloader {
                 element: particle,
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2,
-                life: Math.random() * 3000 + 1000, // 1-4 seconds
+                vx: (Math.random() - 0.5) * 1, // Slower movement
+                vy: (Math.random() - 0.5) * 1,
+                life: Math.random() * 4000 + 2000, // Longer life
                 birth: Date.now()
             });
         }
@@ -139,7 +139,7 @@ class QuickShinePreloader {
                         if (particle.y > window.innerHeight) particle.y = 0;
                         
                         // Update opacity (fade in/out)
-                        const opacity = Math.sin(lifeRatio * Math.PI) * 0.6;
+                        const opacity = Math.sin(lifeRatio * Math.PI) * 0.4; // Reduced opacity
                         
                         particle.element.style.left = particle.x + 'px';
                         particle.element.style.top = particle.y + 'px';
@@ -359,10 +359,6 @@ class QuickShinePreloader {
         // Clear particles
         this.particles = [];
         
-        // Remove any remaining event listeners
-        document.removeEventListener('click', this.handleClick);
-        document.removeEventListener('keydown', this.handleKeydown);
-        
         console.log('✨ Shine Preloader completed successfully');
     }
     
@@ -423,15 +419,15 @@ class ParticleEnhancer {
     }
     
     createParticles() {
-        const count = 30;
+        const count = 15; // Reduced from 30 for cleaner look
         
         for (let i = 0; i < count; i++) {
             this.particles.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 1,
-                vy: (Math.random() - 0.5) * 1,
-                life: Math.random() * 200 + 100,
+                vx: (Math.random() - 0.5) * 0.5, // Slower movement
+                vy: (Math.random() - 0.5) * 0.5,
+                life: Math.random() * 300 + 200, // Longer life
                 age: 0,
                 color: this.getRandomColor()
             });
@@ -461,7 +457,7 @@ class ParticleEnhancer {
             
             // Calculate opacity
             const lifeRatio = particle.age / particle.life;
-            const opacity = Math.sin(lifeRatio * Math.PI) * 0.6;
+            const opacity = Math.sin(lifeRatio * Math.PI) * 0.4; // Reduced opacity
             
             // Draw particle
             this.ctx.globalAlpha = opacity;
@@ -528,21 +524,12 @@ function getPreloaderPerformance() {
     return null;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        QuickShinePreloader,
-        ParticleEnhancer,
-        hidePreloader,
-        getPreloaderPerformance
-    };
-}
-
 /* ========================================
-   HEADER CONTROLLER
+   FLOATING HEADER CONTROLLER
    ======================================== */
 class FloatingHeaderController {
     constructor() {
-        this. = document.getElementById('floating');
+        this.header = document.getElementById('floatingHeader');
         this.navCapsule = document.getElementById('navCapsule');
         this.navTrack = this.navCapsule?.querySelector('.nav-track');
         this.navDots = document.querySelectorAll('.nav-dot');
@@ -561,7 +548,7 @@ class FloatingHeaderController {
     }
     
     init() {
-        if (!this.) return;
+        if (!this.header) return;
         
         this.setupScrollBehavior();
         this.setupNavigationIndicator();
@@ -593,25 +580,25 @@ class FloatingHeaderController {
         
         // Add scrolled class for visual changes
         if (currentScrollY > 50) {
-            this..classList.add('scrolled');
+            this.header.classList.add('scrolled');
         } else {
-            this..classList.remove('scrolled');
+            this.header.classList.remove('scrolled');
         }
         
-        // Hide/show  on scroll (optional)
+        // Hide/show header on scroll (optional)
         if (currentScrollY > this.lastScrollY && currentScrollY > 200) {
             // Scrolling down
             if (!this.isScrollingDown && !this.isMobileMenuOpen) {
                 this.isScrollingDown = true;
-                this..style.transform = 'translateX(-50%) translateY(-100px)';
-                this..style.opacity = '0.7';
+                this.header.style.transform = 'translateX(-50%) translateY(-100px)';
+                this.header.style.opacity = '0.7';
             }
         } else {
             // Scrolling up
             if (this.isScrollingDown) {
                 this.isScrollingDown = false;
-                this..style.transform = 'translateX(-50%) translateY(0)';
-                this..style.opacity = '1';
+                this.header.style.transform = 'translateX(-50%) translateY(0)';
+                this.header.style.opacity = '1';
             }
         }
         
@@ -737,9 +724,9 @@ class FloatingHeaderController {
         this.mobileOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         
-        // Reset  position when menu opens
-        this..style.transform = 'translateX(-50%) translateY(0)';
-        this..style.opacity = '1';
+        // Reset header position when menu opens
+        this.header.style.transform = 'translateX(-50%) translateY(0)';
+        this.header.style.opacity = '1';
         this.isScrollingDown = false;
         
         // Animate mobile links
@@ -784,8 +771,8 @@ class FloatingHeaderController {
         const targetElement = document.querySelector(target);
         if (!targetElement) return;
         
-        const Height = this..offsetHeight + 20; // Add some offset
-        const targetPosition = targetElement.offsetTop - Height;
+        const headerHeight = this.header.offsetHeight + 20; // Add some offset
+        const targetPosition = targetElement.offsetTop - headerHeight;
         
         window.scrollTo({
             top: targetPosition,
@@ -846,17 +833,17 @@ class FloatingHeaderController {
     
     setupGlowEffect() {
         // Add subtle glow effect on hover
-        if (this.) {
+        if (this.header) {
             let glowTimeout;
             
-            this..addEventListener('mouseenter', () => {
+            this.header.addEventListener('mouseenter', () => {
                 clearTimeout(glowTimeout);
-                this..style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
+                this.header.style.filter = 'drop-shadow(0 8px 32px rgba(34, 197, 94, 0.15))';
             });
             
-            this..addEventListener('mouseleave', () => {
+            this.header.addEventListener('mouseleave', () => {
                 glowTimeout = setTimeout(() => {
-                    this..style.filter = '';
+                    this.header.style.filter = '';
                 }, 300);
             });
         }
@@ -899,16 +886,16 @@ class FloatingHeaderController {
     }
     
     // Public methods for external control
-    show() {
-        this..style.transform = 'translateX(-50%) translateY(0)';
-        this..style.opacity = '1';
+    showHeader() {
+        this.header.style.transform = 'translateX(-50%) translateY(0)';
+        this.header.style.opacity = '1';
         this.isScrollingDown = false;
     }
     
-    hide() {
+    hideHeader() {
         if (!this.isMobileMenuOpen) {
-            this..style.transform = 'translateX(-50%) translateY(-100px)';
-            this..style.opacity = '0.7';
+            this.header.style.transform = 'translateX(-50%) translateY(-100px)';
+            this.header.style.opacity = '0.7';
             this.isScrollingDown = true;
         }
     }
@@ -928,71 +915,6 @@ class FloatingHeaderController {
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('keydown', this.handleKeydown);
     }
-}
-
-/* ========================================
-   INITIALIZATION
-   ======================================== */
-
-// Initialize when DOM is ready
-let floatingController;
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        floatingController = new FloatingController();
-    });
-} else {
-    floatingController = new FloatingController();
-}
-
-// Make it globally accessible for debugging
-window.FloatingController = FloatingController;
-window.floatingController = floatingHeaderController;
-
-/* ========================================
-   UTILITY FUNCTIONS
-   ======================================== */
-
-// Smooth scroll utility
-function smoothScrollTo(target, offset = 100) {
-    const element = typeof target === 'string' ? document.querySelector(target) : target;
-    if (element) {
-        const targetPosition = element.offsetTop - offset;
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
-        });
-    }
-}
-
-// Header visibility control
-function toggleHeaderVisibility(show = true) {
-    if (floatingHeaderController) {
-        if (show) {
-            floatingHeaderController.showHeader();
-        } else {
-            floatingHeaderController.hideHeader();
-        }
-    }
-}
-
-// Set active navigation programmatically
-function setActiveNavigation(index) {
-    if (floatingHeaderController) {
-        floatingHeaderController.setActiveNav(index);
-    }
-}
-
-/* ========================================
-   EXPORT FOR MODULE SYSTEMS
-   ======================================== */
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        FloatingHeaderController,
-        smoothScrollTo,
-        toggleHeaderVisibility,
-        setActiveNavigation
-    };
 }
 
 /* ========================================
@@ -1301,7 +1223,7 @@ class HolisticPsychApp {
     initializeApp() {
         try {
             // Initialize preloader first
-            this.components.preloader = new PreloaderController();
+            this.components.preloader = new QuickShinePreloader();
             
             // Initialize other components after preloader
             document.addEventListener('preloaderComplete', () => {
@@ -1350,12 +1272,12 @@ class HolisticPsychApp {
         console.log('🔄 Initializing fallback functionality');
         
         // Basic mobile menu
-        const mobileToggle = document.getElementById('mobileMenuToggle');
-        const mobileNav = document.getElementById('mobileNav');
+        const mobileToggle = document.getElementById('mobileTrigger');
+        const mobileOverlay = document.getElementById('mobileOverlay');
         
-        if (mobileToggle && mobileNav) {
+        if (mobileToggle && mobileOverlay) {
             mobileToggle.addEventListener('click', () => {
-                mobileNav.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
                 mobileToggle.classList.toggle('active');
             });
         }
@@ -1373,7 +1295,7 @@ class HolisticPsychApp {
         
         // Hide preloader
         setTimeout(() => {
-            const preloader = document.getElementById('preloader');
+            const preloader = document.getElementById('shinePreloader');
             if (preloader) {
                 preloader.style.display = 'none';
             }
@@ -1388,6 +1310,55 @@ class HolisticPsychApp {
 /* ========================================
    INITIALIZATION
    ======================================== */
+
+// Initialize when DOM is ready
+let floatingHeaderController;
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        floatingHeaderController = new FloatingHeaderController();
+    });
+} else {
+    floatingHeaderController = new FloatingHeaderController();
+}
+
+// Make it globally accessible for debugging
+window.FloatingHeaderController = FloatingHeaderController;
+window.floatingHeaderController = floatingHeaderController;
+
+/* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
+
+// Smooth scroll utility
+function smoothScrollTo(target, offset = 100) {
+    const element = typeof target === 'string' ? document.querySelector(target) : target;
+    if (element) {
+        const targetPosition = element.offsetTop - offset;
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
+// Header visibility control
+function toggleHeaderVisibility(show = true) {
+    if (floatingHeaderController) {
+        if (show) {
+            floatingHeaderController.showHeader();
+        } else {
+            floatingHeaderController.hideHeader();
+        }
+    }
+}
+
+// Set active navigation programmatically
+function setActiveNavigation(index) {
+    if (floatingHeaderController) {
+        floatingHeaderController.setActiveNav(index);
+    }
+}
 
 // Initialize the application
 const app = new HolisticPsychApp();
@@ -1466,8 +1437,8 @@ window.addEventListener('unhandledrejection', (event) => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         HolisticPsychApp,
-        PreloaderController,
-        HeaderController,
+        QuickShinePreloader,
+        FloatingHeaderController,
         HeroSlideshowController,
         ScrollAnimationsController,
         ContactFormHandler,
