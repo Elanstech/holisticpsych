@@ -1535,135 +1535,34 @@ class HeroAccessibilityController {
 }
 
 /* ========================================
-   HERO PERFORMANCE MONITOR
-   ======================================== */
-class HeroPerformanceMonitor {
-    constructor() {
-        this.metrics = {
-            slideTransitions: 0,
-            averageTransitionTime: 0,
-            totalTime: 0,
-            errors: 0
-        };
-        
-        this.init();
-    }
-    
-    init() {
-        this.monitorSlideTransitions();
-        this.monitorImageLoading();
-        this.monitorAnimationPerformance();
-    }
-    
-    monitorSlideTransitions() {
-        document.addEventListener('heroSlideChange', (event) => {
-            const startTime = performance.now();
-            
-            setTimeout(() => {
-                const endTime = performance.now();
-                const transitionTime = endTime - startTime;
-                
-                this.metrics.slideTransitions++;
-                this.metrics.totalTime += transitionTime;
-                this.metrics.averageTransitionTime = this.metrics.totalTime / this.metrics.slideTransitions;
-                
-                // Log performance if transition is slow
-                if (transitionTime > 100) {
-                    console.warn(`Slow hero transition: ${transitionTime}ms`);
-                }
-            }, 1500);
-        });
-    }
-    
-    monitorImageLoading() {
-        const images = document.querySelectorAll('.enhanced-hero img');
-        let loadedImages = 0;
-        const totalImages = images.length;
-        
-        images.forEach(img => {
-            if (img.complete) {
-                loadedImages++;
-            } else {
-                img.addEventListener('load', () => {
-                    loadedImages++;
-                    
-                    if (loadedImages === totalImages) {
-                        console.log('✅ All hero images loaded successfully');
-                    }
-                });
-                
-                img.addEventListener('error', () => {
-                    this.metrics.errors++;
-                    console.error('❌ Hero image failed to load:', img.src);
-                });
-            }
-        });
-    }
-    
-    monitorAnimationPerformance() {
-        // Monitor for dropped frames during animations
-        let lastTime = performance.now();
-        let frameCount = 0;
-        
-        const checkFrameRate = () => {
-            const currentTime = performance.now();
-            const deltaTime = currentTime - lastTime;
-            
-            if (deltaTime > 16.67) { // More than 60fps
-                frameCount++;
-                
-                if (frameCount > 10) {
-                    console.warn('Hero animations may be dropping frames');
-                    frameCount = 0;
-                }
-            }
-            
-            lastTime = currentTime;
-            requestAnimationFrame(checkFrameRate);
-        };
-        
-        requestAnimationFrame(checkFrameRate);
-    }
-    
-    getMetrics() {
-        return { ...this.metrics };
-    }
-}
-
-/* ========================================
    INITIALIZATION & INTEGRATION
    ======================================== */
 
 let enhancedHeroController;
 let heroAccessibilityController;
-let heroPerformanceMonitor;
 
 function initializeEnhancedHero() {
     try {
-        // Initialize main hero controller
+        console.log('Initializing Enhanced Hero System...');
         enhancedHeroController = new EnhancedHeroController();
         
         // Initialize accessibility enhancements
         heroAccessibilityController = new HeroAccessibilityController(enhancedHeroController);
         
-        // Initialize performance monitoring
-        heroPerformanceMonitor = new HeroPerformanceMonitor();
+        // Global API
+        window.EnhancedHeroController = {
+            getInstance: () => enhancedHeroController,
+            goToSlide: (index) => enhancedHeroController?.goToSlide(index),
+            nextSlide: () => enhancedHeroController?.nextSlide(),
+            previousSlide: () => enhancedHeroController?.previousSlide(),
+            getCurrentSlide: () => enhancedHeroController?.getCurrentSlide() || 0,
+            getTotalSlides: () => enhancedHeroController?.getTotalSlides() || 0,
+        };
         
         console.log('✅ Enhanced Hero System initialized successfully');
         
-        // Dispatch initialization event
-        document.dispatchEvent(new CustomEvent('heroInitialized', {
-            detail: {
-                controller: enhancedHeroController,
-                accessibility: heroAccessibilityController,
-                performance: heroPerformanceMonitor
-            }
-        }));
-        
     } catch (error) {
         console.error('❌ Error initializing Enhanced Hero System:', error);
-        
-        // Fallback initialization
         initializeBasicHero();
     }
 }
@@ -1671,81 +1570,60 @@ function initializeEnhancedHero() {
 function initializeBasicHero() {
     console.log('🔄 Initializing basic hero fallback');
     
-    // Basic slideshow functionality
-    const slides = document.querySelectorAll('.hero-slide, .mobile-slide');
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    const mobileSlides = document.querySelectorAll('.mobile-slide');
     const dots = document.querySelectorAll('.slide-dot');
     let currentSlide = 0;
+    const totalSlides = Math.max(heroSlides.length, mobileSlides.length);
     
     function showSlide(index) {
-        slides.forEach((slide, i) => {
+        // Update desktop slides
+        heroSlides.forEach((slide, i) => {
             slide.classList.toggle('active', i === index);
         });
         
+        // Update mobile slides
+        mobileSlides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        
+        // Update dots
         dots.forEach((dot, i) => {
             dot.classList.toggle('active', i === index);
         });
         
         currentSlide = index;
+        console.log('Basic hero - slide changed to:', index);
     }
     
+    // Dot navigation
     dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => showSlide(index));
+        dot.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSlide(index);
+        });
     });
     
-    // Basic auto-advance
-    setInterval(() => {
-        const nextSlide = (currentSlide + 1) % slides.length;
-        showSlide(nextSlide);
-    }, 6000);
+    // Auto-advance
+    if (totalSlides > 1) {
+        setInterval(() => {
+            const nextSlide = (currentSlide + 1) % totalSlides;
+            showSlide(nextSlide);
+        }, 4000);
+    }
+    
+    console.log('✅ Basic hero fallback initialized');
 }
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeEnhancedHero);
 } else {
-    initializeEnhancedHero();
+    // Small delay to ensure all elements are rendered
+    setTimeout(initializeEnhancedHero, 100);
 }
 
-// Global API for external access
-window.EnhancedHeroController = {
-    getInstance: () => enhancedHeroController,
-    goToSlide: (index) => enhancedHeroController?.goToSlide(index),
-    nextSlide: () => enhancedHeroController?.nextSlide(),
-    previousSlide: () => enhancedHeroController?.previousSlide(),
-    toggleAutoPlay: () => enhancedHeroController?.toggleAutoPlay(),
-    getCurrentSlide: () => enhancedHeroController?.getCurrentSlide() || 0,
-    getTotalSlides: () => enhancedHeroController?.getTotalSlides() || 0,
-    getMetrics: () => heroPerformanceMonitor?.getMetrics() || {},
-    isAutoPlaying: () => enhancedHeroController?.isAutoPlayActive() || false
-};
-
-// Error handling
-window.addEventListener('error', (event) => {
-    if (event.error && event.error.message.includes('hero')) {
-        console.warn('Hero error handled gracefully:', event.error);
-        
-        // Attempt recovery
-        if (!enhancedHeroController) {
-            setTimeout(initializeBasicHero, 1000);
-        }
-    }
-});
-
-// Performance monitoring for the entire hero system
-if (typeof PerformanceObserver !== 'undefined') {
-    const heroPerformanceObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        entries.forEach(entry => {
-            if (entry.name.includes('hero') && entry.duration > 50) {
-                console.warn(`Hero operation took ${entry.duration}ms:`, entry.name);
-            }
-        });
-    });
-    
-    heroPerformanceObserver.observe({ entryTypes: ['measure'] });
-}
-
-console.log('✨ Enhanced Hero System loaded and ready');
+console.log('📄 Enhanced Hero System script loaded');
 
 /* ========================================
    UTILITIES
