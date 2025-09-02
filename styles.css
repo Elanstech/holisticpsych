@@ -126,6 +126,7 @@ body {
 /* ========================================
    PRELOADER STYLES
    ======================================== */
+
 /* Shine Preloader Container */
 .shine-preloader {
     position: fixed;
@@ -174,36 +175,36 @@ body {
 .orb {
     position: absolute;
     border-radius: var(--radius-full);
-    filter: blur(40px);
-    opacity: 0.6;
-    animation: orbFloat 4s ease-in-out infinite;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: orbFloat 6s ease-in-out infinite;
 }
 
 .orb-1 {
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
     background: radial-gradient(circle, var(--primary-green) 0%, transparent 70%);
-    top: 20%;
-    left: 10%;
+    top: 10%;
+    left: 5%;
     animation-delay: 0s;
 }
 
 .orb-2 {
-    width: 250px;
-    height: 250px;
+    width: 180px;
+    height: 180px;
     background: radial-gradient(circle, var(--primary-blue) 0%, transparent 70%);
-    top: 60%;
-    right: 15%;
-    animation-delay: 1.5s;
+    top: 70%;
+    right: 10%;
+    animation-delay: 2s;
 }
 
 .orb-3 {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     background: radial-gradient(circle, var(--primary-purple) 0%, transparent 70%);
-    bottom: 30%;
-    left: 20%;
-    animation-delay: 3s;
+    bottom: 20%;
+    left: 15%;
+    animation-delay: 4s;
 }
 
 .particle-field {
@@ -230,8 +231,8 @@ body {
 
 .logo-container {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -240,28 +241,28 @@ body {
 
 .logo-glow-ring {
     position: absolute;
-    top: -20px;
-    left: -20px;
-    width: calc(100% + 40px);
-    height: calc(100% + 40px);
-    border: 3px solid transparent;
-    border-radius: var(--radius-full);
-    background: var(--gradient-primary);
-    background-clip: padding-box;
-    opacity: 0;
-    animation: glowRing 2s ease-in-out infinite;
-}
-
-.logo-pulse-ring {
-    position: absolute;
     top: -30px;
     left: -30px;
     width: calc(100% + 60px);
     height: calc(100% + 60px);
-    border: 2px solid var(--primary-green);
+    border: 2px solid transparent;
+    border-radius: var(--radius-full);
+    background: linear-gradient(45deg, var(--primary-green), var(--primary-blue));
+    background-clip: padding-box;
+    opacity: 0;
+    animation: glowRing 4s ease-in-out infinite;
+}
+
+.logo-pulse-ring {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: calc(100% + 80px);
+    height: calc(100% + 80px);
+    border: 1px solid var(--primary-green);
     border-radius: var(--radius-full);
     opacity: 0;
-    animation: pulseRing 3s ease-in-out infinite;
+    animation: pulseRing 6s ease-in-out infinite;
 }
 
 .showcase-logo {
@@ -324,33 +325,33 @@ body {
 
 .sparkle {
     position: absolute;
-    font-size: 20px;
+    font-size: 16px;
     opacity: 0;
-    animation: sparkleAnimation 2s ease-in-out infinite;
+    animation: sparkleAnimation 3s ease-in-out infinite;
 }
 
 .sparkle-1 {
-    top: 10%;
-    left: 20%;
-    animation-delay: 0.5s;
-}
-
-.sparkle-2 {
-    top: 20%;
-    right: 15%;
+    top: 15%;
+    left: 15%;
     animation-delay: 1s;
 }
 
+.sparkle-2 {
+    top: 15%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
 .sparkle-3 {
-    bottom: 25%;
+    bottom: 15%;
     left: 15%;
-    animation-delay: 1.5s;
+    animation-delay: 3s;
 }
 
 .sparkle-4 {
     bottom: 15%;
-    right: 20%;
-    animation-delay: 2s;
+    right: 15%;
+    animation-delay: 1.5s;
 }
 
 /* Dynamic Text */
@@ -494,8 +495,8 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     .logo-container {
-        width: 100px;
-        height: 100px;
+        width: 160px;
+        height: 160px;
     }
     
     .text-line {
@@ -514,16 +515,24 @@ body {
         width: 80px;
         height: 80px;
     }
+    
+    .sparkle {
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 480px) {
     .logo-container {
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
     }
     
     .sparkle {
-        font-size: 16px;
+        font-size: 12px;
+    }
+    
+    .orb-1, .orb-2, .orb-3 {
+        display: none;
     }
 }
 
