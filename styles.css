@@ -297,7 +297,7 @@ body {
    HERO SECTION
    ======================================== */
 /* ========================================
-   HERO SECTION
+   HERO SECTION - DESKTOP & MOBILE OPTIMIZED
    ======================================== */
 .hero {
     position: relative;
@@ -1067,10 +1067,10 @@ body {
     }
 }
 
-/* Hero Responsive Design */
+/* Hero Responsive Design - ENHANCED MOBILE & TABLET */
 @media (max-width: 1024px) {
     .hero {
-        min-height: 80vh;
+        min-height: 90vh;
     }
     
     .hero-logo-large {
@@ -1082,6 +1082,7 @@ body {
     .hero-team {
         grid-template-columns: 1fr;
         gap: var(--space-xl);
+        max-width: 450px;
     }
     
     .hero-services {
@@ -1093,6 +1094,7 @@ body {
         flex-direction: column;
         text-align: center;
         gap: var(--space-md);
+        padding: var(--space-lg);
     }
     
     .hero-stats {
@@ -1108,12 +1110,16 @@ body {
     .slide-nav {
         padding: 0 var(--space-lg);
     }
+    
+    .hero-controls {
+        bottom: var(--space-xl);
+    }
 }
 
 @media (max-width: 768px) {
     .hero {
         min-height: 100vh;
-        padding-top: 80px;
+        padding-top: 70px; /* Account for header */
     }
     
     .hero .container {
@@ -1126,32 +1132,57 @@ body {
     }
     
     .hero-logo-large {
-        width: 240px;
-        height: 240px;
-        padding: var(--space-sm);
+        width: 260px;
+        height: 260px;
+        padding: var(--space-md);
+        margin-bottom: var(--space-lg);
     }
     
     .hero-content {
-        padding: var(--space-lg) 0;
+        padding: var(--space-xl) 0;
     }
     
     .hero-content-welcome {
-        min-height: 80vh;
+        min-height: 85vh;
         gap: var(--space-lg);
         padding-top: var(--space-lg);
     }
     
     .logo-showcase-large {
         margin-bottom: var(--space-lg);
-        padding-top: var(--space-lg);
+        padding-top: var(--space-md);
+    }
+    
+    .welcome-text {
+        margin-top: var(--space-md) !important;
+    }
+    
+    .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+        margin-bottom: var(--space-md) !important;
+        line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(1rem, 4vw, 1.3rem);
+        margin-bottom: var(--space-lg) !important;
+    }
+    
+    .hero-location {
+        padding: var(--space-sm) var(--space-lg);
+        font-size: 0.9rem;
+        margin-bottom: var(--space-lg) !important;
     }
     
     .hero-team {
         gap: var(--space-lg);
+        grid-template-columns: 1fr;
+        max-width: 380px;
     }
     
     .team-member {
         padding: var(--space-lg);
+        gap: var(--space-md);
     }
     
     .member-avatar {
@@ -1159,22 +1190,53 @@ body {
         height: 80px;
     }
     
+    .member-info h3 {
+        font-size: 1.2rem;
+    }
+    
+    .hero-services {
+        gap: var(--space-md);
+        grid-template-columns: 1fr;
+    }
+    
+    .service-item {
+        padding: var(--space-lg);
+        gap: var(--space-md);
+    }
+    
+    .service-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .service-icon i {
+        font-size: 1.3rem;
+    }
+    
     .hero-actions {
         flex-direction: column;
         align-items: center;
         gap: var(--space-md);
+        margin-top: var(--space-lg);
     }
     
     .btn-primary,
     .btn-secondary {
         width: 100%;
-        max-width: 300px;
+        max-width: 280px;
         justify-content: center;
+        padding: var(--space-md) var(--space-xl);
+        font-size: 1rem;
     }
     
     .hero-stats {
         grid-template-columns: 1fr;
         gap: var(--space-md);
+        max-width: 280px;
+    }
+    
+    .stat-item {
+        padding: var(--space-md);
     }
     
     .stat-number {
@@ -1182,10 +1244,11 @@ body {
     }
     
     .hero-controls {
-        bottom: var(--space-xl);
-        flex-direction: column;
+        bottom: var(--space-lg);
+        flex-direction: column-reverse;
         gap: var(--space-lg);
         position: relative;
+        margin-top: var(--space-xl);
     }
     
     .slide-nav {
@@ -1197,10 +1260,17 @@ body {
         transform: none;
         top: auto;
         left: auto;
+        order: 2;
     }
     
     .slide-indicators {
         order: 1;
+    }
+    
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
     }
     
     .floating-contact {
@@ -1211,7 +1281,7 @@ body {
     .floating-btn {
         width: 56px;
         height: 56px;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
     
     .floating-item {
@@ -1219,56 +1289,130 @@ body {
         height: 46px;
         font-size: 1.1rem;
     }
+    
+    .floating-menu {
+        bottom: 70px;
+    }
 }
 
 @media (max-width: 480px) {
+    .hero {
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+    
+    .hero .container {
+        padding: 0 var(--space-md);
+    }
+    
     .hero-logo {
         width: 100px;
         height: 100px;
     }
     
     .hero-logo-large {
-        width: 200px;
-        height: 200px;
-        padding: var(--space-xs);
+        width: 220px;
+        height: 220px;
+        padding: var(--space-sm);
+        margin-bottom: var(--space-md);
     }
     
     .hero-content-welcome {
-        min-height: 75vh;
+        min-height: 85vh;
         gap: var(--space-md);
         padding-top: var(--space-md);
     }
     
     .logo-showcase-large {
         margin-bottom: var(--space-md);
-        padding-top: var(--space-md);
+        padding-top: var(--space-sm);
+    }
+    
+    .hero-title {
+        font-size: clamp(1.8rem, 9vw, 2.5rem);
+        margin-bottom: var(--space-sm) !important;
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(0.95rem, 5vw, 1.2rem);
+        margin-bottom: var(--space-md) !important;
     }
     
     .hero-location {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 0.9rem;
+        padding: var(--space-xs) var(--space-md);
+        font-size: 0.85rem;
+        margin-bottom: var(--space-md) !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-xs);
+    }
+    
+    .hero-location span {
+        text-align: center;
     }
     
     .team-member {
         padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+    
+    .member-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .member-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .member-info p {
+        font-size: 0.9rem;
+    }
+    
+    .experience {
+        font-size: 0.8rem;
+        padding: var(--space-xs) var(--space-sm);
     }
     
     .service-item {
-        padding: var(--space-lg);
+        padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+    
+    .service-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .service-icon i {
+        font-size: 1.2rem;
+    }
+    
+    .service-info h3 {
+        font-size: 1rem;
+    }
+    
+    .service-info p {
+        font-size: 0.85rem;
     }
     
     .stat-item {
-        padding: var(--space-md);
+        padding: var(--space-sm);
     }
     
     .stat-number {
         font-size: 1.8rem;
     }
     
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
     .btn-primary,
     .btn-secondary {
-        padding: var(--space-md) var(--space-xl);
-        font-size: 1rem;
+        padding: var(--space-sm) var(--space-lg);
+        font-size: 0.95rem;
+        max-width: 260px;
     }
     
     .floating-contact {
@@ -1279,7 +1423,7 @@ body {
     .floating-btn {
         width: 52px;
         height: 52px;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
     
     .floating-item {
@@ -1294,6 +1438,59 @@ body {
     
     .slide-nav {
         gap: var(--space-2xl);
+    }
+    
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .indicator {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .hero-controls {
+        gap: var(--space-md);
+        margin-top: var(--space-lg);
+    }
+}
+
+/* Ultra-small screens */
+@media (max-width: 360px) {
+    .hero-logo-large {
+        width: 180px;
+        height: 180px;
+        padding: var(--space-xs);
+    }
+    
+    .hero-title {
+        font-size: clamp(1.6rem, 10vw, 2.2rem);
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(0.9rem, 5.5vw, 1.1rem);
+    }
+    
+    .hero-location {
+        font-size: 0.8rem;
+        padding: var(--space-xs) var(--space-sm);
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.9rem;
+        padding: var(--space-sm) var(--space-md);
+        max-width: 240px;
+    }
+    
+    .team-member {
+        padding: var(--space-sm);
+    }
+    
+    .service-item {
+        padding: var(--space-sm);
     }
 }
 
