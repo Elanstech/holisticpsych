@@ -1337,25 +1337,123 @@ body {
         width: 100vw;
     }
     
-    .hero-content {
+    .hero-content-wrapper {
         padding: var(--space-md) 0;
     }
     
-    .team-highlight {
-        gap: var(--space-sm);
+    .hero-container {
+        padding: 0 var(--space-md);
     }
     
-    .credential-badge {
-        padding: var(--space-sm) var(--space-md);
-        font-size: 0.875rem;
+    .hero-main-title {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+        margin-bottom: var(--space-md);
     }
     
-    .specialty-item h4 {
+    .hero-subtitle {
+        font-size: clamp(0.95rem, 4vw, 1.2rem);
+        margin-bottom: var(--space-lg);
+    }
+    
+    .hero-services-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    
+    .service-card {
+        padding: var(--space-md);
+    }
+    
+    .service-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .service-icon i {
+        font-size: 1.3rem;
+    }
+    
+    .service-title {
         font-size: 1.1rem;
     }
     
-    .specialty-item p {
+    .service-desc {
+        font-size: 0.85rem;
+    }
+    
+    .team-card {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+    
+    .avatar-placeholder {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .avatar-placeholder i {
+        font-size: 1.5rem;
+    }
+    
+    .team-name {
+        font-size: 1.3rem;
+    }
+    
+    .team-title {
         font-size: 0.9rem;
+    }
+    
+    .team-specialties span {
+        font-size: 0.8rem;
+        padding: 2px var(--space-xs);
+    }
+    
+    .credential-item {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.85rem;
+        flex-direction: column;
+        gap: var(--space-xs);
+        text-align: center;
+    }
+    
+    .hero-location-badge {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+    }
+    
+    .hero-btn {
+        font-size: 1rem;
+        padding: var(--space-md) var(--space-lg);
+    }
+    
+    .slide-nav {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .slide-nav i {
+        font-size: 1rem;
+    }
+    
+    .slide-indicator {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .hero-logo-section {
+        margin-bottom: var(--space-xl);
+    }
+    
+    .hero-text-section {
+        margin-bottom: var(--space-lg);
+    }
+    
+    .hero-team-section {
+        margin-bottom: var(--space-xl);
+    }
+    
+    .hero-services-grid {
+        margin-bottom: var(--space-xl);
     }
 }
 
