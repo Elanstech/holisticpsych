@@ -1083,6 +1083,28 @@ body {
         padding: var(--space-sm) var(--space-md);
     }
     
+    .feature-item {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+    
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .feature-icon i {
+        font-size: 1rem;
+    }
+    
+    .feature-content h3 {
+        font-size: 0.9rem;
+    }
+    
+    .feature-content p {
+        font-size: 0.8rem;
+    }
+    
     .service-card {
         padding: var(--space-xl);
     }
