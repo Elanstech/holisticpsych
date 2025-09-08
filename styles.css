@@ -388,7 +388,7 @@ body {
     animation: slideUp 0.8s ease-out 0.3s both;
 }
 
-/* Logo Showcase */
+/* Logo Showcase - Original Size */
 .logo-showcase {
     margin-bottom: var(--space-2xl);
 }
@@ -406,6 +406,42 @@ body {
 .hero-logo:hover {
     transform: scale(1.05);
     box-shadow: 0 25px 50px rgba(0, 216, 132, 0.3);
+}
+
+/* Large Logo Showcase for First Slide */
+.logo-showcase-large {
+    margin-bottom: var(--space-3xl);
+    text-align: center;
+}
+
+.hero-logo-large {
+    width: 480px;
+    height: 480px;
+    margin: 0 auto;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    transition: var(--transition);
+    border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-logo-large:hover {
+    transform: scale(1.02);
+    box-shadow: 0 40px 80px rgba(0, 216, 132, 0.4);
+}
+
+/* Welcome Content Layout */
+.hero-content-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    gap: var(--space-2xl);
+}
+
+.welcome-text {
+    text-align: center;
+    max-width: 800px;
 }
 
 /* Typography */
@@ -792,6 +828,121 @@ body {
     box-shadow: 0 0 10px rgba(0, 216, 132, 0.5);
 }
 
+/* Floating Contact Button */
+.floating-contact {
+    position: fixed;
+    bottom: var(--space-2xl);
+    right: var(--space-2xl);
+    z-index: 1000;
+}
+
+.floating-btn {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 50%;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 216, 132, 0.4);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.floating-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.floating-btn:hover::before {
+    left: 100%;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 48px rgba(0, 216, 132, 0.6);
+}
+
+.floating-btn.active {
+    transform: rotate(45deg);
+}
+
+.floating-menu {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.floating-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.floating-item {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: var(--gray-700);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: var(--transition);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    animation: floatUp 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.floating-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.floating-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.floating-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.floating-item:hover {
+    background: var(--white);
+    color: var(--primary-green);
+    transform: scale(1.1) translateY(0);
+    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.2);
+}
+
+@keyframes floatUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Animations */
 @keyframes slideUp {
     from {
@@ -841,6 +992,11 @@ body {
         min-height: 80vh;
     }
     
+    .hero-logo-large {
+        width: 360px;
+        height: 360px;
+    }
+    
     .hero-team {
         grid-template-columns: 1fr;
         gap: var(--space-xl);
@@ -861,6 +1017,11 @@ body {
         grid-template-columns: repeat(3, 1fr);
         gap: var(--space-md);
     }
+    
+    .floating-contact {
+        bottom: var(--space-xl);
+        right: var(--space-xl);
+    }
 }
 
 @media (max-width: 768px) {
@@ -878,8 +1039,22 @@ body {
         height: 120px;
     }
     
+    .hero-logo-large {
+        width: 280px;
+        height: 280px;
+    }
+    
     .hero-content {
         padding: var(--space-xl) 0;
+    }
+    
+    .hero-content-welcome {
+        min-height: 75vh;
+        gap: var(--space-xl);
+    }
+    
+    .logo-showcase-large {
+        margin-bottom: var(--space-xl);
     }
     
     .hero-team {
@@ -926,12 +1101,43 @@ body {
     .slide-nav {
         order: -1;
     }
+    
+    .floating-contact {
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+    }
+    
+    .floating-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.3rem;
+    }
+    
+    .floating-item {
+        width: 46px;
+        height: 46px;
+        font-size: 1.1rem;
+    }
 }
 
 @media (max-width: 480px) {
     .hero-logo {
         width: 100px;
         height: 100px;
+    }
+    
+    .hero-logo-large {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .hero-content-welcome {
+        min-height: 70vh;
+        gap: var(--space-lg);
+    }
+    
+    .logo-showcase-large {
+        margin-bottom: var(--space-lg);
     }
     
     .hero-location {
@@ -959,6 +1165,27 @@ body {
     .btn-secondary {
         padding: var(--space-md) var(--space-xl);
         font-size: 1rem;
+    }
+    
+    .floating-contact {
+        bottom: var(--space-md);
+        right: var(--space-md);
+    }
+    
+    .floating-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 1.2rem;
+    }
+    
+    .floating-item {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+    
+    .floating-menu {
+        bottom: 65px;
     }
 }
 
