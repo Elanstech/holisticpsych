@@ -497,6 +497,112 @@ function announceSlideChange(slideIndex) {
 }
 
 /* ========================================
+   FLOATING CONTACT BUTTON
+   ======================================== */
+function initializeFloatingContact() {
+    const floatingContact = document.getElementById('floatingContact');
+    const floatingBtn = document.getElementById('floatingBtn');
+    const floatingMenu = document.getElementById('floatingMenu');
+    
+    if (!floatingContact || !floatingBtn || !floatingMenu) {
+        console.warn('Floating contact elements not found');
+        return;
+    }
+    
+    let isOpen = false;
+    
+    // Toggle menu on button click
+    floatingBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleFloatingMenu();
+    });
+    
+    // Handle keyboard navigation
+    floatingBtn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleFloatingMenu();
+        }
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!floatingContact.contains(e.target) && isOpen) {
+            closeFloatingMenu();
+        }
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isOpen) {
+            closeFloatingMenu();
+        }
+    });
+    
+    // Handle menu item clicks
+    const menuItems = floatingMenu.querySelectorAll('.floating-item');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Close menu after click
+            setTimeout(() => {
+                closeFloatingMenu();
+            }, 150);
+        });
+    });
+    
+    function toggleFloatingMenu() {
+        if (isOpen) {
+            closeFloatingMenu();
+        } else {
+            openFloatingMenu();
+        }
+    }
+    
+    function openFloatingMenu() {
+        isOpen = true;
+        floatingBtn.classList.add('active');
+        floatingMenu.classList.add('open');
+        floatingBtn.setAttribute('aria-expanded', 'true');
+        
+        // Focus management for accessibility
+        const firstMenuItem = floatingMenu.querySelector('.floating-item');
+        if (firstMenuItem) {
+            setTimeout(() => {
+                firstMenuItem.focus();
+            }, 100);
+        }
+    }
+    
+    function closeFloatingMenu() {
+        isOpen = false;
+        floatingBtn.classList.remove('active');
+        floatingMenu.classList.remove('open');
+        floatingBtn.setAttribute('aria-expanded', 'false');
+        
+        // Reset menu item animations
+        const menuItems = floatingMenu.querySelectorAll('.floating-item');
+        menuItems.forEach(item => {
+            item.style.animation = 'none';
+            item.offsetHeight; // Trigger reflow
+            item.style.animation = '';
+        });
+    }
+    
+    // Auto-hide when scrolling (optional)
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (isOpen) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                closeFloatingMenu();
+            }, 1000);
+        }
+    });
+    
+    console.log('✅ Floating contact button initialized successfully');
+}
+
+/* ========================================
    SERVICES CAROUSEL
    ======================================== */
 function initializeServicesCarousel() {
