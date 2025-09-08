@@ -411,23 +411,24 @@ body {
 
 /* Large Logo Showcase for First Slide */
 .logo-showcase-large {
-    margin-bottom: var(--space-3xl);
+    margin-bottom: var(--space-2xl);
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: var(--space-xl);
 }
 
 .hero-logo-large {
-    width: 400px;
-    height: 400px;
+    width: 350px;
+    height: 350px;
     margin: 0 auto;
     border-radius: var(--radius-xl);
     transition: var(--transition);
     position: relative;
     z-index: 2;
     /* Frosted glass container */
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -483,15 +484,17 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 80vh;
-    gap: var(--space-2xl);
+    justify-content: flex-start;
+    min-height: 85vh;
+    gap: var(--space-xl);
     animation: slideUp 0.8s ease-out 0.3s both;
+    padding-top: var(--space-xl);
 }
 
 .welcome-text {
     text-align: center;
     max-width: 800px;
+    margin-top: var(--space-lg);
 }
 
 /* Typography */
@@ -499,7 +502,7 @@ body {
     font-family: var(--font-heading);
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 700;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     color: var(--white);
     line-height: 1.1;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
@@ -508,7 +511,7 @@ body {
 
 .hero-subtitle {
     font-size: clamp(1.2rem, 3vw, 1.6rem);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.4;
     font-weight: 400;
@@ -527,7 +530,7 @@ body {
     font-weight: 500;
     color: var(--white);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
     transition: var(--transition);
 }
 
@@ -792,7 +795,7 @@ body {
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* Controls */
+/* Controls - Repositioned */
 .hero-controls {
     position: absolute;
     bottom: var(--space-2xl);
@@ -800,13 +803,17 @@ body {
     transform: translateX(-50%);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-xl);
     z-index: 4;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .slide-indicators {
     display: flex;
     gap: var(--space-md);
+    order: 2;
 }
 
 .indicator {
@@ -833,7 +840,14 @@ body {
 
 .slide-nav {
     display: flex;
-    gap: var(--space-md);
+    justify-content: space-between;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 var(--space-xl);
+    order: 1;
 }
 
 .nav-btn {
@@ -1043,9 +1057,9 @@ body {
     }
     
     .hero-logo-large {
-        width: 300px;
-        height: 300px;
-        padding: var(--space-lg);
+        width: 280px;
+        height: 280px;
+        padding: var(--space-md);
     }
     
     .hero-team {
@@ -1073,6 +1087,10 @@ body {
         bottom: var(--space-xl);
         right: var(--space-xl);
     }
+    
+    .slide-nav {
+        padding: 0 var(--space-lg);
+    }
 }
 
 @media (max-width: 768px) {
@@ -1091,22 +1109,24 @@ body {
     }
     
     .hero-logo-large {
-        width: 250px;
-        height: 250px;
-        padding: var(--space-md);
+        width: 240px;
+        height: 240px;
+        padding: var(--space-sm);
     }
     
     .hero-content {
-        padding: var(--space-xl) 0;
+        padding: var(--space-lg) 0;
     }
     
     .hero-content-welcome {
-        min-height: 75vh;
-        gap: var(--space-xl);
+        min-height: 80vh;
+        gap: var(--space-lg);
+        padding-top: var(--space-lg);
     }
     
     .logo-showcase-large {
-        margin-bottom: var(--space-xl);
+        margin-bottom: var(--space-lg);
+        padding-top: var(--space-lg);
     }
     
     .hero-team {
@@ -1148,10 +1168,22 @@ body {
         bottom: var(--space-xl);
         flex-direction: column;
         gap: var(--space-lg);
+        position: relative;
     }
     
     .slide-nav {
-        order: -1;
+        position: relative;
+        justify-content: center;
+        gap: var(--space-3xl);
+        padding: 0;
+        width: auto;
+        transform: none;
+        top: auto;
+        left: auto;
+    }
+    
+    .slide-indicators {
+        order: 1;
     }
     
     .floating-contact {
@@ -1181,16 +1213,18 @@ body {
     .hero-logo-large {
         width: 200px;
         height: 200px;
-        padding: var(--space-sm);
+        padding: var(--space-xs);
     }
     
     .hero-content-welcome {
-        min-height: 70vh;
-        gap: var(--space-lg);
+        min-height: 75vh;
+        gap: var(--space-md);
+        padding-top: var(--space-md);
     }
     
     .logo-showcase-large {
-        margin-bottom: var(--space-lg);
+        margin-bottom: var(--space-md);
+        padding-top: var(--space-md);
     }
     
     .hero-location {
@@ -1239,6 +1273,10 @@ body {
     
     .floating-menu {
         bottom: 65px;
+    }
+    
+    .slide-nav {
+        gap: var(--space-2xl);
     }
 }
 
