@@ -1,6 +1,6 @@
 /* ========================================
    HOLISTIC PSYCHOLOGICAL SERVICES - CSS
-   Simple & Clean Design
+   Manhattan Corporate Style with Enhanced Hero
    ======================================== */
 
 /* ========================================
@@ -296,8 +296,6 @@ body {
 /* ========================================
    HERO SECTION
    ======================================== */
-
-/* Hero Section */
 .hero {
     position: relative;
     height: 100vh;
@@ -388,7 +386,7 @@ body {
     animation: slideUp 0.8s ease-out 0.3s both;
 }
 
-/* Logo Showcase - Original Size */
+/* Logo Showcase - Original Size for slides 2 & 3 */
 .logo-showcase {
     margin-bottom: var(--space-2xl);
 }
@@ -429,7 +427,7 @@ body {
     box-shadow: 0 40px 80px rgba(0, 216, 132, 0.4);
 }
 
-/* Welcome Content Layout */
+/* Welcome Content Layout for First Slide */
 .hero-content-welcome {
     display: flex;
     flex-direction: column;
@@ -437,6 +435,7 @@ body {
     justify-content: center;
     min-height: 80vh;
     gap: var(--space-2xl);
+    animation: slideUp 0.8s ease-out 0.3s both;
 }
 
 .welcome-text {
@@ -986,209 +985,6 @@ body {
     }
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .hero {
-        min-height: 80vh;
-    }
-    
-    .hero-logo-large {
-        width: 360px;
-        height: 360px;
-    }
-    
-    .hero-team {
-        grid-template-columns: 1fr;
-        gap: var(--space-xl);
-    }
-    
-    .hero-services {
-        grid-template-columns: 1fr;
-        gap: var(--space-lg);
-    }
-    
-    .service-item {
-        flex-direction: column;
-        text-align: center;
-        gap: var(--space-md);
-    }
-    
-    .hero-stats {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-md);
-    }
-    
-    .floating-contact {
-        bottom: var(--space-xl);
-        right: var(--space-xl);
-    }
-}
-
-@media (max-width: 768px) {
-    .hero {
-        min-height: 100vh;
-        padding-top: 80px;
-    }
-    
-    .hero .container {
-        padding: 0 var(--space-lg);
-    }
-    
-    .hero-logo {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .hero-logo-large {
-        width: 280px;
-        height: 280px;
-    }
-    
-    .hero-content {
-        padding: var(--space-xl) 0;
-    }
-    
-    .hero-content-welcome {
-        min-height: 75vh;
-        gap: var(--space-xl);
-    }
-    
-    .logo-showcase-large {
-        margin-bottom: var(--space-xl);
-    }
-    
-    .hero-team {
-        gap: var(--space-lg);
-    }
-    
-    .team-member {
-        padding: var(--space-lg);
-    }
-    
-    .member-avatar {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        align-items: center;
-        gap: var(--space-md);
-    }
-    
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-        max-width: 300px;
-        justify-content: center;
-    }
-    
-    .hero-stats {
-        grid-template-columns: 1fr;
-        gap: var(--space-md);
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
-    .hero-controls {
-        bottom: var(--space-xl);
-        flex-direction: column;
-        gap: var(--space-lg);
-    }
-    
-    .slide-nav {
-        order: -1;
-    }
-    
-    .floating-contact {
-        bottom: var(--space-lg);
-        right: var(--space-lg);
-    }
-    
-    .floating-btn {
-        width: 56px;
-        height: 56px;
-        font-size: 1.3rem;
-    }
-    
-    .floating-item {
-        width: 46px;
-        height: 46px;
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-logo {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .hero-logo-large {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .hero-content-welcome {
-        min-height: 70vh;
-        gap: var(--space-lg);
-    }
-    
-    .logo-showcase-large {
-        margin-bottom: var(--space-lg);
-    }
-    
-    .hero-location {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 0.9rem;
-    }
-    
-    .team-member {
-        padding: var(--space-md);
-    }
-    
-    .service-item {
-        padding: var(--space-lg);
-    }
-    
-    .stat-item {
-        padding: var(--space-md);
-    }
-    
-    .stat-number {
-        font-size: 1.8rem;
-    }
-    
-    .btn-primary,
-    .btn-secondary {
-        padding: var(--space-md) var(--space-xl);
-        font-size: 1rem;
-    }
-    
-    .floating-contact {
-        bottom: var(--space-md);
-        right: var(--space-md);
-    }
-    
-    .floating-btn {
-        width: 52px;
-        height: 52px;
-        font-size: 1.2rem;
-    }
-    
-    .floating-item {
-        width: 44px;
-        height: 44px;
-        font-size: 1rem;
-    }
-    
-    .floating-menu {
-        bottom: 65px;
-    }
-}
-
 /* ========================================
    ABOUT SECTION
    ======================================== */
@@ -1660,6 +1456,41 @@ body {
         display: none;
     }
     
+    .hero {
+        min-height: 80vh;
+    }
+    
+    .hero-logo-large {
+        width: 360px;
+        height: 360px;
+    }
+    
+    .hero-team {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+    
+    .hero-services {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+    
+    .service-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-md);
+    }
+    
+    .hero-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .floating-contact {
+        bottom: var(--space-xl);
+        right: var(--space-xl);
+    }
+    
     .contact-grid {
         grid-template-columns: 1fr;
         gap: var(--space-2xl);
@@ -1681,8 +1512,8 @@ body {
     }
     
     .hero {
-        min-height: 90vh;
-        padding-top: 70px;
+        min-height: 100vh;
+        padding-top: 80px;
     }
     
     .logo-text {
@@ -1693,20 +1524,44 @@ body {
         padding: var(--space-sm) 0;
     }
     
+    .hero .container {
+        padding: 0 var(--space-lg);
+    }
+    
     .hero-logo {
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
+    }
+    
+    .hero-logo-large {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .hero-content {
+        padding: var(--space-xl) 0;
+    }
+    
+    .hero-content-welcome {
+        min-height: 75vh;
+        gap: var(--space-xl);
+    }
+    
+    .logo-showcase-large {
+        margin-bottom: var(--space-xl);
     }
     
     .hero-team {
-        flex-direction: column;
         gap: var(--space-lg);
     }
     
-    .hero-services {
-        flex-direction: column;
-        gap: var(--space-md);
-        align-items: center;
+    .team-member {
+        padding: var(--space-lg);
+    }
+    
+    .member-avatar {
+        width: 80px;
+        height: 80px;
     }
     
     .hero-actions {
@@ -1718,8 +1573,44 @@ body {
     .btn-primary,
     .btn-secondary {
         width: 100%;
-        max-width: 280px;
+        max-width: 300px;
         justify-content: center;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .hero-controls {
+        bottom: var(--space-xl);
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+    
+    .slide-nav {
+        order: -1;
+    }
+    
+    .floating-contact {
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+    }
+    
+    .floating-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.3rem;
+    }
+    
+    .floating-item {
+        width: 46px;
+        height: 46px;
+        font-size: 1.1rem;
     }
     
     .team-grid {
@@ -1738,17 +1629,70 @@ body {
 
 @media (max-width: 480px) {
     .hero-logo {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
     }
     
-    .member-avatar {
-        width: 60px;
-        height: 60px;
+    .hero-logo-large {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .hero-content-welcome {
+        min-height: 70vh;
+        gap: var(--space-lg);
+    }
+    
+    .logo-showcase-large {
+        margin-bottom: var(--space-lg);
+    }
+    
+    .hero-location {
+        padding: var(--space-sm) var(--space-lg);
+        font-size: 0.9rem;
+    }
+    
+    .team-member {
+        padding: var(--space-md);
     }
     
     .service-item {
-        padding: var(--space-sm) var(--space-md);
+        padding: var(--space-lg);
+    }
+    
+    .stat-item {
+        padding: var(--space-md);
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: var(--space-md) var(--space-xl);
+        font-size: 1rem;
+    }
+    
+    .floating-contact {
+        bottom: var(--space-md);
+        right: var(--space-md);
+    }
+    
+    .floating-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 1.2rem;
+    }
+    
+    .floating-item {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+    
+    .floating-menu {
+        bottom: 65px;
     }
     
     .service-card {
@@ -1793,7 +1737,9 @@ body {
 .nav-link:focus,
 .cta-btn:focus,
 .btn-primary:focus,
-.btn-secondary:focus {
+.btn-secondary:focus,
+.floating-btn:focus,
+.floating-item:focus {
     outline: 2px solid var(--primary-green);
     outline-offset: 2px;
 }
