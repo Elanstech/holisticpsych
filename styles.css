@@ -489,12 +489,17 @@ body {
     gap: var(--space-xl);
     animation: slideUp 0.8s ease-out 0.3s both;
     padding-top: var(--space-xl);
+    text-align: center;
 }
 
 .welcome-text {
     text-align: center;
     max-width: 800px;
     margin-top: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 /* Typography */
@@ -507,6 +512,8 @@ body {
     line-height: 1.1;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     letter-spacing: -0.02em;
+    text-align: center;
+    width: 100%;
 }
 
 .hero-subtitle {
@@ -516,6 +523,8 @@ body {
     line-height: 1.4;
     font-weight: 400;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 100%;
 }
 
 .hero-location {
@@ -532,6 +541,8 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     margin-bottom: var(--space-xl);
     transition: var(--transition);
+    align-self: center;
+    text-align: center;
 }
 
 .hero-location:hover {
