@@ -148,7 +148,7 @@ function nextHeroSlide() {
 }
 
 function startHeroAutoplay() {
-    heroSlideInterval = setInterval(nextHeroSlide, 6000); // 6 seconds
+    heroSlideInterval = setInterval(nextHeroSlide, 7000); // 7 seconds for 3 slides
 }
 
 function pauseHeroAutoplay() {
