@@ -21,6 +21,7 @@ let progressInterval;
 document.addEventListener('DOMContentLoaded', function() {
     initializeHeader();
     initializeHeroSlideshow();
+    initializeFloatingContact();
     initializeServicesCarousel();
     initializeContactForm();
     initializeSmoothScrolling();
