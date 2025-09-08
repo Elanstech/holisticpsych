@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holistic Psychological Services PLLC - Manhattan Mental Health</title>
-    <meta name="description" content="Professional psychological services in Manhattan. Dr. Kristie Doheny and Dr. Doug Uhlig providing compassionate mental health care. Located at 274 Madison Ave, NYC.">
+    <meta name="description" content="Professional psychological services in Manhattan. Dr. Kristie Doheny and Dr. Doug Uhlig providing compassionate mental health care.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
-    <!-- Custom Styles -->
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     
     <!-- Favicon -->
@@ -22,7 +22,7 @@
 </head>
 <body>
     
-    <!-- Simple Header -->
+    <!-- Header -->
     <header class="header" id="header">
         <div class="container">
             <div class="header-content">
@@ -58,99 +58,19 @@
         </div>
         
         <!-- Mobile Menu -->
-        <div class="mobile-menu-overlay" id="mobileMenu">
-            <div class="mobile-menu-backdrop"></div>
-            <div class="mobile-menu-panel">
-                <div class="mobile-menu-header">
-                    <div class="mobile-logo">
-                        <img src="images/logo.png" alt="Logo">
-                        <div class="mobile-logo-text">
-                            <h3>Holistic Psychological</h3>
-                            <p>Manhattan Wellness</p>
-                        </div>
-                    </div>
-                    <button class="mobile-close-btn" id="mobileCloseBtn">
-                        <span class="close-line"></span>
-                        <span class="close-line"></span>
-                    </button>
-                </div>
-                
-                <nav class="mobile-nav">
-                    <a href="#home" class="mobile-nav-link" data-index="0">
-                        <div class="nav-link-icon">
-                            <i class="ri-home-4-line"></i>
-                        </div>
-                        <div class="nav-link-content">
-                            <span class="nav-link-title">Home</span>
-                            <span class="nav-link-desc">Welcome & Overview</span>
-                        </div>
-                        <div class="nav-link-arrow">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                    
-                    <a href="#about" class="mobile-nav-link" data-index="1">
-                        <div class="nav-link-icon">
-                            <i class="ri-user-heart-line"></i>
-                        </div>
-                        <div class="nav-link-content">
-                            <span class="nav-link-title">About</span>
-                            <span class="nav-link-desc">Meet Our Team</span>
-                        </div>
-                        <div class="nav-link-arrow">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                    
-                    <a href="#services" class="mobile-nav-link" data-index="2">
-                        <div class="nav-link-icon">
-                            <i class="ri-mental-health-line"></i>
-                        </div>
-                        <div class="nav-link-content">
-                            <span class="nav-link-title">Services</span>
-                            <span class="nav-link-desc">Therapy & Counseling</span>
-                        </div>
-                        <div class="nav-link-arrow">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                    
-                    <a href="#contact" class="mobile-nav-link" data-index="3">
-                        <div class="nav-link-icon">
-                            <i class="ri-phone-line"></i>
-                        </div>
-                        <div class="nav-link-content">
-                            <span class="nav-link-title">Contact</span>
-                            <span class="nav-link-desc">Get in Touch</span>
-                        </div>
-                        <div class="nav-link-arrow">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                </nav>
-                
-                <div class="mobile-menu-footer">
-                    <div class="mobile-actions">
-                        <a href="tel:(646)971-7325" class="mobile-phone-btn">
-                            <div class="phone-icon">
-                                <i class="ri-phone-fill"></i>
-                            </div>
-                            <div class="phone-content">
-                                <span class="phone-label">Call Now</span>
-                                <span class="phone-number">(646) 971-7325</span>
-                            </div>
-                        </a>
-                        
-                        <a href="#contact" class="mobile-book-btn">
-                            <span>Schedule Consultation</span>
-                            <i class="ri-calendar-check-line"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="mobile-contact-info">
-                        <p>274 Madison Ave, Suite 905<br>New York, NY 10016</p>
-                    </div>
-                </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <nav class="mobile-nav">
+                <a href="#home" class="mobile-nav-link">Home</a>
+                <a href="#about" class="mobile-nav-link">About</a>
+                <a href="#services" class="mobile-nav-link">Services</a>
+                <a href="#contact" class="mobile-nav-link">Contact</a>
+            </nav>
+            <div class="mobile-actions">
+                <a href="tel:(646)971-7325" class="mobile-phone-btn">
+                    <i class="ri-phone-line"></i>
+                    <span>(646) 971-7325</span>
+                </a>
+                <a href="#contact" class="mobile-cta-btn">Book Session</a>
             </div>
         </div>
     </header>
@@ -163,18 +83,13 @@
             <div class="hero-slideshow">
                 <!-- Slide 1: Welcome & Logo -->
                 <div class="hero-slide active" data-slide="0">
-                    <div class="slide-bg">
-                        <img src="https://images.pexels.com/photos/6301184/pexels-photo-6301184.jpeg" alt="Peaceful therapy environment">
-                        <div class="slide-overlay"></div>
-                    </div>
                     <div class="container">
-                        <div class="hero-content welcome-slide">
+                        <div class="hero-content">
                             <div class="logo-showcase">
                                 <img src="images/logo.png" alt="Holistic Psychological Services" class="hero-logo">
-                                <div class="logo-glow"></div>
                             </div>
                             <h1 class="hero-title">Welcome to Holistic Psychological Services</h1>
-                            <p class="hero-subtitle">Professional Mental Health Care in the Heart of Manhattan</p>
+                            <p class="hero-subtitle">Professional Mental Health Care in Manhattan</p>
                             <div class="hero-location">
                                 <i class="ri-map-pin-2-line"></i>
                                 <span>274 Madison Ave, Suite 905 • New York, NY 10016</span>
@@ -183,17 +98,35 @@
                     </div>
                 </div>
                 
-                <!-- Slide 2: Services & People -->
+                <!-- Slide 2: Team & Services -->
                 <div class="hero-slide" data-slide="1">
-                    <div class="slide-bg">
-                        <img src="https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg" alt="Therapy session">
-                        <div class="slide-overlay"></div>
-                    </div>
                     <div class="container">
-                        <div class="hero-content services-slide">
+                        <div class="hero-content">
                             <h1 class="hero-title">Compassionate Care for Your Mental Wellness</h1>
-                            <p class="hero-subtitle">Evidence-based therapy tailored to your unique needs</p>
-                            <div class="services-preview">
+                            <p class="hero-subtitle">Expert psychologists providing evidence-based therapy</p>
+                            
+                            <div class="hero-team">
+                                <div class="team-member">
+                                    <div class="member-avatar">
+                                        <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny">
+                                    </div>
+                                    <div class="member-info">
+                                        <h3>Dr. Kristie Doheny</h3>
+                                        <p>PsyD, Owner</p>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <div class="member-avatar">
+                                        <img src="https://images.pexels.com/photos/5327921/pexels-photo-5327921.jpeg" alt="Dr. Doug Uhlig">
+                                    </div>
+                                    <div class="member-info">
+                                        <h3>Dr. Doug Uhlig</h3>
+                                        <p>Licensed Psychologist</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="hero-services">
                                 <div class="service-item">
                                     <i class="ri-user-heart-line"></i>
                                     <span>Individual Therapy</span>
@@ -206,11 +139,8 @@
                                     <i class="ri-mental-health-line"></i>
                                     <span>Group Therapy</span>
                                 </div>
-                                <div class="service-item">
-                                    <i class="ri-heart-pulse-line"></i>
-                                    <span>Holistic Approaches</span>
-                                </div>
                             </div>
+                            
                             <div class="hero-actions">
                                 <a href="#contact" class="btn-primary">Schedule Consultation</a>
                                 <a href="tel:(646)971-7325" class="btn-secondary">
@@ -225,24 +155,10 @@
             
             <!-- Slideshow Controls -->
             <div class="hero-controls">
-                <button class="slide-nav prev" id="prevSlide">
-                    <i class="ri-arrow-left-s-line"></i>
-                </button>
                 <div class="slide-indicators">
                     <button class="indicator active" data-slide="0"></button>
                     <button class="indicator" data-slide="1"></button>
                 </div>
-                <button class="slide-nav next" id="nextSlide">
-                    <i class="ri-arrow-right-s-line"></i>
-                </button>
-            </div>
-            
-            <!-- Scroll Indicator -->
-            <div class="scroll-indicator">
-                <div class="scroll-mouse">
-                    <div class="scroll-wheel"></div>
-                </div>
-                <span>Explore Our Services</span>
             </div>
         </section>
         
@@ -256,76 +172,43 @@
                 
                 <div class="team-grid">
                     <!-- Dr. Kristie Doheny -->
-                    <div class="team-member" data-aos="fade-up">
-                        <div class="member-image">
+                    <div class="team-card">
+                        <div class="team-image">
                             <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny">
-                            <div class="member-overlay">
-                                <div class="member-credentials">
-                                    <span class="credential">Licensed Psychologist</span>
-                                    <span class="credential">PsyD</span>
-                                </div>
-                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Dr. Kristie Doheny</h3>
-                            <p class="member-title">Owner & Licensed Psychologist (PsyD)</p>
-                            <p class="member-description">
+                        <div class="team-info">
+                            <h3 class="team-name">Dr. Kristie Doheny</h3>
+                            <p class="team-title">PsyD, Owner & Licensed Psychologist</p>
+                            <p class="team-description">
                                 Dr. Doheny brings over 15 years of experience in clinical psychology, specializing in 
-                                anxiety, depression, and trauma-informed care. Her holistic approach integrates 
-                                evidence-based practices with mindfulness and somatic techniques.
+                                anxiety, depression, and trauma-informed care with a holistic approach.
                             </p>
-                            <div class="member-specialties">
-                                <span class="specialty">Anxiety & Depression</span>
-                                <span class="specialty">Trauma Therapy</span>
-                                <span class="specialty">Mindfulness-Based Care</span>
+                            <div class="team-specialties">
+                                <span>Anxiety & Depression</span>
+                                <span>Trauma Therapy</span>
+                                <span>Mindfulness-Based Care</span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Dr. Doug Uhlig -->
-                    <div class="team-member" data-aos="fade-up" data-aos-delay="200">
-                        <div class="member-image">
+                    <div class="team-card">
+                        <div class="team-image">
                             <img src="https://images.pexels.com/photos/5327921/pexels-photo-5327921.jpeg" alt="Dr. Doug Uhlig">
-                            <div class="member-overlay">
-                                <div class="member-credentials">
-                                    <span class="credential">Licensed Psychologist</span>
-                                    <span class="credential">PhD</span>
-                                </div>
-                            </div>
                         </div>
-                        <div class="member-info">
-                            <h3 class="member-name">Dr. Doug Uhlig</h3>
-                            <p class="member-title">Licensed Psychologist</p>
-                            <p class="member-description">
-                                Dr. Uhlig specializes in cognitive-behavioral therapy and relationship counseling. 
-                                With a warm, collaborative approach, he helps individuals and couples navigate 
-                                life's challenges and build stronger, more fulfilling relationships.
+                        <div class="team-info">
+                            <h3 class="team-name">Dr. Doug Uhlig</h3>
+                            <p class="team-title">Licensed Psychologist</p>
+                            <p class="team-description">
+                                Dr. Uhlig specializes in cognitive-behavioral therapy and relationship counseling, 
+                                helping individuals and couples build stronger, more fulfilling relationships.
                             </p>
-                            <div class="member-specialties">
-                                <span class="specialty">Couples Therapy</span>
-                                <span class="specialty">CBT</span>
-                                <span class="specialty">Relationship Counseling</span>
+                            <div class="team-specialties">
+                                <span>Couples Therapy</span>
+                                <span>CBT</span>
+                                <span>Relationship Counseling</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="about-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">15+</div>
-                        <div class="stat-label">Years Experience</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Clients Helped</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Confidential Care</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Crisis Support</div>
                     </div>
                 </div>
             </div>
@@ -349,8 +232,8 @@
                                 </div>
                                 <h3 class="service-title">Individual Therapy</h3>
                                 <p class="service-description">
-                                    One-on-one sessions focused on your personal growth, mental health challenges, 
-                                    and life goals in a safe, supportive environment.
+                                    One-on-one sessions focused on your personal growth and mental health challenges 
+                                    in a safe, supportive environment.
                                 </p>
                                 <ul class="service-features">
                                     <li>Anxiety & Depression Treatment</li>
@@ -358,10 +241,6 @@
                                     <li>Cognitive Behavioral Therapy</li>
                                     <li>Mindfulness Integration</li>
                                 </ul>
-                                <div class="service-duration">
-                                    <i class="ri-time-line"></i>
-                                    <span>50-minute sessions</span>
-                                </div>
                             </div>
                             
                             <!-- Service 2 -->
@@ -380,10 +259,6 @@
                                     <li>Intimacy Building</li>
                                     <li>Relationship Repair</li>
                                 </ul>
-                                <div class="service-duration">
-                                    <i class="ri-time-line"></i>
-                                    <span>60-minute sessions</span>
-                                </div>
                             </div>
                             
                             <!-- Service 3 -->
@@ -402,32 +277,6 @@
                                     <li>Social Skills Development</li>
                                     <li>Cost-Effective Option</li>
                                 </ul>
-                                <div class="service-duration">
-                                    <i class="ri-time-line"></i>
-                                    <span>90-minute sessions</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Service 4 -->
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <i class="ri-heart-pulse-line"></i>
-                                </div>
-                                <h3 class="service-title">Holistic Approaches</h3>
-                                <p class="service-description">
-                                    Integrative therapies that address mind, body, and spirit for comprehensive 
-                                    healing and personal growth.
-                                </p>
-                                <ul class="service-features">
-                                    <li>Mindfulness Meditation</li>
-                                    <li>Somatic Therapy</li>
-                                    <li>Art & Expressive Therapy</li>
-                                    <li>Wellness Coaching</li>
-                                </ul>
-                                <div class="service-duration">
-                                    <i class="ri-time-line"></i>
-                                    <span>Variable duration</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -441,7 +290,6 @@
                             <button class="carousel-indicator active" data-slide="0"></button>
                             <button class="carousel-indicator" data-slide="1"></button>
                             <button class="carousel-indicator" data-slide="2"></button>
-                            <button class="carousel-indicator" data-slide="3"></button>
                         </div>
                         <button class="carousel-btn next" id="nextService">
                             <i class="ri-arrow-right-s-line"></i>
@@ -451,7 +299,7 @@
                 
                 <div class="services-cta">
                     <h3>Ready to Start Your Healing Journey?</h3>
-                    <p>Contact us today to schedule your consultation and take the first step toward better mental health.</p>
+                    <p>Contact us today to schedule your consultation.</p>
                     <div class="cta-buttons">
                         <a href="#contact" class="btn-primary">Schedule Consultation</a>
                         <a href="tel:(646)971-7325" class="btn-secondary">
@@ -479,7 +327,7 @@
                             </div>
                             <div class="contact-details">
                                 <h3>Office Location</h3>
-                                <p>274 Madison Ave, 9th Floor<br>Suite 905, New York, NY 10016</p>
+                                <p>274 Madison Ave, Suite 905<br>New York, NY 10016</p>
                             </div>
                         </div>
                         
@@ -500,16 +348,6 @@
                             <div class="contact-details">
                                 <h3>Office Hours</h3>
                                 <p>Monday - Friday: 9:00 AM - 7:00 PM<br>Saturday: 10:00 AM - 4:00 PM</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="ri-shield-check-line"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Insurance</h3>
-                                <p>Most major insurance plans accepted<br>Contact us to verify coverage</p>
                             </div>
                         </div>
                     </div>
@@ -539,14 +377,13 @@
                                     <option value="individual">Individual Therapy</option>
                                     <option value="couples">Couples Counseling</option>
                                     <option value="group">Group Therapy</option>
-                                    <option value="holistic">Holistic Approaches</option>
                                     <option value="consultation">Initial Consultation</option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="5" placeholder="Tell us how we can help you..."></textarea>
+                                <textarea id="message" name="message" rows="4" placeholder="Tell us how we can help you..."></textarea>
                             </div>
                             
                             <button type="submit" class="btn-primary">Send Message</button>
@@ -583,7 +420,6 @@
                             <li><a href="#services">Individual Therapy</a></li>
                             <li><a href="#services">Couples Counseling</a></li>
                             <li><a href="#services">Group Therapy</a></li>
-                            <li><a href="#services">Holistic Approaches</a></li>
                         </ul>
                     </div>
                     
@@ -600,10 +436,6 @@
             
             <div class="footer-bottom">
                 <p>&copy; 2024 Holistic Psychological Services PLLC. All rights reserved.</p>
-                <div class="footer-legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
             </div>
         </div>
     </footer>
