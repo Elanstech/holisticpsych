@@ -1120,8 +1120,9 @@ body {
         display: flex;
     }
     
-    .header.mobile-open .mobile-menu {
-        display: block;
+    .header.mobile-open .mobile-menu-overlay {
+        opacity: 1;
+        visibility: visible;
     }
     
     .phone-btn {
@@ -1141,6 +1142,30 @@ body {
     .footer-links {
         grid-template-columns: 1fr;
     }
+    
+    .hero {
+        height: 90vh;
+    }
+    
+    .hero-logo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .services-preview {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .team-highlight {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .credential-badge {
+        justify-content: center;
+        text-align: center;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1149,8 +1174,8 @@ body {
     }
     
     .hero {
-        height: 80vh;
-        margin-top: 70px;
+        height: 85vh;
+        padding-top: 70px;
     }
     
     .logo-text {
@@ -1162,8 +1187,16 @@ body {
     }
     
     .hero-logo {
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
+    }
+    
+    .hero-title {
+        font-size: clamp(1.75rem, 6vw, 2.5rem);
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(1rem, 3vw, 1.25rem);
     }
     
     .services-preview {
@@ -1171,9 +1204,24 @@ body {
         gap: var(--space-md);
     }
     
+    .service-item {
+        padding: var(--space-md);
+    }
+    
+    .service-item i {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+    
+    .service-item span {
+        font-size: 1rem;
+    }
+    
     .hero-actions {
         flex-direction: column;
         align-items: center;
+        gap: var(--space-md);
     }
     
     .btn-primary,
@@ -1181,6 +1229,7 @@ body {
         width: 100%;
         max-width: 300px;
         justify-content: center;
+        padding: var(--space-md) var(--space-xl);
     }
     
     .team-grid {
@@ -1209,6 +1258,30 @@ body {
     
     .hero-controls {
         bottom: var(--space-md);
+        gap: var(--space-md);
+    }
+    
+    .slide-nav {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .slide-nav i {
+        font-size: 1rem;
+    }
+    
+    .specialties-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    
+    .specialty-item {
+        padding: var(--space-md);
+    }
+    
+    .hero-location {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
     }
 }
 
@@ -1239,6 +1312,184 @@ body {
     .cta-buttons {
         flex-direction: column;
         align-items: center;
+    }
+    
+    .hero-logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .mobile-menu-panel {
+        width: 100vw;
+    }
+    
+    .hero-content {
+        padding: var(--space-md) 0;
+    }
+    
+    .team-highlight {
+        gap: var(--space-sm);
+    }
+    
+    .credential-badge {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.875rem;
+    }
+    
+    .specialty-item h4 {
+        font-size: 1.1rem;
+    }
+    
+    .specialty-item p {
+        font-size: 0.9rem;
+    }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes glow {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+}
+
+@keyframes phonePulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* ========================================
+   ADDITIONAL MOBILE ANIMATIONS
+   ======================================== */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ========================================
+   FROSTED GLASS UTILITIES
+   ======================================== */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+.hero-slide img,
+.mobile-menu-panel,
+.hero-logo {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* ========================================
+   ACCESSIBILITY IMPROVEMENTS
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .logo-glow,
+    .phone-icon::after,
+    .scroll-wheel {
+        animation: none !important;
+    }
+}
+
+/* Focus styles for better accessibility */
+.mobile-nav-link:focus,
+.mobile-phone-btn:focus,
+.mobile-book-btn:focus,
+.mobile-close-btn:focus {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .frosted-overlay {
+        background: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: none !important;
+    }
+    
+    .mobile-menu-panel {
+        background: var(--white) !important;
+        backdrop-filter: none !important;
     }
 }
 
@@ -1288,7 +1539,7 @@ body {
 }
 
 /* ========================================
-   STATES
+   FOCUS STATES
    ======================================== */
 .nav-link:focus,
 .cta-btn:focus,
