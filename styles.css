@@ -1069,9 +1069,35 @@ body {
 }
 
 @media (max-width: 480px) {
+    .hero-content {
+        padding: var(--space-xl) 0;
+        padding-top: 80px;
+    }
+    
     .hero-logo {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
+    }
+    
+    .hero-title {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+        margin-bottom: var(--space-sm);
+    }
+    
+    .hero-subtitle {
+        font-size: clamp(0.95rem, 4.5vw, 1.2rem);
+        margin-bottom: var(--space-lg);
+    }
+    
+    .hero-location {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+        gap: var(--space-xs);
+    }
+    
+    .team-member {
+        padding: var(--space-md);
+        gap: var(--space-sm);
     }
     
     .member-avatar {
@@ -1079,8 +1105,25 @@ body {
         height: 60px;
     }
     
+    .member-info h3 {
+        font-size: 1rem;
+    }
+    
+    .member-info p {
+        font-size: 0.85rem;
+    }
+    
     .service-item {
         padding: var(--space-sm) var(--space-md);
+        gap: var(--space-sm);
+    }
+    
+    .service-item i {
+        font-size: 1.1rem;
+    }
+    
+    .service-item span {
+        font-size: 0.9rem;
     }
     
     .feature-item {
@@ -1089,20 +1132,41 @@ body {
     }
     
     .feature-icon {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
     }
     
     .feature-icon i {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     
     .feature-content h3 {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
     
     .feature-content p {
         font-size: 0.8rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        padding: var(--space-sm) var(--space-lg);
+        font-size: 0.95rem;
+        max-width: 260px;
+    }
+    
+    .hero-controls {
+        bottom: var(--space-md);
+    }
+    
+    .slide-indicators {
+        padding: var(--space-xs) var(--space-sm);
+        gap: var(--space-xs);
+    }
+    
+    .indicator {
+        width: 8px;
+        height: 8px;
     }
     
     .service-card {
