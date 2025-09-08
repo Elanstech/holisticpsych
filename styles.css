@@ -1120,9 +1120,12 @@ body {
         display: flex;
     }
     
-    .header.mobile-open .mobile-menu-overlay {
-        opacity: 1;
-        visibility: visible;
+    .mobile-menu-overlay {
+        display: none; /* Hidden by default */
+    }
+    
+    .mobile-menu-overlay.active {
+        display: block; /* Only show when active */
     }
     
     .phone-btn {
@@ -1165,6 +1168,17 @@ body {
     .credential-badge {
         justify-content: center;
         text-align: center;
+    }
+}
+
+/* Ensure mobile menu is completely hidden on desktop */
+@media (min-width: 1025px) {
+    .mobile-menu-overlay {
+        display: none !important;
+    }
+    
+    .mobile-menu-btn {
+        display: none !important;
     }
 }
 
