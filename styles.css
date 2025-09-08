@@ -549,9 +549,6 @@ body {
     transition: var(--transition);
     text-align: center !important;
     align-self: center !important;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .hero-location:hover {
