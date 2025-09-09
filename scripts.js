@@ -1,19 +1,30 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - JS
-   Manhattan Corporate Style with Enhanced Hero
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE JS
+   Manhattan Corporate Style with All Sections
    ======================================== */
 
 /* ========================================
    GLOBAL VARIABLES
    ======================================== */
+
+// Hero Section Variables
 let currentHeroSlide = 0;
-let currentServiceSlide = 0;
 let heroSlideInterval;
 let heroTotalSlides = 3;
 let heroAutoplayDuration = 8000; // 8 seconds per slide
 let heroTransitionDuration = 1000; // 1 second transition
 let isHeroPaused = false;
 let progressInterval;
+
+// Services Carousel Variables
+let currentServiceSlide = 0;
+
+// Reviews Section Variables
+let currentTestimonial = 0;
+let testimonialInterval;
+let isTestimonialPaused = false;
+let totalTestimonials = 0;
+let isDesktop = window.innerWidth >= 1200;
 
 /* ========================================
    DOM READY INITIALIZATION
@@ -28,6 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMobileMenu();
     initializeScrollAnimations();
     initializeAccessibility();
+    
+    // Initialize new sections
+    initializeAboutPreview();
+    initializeReviewsSection();
 });
 
 /* ========================================
@@ -897,34 +912,6 @@ function initializeSmoothScrolling() {
 }
 
 /* ========================================
-   UTILITY FUNCTIONS
-   ======================================== */
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-/* ========================================
    SCROLL ANIMATIONS (SIMPLE)
    ======================================== */
 function initializeScrollAnimations() {
@@ -938,12 +925,22 @@ function initializeScrollAnimations() {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
+                
+                // Trigger stats counter animation for reviews section
+                if (entry.target.classList.contains('review-stats')) {
+                    animateStatsCounters();
+                }
+                
+                // Trigger team count animation for about section
+                if (entry.target.querySelector('.count-number')) {
+                    animateAboutTeamCount();
+                }
             }
         });
     }, observerOptions);
     
     // Elements to animate
-    const animatedElements = document.querySelectorAll('.team-card, .service-card, .contact-item');
+    const animatedElements = document.querySelectorAll('.team-card, .service-card, .contact-item, .about-preview-text, .leadership-preview, .reviews-section, .instagram-section');
     
     animatedElements.forEach((element, index) => {
         element.style.opacity = '0';
@@ -956,84 +953,980 @@ function initializeScrollAnimations() {
 }
 
 /* ========================================
-   PERFORMANCE OPTIMIZATIONS
+   ABOUT PREVIEW SECTION
    ======================================== */
-// Lazy loading for images
-function initializeLazyLoading() {
-    const images = document.querySelectorAll('img[data-src]');
+function initializeAboutPreview() {
+    initializeAboutScrollAnimations();
+    initializeLeaderCardInteractions();
+    initializeHighlightAnimations();
+    initializeSpecialtyTagInteractions();
+    initializeAboutButtonAnimations();
+    initializeAboutAccessibility();
+}
+
+function initializeAboutScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
     
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
-                }
-            });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                
+                // Stagger animations for child elements
+                const children = entry.target.querySelectorAll('.highlight-item, .leader-card, .specialty-tag');
+                children.forEach((child, index) => {
+                    setTimeout(() => {
+                        child.classList.add('animate-in');
+                    }, index * 100);
+                });
+            }
         });
-        
-        images.forEach(img => imageObserver.observe(img));
-    } else {
-        // Fallback for browsers without IntersectionObserver
-        images.forEach(img => {
-            img.src = img.dataset.src;
-        });
-    }
-}
-
-// Preload next slide image
-function preloadNextSlideImage() {
-    const nextIndex = (currentHeroSlide + 1) % heroTotalSlides;
-    const nextSlide = document.querySelector(`[data-slide="${nextIndex}"]`);
+    }, observerOptions);
     
-    if (nextSlide) {
-        const img = nextSlide.querySelector('.hero-background img');
-        if (img && img.dataset.src) {
-            const preloadImg = new Image();
-            preloadImg.src = img.dataset.src;
-        }
-    }
-}
-
-/* ========================================
-   RESIZE HANDLER
-   ======================================== */
-function handleHeroResize() {
-    // Recalculate positions if needed
-    const heroSection = document.querySelector('.hero');
-    if (heroSection) {
-        // Force layout recalculation
-        heroSection.style.height = '100vh';
-        heroSection.offsetHeight; // Trigger reflow
+    // Elements to animate
+    const animatedElements = document.querySelectorAll('.about-preview-text, .leadership-preview');
+    animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         
-        // Update for mobile viewport height issues
-        if (window.innerHeight < 600) {
-            heroSection.style.minHeight = '100vh';
-        }
-    }
-}
-
-// Debounced resize handler
-const debouncedHeroResize = debounce(handleHeroResize, 250);
-window.addEventListener('resize', debouncedHeroResize);
-
-/* ========================================
-   ERROR HANDLING
-   ======================================== */
-window.addEventListener('error', function(event) {
-    console.error('JavaScript Error:', {
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno
+        observer.observe(element);
     });
-});
+    
+    // Add CSS for animate-in class
+    if (!document.querySelector('#about-animations-style')) {
+        const style = document.createElement('style');
+        style.id = 'about-animations-style';
+        style.textContent = `
+            .animate-in {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+            
+            .highlight-item,
+            .leader-card,
+            .specialty-tag {
+                transition: opacity 0.4s ease, transform 0.4s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
 
-window.addEventListener('unhandledrejection', function(event) {
-    console.error('Unhandled Promise Rejection:', event.reason);
-});
+function initializeLeaderCardInteractions() {
+    const leaderCards = document.querySelectorAll('.leader-card');
+    
+    leaderCards.forEach(card => {
+        // Enhanced hover effects
+        card.addEventListener('mouseenter', function() {
+            // Add subtle scale to image
+            const img = this.querySelector('.leader-image img');
+            if (img) {
+                img.style.transform = 'scale(1.1)';
+            }
+            
+            // Animate specialty tag
+            const specialty = this.querySelector('.leader-specialty');
+            if (specialty) {
+                specialty.style.background = 'var(--primary-green)';
+                specialty.style.color = 'var(--white)';
+                specialty.style.borderColor = 'var(--primary-green)';
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            // Reset image scale
+            const img = this.querySelector('.leader-image img');
+            if (img) {
+                img.style.transform = 'scale(1)';
+            }
+            
+            // Reset specialty tag
+            const specialty = this.querySelector('.leader-specialty');
+            if (specialty) {
+                specialty.style.background = 'rgba(0, 216, 132, 0.1)';
+                specialty.style.color = 'var(--primary-green)';
+                specialty.style.borderColor = 'rgba(0, 216, 132, 0.2)';
+            }
+        });
+        
+        // Click interaction for potential future functionality
+        card.addEventListener('click', function() {
+            const leaderName = this.dataset.leader;
+            
+            // Add click animation
+            this.style.transform = 'scale(0.98) translateY(-2px)';
+            setTimeout(() => {
+                this.style.transform = 'translateY(-2px)';
+            }, 150);
+            
+            console.log(`Leader card clicked: ${leaderName}`);
+        });
+        
+        // Keyboard accessibility
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Learn more about ${card.querySelector('h4')?.textContent || 'team member'}`);
+        
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+    });
+}
+
+function initializeHighlightAnimations() {
+    const highlights = document.querySelectorAll('.highlight-item');
+    
+    highlights.forEach((highlight, index) => {
+        // Stagger initial animations
+        highlight.style.animationDelay = `${index * 0.1}s`;
+        
+        // Enhanced hover interaction
+        highlight.addEventListener('mouseenter', function() {
+            const icon = this.querySelector('.highlight-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1.1) rotate(5deg)';
+                icon.style.boxShadow = '0 6px 16px rgba(0, 216, 132, 0.3)';
+            }
+        });
+        
+        highlight.addEventListener('mouseleave', function() {
+            const icon = this.querySelector('.highlight-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1) rotate(0deg)';
+                icon.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
+            }
+        });
+    });
+}
+
+function initializeSpecialtyTagInteractions() {
+    const specialtyTags = document.querySelectorAll('.specialty-tag');
+    
+    specialtyTags.forEach((tag, index) => {
+        // Random animation delay for a more organic feel
+        const delay = Math.random() * 0.5;
+        tag.style.animationDelay = `${delay}s`;
+        
+        // Enhanced interactions
+        tag.addEventListener('mouseenter', function() {
+            // Create ripple effect
+            createAboutRippleEffect(this);
+        });
+    });
+}
+
+function createAboutRippleEffect(element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    
+    ripple.style.cssText = `
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        width: ${size}px;
+        height: ${size}px;
+        left: 50%;
+        top: 50%;
+        margin-left: ${-size / 2}px;
+        margin-top: ${-size / 2}px;
+        pointer-events: none;
+    `;
+    
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    
+    // Add ripple animation if not exists
+    if (!document.querySelector('#ripple-animation-style')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-animation-style';
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+function initializeAboutButtonAnimations() {
+    const buttons = document.querySelectorAll('.about-learn-more, .about-view-team');
+    
+    buttons.forEach(button => {
+        // Enhanced click animation
+        button.addEventListener('click', function(e) {
+            // Create expanding circle animation
+            const circle = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 2;
+            
+            circle.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                width: 0;
+                height: 0;
+                left: ${e.clientX - rect.left}px;
+                top: ${e.clientY - rect.top}px;
+                transform: translate(-50%, -50%);
+                animation: button-click 0.5s ease-out;
+                pointer-events: none;
+            `;
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(circle);
+            
+            // Add button click animation if not exists
+            if (!document.querySelector('#button-click-animation-style')) {
+                const style = document.createElement('style');
+                style.id = 'button-click-animation-style';
+                style.textContent = `
+                    @keyframes button-click {
+                        to {
+                            width: ${size}px;
+                            height: ${size}px;
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            setTimeout(() => {
+                circle.remove();
+            }, 500);
+        });
+    });
+}
+
+function initializeAboutAccessibility() {
+    // Add focus management
+    const focusableElements = document.querySelectorAll('.leader-card, .about-learn-more, .about-view-team');
+    
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', function() {
+            this.style.outline = '2px solid var(--primary-green)';
+            this.style.outlineOffset = '2px';
+        });
+        
+        element.addEventListener('blur', function() {
+            this.style.outline = 'none';
+        });
+    });
+    
+    // Add ARIA live region for dynamic content updates
+    if (!document.querySelector('#about-live-region')) {
+        const liveRegion = document.createElement('div');
+        liveRegion.id = 'about-live-region';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.cssText = `
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        `;
+        document.body.appendChild(liveRegion);
+    }
+}
+
+function animateAboutTeamCount() {
+    const countElement = document.querySelector('.count-number');
+    if (!countElement) return;
+    
+    const targetCount = parseInt(countElement.textContent);
+    const duration = 1000; // 1 second
+    const startTime = performance.now();
+    
+    function updateCount(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentCount = Math.round(easeOut * targetCount);
+        
+        countElement.textContent = currentCount + '+';
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCount);
+        }
+    }
+    
+    // Start animation when element becomes visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                requestAnimationFrame(updateCount);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    observer.observe(countElement);
+}
+
+/* ========================================
+   REVIEWS & INSTAGRAM SECTION
+   ======================================== */
+function initializeReviewsSection() {
+    initializeTestimonialsCarousel();
+    initializeInstagramSection();
+    initializeReviewsScrollAnimations();
+    initializeReviewsAccessibility();
+    initializeResponsiveHandling();
+    
+    console.log('✅ Reviews & Instagram section initialized successfully');
+}
+
+function initializeTestimonialsCarousel() {
+    const track = document.getElementById('testimonialsTrack');
+    const cards = document.querySelectorAll('.testimonial-card');
+    const indicators = document.getElementById('testimonialIndicators');
+    const prevBtn = document.getElementById('testimonialPrev');
+    const nextBtn = document.getElementById('testimonialNext');
+    
+    if (!track || cards.length === 0) {
+        console.warn('Testimonials elements not found');
+        return;
+    }
+    
+    totalTestimonials = cards.length;
+    
+    // Check if desktop layout (grid instead of carousel)
+    checkDesktopLayout();
+    
+    if (!isDesktop) {
+        // Generate indicators
+        generateTestimonialIndicators();
+        
+        // Initialize carousel
+        showTestimonial(0);
+        
+        // Add event listeners
+        if (prevBtn) {
+            prevBtn.addEventListener('click', previousTestimonial);
+            prevBtn.addEventListener('keydown', handleTestimonialButtonKeydown);
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', nextTestimonial);
+            nextBtn.addEventListener('keydown', handleTestimonialButtonKeydown);
+        }
+        
+        // Add touch/swipe support
+        initializeTestimonialTouchSupport();
+        
+        // Add keyboard navigation
+        initializeTestimonialKeyboardSupport();
+        
+        // Auto-play functionality
+        startTestimonialAutoplay();
+        
+        // Pause/resume on hover
+        const container = document.querySelector('.testimonials-container');
+        if (container) {
+            container.addEventListener('mouseenter', pauseTestimonialAutoplay);
+            container.addEventListener('mouseleave', resumeTestimonialAutoplay);
+            container.addEventListener('focusin', pauseTestimonialAutoplay);
+            container.addEventListener('focusout', resumeTestimonialAutoplay);
+        }
+    }
+    
+    // Add visibility change handler
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            pauseTestimonialAutoplay();
+        } else if (!isTestimonialPaused) {
+            resumeTestimonialAutoplay();
+        }
+    });
+}
+
+function checkDesktopLayout() {
+    isDesktop = window.innerWidth >= 1200;
+    const controls = document.querySelector('.testimonials-controls');
+    
+    if (isDesktop) {
+        // Hide controls on desktop
+        if (controls) controls.style.display = 'none';
+        stopTestimonialAutoplay();
+    } else {
+        // Show controls on mobile/tablet
+        if (controls) controls.style.display = 'flex';
+        if (!isTestimonialPaused) {
+            startTestimonialAutoplay();
+        }
+    }
+}
+
+function generateTestimonialIndicators() {
+    const indicators = document.getElementById('testimonialIndicators');
+    if (!indicators) return;
+    
+    indicators.innerHTML = '';
+    
+    for (let i = 0; i < totalTestimonials; i++) {
+        const indicator = document.createElement('button');
+        indicator.className = 'testimonial-indicator';
+        indicator.setAttribute('data-slide', i);
+        indicator.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
+        
+        indicator.addEventListener('click', () => {
+            showTestimonial(i);
+            resetTestimonialAutoplay();
+        });
+        
+        indicator.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                showTestimonial(i);
+                resetTestimonialAutoplay();
+            }
+        });
+        
+        indicators.appendChild(indicator);
+    }
+}
+
+function showTestimonial(index) {
+    if (isDesktop) return; // No carousel on desktop
+    
+    const track = document.getElementById('testimonialsTrack');
+    const indicators = document.querySelectorAll('.testimonial-indicator');
+    const prevBtn = document.getElementById('testimonialPrev');
+    const nextBtn = document.getElementById('testimonialNext');
+    
+    if (index < 0 || index >= totalTestimonials) return;
+    
+    // Move track
+    const translateX = -index * 100;
+    track.style.transform = `translateX(${translateX}%)`;
+    
+    // Update indicators
+    indicators.forEach((indicator, i) => {
+        if (i === index) {
+            indicator.classList.add('active');
+            indicator.setAttribute('aria-pressed', 'true');
+        } else {
+            indicator.classList.remove('active');
+            indicator.setAttribute('aria-pressed', 'false');
+        }
+    });
+    
+    // Update navigation buttons
+    if (prevBtn) {
+        prevBtn.disabled = index === 0;
+    }
+    if (nextBtn) {
+        nextBtn.disabled = index === totalTestimonials - 1;
+    }
+    
+    currentTestimonial = index;
+    
+    // Announce change for screen readers
+    announceTestimonialChange(index);
+    
+    // Add animation to current card
+    const currentCard = document.querySelectorAll('.testimonial-card')[index];
+    if (currentCard) {
+        currentCard.classList.add('animate-in');
+    }
+}
+
+function nextTestimonial() {
+    if (currentTestimonial < totalTestimonials - 1) {
+        showTestimonial(currentTestimonial + 1);
+    } else {
+        showTestimonial(0); // Loop to first
+    }
+}
+
+function previousTestimonial() {
+    if (currentTestimonial > 0) {
+        showTestimonial(currentTestimonial - 1);
+    } else {
+        showTestimonial(totalTestimonials - 1); // Loop to last
+    }
+}
+
+function startTestimonialAutoplay() {
+    if (isDesktop) return;
+    
+    stopTestimonialAutoplay();
+    testimonialInterval = setInterval(() => {
+        if (!isTestimonialPaused) {
+            nextTestimonial();
+        }
+    }, 5000); // 5 seconds per slide
+}
+
+function stopTestimonialAutoplay() {
+    if (testimonialInterval) {
+        clearInterval(testimonialInterval);
+        testimonialInterval = null;
+    }
+}
+
+function pauseTestimonialAutoplay() {
+    isTestimonialPaused = true;
+}
+
+function resumeTestimonialAutoplay() {
+    isTestimonialPaused = false;
+}
+
+function resetTestimonialAutoplay() {
+    stopTestimonialAutoplay();
+    setTimeout(() => {
+        if (!isTestimonialPaused) {
+            startTestimonialAutoplay();
+        }
+    }, 1000);
+}
+
+function initializeTestimonialTouchSupport() {
+    const container = document.querySelector('.testimonials-carousel');
+    if (!container) return;
+    
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isDragging = false;
+    const threshold = 50;
+    
+    container.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        pauseTestimonialAutoplay();
+    }, { passive: true });
+    
+    container.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+        
+        const deltaX = Math.abs(currentX - startX);
+        const deltaY = Math.abs(currentY - startY);
+        
+        // Prevent vertical scrolling during horizontal swipe
+        if (deltaX > deltaY && deltaX > 20) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    container.addEventListener('touchend', function() {
+        if (!isDragging) return;
+        
+        const deltaX = startX - currentX;
+        const deltaY = Math.abs(startY - currentY);
+        
+        if (Math.abs(deltaX) > threshold && Math.abs(deltaX) > deltaY) {
+            if (deltaX > 0) {
+                nextTestimonial();
+            } else {
+                previousTestimonial();
+            }
+            resetTestimonialAutoplay();
+        }
+        
+        isDragging = false;
+        setTimeout(() => {
+            resumeTestimonialAutoplay();
+        }, 100);
+    }, { passive: true });
+}
+
+function initializeTestimonialKeyboardSupport() {
+    document.addEventListener('keydown', function(e) {
+        const focusedElement = document.activeElement;
+        const isTestimonialFocused = document.querySelector('.testimonials-container')?.contains(focusedElement);
+        
+        if (!isTestimonialFocused) return;
+        
+        switch(e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                previousTestimonial();
+                resetTestimonialAutoplay();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                nextTestimonial();
+                resetTestimonialAutoplay();
+                break;
+            case ' ':
+                e.preventDefault();
+                if (isTestimonialPaused) {
+                    resumeTestimonialAutoplay();
+                    startTestimonialAutoplay();
+                } else {
+                    pauseTestimonialAutoplay();
+                }
+                break;
+        }
+    });
+}
+
+function handleTestimonialButtonKeydown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.target.click();
+    }
+}
+
+function initializeInstagramSection() {
+    const followBtn = document.querySelector('.instagram-follow-btn');
+    const instagramIcon = document.querySelector('.instagram-icon');
+    
+    // Enhanced follow button interactions
+    if (followBtn) {
+        followBtn.addEventListener('click', function(e) {
+            // Add click animation
+            createInstagramClickAnimation(this, e);
+            
+            // Track click for analytics (optional)
+            console.log('Instagram follow button clicked');
+        });
+    }
+    
+    // Animate Instagram icon on hover
+    if (instagramIcon) {
+        instagramIcon.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1) rotate(5deg)';
+        });
+        
+        instagramIcon.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+    }
+    
+    // Initialize Elfsight widget observer
+    initializeElfsightObserver();
+}
+
+function createInstagramClickAnimation(element, event) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    
+    ripple.style.cssText = `
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        width: 0;
+        height: 0;
+        left: ${event.clientX - rect.left}px;
+        top: ${event.clientY - rect.top}px;
+        transform: translate(-50%, -50%);
+        animation: ripple-expand 0.6s ease-out;
+        pointer-events: none;
+        z-index: 1000;
+    `;
+    
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    
+    // Add animation if not exists
+    if (!document.querySelector('#ripple-expand-style')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-expand-style';
+        style.textContent = `
+            @keyframes ripple-expand {
+                to {
+                    width: ${size}px;
+                    height: ${size}px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.remove();
+        }
+    }, 600);
+}
+
+function initializeElfsightObserver() {
+    // Observer to detect when Elfsight widget loads
+    const instagramFeed = document.querySelector('.instagram-feed');
+    if (!instagramFeed) return;
+    
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1 && node.classList && node.classList.contains('elfsight-app')) {
+                        // Widget loaded
+                        console.log('✅ Instagram widget loaded');
+                        
+                        // Add custom styling or interactions here if needed
+                        customizeElfsightWidget(node);
+                    }
+                });
+            }
+        });
+    });
+    
+    observer.observe(instagramFeed, {
+        childList: true,
+        subtree: true
+    });
+}
+
+function customizeElfsightWidget(widget) {
+    // Add any custom styling or functionality to the Elfsight widget
+    widget.style.borderRadius = 'var(--radius-lg)';
+    widget.style.overflow = 'hidden';
+    
+    // Add loading animation
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'elfsight-loading';
+    loadingOverlay.innerHTML = `
+        <div class="loading-spinner">
+            <i class="ri-loader-4-line"></i>
+        </div>
+        <p>Loading Instagram feed...</p>
+    `;
+    
+    // Add loading styles
+    if (!document.querySelector('#elfsight-loading-style')) {
+        const style = document.createElement('style');
+        style.id = 'elfsight-loading-style';
+        style.textContent = `
+            .elfsight-loading {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: var(--gray-50);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: var(--space-md);
+                z-index: 10;
+            }
+            
+            .loading-spinner i {
+                font-size: 2rem;
+                color: var(--primary-green);
+                animation: spin 1s linear infinite;
+            }
+            
+            .elfsight-loading p {
+                color: var(--gray-600);
+                font-size: 0.9rem;
+            }
+            
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    widget.parentNode.style.position = 'relative';
+    widget.parentNode.appendChild(loadingOverlay);
+    
+    // Remove loading overlay after widget content loads
+    setTimeout(() => {
+        if (loadingOverlay.parentNode) {
+            loadingOverlay.style.opacity = '0';
+            loadingOverlay.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                if (loadingOverlay.parentNode) {
+                    loadingOverlay.remove();
+                }
+            }, 300);
+        }
+    }, 2000);
+}
+
+function initializeReviewsScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                
+                // Stagger animations for testimonial cards
+                const cards = entry.target.querySelectorAll('.testimonial-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('animate-in');
+                    }, index * 100);
+                });
+                
+                // Trigger stats counter animation
+                if (entry.target.classList.contains('review-stats')) {
+                    animateStatsCounters();
+                }
+            }
+        });
+    }, observerOptions);
+    
+    // Elements to animate
+    const animatedElements = document.querySelectorAll('.reviews-section, .instagram-section, .review-stats');
+    animatedElements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        observer.observe(element);
+    });
+    
+    // Add animate-in styles
+    if (!document.querySelector('#scroll-animations-style')) {
+        const style = document.createElement('style');
+        style.id = 'scroll-animations-style';
+        style.textContent = `
+            .animate-in {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+function animateStatsCounters() {
+    const statNumbers = document.querySelectorAll('.review-stats .stat-number');
+    
+    statNumbers.forEach(statNumber => {
+        const finalValue = statNumber.textContent;
+        const isDecimal = finalValue.includes('.');
+        const numericValue = parseFloat(finalValue);
+        
+        if (isNaN(numericValue)) return;
+        
+        let currentValue = 0;
+        const increment = numericValue / 60; // 60 frames for smooth animation
+        const duration = 1500;
+        const startTime = performance.now();
+        
+        function updateCounter(timestamp) {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            currentValue = numericValue * easeOut;
+            
+            if (isDecimal) {
+                statNumber.textContent = currentValue.toFixed(1);
+            } else {
+                statNumber.textContent = Math.round(currentValue) + '+';
+            }
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                statNumber.textContent = finalValue;
+            }
+        }
+        
+        requestAnimationFrame(updateCounter);
+    });
+}
+
+function initializeResponsiveHandling() {
+    let resizeTimer;
+    
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const wasDesktop = isDesktop;
+            checkDesktopLayout();
+            
+            if (wasDesktop !== isDesktop) {
+                // Layout changed, reinitialize
+                if (isDesktop) {
+                    // Switched to desktop
+                    stopTestimonialAutoplay();
+                    const track = document.getElementById('testimonialsTrack');
+                    if (track) track.style.transform = 'none';
+                } else {
+                    // Switched to mobile/tablet
+                    generateTestimonialIndicators();
+                    showTestimonial(0);
+                    startTestimonialAutoplay();
+                }
+            }
+        }, 250);
+    });
+}
+
+function initializeReviewsAccessibility() {
+    // Add live region for announcements
+    if (!document.querySelector('#reviews-live-region')) {
+        const liveRegion = document.createElement('div');
+        liveRegion.id = 'reviews-live-region';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.cssText = `
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        `;
+        document.body.appendChild(liveRegion);
+    }
+    
+    // Add focus management
+    const focusableElements = document.querySelectorAll('.testimonial-nav, .testimonial-indicator, .instagram-follow-btn');
+    
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', function() {
+            this.style.outline = '2px solid var(--primary-green)';
+            this.style.outlineOffset = '2px';
+        });
+        
+        element.addEventListener('blur', function() {
+            this.style.outline = 'none';
+        });
+    });
+}
+
+function announceTestimonialChange(index) {
+    const liveRegion = document.getElementById('reviews-live-region');
+    if (liveRegion) {
+        liveRegion.textContent = `Showing testimonial ${index + 1} of ${totalTestimonials}`;
+    }
+}
 
 /* ========================================
    ACCESSIBILITY ENHANCEMENTS
@@ -1075,6 +1968,72 @@ function initializeAccessibility() {
 }
 
 /* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+/* ========================================
+   RESIZE HANDLER
+   ======================================== */
+function handleHeroResize() {
+    // Recalculate positions if needed
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        // Force layout recalculation
+        heroSection.style.height = '100vh';
+        heroSection.offsetHeight; // Trigger reflow
+        
+        // Update for mobile viewport height issues
+        if (window.innerHeight < 600) {
+            heroSection.style.minHeight = '100vh';
+        }
+    }
+}
+
+// Debounced resize handler
+const debouncedHeroResize = debounce(handleHeroResize, 250);
+window.addEventListener('resize', debouncedHeroResize);
+
+/* ========================================
+   ERROR HANDLING
+   ======================================== */
+window.addEventListener('error', function(event) {
+    console.error('JavaScript Error:', {
+        message: event.message,
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno
+    });
+});
+
+window.addEventListener('unhandledrejection', function(event) {
+    console.error('Unhandled Promise Rejection:', event.reason);
+});
+
+/* ========================================
    CLEANUP ON PAGE UNLOAD
    ======================================== */
 window.addEventListener('beforeunload', function() {
@@ -1084,10 +2043,13 @@ window.addEventListener('beforeunload', function() {
     if (progressInterval) {
         clearInterval(progressInterval);
     }
+    if (testimonialInterval) {
+        clearInterval(testimonialInterval);
+    }
 });
 
 /* ========================================
-   PUBLIC API
+   PUBLIC APIS
    ======================================== */
 // Expose functions for external control if needed
 window.HeroSlideshow = {
@@ -1100,7 +2062,21 @@ window.HeroSlideshow = {
     getTotalSlides: () => heroTotalSlides
 };
 
+window.AboutPreview = {
+    animateTeamCount: animateAboutTeamCount
+};
+
+window.ReviewsSection = {
+    showTestimonial,
+    nextTestimonial,
+    previousTestimonial,
+    pauseAutoplay: pauseTestimonialAutoplay,
+    resumeAutoplay: resumeTestimonialAutoplay,
+    getCurrentTestimonial: () => currentTestimonial,
+    getTotalTestimonials: () => totalTestimonials
+};
+
 /* ========================================
    FINAL INITIALIZATION
    ======================================== */
-console.log('✅ Holistic Psychology Services website with enhanced hero loaded successfully');
+console.log('✅ Holistic Psychology Services complete website loaded successfully');
