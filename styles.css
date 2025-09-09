@@ -2370,7 +2370,7 @@ body {
 }
 
 /* ========================================
-   REVIEWS & SOCIAL SECTION
+   REVIEWS/TESTIMONIALS SECTION
    ======================================== */
 
 .reviews-social {
@@ -2398,10 +2398,6 @@ body {
     position: relative;
     z-index: 2;
 }
-
-/* ========================================
-   REVIEWS/TESTIMONIALS SECTION
-   ======================================== */
 
 .reviews-section {
     margin-bottom: var(--space-3xl);
