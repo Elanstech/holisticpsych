@@ -1575,6 +1575,10 @@ body {
 /* ========================================
    ABOUT SECTION
    ======================================== */
+/* ========================================
+   ABOUT PREVIEW SECTION
+   ======================================== */
+
 .about-preview {
     padding: var(--space-3xl) 0;
     background: var(--white);
@@ -1601,6 +1605,10 @@ body {
     position: relative;
     z-index: 2;
 }
+
+/* ========================================
+   LEFT CONTENT - TEXT SECTION
+   ======================================== */
 
 .about-preview-text {
     display: flex;
@@ -1754,6 +1762,10 @@ body {
     box-shadow: var(--shadow-md);
 }
 
+/* ========================================
+   RIGHT CONTENT - VISUAL SECTION
+   ======================================== */
+
 .about-preview-visual {
     position: relative;
 }
@@ -1812,8 +1824,8 @@ body {
 .leader-card {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-lg);
+    gap: var(--space-lg);
+    padding: var(--space-xl);
     background: var(--gray-50);
     border-radius: var(--radius-lg);
     transition: var(--transition);
@@ -1932,6 +1944,10 @@ body {
     color: var(--white);
     border-color: var(--primary-green);
 }
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
 
 /* Tablet */
 @media (max-width: 1024px) {
