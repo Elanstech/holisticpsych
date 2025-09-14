@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAccessibility();
     initializeReviewsSection();
     
-    // Initialize Enhanced Services Carousel (NEW)
-    window.enhancedServicesCarousel = new EnhancedServicesCarousel();
-    window.enhancedServiceCards = new EnhancedServiceCardInteractions();
+    // Initialize Enhanced Services Section (NEW)
+    window.servicesCarousel = new ServicesCarousel();
+    window.servicesCardInteractions = new ServicesCardInteractions();
     
     console.log('✅ All systems initialized successfully');
 });
@@ -1258,27 +1258,34 @@ function announceAboutAction(message) {
 }
 
 /* ========================================
-   ENHANCED SERVICES CAROUSEL CLASS
+   ENHANCED SERVICES SECTION - NEW VERSION
    ======================================== */
 
-class EnhancedServicesCarousel {
+class ServicesCarousel {
     constructor() {
-        this.track = document.getElementById('servicesTrackModern');
-        this.cards = document.querySelectorAll('.service-card-modern');
-        this.prevBtn = document.getElementById('servicesPrev');
-        this.nextBtn = document.getElementById('servicesNext');
-        this.filterTabs = document.querySelectorAll('.filter-tab');
-        this.indicatorsContainer = document.getElementById('indicatorsTrack');
+        // DOM Elements
+        this.track = document.getElementById('servicesCarouselTrack');
+        this.cards = document.querySelectorAll('.services-card');
+        this.prevBtn = document.getElementById('servicesPrevBtn');
+        this.nextBtn = document.getElementById('servicesNextBtn');
+        this.filterTabs = document.querySelectorAll('.services-filter-tab');
+        this.indicatorsContainer = document.getElementById('servicesIndicators');
         
+        // State
         this.currentIndex = 0;
-        this.visibleCards = 3; // Desktop default
+        this.visibleCards = this.calculateVisibleCards();
         this.currentFilter = 'all';
         this.filteredCards = [...this.cards];
         this.isAnimating = false;
         this.autoplayInterval = null;
-        this.autoplayDelay = 4000; // 4 seconds
+        this.autoplayDelay = 4000;
         this.isPaused = false;
         this.hasUserInteracted = false;
+        
+        // Debounced resize handler
+        this.debouncedResize = this.debounce(() => {
+            this.handleResize();
+        }, 250);
         
         this.init();
     }
@@ -1289,49 +1296,49 @@ class EnhancedServicesCarousel {
             return;
         }
         
-        this.calculateVisibleCards();
         this.setupEventListeners();
         this.generateIndicators();
         this.updateCarousel();
-        this.startAutoplay();
         this.setupIntersectionObserver();
+        this.updatePulseHint();
         
-        console.log('✅ Enhanced Services Carousel initialized');
+        console.log('✅ Services Carousel initialized');
     }
     
     calculateVisibleCards() {
         const containerWidth = window.innerWidth;
         
         if (containerWidth >= 1200) {
-            this.visibleCards = 3; // Exactly 3 on desktop
+            return 3; // Exactly 3 on desktop
         } else if (containerWidth >= 768) {
-            this.visibleCards = 2;
+            return 2;
         } else {
-            this.visibleCards = 1;
+            return 1;
         }
     }
     
     setupEventListeners() {
-        // Enhanced filter tabs with rapid response
+        // Filter tabs with instant response
         this.filterTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.handleUserInteraction();
-                const category = e.target.dataset.category;
+                const category = e.currentTarget.dataset.category;
                 this.filterServices(category);
             });
             
-            // Add keyboard support
+            // Keyboard support
             tab.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     this.handleUserInteraction();
-                    const category = e.target.dataset.category;
+                    const category = e.currentTarget.dataset.category;
                     this.filterServices(category);
                 }
             });
         });
         
-        // Navigation buttons with enhanced feedback
+        // Navigation buttons
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', () => {
                 this.handleUserInteraction();
@@ -1346,26 +1353,17 @@ class EnhancedServicesCarousel {
             });
         }
         
-        // Enhanced touch/swipe support
+        // Touch/swipe support
         this.setupTouchEvents();
         
         // Keyboard navigation
         this.setupKeyboardNavigation();
         
-        // Window resize handler with debouncing
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                this.calculateVisibleCards();
-                this.updateCarousel();
-                this.generateIndicators();
-                this.updatePulseHint();
-            }, 150);
-        });
+        // Window resize handler
+        window.addEventListener('resize', this.debouncedResize);
         
         // Pause/resume on hover and focus
-        const carouselContainer = document.querySelector('.services-carousel-modern');
+        const carouselContainer = document.querySelector('.services-carousel-container');
         if (carouselContainer) {
             carouselContainer.addEventListener('mouseenter', () => this.pauseAutoplay());
             carouselContainer.addEventListener('mouseleave', () => this.resumeAutoplay());
@@ -1402,7 +1400,7 @@ class EnhancedServicesCarousel {
             });
         }, options);
         
-        const carouselSection = document.querySelector('.services-modern');
+        const carouselSection = document.querySelector('.services-enhanced');
         if (carouselSection) {
             this.observer.observe(carouselSection);
         }
@@ -1413,13 +1411,13 @@ class EnhancedServicesCarousel {
         this.pauseAutoplay();
         this.removePulseHint();
         
-        // Resume autoplay after 10 seconds of no interaction
+        // Resume autoplay after 8 seconds of no interaction
         clearTimeout(this.userInteractionTimeout);
         this.userInteractionTimeout = setTimeout(() => {
             this.hasUserInteracted = false;
             this.resumeAutoplay();
             this.updatePulseHint();
-        }, 10000);
+        }, 8000);
     }
     
     filterServices(category) {
@@ -1428,36 +1426,34 @@ class EnhancedServicesCarousel {
         this.currentFilter = category;
         this.currentIndex = 0;
         
-        // Update active filter tab with smooth animation
+        // Update active filter tab with instant feedback
         this.filterTabs.forEach(tab => {
             tab.classList.remove('active');
             if (tab.dataset.category === category) {
                 tab.classList.add('active');
-                
-                // Add feedback animation
                 this.createTabFeedback(tab);
             }
         });
         
-        // Smooth filter transition
+        // Instant filter transition
         this.animateFilterTransition(category);
         this.announceFilterChange(category);
     }
     
     createTabFeedback(tab) {
         const feedback = document.createElement('div');
-        feedback.className = 'tab-feedback';
+        feedback.className = 'services-tab-feedback';
         feedback.style.cssText = `
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, #00d884 0%, #0ea5e9 50%, #8b5cf6 100%);
+            border-radius: 9999px;
             opacity: 0.2;
-            transform: scale(1.2);
-            animation: tabFeedback 0.3s ease-out;
+            transform: scale(1.1);
+            animation: servicesTabFeedback 0.3s ease-out;
             pointer-events: none;
             z-index: 1;
         `;
@@ -1466,13 +1462,13 @@ class EnhancedServicesCarousel {
         tab.appendChild(feedback);
         
         // Add CSS animation if not exists
-        if (!document.querySelector('#tab-feedback-animation')) {
+        if (!document.querySelector('#services-tab-feedback-animation')) {
             const style = document.createElement('style');
-            style.id = 'tab-feedback-animation';
+            style.id = 'services-tab-feedback-animation';
             style.textContent = `
-                @keyframes tabFeedback {
-                    0% { opacity: 0.2; transform: scale(1.2); }
-                    50% { opacity: 0.4; transform: scale(1.1); }
+                @keyframes servicesTabFeedback {
+                    0% { opacity: 0.2; transform: scale(1.1); }
+                    50% { opacity: 0.4; transform: scale(1.05); }
                     100% { opacity: 0; transform: scale(1); }
                 }
             `;
@@ -1492,9 +1488,9 @@ class EnhancedServicesCarousel {
         // Quick fade out
         this.cards.forEach((card, index) => {
             setTimeout(() => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(15px)';
-            }, index * 30);
+                card.style.opacity = '0.3';
+                card.style.transform = 'translateY(10px) scale(0.98)';
+            }, index * 20);
         });
         
         setTimeout(() => {
@@ -1507,12 +1503,12 @@ class EnhancedServicesCarousel {
                 );
             }
             
-            // Hide/show cards
+            // Hide/show cards instantly
             this.cards.forEach(card => {
                 if (this.filteredCards.includes(card)) {
-                    card.classList.remove('hidden');
+                    card.classList.remove('services-hidden');
                 } else {
-                    card.classList.add('hidden');
+                    card.classList.add('services-hidden');
                 }
             });
             
@@ -1520,8 +1516,8 @@ class EnhancedServicesCarousel {
             this.filteredCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 30);
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, index * 20);
             });
             
             // Update carousel
@@ -1530,7 +1526,7 @@ class EnhancedServicesCarousel {
             this.updatePulseHint();
             this.isAnimating = false;
             
-        }, this.cards.length * 30 + 100);
+        }, this.cards.length * 20 + 100);
     }
     
     generateIndicators() {
@@ -1549,7 +1545,7 @@ class EnhancedServicesCarousel {
         
         for (let i = 0; i < totalSlides; i++) {
             const indicator = document.createElement('button');
-            indicator.className = 'carousel-indicator-modern';
+            indicator.className = 'services-indicator';
             indicator.setAttribute('aria-label', `Go to slide ${i + 1} of ${totalSlides}`);
             
             indicator.addEventListener('click', () => {
@@ -1569,28 +1565,14 @@ class EnhancedServicesCarousel {
         const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
         this.currentIndex = Math.min(this.currentIndex, maxIndex);
         
-        // Calculate transform with smooth easing
-        const cardWidth = this.getCardWidth();
-        const gap = 24;
-        const totalCardWidth = cardWidth + gap;
-        const translateX = -this.currentIndex * totalCardWidth;
-        
-        this.track.style.transform = `translateX(${translateX}px)`;
+        // Calculate transform
+        const translateX = -(this.currentIndex * (100 / this.visibleCards));
+        this.track.style.transform = `translateX(${translateX}%)`;
         
         this.updateNavigationButtons();
         this.updateIndicators();
         this.updatePulseHint();
         this.announceSlideChange();
-    }
-    
-    getCardWidth() {
-        if (this.visibleCards === 3) {
-            return (this.track.parentElement.offsetWidth - 48) / 3; // 3 cards with gaps
-        } else if (this.visibleCards === 2) {
-            return 320;
-        } else {
-            return 280;
-        }
     }
     
     updateNavigationButtons() {
@@ -1608,11 +1590,11 @@ class EnhancedServicesCarousel {
     }
     
     updateIndicators() {
-        const indicators = this.indicatorsContainer.querySelectorAll('.carousel-indicator-modern');
+        const indicators = this.indicatorsContainer.querySelectorAll('.services-indicator');
         const activeIndicatorIndex = Math.floor(this.currentIndex / this.visibleCards);
         
         indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === activeIndicatorIndex);
+            indicator.classList.toggle('services-active', index === activeIndicatorIndex);
             indicator.setAttribute('aria-pressed', index === activeIndicatorIndex ? 'true' : 'false');
         });
     }
@@ -1624,15 +1606,15 @@ class EnhancedServicesCarousel {
         const hasMoreContent = this.currentIndex < maxIndex;
         
         if (hasMoreContent && !this.hasUserInteracted && this.isInViewport()) {
-            this.nextBtn.classList.add('pulse-hint');
+            this.nextBtn.classList.add('services-pulse-hint');
         } else {
-            this.nextBtn.classList.remove('pulse-hint');
+            this.nextBtn.classList.remove('services-pulse-hint');
         }
     }
     
     removePulseHint() {
         if (this.nextBtn) {
-            this.nextBtn.classList.remove('pulse-hint');
+            this.nextBtn.classList.remove('services-pulse-hint');
         }
     }
     
@@ -1677,7 +1659,7 @@ class EnhancedServicesCarousel {
     }
     
     createNavFeedback(button) {
-        const ripple = button.querySelector('.nav-ripple');
+        const ripple = button.querySelector('.services-nav-ripple');
         if (ripple) {
             ripple.style.width = '0';
             ripple.style.height = '0';
@@ -1741,7 +1723,7 @@ class EnhancedServicesCarousel {
     setupKeyboardNavigation() {
         document.addEventListener('keydown', (e) => {
             const activeElement = document.activeElement;
-            const isCarouselFocused = document.querySelector('.services-carousel-modern')?.contains(activeElement);
+            const isCarouselFocused = document.querySelector('.services-carousel-container')?.contains(activeElement);
             
             if (!isCarouselFocused) return;
             
@@ -1798,7 +1780,7 @@ class EnhancedServicesCarousel {
     }
     
     isInViewport() {
-        const carousel = document.querySelector('.services-carousel-modern');
+        const carousel = document.querySelector('.services-carousel-container');
         if (!carousel) return false;
         
         const rect = carousel.getBoundingClientRect();
@@ -1806,6 +1788,16 @@ class EnhancedServicesCarousel {
             rect.top < window.innerHeight &&
             rect.bottom > 0
         );
+    }
+    
+    handleResize() {
+        const newVisibleCards = this.calculateVisibleCards();
+        if (newVisibleCards !== this.visibleCards) {
+            this.visibleCards = newVisibleCards;
+            this.generateIndicators();
+            this.updateCarousel();
+            this.updatePulseHint();
+        }
     }
     
     announceFilterChange(category) {
@@ -1851,6 +1843,18 @@ class EnhancedServicesCarousel {
         return liveRegion;
     }
     
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
     destroy() {
         if (this.autoplayInterval) {
             clearInterval(this.autoplayInterval);
@@ -1864,17 +1868,16 @@ class EnhancedServicesCarousel {
             this.observer.disconnect();
         }
         
-        console.log('Enhanced Services carousel destroyed');
+        window.removeEventListener('resize', this.debouncedResize);
+        
+        console.log('Services carousel destroyed');
     }
 }
 
-/* ========================================
-   ENHANCED CARD INTERACTIONS
-   ======================================== */
-
-class EnhancedServiceCardInteractions {
+// Enhanced Card Interactions
+class ServicesCardInteractions {
     constructor() {
-        this.cards = document.querySelectorAll('.service-card-modern');
+        this.cards = document.querySelectorAll('.services-card');
         this.init();
     }
     
@@ -1886,7 +1889,7 @@ class EnhancedServiceCardInteractions {
     
     setupCardInteractions() {
         this.cards.forEach((card, index) => {
-            const learnMoreBtn = card.querySelector('.learn-more-btn');
+            const learnMoreBtn = card.querySelector('.services-learn-more');
             
             if (learnMoreBtn) {
                 learnMoreBtn.addEventListener('click', (e) => {
@@ -1920,22 +1923,22 @@ class EnhancedServiceCardInteractions {
     
     handleLearnMoreClick(e, card) {
         const button = e.currentTarget;
-        const serviceTitle = card.querySelector('.service-title').textContent;
+        const serviceTitle = card.querySelector('.services-card-title').textContent;
         
         // Enhanced click feedback
         this.createEnhancedRipple(button, e);
         
         // Button state animation
         const originalHTML = button.innerHTML;
-        button.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i><span>Loading...</span>';
+        button.innerHTML = '<i class="ri-loader-4-line" style="animation: servicesSpinLoader 1s linear infinite;"></i><span>Loading...</span>';
         button.style.pointerEvents = 'none';
         
         // Add spinner animation if not exists
-        if (!document.querySelector('#spinner-animation')) {
+        if (!document.querySelector('#services-spinner-animation')) {
             const style = document.createElement('style');
-            style.id = 'spinner-animation';
+            style.id = 'services-spinner-animation';
             style.textContent = `
-                @keyframes spin {
+                @keyframes servicesSpinLoader {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
                 }
@@ -1965,7 +1968,7 @@ class EnhancedServiceCardInteractions {
             left: ${event.clientX - rect.left}px;
             top: ${event.clientY - rect.top}px;
             transform: translate(-50%, -50%);
-            animation: enhancedRipple 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: servicesEnhancedRipple 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             z-index: 1000;
         `;
@@ -1975,11 +1978,11 @@ class EnhancedServiceCardInteractions {
         element.appendChild(ripple);
         
         // Add enhanced ripple animation
-        if (!document.querySelector('#enhanced-ripple-animation')) {
+        if (!document.querySelector('#services-enhanced-ripple-animation')) {
             const style = document.createElement('style');
-            style.id = 'enhanced-ripple-animation';
+            style.id = 'services-enhanced-ripple-animation';
             style.textContent = `
-                @keyframes enhancedRipple {
+                @keyframes servicesEnhancedRipple {
                     0% {
                         width: 0;
                         height: 0;
@@ -2008,24 +2011,24 @@ class EnhancedServiceCardInteractions {
     }
     
     addCardHoverEffect(card) {
-        const features = card.querySelectorAll('.service-features li');
-        const icon = card.querySelector('.service-icon-modern');
+        const features = card.querySelectorAll('.services-features li');
+        const icon = card.querySelector('.services-icon');
         
         features.forEach((feature, index) => {
             setTimeout(() => {
-                feature.style.transform = 'translateX(10px)';
-                feature.style.color = 'var(--gray-800)';
-            }, index * 40);
+                feature.style.transform = 'translateX(8px)';
+                feature.style.color = '#1f2937';
+            }, index * 30);
         });
         
         if (icon) {
-            icon.style.animation = 'float-icon 3s ease-in-out infinite';
+            icon.style.animation = 'servicesFloatIcon 3s ease-in-out infinite';
         }
     }
     
     removeCardHoverEffect(card) {
-        const features = card.querySelectorAll('.service-features li');
-        const icon = card.querySelector('.service-icon-modern');
+        const features = card.querySelectorAll('.services-features li');
+        const icon = card.querySelector('.services-icon');
         
         features.forEach(feature => {
             feature.style.transform = '';
@@ -2038,7 +2041,7 @@ class EnhancedServiceCardInteractions {
     }
     
     addCardFocusEffect(card) {
-        card.style.outline = '3px solid var(--primary-green)';
+        card.style.outline = '3px solid #00d884';
         card.style.outlineOffset = '4px';
         this.addCardHoverEffect(card);
     }
@@ -2077,7 +2080,7 @@ class EnhancedServiceCardInteractions {
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    const learnMoreBtn = card.querySelector('.learn-more-btn');
+                    const learnMoreBtn = card.querySelector('.services-learn-more');
                     if (learnMoreBtn) {
                         learnMoreBtn.click();
                     }
@@ -2087,11 +2090,11 @@ class EnhancedServiceCardInteractions {
     }
     
     setupAnimations() {
-        if (!document.querySelector('#enhanced-card-animations')) {
+        if (!document.querySelector('#services-enhanced-card-animations')) {
             const style = document.createElement('style');
-            style.id = 'enhanced-card-animations';
+            style.id = 'services-enhanced-card-animations';
             style.textContent = `
-                @keyframes float-icon {
+                @keyframes servicesFloatIcon {
                     0%, 100% { 
                         transform: translateY(0px) rotate(0deg) scale(1); 
                     }
@@ -3141,8 +3144,8 @@ function cleanupSite() {
     }
     
     // Clean up enhanced services carousel
-    if (window.enhancedServicesCarousel) {
-        window.enhancedServicesCarousel.destroy();
+    if (window.servicesCarousel) {
+        window.servicesCarousel.destroy();
     }
     
     // Clear any other intervals or timeouts
@@ -3189,16 +3192,16 @@ window.ReviewsSection = {
 };
 
 // Enhanced Services Carousel API
-window.EnhancedServicesAPI = {
-    next: () => window.enhancedServicesCarousel?.goToNext(),
-    previous: () => window.enhancedServicesCarousel?.goToPrevious(),
-    goToSlide: (index) => window.enhancedServicesCarousel?.goToSlide(index),
-    filter: (category) => window.enhancedServicesCarousel?.filterServices(category),
-    pauseAutoplay: () => window.enhancedServicesCarousel?.pauseAutoplay(),
-    resumeAutoplay: () => window.enhancedServicesCarousel?.resumeAutoplay(),
-    getCurrentIndex: () => window.enhancedServicesCarousel?.currentIndex || 0,
-    getCurrentFilter: () => window.enhancedServicesCarousel?.currentFilter || 'all',
-    getTotalCards: () => window.enhancedServicesCarousel?.filteredCards.length || 0
+window.ServicesAPI = {
+    next: () => window.servicesCarousel?.goToNext(),
+    previous: () => window.servicesCarousel?.goToPrevious(),
+    goToSlide: (index) => window.servicesCarousel?.goToSlide(index),
+    filter: (category) => window.servicesCarousel?.filterServices(category),
+    pauseAutoplay: () => window.servicesCarousel?.pauseAutoplay(),
+    resumeAutoplay: () => window.servicesCarousel?.resumeAutoplay(),
+    getCurrentIndex: () => window.servicesCarousel?.currentIndex || 0,
+    getCurrentFilter: () => window.servicesCarousel?.currentFilter || 'all',
+    getTotalCards: () => window.servicesCarousel?.filteredCards.length || 0
 };
 
 /* ========================================
