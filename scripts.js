@@ -1,6 +1,6 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE JS
-   Manhattan Corporate Style with Modern Services Carousel
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE ENHANCED JS
+   Manhattan Corporate Style with Enhanced Services Carousel
    ======================================== */
 
 /* ========================================
@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAccessibility();
     initializeReviewsSection();
     
-    // Initialize Modern Services Carousel
-    window.servicesCarousel = new ModernServicesCarousel();
-    window.serviceCardEnhancer = new ServiceCardEnhancer();
+    // Initialize Enhanced Services Carousel (NEW)
+    window.enhancedServicesCarousel = new EnhancedServicesCarousel();
+    window.enhancedServiceCards = new EnhancedServiceCardInteractions();
     
     console.log('✅ All systems initialized successfully');
 });
@@ -1258,10 +1258,10 @@ function announceAboutAction(message) {
 }
 
 /* ========================================
-   MODERN SERVICES CAROUSEL - NEW SYSTEM
+   ENHANCED SERVICES CAROUSEL CLASS
    ======================================== */
 
-class ModernServicesCarousel {
+class EnhancedServicesCarousel {
     constructor() {
         this.track = document.getElementById('servicesTrackModern');
         this.cards = document.querySelectorAll('.service-card-modern');
@@ -1271,13 +1271,14 @@ class ModernServicesCarousel {
         this.indicatorsContainer = document.getElementById('indicatorsTrack');
         
         this.currentIndex = 0;
-        this.visibleCards = 3; // Default number of visible cards
+        this.visibleCards = 3; // Desktop default
         this.currentFilter = 'all';
         this.filteredCards = [...this.cards];
         this.isAnimating = false;
         this.autoplayInterval = null;
-        this.autoplayDelay = 6000; // 6 seconds
+        this.autoplayDelay = 4000; // 4 seconds
         this.isPaused = false;
+        this.hasUserInteracted = false;
         
         this.init();
     }
@@ -1293,18 +1294,16 @@ class ModernServicesCarousel {
         this.generateIndicators();
         this.updateCarousel();
         this.startAutoplay();
-        
-        // Initialize intersection observer for performance
         this.setupIntersectionObserver();
         
-        console.log('✅ Modern Services Carousel initialized successfully');
+        console.log('✅ Enhanced Services Carousel initialized');
     }
     
     calculateVisibleCards() {
-        const containerWidth = this.track.parentElement.offsetWidth;
+        const containerWidth = window.innerWidth;
         
         if (containerWidth >= 1200) {
-            this.visibleCards = 3;
+            this.visibleCards = 3; // Exactly 3 on desktop
         } else if (containerWidth >= 768) {
             this.visibleCards = 2;
         } else {
@@ -1313,41 +1312,59 @@ class ModernServicesCarousel {
     }
     
     setupEventListeners() {
-        // Navigation buttons
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => this.goToPrevious());
-        }
-        
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.goToNext());
-        }
-        
-        // Filter tabs
+        // Enhanced filter tabs with rapid response
         this.filterTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
+                this.handleUserInteraction();
                 const category = e.target.dataset.category;
                 this.filterServices(category);
             });
+            
+            // Add keyboard support
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.handleUserInteraction();
+                    const category = e.target.dataset.category;
+                    this.filterServices(category);
+                }
+            });
         });
         
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (this.isInViewport()) {
-                this.handleKeyboardNavigation(e);
-            }
-        });
+        // Navigation buttons with enhanced feedback
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => {
+                this.handleUserInteraction();
+                this.goToPrevious();
+            });
+        }
         
-        // Touch/swipe support
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => {
+                this.handleUserInteraction();
+                this.goToNext();
+            });
+        }
+        
+        // Enhanced touch/swipe support
         this.setupTouchEvents();
         
-        // Window resize handler
-        window.addEventListener('resize', this.debounce(() => {
-            this.calculateVisibleCards();
-            this.updateCarousel();
-            this.generateIndicators();
-        }, 250));
+        // Keyboard navigation
+        this.setupKeyboardNavigation();
         
-        // Pause autoplay on hover
+        // Window resize handler with debouncing
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                this.calculateVisibleCards();
+                this.updateCarousel();
+                this.generateIndicators();
+                this.updatePulseHint();
+            }, 150);
+        });
+        
+        // Pause/resume on hover and focus
         const carouselContainer = document.querySelector('.services-carousel-modern');
         if (carouselContainer) {
             carouselContainer.addEventListener('mouseenter', () => this.pauseAutoplay());
@@ -1360,7 +1377,7 @@ class ModernServicesCarousel {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.pauseAutoplay();
-            } else if (!this.isPaused) {
+            } else if (!this.isPaused && !this.hasUserInteracted) {
                 this.resumeAutoplay();
             }
         });
@@ -1368,22 +1385,18 @@ class ModernServicesCarousel {
     
     setupIntersectionObserver() {
         const options = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
         };
         
         this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    
-                    // Start autoplay when in view
-                    if (!this.autoplayInterval && !this.isPaused) {
+                    if (!this.hasUserInteracted) {
                         this.startAutoplay();
                     }
+                    this.updatePulseHint();
                 } else {
-                    // Pause autoplay when out of view
                     this.pauseAutoplay();
                 }
             });
@@ -1395,86 +1408,93 @@ class ModernServicesCarousel {
         }
     }
     
-    setupTouchEvents() {
-        let startX = 0;
-        let startY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let isDragging = false;
-        const threshold = 50;
+    handleUserInteraction() {
+        this.hasUserInteracted = true;
+        this.pauseAutoplay();
+        this.removePulseHint();
         
-        this.track.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            this.pauseAutoplay();
-        }, { passive: true });
-        
-        this.track.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            
-            currentX = e.touches[0].clientX;
-            currentY = e.touches[0].clientY;
-            
-            const deltaX = Math.abs(currentX - startX);
-            const deltaY = Math.abs(currentY - startY);
-            
-            // Prevent vertical scrolling during horizontal swipe
-            if (deltaX > deltaY && deltaX > 20) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        this.track.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            
-            const deltaX = startX - currentX;
-            const deltaY = Math.abs(startY - currentY);
-            
-            if (Math.abs(deltaX) > threshold && Math.abs(deltaX) > deltaY) {
-                if (deltaX > 0) {
-                    this.goToNext();
-                } else {
-                    this.goToPrevious();
-                }
-            }
-            
-            isDragging = false;
-            setTimeout(() => this.resumeAutoplay(), 100);
-        }, { passive: true });
+        // Resume autoplay after 10 seconds of no interaction
+        clearTimeout(this.userInteractionTimeout);
+        this.userInteractionTimeout = setTimeout(() => {
+            this.hasUserInteracted = false;
+            this.resumeAutoplay();
+            this.updatePulseHint();
+        }, 10000);
     }
     
     filterServices(category) {
-        if (this.isAnimating) return;
+        if (this.isAnimating || this.currentFilter === category) return;
         
         this.currentFilter = category;
         this.currentIndex = 0;
         
-        // Update active filter tab
+        // Update active filter tab with smooth animation
         this.filterTabs.forEach(tab => {
+            tab.classList.remove('active');
             if (tab.dataset.category === category) {
                 tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
+                
+                // Add feedback animation
+                this.createTabFeedback(tab);
             }
         });
         
-        // Filter cards with animation
+        // Smooth filter transition
         this.animateFilterTransition(category);
-        
-        // Announce filter change for screen readers
         this.announceFilterChange(category);
+    }
+    
+    createTabFeedback(tab) {
+        const feedback = document.createElement('div');
+        feedback.className = 'tab-feedback';
+        feedback.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            opacity: 0.2;
+            transform: scale(1.2);
+            animation: tabFeedback 0.3s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        tab.style.position = 'relative';
+        tab.appendChild(feedback);
+        
+        // Add CSS animation if not exists
+        if (!document.querySelector('#tab-feedback-animation')) {
+            const style = document.createElement('style');
+            style.id = 'tab-feedback-animation';
+            style.textContent = `
+                @keyframes tabFeedback {
+                    0% { opacity: 0.2; transform: scale(1.2); }
+                    50% { opacity: 0.4; transform: scale(1.1); }
+                    100% { opacity: 0; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        setTimeout(() => {
+            if (feedback.parentNode) {
+                feedback.remove();
+            }
+        }, 300);
     }
     
     animateFilterTransition(category) {
         this.isAnimating = true;
         
-        // Fade out current cards
+        // Quick fade out
         this.cards.forEach((card, index) => {
             setTimeout(() => {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-            }, index * 50);
+                card.style.transform = 'translateY(15px)';
+            }, index * 30);
         });
         
         setTimeout(() => {
@@ -1496,20 +1516,21 @@ class ModernServicesCarousel {
                 }
             });
             
-            // Fade in filtered cards
+            // Quick fade in
             this.filteredCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
                     card.style.transform = 'translateY(0)';
-                }, index * 50);
+                }, index * 30);
             });
             
             // Update carousel
             this.generateIndicators();
             this.updateCarousel();
+            this.updatePulseHint();
             this.isAnimating = false;
             
-        }, this.cards.length * 50 + 200);
+        }, this.cards.length * 30 + 100);
     }
     
     generateIndicators() {
@@ -1517,57 +1538,59 @@ class ModernServicesCarousel {
         
         this.indicatorsContainer.innerHTML = '';
         
-        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
-        const totalIndicators = Math.ceil(this.filteredCards.length / this.visibleCards);
+        const totalSlides = Math.ceil(this.filteredCards.length / this.visibleCards);
         
-        if (totalIndicators <= 1) {
+        if (totalSlides <= 1) {
             this.indicatorsContainer.style.display = 'none';
             return;
         }
         
         this.indicatorsContainer.style.display = 'flex';
         
-        for (let i = 0; i < totalIndicators; i++) {
+        for (let i = 0; i < totalSlides; i++) {
             const indicator = document.createElement('button');
             indicator.className = 'carousel-indicator-modern';
-            indicator.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            indicator.setAttribute('aria-label', `Go to slide ${i + 1} of ${totalSlides}`);
             
             indicator.addEventListener('click', () => {
+                this.handleUserInteraction();
                 this.goToSlide(i * this.visibleCards);
             });
             
-            if (i === Math.floor(this.currentIndex / this.visibleCards)) {
-                indicator.classList.add('active');
-            }
-            
             this.indicatorsContainer.appendChild(indicator);
         }
+        
+        this.updateIndicators();
     }
     
     updateCarousel() {
         if (this.filteredCards.length === 0) return;
         
-        // Calculate maximum index
         const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
         this.currentIndex = Math.min(this.currentIndex, maxIndex);
         
-        // Calculate transform based on visible cards
-        const cardWidth = 360; // Base card width
-        const gap = 24; // Gap between cards
+        // Calculate transform with smooth easing
+        const cardWidth = this.getCardWidth();
+        const gap = 24;
         const totalCardWidth = cardWidth + gap;
-        
-        // Update transform
         const translateX = -this.currentIndex * totalCardWidth;
+        
         this.track.style.transform = `translateX(${translateX}px)`;
         
-        // Update navigation buttons
         this.updateNavigationButtons();
-        
-        // Update indicators
         this.updateIndicators();
-        
-        // Announce slide change for screen readers
+        this.updatePulseHint();
         this.announceSlideChange();
+    }
+    
+    getCardWidth() {
+        if (this.visibleCards === 3) {
+            return (this.track.parentElement.offsetWidth - 48) / 3; // 3 cards with gaps
+        } else if (this.visibleCards === 2) {
+            return 320;
+        } else {
+            return 280;
+        }
     }
     
     updateNavigationButtons() {
@@ -1575,10 +1598,12 @@ class ModernServicesCarousel {
         
         if (this.prevBtn) {
             this.prevBtn.disabled = this.currentIndex <= 0;
+            this.prevBtn.style.opacity = this.currentIndex <= 0 ? '0.4' : '1';
         }
         
         if (this.nextBtn) {
             this.nextBtn.disabled = this.currentIndex >= maxIndex;
+            this.nextBtn.style.opacity = this.currentIndex >= maxIndex ? '0.4' : '1';
         }
     }
     
@@ -1587,14 +1612,28 @@ class ModernServicesCarousel {
         const activeIndicatorIndex = Math.floor(this.currentIndex / this.visibleCards);
         
         indicators.forEach((indicator, index) => {
-            if (index === activeIndicatorIndex) {
-                indicator.classList.add('active');
-                indicator.setAttribute('aria-pressed', 'true');
-            } else {
-                indicator.classList.remove('active');
-                indicator.setAttribute('aria-pressed', 'false');
-            }
+            indicator.classList.toggle('active', index === activeIndicatorIndex);
+            indicator.setAttribute('aria-pressed', index === activeIndicatorIndex ? 'true' : 'false');
         });
+    }
+    
+    updatePulseHint() {
+        if (!this.nextBtn) return;
+        
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        const hasMoreContent = this.currentIndex < maxIndex;
+        
+        if (hasMoreContent && !this.hasUserInteracted && this.isInViewport()) {
+            this.nextBtn.classList.add('pulse-hint');
+        } else {
+            this.nextBtn.classList.remove('pulse-hint');
+        }
+    }
+    
+    removePulseHint() {
+        if (this.nextBtn) {
+            this.nextBtn.classList.remove('pulse-hint');
+        }
     }
     
     goToNext() {
@@ -1604,13 +1643,13 @@ class ModernServicesCarousel {
         
         if (this.currentIndex < maxIndex) {
             this.currentIndex = Math.min(this.currentIndex + this.visibleCards, maxIndex);
-        } else {
+        } else if (this.filteredCards.length > this.visibleCards) {
             // Loop to beginning
             this.currentIndex = 0;
         }
         
         this.updateCarousel();
-        this.resetAutoplay();
+        this.createNavFeedback(this.nextBtn);
     }
     
     goToPrevious() {
@@ -1625,7 +1664,7 @@ class ModernServicesCarousel {
         }
         
         this.updateCarousel();
-        this.resetAutoplay();
+        this.createNavFeedback(this.prevBtn);
     }
     
     goToSlide(index) {
@@ -1635,47 +1674,106 @@ class ModernServicesCarousel {
         this.currentIndex = Math.min(Math.max(index, 0), maxIndex);
         
         this.updateCarousel();
-        this.resetAutoplay();
     }
     
-    handleKeyboardNavigation(e) {
-        // Only handle keyboard events when carousel is focused
-        const activeElement = document.activeElement;
-        const isCarouselFocused = document.querySelector('.services-carousel-modern')?.contains(activeElement);
-        
-        if (!isCarouselFocused) return;
-        
-        switch(e.key) {
-            case 'ArrowLeft':
-                e.preventDefault();
-                this.goToPrevious();
-                break;
-            case 'ArrowRight':
-                e.preventDefault();
-                this.goToNext();
-                break;
-            case 'Home':
-                e.preventDefault();
-                this.goToSlide(0);
-                break;
-            case 'End':
-                e.preventDefault();
-                const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
-                this.goToSlide(maxIndex);
-                break;
-            case ' ':
-                e.preventDefault();
-                if (this.isPaused) {
-                    this.resumeAutoplay();
-                } else {
-                    this.pauseAutoplay();
-                }
-                break;
+    createNavFeedback(button) {
+        const ripple = button.querySelector('.nav-ripple');
+        if (ripple) {
+            ripple.style.width = '0';
+            ripple.style.height = '0';
+            
+            setTimeout(() => {
+                ripple.style.width = '120px';
+                ripple.style.height = '120px';
+            }, 10);
+            
+            setTimeout(() => {
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+            }, 600);
         }
     }
     
+    setupTouchEvents() {
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        const threshold = 50;
+        
+        this.track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            this.handleUserInteraction();
+        }, { passive: true });
+        
+        this.track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const deltaX = Math.abs(currentX - startX);
+            const deltaY = Math.abs(currentY - startY);
+            
+            if (deltaX > deltaY && deltaX > 20) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        this.track.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const deltaX = startX - endX;
+            
+            if (Math.abs(deltaX) > threshold) {
+                if (deltaX > 0) {
+                    this.goToNext();
+                } else {
+                    this.goToPrevious();
+                }
+            }
+            
+            isDragging = false;
+        }, { passive: true });
+    }
+    
+    setupKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            const activeElement = document.activeElement;
+            const isCarouselFocused = document.querySelector('.services-carousel-modern')?.contains(activeElement);
+            
+            if (!isCarouselFocused) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.handleUserInteraction();
+                    this.goToPrevious();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.handleUserInteraction();
+                    this.goToNext();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    this.handleUserInteraction();
+                    this.goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    this.handleUserInteraction();
+                    const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+                    this.goToSlide(maxIndex);
+                    break;
+            }
+        });
+    }
+    
     startAutoplay() {
-        if (this.autoplayInterval || this.filteredCards.length <= this.visibleCards) return;
+        if (this.autoplayInterval || this.hasUserInteracted) return;
+        if (this.filteredCards.length <= this.visibleCards) return;
         
         this.autoplayInterval = setInterval(() => {
             if (!this.isPaused && this.isInViewport()) {
@@ -1694,18 +1792,9 @@ class ModernServicesCarousel {
     
     resumeAutoplay() {
         this.isPaused = false;
-        if (!this.autoplayInterval && this.filteredCards.length > this.visibleCards) {
+        if (!this.hasUserInteracted && this.filteredCards.length > this.visibleCards) {
             this.startAutoplay();
         }
-    }
-    
-    resetAutoplay() {
-        this.pauseAutoplay();
-        setTimeout(() => {
-            if (!this.isPaused) {
-                this.startAutoplay();
-            }
-        }, 1000);
     }
     
     isInViewport() {
@@ -1714,10 +1803,8 @@ class ModernServicesCarousel {
         
         const rect = carousel.getBoundingClientRect();
         return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            rect.top < window.innerHeight &&
+            rect.bottom > 0
         );
     }
     
@@ -1738,7 +1825,9 @@ class ModernServicesCarousel {
         const totalSlides = Math.ceil(this.filteredCards.length / this.visibleCards);
         const currentSlide = Math.floor(this.currentIndex / this.visibleCards) + 1;
         
-        liveRegion.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+        if (totalSlides > 1) {
+            liveRegion.textContent = `Viewing slide ${currentSlide} of ${totalSlides}`;
+        }
     }
     
     getLiveRegion() {
@@ -1762,29 +1851,20 @@ class ModernServicesCarousel {
         return liveRegion;
     }
     
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-    
     destroy() {
-        // Clean up event listeners and intervals
         if (this.autoplayInterval) {
             clearInterval(this.autoplayInterval);
+        }
+        
+        if (this.userInteractionTimeout) {
+            clearTimeout(this.userInteractionTimeout);
         }
         
         if (this.observer) {
             this.observer.disconnect();
         }
         
-        console.log('Services carousel destroyed');
+        console.log('Enhanced Services carousel destroyed');
     }
 }
 
@@ -1792,7 +1872,7 @@ class ModernServicesCarousel {
    ENHANCED CARD INTERACTIONS
    ======================================== */
 
-class ServiceCardEnhancer {
+class EnhancedServiceCardInteractions {
     constructor() {
         this.cards = document.querySelectorAll('.service-card-modern');
         this.init();
@@ -1801,21 +1881,20 @@ class ServiceCardEnhancer {
     init() {
         this.setupCardInteractions();
         this.setupAccessibilityFeatures();
-        this.setupHoverEffects();
+        this.setupAnimations();
     }
     
     setupCardInteractions() {
         this.cards.forEach((card, index) => {
             const learnMoreBtn = card.querySelector('.learn-more-btn');
             
-            // Enhanced click interaction
             if (learnMoreBtn) {
                 learnMoreBtn.addEventListener('click', (e) => {
                     this.handleLearnMoreClick(e, card);
                 });
             }
             
-            // Card hover interaction
+            // Enhanced hover interactions
             card.addEventListener('mouseenter', () => {
                 this.addCardHoverEffect(card);
             });
@@ -1824,7 +1903,7 @@ class ServiceCardEnhancer {
                 this.removeCardHoverEffect(card);
             });
             
-            // Card focus for keyboard navigation
+            // Focus management
             card.setAttribute('tabindex', '0');
             card.addEventListener('focus', () => {
                 this.addCardFocusEffect(card);
@@ -1834,8 +1913,8 @@ class ServiceCardEnhancer {
                 this.removeCardFocusEffect(card);
             });
             
-            // Intersection observer for entrance animations
-            this.setupCardAnimations(card, index);
+            // Entrance animations
+            this.setupCardAnimation(card, index);
         });
     }
     
@@ -1843,42 +1922,50 @@ class ServiceCardEnhancer {
         const button = e.currentTarget;
         const serviceTitle = card.querySelector('.service-title').textContent;
         
-        // Add click animation
-        this.createRippleEffect(button, e);
+        // Enhanced click feedback
+        this.createEnhancedRipple(button, e);
         
-        // Add loading state
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="ri-loader-4-line"></i><span>Loading...</span>';
+        // Button state animation
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i><span>Loading...</span>';
         button.style.pointerEvents = 'none';
         
-        // Simulate loading (since we're redirecting)
+        // Add spinner animation if not exists
+        if (!document.querySelector('#spinner-animation')) {
+            const style = document.createElement('style');
+            style.id = 'spinner-animation';
+            style.textContent = `
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
         setTimeout(() => {
-            button.innerHTML = originalText;
+            button.innerHTML = originalHTML;
             button.style.pointerEvents = 'auto';
         }, 1000);
         
-        // Analytics tracking (optional)
-        this.trackServiceInteraction(serviceTitle);
-        
-        // Add success feedback for screen readers
         this.announceAction(`Loading more information about ${serviceTitle}`);
     }
     
-    createRippleEffect(element, event) {
+    createEnhancedRipple(element, event) {
         const ripple = document.createElement('span');
         const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 2;
+        const size = Math.max(rect.width, rect.height) * 2.5;
         
         ripple.style.cssText = `
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
             width: 0;
             height: 0;
             left: ${event.clientX - rect.left}px;
             top: ${event.clientY - rect.top}px;
             transform: translate(-50%, -50%);
-            animation: ripple-expand 0.6s ease-out;
+            animation: enhancedRipple 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
             z-index: 1000;
         `;
@@ -1887,15 +1974,25 @@ class ServiceCardEnhancer {
         element.style.overflow = 'hidden';
         element.appendChild(ripple);
         
-        // Add ripple animation if not exists
-        if (!document.querySelector('#services-ripple-style')) {
+        // Add enhanced ripple animation
+        if (!document.querySelector('#enhanced-ripple-animation')) {
             const style = document.createElement('style');
-            style.id = 'services-ripple-style';
+            style.id = 'enhanced-ripple-animation';
             style.textContent = `
-                @keyframes ripple-expand {
-                    to {
+                @keyframes enhancedRipple {
+                    0% {
+                        width: 0;
+                        height: 0;
+                        opacity: 0.6;
+                    }
+                    50% {
                         width: ${size}px;
                         height: ${size}px;
+                        opacity: 0.3;
+                    }
+                    100% {
+                        width: ${size * 1.2}px;
+                        height: ${size * 1.2}px;
                         opacity: 0;
                     }
                 }
@@ -1907,36 +2004,34 @@ class ServiceCardEnhancer {
             if (ripple.parentNode) {
                 ripple.remove();
             }
-        }, 600);
+        }, 800);
     }
     
     addCardHoverEffect(card) {
         const features = card.querySelectorAll('.service-features li');
+        const icon = card.querySelector('.service-icon-modern');
         
         features.forEach((feature, index) => {
             setTimeout(() => {
-                feature.style.transform = 'translateX(8px)';
+                feature.style.transform = 'translateX(10px)';
                 feature.style.color = 'var(--gray-800)';
-            }, index * 50);
+            }, index * 40);
         });
         
-        // Add floating animation to icon
-        const icon = card.querySelector('.service-icon-modern');
         if (icon) {
-            icon.style.animation = 'float-icon 2s ease-in-out infinite';
+            icon.style.animation = 'float-icon 3s ease-in-out infinite';
         }
     }
     
     removeCardHoverEffect(card) {
         const features = card.querySelectorAll('.service-features li');
+        const icon = card.querySelector('.service-icon-modern');
         
         features.forEach(feature => {
             feature.style.transform = '';
             feature.style.color = '';
         });
         
-        // Remove floating animation
-        const icon = card.querySelector('.service-icon-modern');
         if (icon) {
             icon.style.animation = '';
         }
@@ -1953,7 +2048,7 @@ class ServiceCardEnhancer {
         this.removeCardHoverEffect(card);
     }
     
-    setupCardAnimations(card, index) {
+    setupCardAnimation(card, index) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1970,16 +2065,14 @@ class ServiceCardEnhancer {
             rootMargin: '0px 0px -50px 0px'
         });
         
-        // Set initial state
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        card.style.transition = 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
         
         observer.observe(card);
     }
     
     setupAccessibilityFeatures() {
-        // Add keyboard navigation for cards
         this.cards.forEach(card => {
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -1993,32 +2086,24 @@ class ServiceCardEnhancer {
         });
     }
     
-    setupHoverEffects() {
-        // Add CSS for hover animations if not exists
-        if (!document.querySelector('#services-hover-animations')) {
+    setupAnimations() {
+        if (!document.querySelector('#enhanced-card-animations')) {
             const style = document.createElement('style');
-            style.id = 'services-hover-animations';
+            style.id = 'enhanced-card-animations';
             style.textContent = `
                 @keyframes float-icon {
-                    0%, 100% { transform: translateY(0px) rotate(0deg); }
-                    50% { transform: translateY(-5px) rotate(5deg); }
+                    0%, 100% { 
+                        transform: translateY(0px) rotate(0deg) scale(1); 
+                    }
+                    33% { 
+                        transform: translateY(-3px) rotate(2deg) scale(1.02); 
+                    }
+                    66% { 
+                        transform: translateY(-1px) rotate(-1deg) scale(1.01); 
+                    }
                 }
             `;
             document.head.appendChild(style);
-        }
-    }
-    
-    trackServiceInteraction(serviceTitle) {
-        // Analytics tracking can be implemented here
-        console.log(`Service interaction: ${serviceTitle}`);
-        
-        // Example: Google Analytics event
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'service_click', {
-                event_category: 'Services',
-                event_label: serviceTitle,
-                value: 1
-            });
         }
     }
     
@@ -3055,9 +3140,9 @@ function cleanupSite() {
         aboutObserver.disconnect();
     }
     
-    // Clean up modern services carousel
-    if (window.servicesCarousel) {
-        window.servicesCarousel.destroy();
+    // Clean up enhanced services carousel
+    if (window.enhancedServicesCarousel) {
+        window.enhancedServicesCarousel.destroy();
     }
     
     // Clear any other intervals or timeouts
@@ -3103,20 +3188,20 @@ window.ReviewsSection = {
     getTotalTestimonials: () => totalTestimonials
 };
 
-// Modern Services Carousel API
-window.ServicesCarousel = {
-    next: () => window.servicesCarousel?.goToNext(),
-    previous: () => window.servicesCarousel?.goToPrevious(),
-    goToSlide: (index) => window.servicesCarousel?.goToSlide(index),
-    filter: (category) => window.servicesCarousel?.filterServices(category),
-    pauseAutoplay: () => window.servicesCarousel?.pauseAutoplay(),
-    resumeAutoplay: () => window.servicesCarousel?.resumeAutoplay(),
-    getCurrentIndex: () => window.servicesCarousel?.currentIndex || 0,
-    getCurrentFilter: () => window.servicesCarousel?.currentFilter || 'all',
-    getTotalCards: () => window.servicesCarousel?.filteredCards.length || 0
+// Enhanced Services Carousel API
+window.EnhancedServicesAPI = {
+    next: () => window.enhancedServicesCarousel?.goToNext(),
+    previous: () => window.enhancedServicesCarousel?.goToPrevious(),
+    goToSlide: (index) => window.enhancedServicesCarousel?.goToSlide(index),
+    filter: (category) => window.enhancedServicesCarousel?.filterServices(category),
+    pauseAutoplay: () => window.enhancedServicesCarousel?.pauseAutoplay(),
+    resumeAutoplay: () => window.enhancedServicesCarousel?.resumeAutoplay(),
+    getCurrentIndex: () => window.enhancedServicesCarousel?.currentIndex || 0,
+    getCurrentFilter: () => window.enhancedServicesCarousel?.currentFilter || 'all',
+    getTotalCards: () => window.enhancedServicesCarousel?.filteredCards.length || 0
 };
 
 /* ========================================
    FINAL INITIALIZATION
    ======================================== */
-console.log('✅ Holistic Psychology Services complete website with modern services carousel loaded successfully');
+console.log('✅ Holistic Psychology Services complete enhanced website loaded successfully');
