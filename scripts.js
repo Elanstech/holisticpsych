@@ -1,6 +1,6 @@
 /* ========================================
    HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE JS
-   Manhattan Corporate Style with Modern Hero & About
+   Manhattan Corporate Style with Modern Services Carousel
    ======================================== */
 
 /* ========================================
@@ -21,9 +21,6 @@ let aboutObserver;
 let statsAnimated = false;
 let aboutInitialized = false;
 
-// Services Carousel Variables
-let currentServiceSlide = 0;
-
 // Reviews Section Variables
 let currentTestimonial = 0;
 let testimonialInterval;
@@ -38,13 +35,18 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeHeader();
     initializeHeroSlideshow();
     initializeAboutSection();
-    initializeServicesCarousel();
     initializeContactForm();
     initializeSmoothScrolling();
     initializeMobileMenu();
     initializeScrollAnimations();
     initializeAccessibility();
     initializeReviewsSection();
+    
+    // Initialize Modern Services Carousel
+    window.servicesCarousel = new ModernServicesCarousel();
+    window.serviceCardEnhancer = new ServiceCardEnhancer();
+    
+    console.log('✅ All systems initialized successfully');
 });
 
 /* ========================================
@@ -1256,99 +1258,789 @@ function announceAboutAction(message) {
 }
 
 /* ========================================
-   SERVICES CAROUSEL
+   MODERN SERVICES CAROUSEL - NEW SYSTEM
    ======================================== */
-function initializeServicesCarousel() {
-    const track = document.getElementById('servicesTrack');
-    const cards = document.querySelectorAll('.service-card');
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    const prevBtn = document.getElementById('prevService');
-    const nextBtn = document.getElementById('nextService');
-    
-    if (!track || cards.length === 0) return;
-    
-    // Initialize first slide
-    showServiceSlide(0);
-    
-    // Add click handlers to indicators
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', function() {
-            showServiceSlide(index);
-        });
-    });
-    
-    // Add click handlers to navigation buttons
-    if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
-            const prevIndex = currentServiceSlide === 0 ? cards.length - 1 : currentServiceSlide - 1;
-            showServiceSlide(prevIndex);
-        });
-    }
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
-            const nextIndex = (currentServiceSlide + 1) % cards.length;
-            showServiceSlide(nextIndex);
-        });
-    }
-    
-    // Touch/swipe support for mobile
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-    
-    track.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-    }, { passive: true });
-    
-    track.addEventListener('touchmove', function(e) {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX;
-    }, { passive: true });
-    
-    track.addEventListener('touchend', function() {
-        if (!isDragging) return;
+
+class ModernServicesCarousel {
+    constructor() {
+        this.track = document.getElementById('servicesTrackModern');
+        this.cards = document.querySelectorAll('.service-card-modern');
+        this.prevBtn = document.getElementById('servicesPrev');
+        this.nextBtn = document.getElementById('servicesNext');
+        this.filterTabs = document.querySelectorAll('.filter-tab');
+        this.indicatorsContainer = document.getElementById('indicatorsTrack');
         
-        const diff = startX - currentX;
+        this.currentIndex = 0;
+        this.visibleCards = 3; // Default number of visible cards
+        this.currentFilter = 'all';
+        this.filteredCards = [...this.cards];
+        this.isAnimating = false;
+        this.autoplayInterval = null;
+        this.autoplayDelay = 6000; // 6 seconds
+        this.isPaused = false;
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.track || this.cards.length === 0) {
+            console.warn('Services carousel elements not found');
+            return;
+        }
+        
+        this.calculateVisibleCards();
+        this.setupEventListeners();
+        this.generateIndicators();
+        this.updateCarousel();
+        this.startAutoplay();
+        
+        // Initialize intersection observer for performance
+        this.setupIntersectionObserver();
+        
+        console.log('✅ Modern Services Carousel initialized successfully');
+    }
+    
+    calculateVisibleCards() {
+        const containerWidth = this.track.parentElement.offsetWidth;
+        
+        if (containerWidth >= 1200) {
+            this.visibleCards = 3;
+        } else if (containerWidth >= 768) {
+            this.visibleCards = 2;
+        } else {
+            this.visibleCards = 1;
+        }
+    }
+    
+    setupEventListeners() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => this.goToPrevious());
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => this.goToNext());
+        }
+        
+        // Filter tabs
+        this.filterTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const category = e.target.dataset.category;
+                this.filterServices(category);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (this.isInViewport()) {
+                this.handleKeyboardNavigation(e);
+            }
+        });
+        
+        // Touch/swipe support
+        this.setupTouchEvents();
+        
+        // Window resize handler
+        window.addEventListener('resize', this.debounce(() => {
+            this.calculateVisibleCards();
+            this.updateCarousel();
+            this.generateIndicators();
+        }, 250));
+        
+        // Pause autoplay on hover
+        const carouselContainer = document.querySelector('.services-carousel-modern');
+        if (carouselContainer) {
+            carouselContainer.addEventListener('mouseenter', () => this.pauseAutoplay());
+            carouselContainer.addEventListener('mouseleave', () => this.resumeAutoplay());
+            carouselContainer.addEventListener('focusin', () => this.pauseAutoplay());
+            carouselContainer.addEventListener('focusout', () => this.resumeAutoplay());
+        }
+        
+        // Visibility change handler
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAutoplay();
+            } else if (!this.isPaused) {
+                this.resumeAutoplay();
+            }
+        });
+    }
+    
+    setupIntersectionObserver() {
+        const options = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // Start autoplay when in view
+                    if (!this.autoplayInterval && !this.isPaused) {
+                        this.startAutoplay();
+                    }
+                } else {
+                    // Pause autoplay when out of view
+                    this.pauseAutoplay();
+                }
+            });
+        }, options);
+        
+        const carouselSection = document.querySelector('.services-modern');
+        if (carouselSection) {
+            this.observer.observe(carouselSection);
+        }
+    }
+    
+    setupTouchEvents() {
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let isDragging = false;
         const threshold = 50;
         
-        if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-                // Swipe left - next slide
-                const nextIndex = (currentServiceSlide + 1) % cards.length;
-                showServiceSlide(nextIndex);
-            } else {
-                // Swipe right - previous slide
-                const prevIndex = currentServiceSlide === 0 ? cards.length - 1 : currentServiceSlide - 1;
-                showServiceSlide(prevIndex);
+        this.track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            this.pauseAutoplay();
+        }, { passive: true });
+        
+        this.track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+            
+            const deltaX = Math.abs(currentX - startX);
+            const deltaY = Math.abs(currentY - startY);
+            
+            // Prevent vertical scrolling during horizontal swipe
+            if (deltaX > deltaY && deltaX > 20) {
+                e.preventDefault();
             }
+        }, { passive: false });
+        
+        this.track.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            
+            const deltaX = startX - currentX;
+            const deltaY = Math.abs(startY - currentY);
+            
+            if (Math.abs(deltaX) > threshold && Math.abs(deltaX) > deltaY) {
+                if (deltaX > 0) {
+                    this.goToNext();
+                } else {
+                    this.goToPrevious();
+                }
+            }
+            
+            isDragging = false;
+            setTimeout(() => this.resumeAutoplay(), 100);
+        }, { passive: true });
+    }
+    
+    filterServices(category) {
+        if (this.isAnimating) return;
+        
+        this.currentFilter = category;
+        this.currentIndex = 0;
+        
+        // Update active filter tab
+        this.filterTabs.forEach(tab => {
+            if (tab.dataset.category === category) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        
+        // Filter cards with animation
+        this.animateFilterTransition(category);
+        
+        // Announce filter change for screen readers
+        this.announceFilterChange(category);
+    }
+    
+    animateFilterTransition(category) {
+        this.isAnimating = true;
+        
+        // Fade out current cards
+        this.cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+            }, index * 50);
+        });
+        
+        setTimeout(() => {
+            // Update filtered cards
+            if (category === 'all') {
+                this.filteredCards = [...this.cards];
+            } else {
+                this.filteredCards = [...this.cards].filter(card => 
+                    card.dataset.category === category
+                );
+            }
+            
+            // Hide/show cards
+            this.cards.forEach(card => {
+                if (this.filteredCards.includes(card)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Fade in filtered cards
+            this.filteredCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+            
+            // Update carousel
+            this.generateIndicators();
+            this.updateCarousel();
+            this.isAnimating = false;
+            
+        }, this.cards.length * 50 + 200);
+    }
+    
+    generateIndicators() {
+        if (!this.indicatorsContainer) return;
+        
+        this.indicatorsContainer.innerHTML = '';
+        
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        const totalIndicators = Math.ceil(this.filteredCards.length / this.visibleCards);
+        
+        if (totalIndicators <= 1) {
+            this.indicatorsContainer.style.display = 'none';
+            return;
         }
         
-        isDragging = false;
-    }, { passive: true });
+        this.indicatorsContainer.style.display = 'flex';
+        
+        for (let i = 0; i < totalIndicators; i++) {
+            const indicator = document.createElement('button');
+            indicator.className = 'carousel-indicator-modern';
+            indicator.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            
+            indicator.addEventListener('click', () => {
+                this.goToSlide(i * this.visibleCards);
+            });
+            
+            if (i === Math.floor(this.currentIndex / this.visibleCards)) {
+                indicator.classList.add('active');
+            }
+            
+            this.indicatorsContainer.appendChild(indicator);
+        }
+    }
+    
+    updateCarousel() {
+        if (this.filteredCards.length === 0) return;
+        
+        // Calculate maximum index
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        this.currentIndex = Math.min(this.currentIndex, maxIndex);
+        
+        // Calculate transform based on visible cards
+        const cardWidth = 360; // Base card width
+        const gap = 24; // Gap between cards
+        const totalCardWidth = cardWidth + gap;
+        
+        // Update transform
+        const translateX = -this.currentIndex * totalCardWidth;
+        this.track.style.transform = `translateX(${translateX}px)`;
+        
+        // Update navigation buttons
+        this.updateNavigationButtons();
+        
+        // Update indicators
+        this.updateIndicators();
+        
+        // Announce slide change for screen readers
+        this.announceSlideChange();
+    }
+    
+    updateNavigationButtons() {
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        
+        if (this.prevBtn) {
+            this.prevBtn.disabled = this.currentIndex <= 0;
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.disabled = this.currentIndex >= maxIndex;
+        }
+    }
+    
+    updateIndicators() {
+        const indicators = this.indicatorsContainer.querySelectorAll('.carousel-indicator-modern');
+        const activeIndicatorIndex = Math.floor(this.currentIndex / this.visibleCards);
+        
+        indicators.forEach((indicator, index) => {
+            if (index === activeIndicatorIndex) {
+                indicator.classList.add('active');
+                indicator.setAttribute('aria-pressed', 'true');
+            } else {
+                indicator.classList.remove('active');
+                indicator.setAttribute('aria-pressed', 'false');
+            }
+        });
+    }
+    
+    goToNext() {
+        if (this.isAnimating) return;
+        
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        
+        if (this.currentIndex < maxIndex) {
+            this.currentIndex = Math.min(this.currentIndex + this.visibleCards, maxIndex);
+        } else {
+            // Loop to beginning
+            this.currentIndex = 0;
+        }
+        
+        this.updateCarousel();
+        this.resetAutoplay();
+    }
+    
+    goToPrevious() {
+        if (this.isAnimating) return;
+        
+        if (this.currentIndex > 0) {
+            this.currentIndex = Math.max(this.currentIndex - this.visibleCards, 0);
+        } else {
+            // Loop to end
+            const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+            this.currentIndex = maxIndex;
+        }
+        
+        this.updateCarousel();
+        this.resetAutoplay();
+    }
+    
+    goToSlide(index) {
+        if (this.isAnimating) return;
+        
+        const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+        this.currentIndex = Math.min(Math.max(index, 0), maxIndex);
+        
+        this.updateCarousel();
+        this.resetAutoplay();
+    }
+    
+    handleKeyboardNavigation(e) {
+        // Only handle keyboard events when carousel is focused
+        const activeElement = document.activeElement;
+        const isCarouselFocused = document.querySelector('.services-carousel-modern')?.contains(activeElement);
+        
+        if (!isCarouselFocused) return;
+        
+        switch(e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.goToPrevious();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.goToNext();
+                break;
+            case 'Home':
+                e.preventDefault();
+                this.goToSlide(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                const maxIndex = Math.max(0, this.filteredCards.length - this.visibleCards);
+                this.goToSlide(maxIndex);
+                break;
+            case ' ':
+                e.preventDefault();
+                if (this.isPaused) {
+                    this.resumeAutoplay();
+                } else {
+                    this.pauseAutoplay();
+                }
+                break;
+        }
+    }
+    
+    startAutoplay() {
+        if (this.autoplayInterval || this.filteredCards.length <= this.visibleCards) return;
+        
+        this.autoplayInterval = setInterval(() => {
+            if (!this.isPaused && this.isInViewport()) {
+                this.goToNext();
+            }
+        }, this.autoplayDelay);
+    }
+    
+    pauseAutoplay() {
+        this.isPaused = true;
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
+        }
+    }
+    
+    resumeAutoplay() {
+        this.isPaused = false;
+        if (!this.autoplayInterval && this.filteredCards.length > this.visibleCards) {
+            this.startAutoplay();
+        }
+    }
+    
+    resetAutoplay() {
+        this.pauseAutoplay();
+        setTimeout(() => {
+            if (!this.isPaused) {
+                this.startAutoplay();
+            }
+        }, 1000);
+    }
+    
+    isInViewport() {
+        const carousel = document.querySelector('.services-carousel-modern');
+        if (!carousel) return false;
+        
+        const rect = carousel.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    
+    announceFilterChange(category) {
+        const liveRegion = this.getLiveRegion();
+        const categoryNames = {
+            'all': 'All Services',
+            'individual': 'Individual Therapy',
+            'family': 'Family and Legal Services',
+            'specialized': 'Specialized Care'
+        };
+        
+        liveRegion.textContent = `Showing ${categoryNames[category] || category} services. ${this.filteredCards.length} services available.`;
+    }
+    
+    announceSlideChange() {
+        const liveRegion = this.getLiveRegion();
+        const totalSlides = Math.ceil(this.filteredCards.length / this.visibleCards);
+        const currentSlide = Math.floor(this.currentIndex / this.visibleCards) + 1;
+        
+        liveRegion.textContent = `Slide ${currentSlide} of ${totalSlides}`;
+    }
+    
+    getLiveRegion() {
+        let liveRegion = document.getElementById('services-live-region');
+        
+        if (!liveRegion) {
+            liveRegion = document.createElement('div');
+            liveRegion.id = 'services-live-region';
+            liveRegion.setAttribute('aria-live', 'polite');
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.style.cssText = `
+                position: absolute;
+                left: -10000px;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            `;
+            document.body.appendChild(liveRegion);
+        }
+        
+        return liveRegion;
+    }
+    
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    destroy() {
+        // Clean up event listeners and intervals
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+        }
+        
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+        
+        console.log('Services carousel destroyed');
+    }
 }
 
-function showServiceSlide(index) {
-    const track = document.getElementById('servicesTrack');
-    const indicators = document.querySelectorAll('.carousel-indicator');
+/* ========================================
+   ENHANCED CARD INTERACTIONS
+   ======================================== */
+
+class ServiceCardEnhancer {
+    constructor() {
+        this.cards = document.querySelectorAll('.service-card-modern');
+        this.init();
+    }
     
-    if (!track) return;
+    init() {
+        this.setupCardInteractions();
+        this.setupAccessibilityFeatures();
+        this.setupHoverEffects();
+    }
     
-    // Move track
-    const translateX = -index * 100;
-    track.style.transform = `translateX(${translateX}%)`;
+    setupCardInteractions() {
+        this.cards.forEach((card, index) => {
+            const learnMoreBtn = card.querySelector('.learn-more-btn');
+            
+            // Enhanced click interaction
+            if (learnMoreBtn) {
+                learnMoreBtn.addEventListener('click', (e) => {
+                    this.handleLearnMoreClick(e, card);
+                });
+            }
+            
+            // Card hover interaction
+            card.addEventListener('mouseenter', () => {
+                this.addCardHoverEffect(card);
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                this.removeCardHoverEffect(card);
+            });
+            
+            // Card focus for keyboard navigation
+            card.setAttribute('tabindex', '0');
+            card.addEventListener('focus', () => {
+                this.addCardFocusEffect(card);
+            });
+            
+            card.addEventListener('blur', () => {
+                this.removeCardFocusEffect(card);
+            });
+            
+            // Intersection observer for entrance animations
+            this.setupCardAnimations(card, index);
+        });
+    }
     
-    // Update indicators
-    indicators.forEach((indicator, i) => {
-        if (i === index) {
-            indicator.classList.add('active');
-        } else {
-            indicator.classList.remove('active');
+    handleLearnMoreClick(e, card) {
+        const button = e.currentTarget;
+        const serviceTitle = card.querySelector('.service-title').textContent;
+        
+        // Add click animation
+        this.createRippleEffect(button, e);
+        
+        // Add loading state
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="ri-loader-4-line"></i><span>Loading...</span>';
+        button.style.pointerEvents = 'none';
+        
+        // Simulate loading (since we're redirecting)
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.pointerEvents = 'auto';
+        }, 1000);
+        
+        // Analytics tracking (optional)
+        this.trackServiceInteraction(serviceTitle);
+        
+        // Add success feedback for screen readers
+        this.announceAction(`Loading more information about ${serviceTitle}`);
+    }
+    
+    createRippleEffect(element, event) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            width: 0;
+            height: 0;
+            left: ${event.clientX - rect.left}px;
+            top: ${event.clientY - rect.top}px;
+            transform: translate(-50%, -50%);
+            animation: ripple-expand 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1000;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        // Add ripple animation if not exists
+        if (!document.querySelector('#services-ripple-style')) {
+            const style = document.createElement('style');
+            style.id = 'services-ripple-style';
+            style.textContent = `
+                @keyframes ripple-expand {
+                    to {
+                        width: ${size}px;
+                        height: ${size}px;
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
         }
-    });
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.remove();
+            }
+        }, 600);
+    }
     
-    currentServiceSlide = index;
+    addCardHoverEffect(card) {
+        const features = card.querySelectorAll('.service-features li');
+        
+        features.forEach((feature, index) => {
+            setTimeout(() => {
+                feature.style.transform = 'translateX(8px)';
+                feature.style.color = 'var(--gray-800)';
+            }, index * 50);
+        });
+        
+        // Add floating animation to icon
+        const icon = card.querySelector('.service-icon-modern');
+        if (icon) {
+            icon.style.animation = 'float-icon 2s ease-in-out infinite';
+        }
+    }
+    
+    removeCardHoverEffect(card) {
+        const features = card.querySelectorAll('.service-features li');
+        
+        features.forEach(feature => {
+            feature.style.transform = '';
+            feature.style.color = '';
+        });
+        
+        // Remove floating animation
+        const icon = card.querySelector('.service-icon-modern');
+        if (icon) {
+            icon.style.animation = '';
+        }
+    }
+    
+    addCardFocusEffect(card) {
+        card.style.outline = '3px solid var(--primary-green)';
+        card.style.outlineOffset = '4px';
+        this.addCardHoverEffect(card);
+    }
+    
+    removeCardFocusEffect(card) {
+        card.style.outline = 'none';
+        this.removeCardHoverEffect(card);
+    }
+    
+    setupCardAnimations(card, index) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 100);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        // Set initial state
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        observer.observe(card);
+    }
+    
+    setupAccessibilityFeatures() {
+        // Add keyboard navigation for cards
+        this.cards.forEach(card => {
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const learnMoreBtn = card.querySelector('.learn-more-btn');
+                    if (learnMoreBtn) {
+                        learnMoreBtn.click();
+                    }
+                }
+            });
+        });
+    }
+    
+    setupHoverEffects() {
+        // Add CSS for hover animations if not exists
+        if (!document.querySelector('#services-hover-animations')) {
+            const style = document.createElement('style');
+            style.id = 'services-hover-animations';
+            style.textContent = `
+                @keyframes float-icon {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    50% { transform: translateY(-5px) rotate(5deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    trackServiceInteraction(serviceTitle) {
+        // Analytics tracking can be implemented here
+        console.log(`Service interaction: ${serviceTitle}`);
+        
+        // Example: Google Analytics event
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'service_click', {
+                event_category: 'Services',
+                event_label: serviceTitle,
+                value: 1
+            });
+        }
+    }
+    
+    announceAction(message) {
+        const liveRegion = document.getElementById('services-live-region') || 
+                          document.createElement('div');
+        
+        if (!liveRegion.id) {
+            liveRegion.id = 'services-live-region';
+            liveRegion.setAttribute('aria-live', 'polite');
+            liveRegion.style.cssText = `
+                position: absolute;
+                left: -10000px;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            `;
+            document.body.appendChild(liveRegion);
+        }
+        
+        liveRegion.textContent = message;
+    }
 }
 
 /* ========================================
@@ -2363,6 +3055,11 @@ function cleanupSite() {
         aboutObserver.disconnect();
     }
     
+    // Clean up modern services carousel
+    if (window.servicesCarousel) {
+        window.servicesCarousel.destroy();
+    }
+    
     // Clear any other intervals or timeouts
     statsAnimated = false;
     aboutInitialized = false;
@@ -2406,7 +3103,20 @@ window.ReviewsSection = {
     getTotalTestimonials: () => totalTestimonials
 };
 
+// Modern Services Carousel API
+window.ServicesCarousel = {
+    next: () => window.servicesCarousel?.goToNext(),
+    previous: () => window.servicesCarousel?.goToPrevious(),
+    goToSlide: (index) => window.servicesCarousel?.goToSlide(index),
+    filter: (category) => window.servicesCarousel?.filterServices(category),
+    pauseAutoplay: () => window.servicesCarousel?.pauseAutoplay(),
+    resumeAutoplay: () => window.servicesCarousel?.resumeAutoplay(),
+    getCurrentIndex: () => window.servicesCarousel?.currentIndex || 0,
+    getCurrentFilter: () => window.servicesCarousel?.currentFilter || 'all',
+    getTotalCards: () => window.servicesCarousel?.filteredCards.length || 0
+};
+
 /* ========================================
    FINAL INITIALIZATION
    ======================================== */
-console.log('✅ Holistic Psychology Services complete website loaded successfully');
+console.log('✅ Holistic Psychology Services complete website with modern services carousel loaded successfully');
