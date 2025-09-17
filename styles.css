@@ -853,6 +853,9 @@ button {
 /* ==========================================================================
    4. Hero Section
    ========================================================================== */
+/* ==========================================================================
+   4. Hero Section
+   ========================================================================== */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -961,12 +964,12 @@ button {
     padding-top: var(--space-xl);
 }
 
-/* Logo Showcase - Moved Down & Tight Fit */
+/* Logo Showcase - Fixed Loading Issue */
 .logo-showcase {
     display: flex;
     justify-content: center;
     margin-bottom: var(--space-2xl);
-    margin-top: var(--space-xl); /* Added margin to move down */
+    margin-top: var(--space-xl);
 }
 
 .hero-logo-container {
@@ -978,7 +981,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px; /* Minimal padding for tight fit */
+    padding: 8px;
     box-shadow: 
         0 0 80px rgba(0, 216, 132, 0.3),
         0 20px 60px rgba(0, 0, 0, 0.4),
@@ -986,7 +989,7 @@ button {
     border: 4px solid rgba(0, 216, 132, 0.4);
     transition: var(--transition-slow);
     animation: logoFloat 6s ease-in-out infinite;
-    overflow: hidden; /* Ensure logo doesn't overflow */
+    overflow: hidden;
 }
 
 .hero-logo-container:hover {
@@ -1000,11 +1003,12 @@ button {
 .hero-logo {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Changed from contain to cover for tight fit */
-    border-radius: 50%; /* Match container border radius */
+    object-fit: cover;
+    border-radius: 50%;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     transition: var(--transition-medium);
-    display: block; /* Ensure proper display */
+    display: block;
+    opacity: 1; /* Always visible by default */
 }
 
 .hero-logo-container:hover .hero-logo {
@@ -1337,7 +1341,7 @@ button {
     }
     
     .logo-showcase {
-        margin-top: var(--space-lg); /* Reduced margin on mobile */
+        margin-top: var(--space-lg);
     }
     
     .hero-location {
