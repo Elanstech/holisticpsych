@@ -27,17 +27,21 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo-section">
-                    <img src="images/logo.png" alt="Holistic Psychological Services" class="logo">
-                    <div class="logo-text">
-                        <h2>Holistic Psychological Services</h2>
-                        <p>PLLC • Manhattan, NY</p>
+                    <div class="brand-logo-container">
+                        <img src="images/logo.png" alt="Holistic Psychological Services" class="brand-logo">
+                    </div>
+                    <div class="brand-text">
+                        <div class="brand-name">Holistic Psychological Services</div>
+                        <div class="brand-subtitle">PLLC • Manhattan, NY</div>
                     </div>
                 </div>
                 
-                <nav class="nav" id="nav">
+                <nav class="nav-menu" id="navMenu">
                     <a href="#home" class="nav-link active">Home</a>
                     <a href="#about" class="nav-link">About</a>
                     <a href="#services" class="nav-link">Services</a>
+                    <a href="#team" class="nav-link">Team</a>
+                    <a href="#reviews" class="nav-link">Reviews</a>
                     <a href="#contact" class="nav-link">Contact</a>
                 </nav>
                 
@@ -46,31 +50,14 @@
                         <i class="ri-phone-line"></i>
                         <span>(646) 971-7325</span>
                     </a>
-                    <a href="#contact" class="cta-btn">Book Session</a>
+                    <a href="#contact" class="btn-consultation">Book Consultation</a>
                 </div>
                 
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <button class="nav-toggle" id="navToggle">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <nav class="mobile-nav">
-                <a href="#home" class="mobile-nav-link">Home</a>
-                <a href="#about" class="mobile-nav-link">About</a>
-                <a href="#services" class="mobile-nav-link">Services</a>
-                <a href="#contact" class="mobile-nav-link">Contact</a>
-            </nav>
-            <div class="mobile-actions">
-                <a href="tel:(646)971-7325" class="mobile-phone-btn">
-                    <i class="ri-phone-line"></i>
-                    <span>(646) 971-7325</span>
-                </a>
-                <a href="#contact" class="mobile-cta-btn">Book Session</a>
             </div>
         </div>
     </header>
@@ -79,23 +66,18 @@
     <main class="main">
         
         <!-- Hero Section -->
-<section class="hero" id="home">
-    <div class="hero-slideshow">
-        
-        <!-- Slide 1: Welcome & Circular Logo -->
-        <div class="hero-slide active" data-slide="0">
+        <section class="hero" id="home">
             <div class="hero-background">
-                <img src="https://images.pexels.com/photos/635279/pexels-photo-635279.jpeg" alt="Manhattan Skyline">
                 <div class="hero-overlay"></div>
             </div>
             <div class="container">
                 <div class="hero-content">
-                    <div class="logo-showcase-circular">
-                        <div class="hero-logo-circular">
+                    <div class="logo-showcase">
+                        <div class="hero-logo-container">
                             <img src="images/logo.png" alt="Holistic Psychological Services">
                         </div>
                     </div>
-                    <div class="welcome-text">
+                    <div class="hero-text">
                         <h1 class="hero-title">Your Journey to Mental Wellness Begins Here</h1>
                         <p class="hero-subtitle">Professional Mental Health Care in the Heart of Manhattan</p>
                         <div class="hero-location">
@@ -103,1048 +85,532 @@
                             <span>274 Madison Ave, Suite 905 • New York, NY 10016</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 2: Modern Team Showcase -->
-        <div class="hero-slide" data-slide="1">
-            <div class="hero-background">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop" alt="Modern Office">
-                <div class="hero-overlay hero-overlay-dark"></div>
-            </div>
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-badge">
-                        <span>Expert Care</span>
-                    </div>
-                    <h1 class="hero-title">Meet Our Distinguished Team</h1>
-                    <p class="hero-subtitle">Board-certified psychologists with decades of combined experience</p>
-                    
-                    <div class="modern-team-grid">
-                        <div class="team-card-modern">
-                            <div class="team-card-content">
-                                <div class="team-avatar">
-                                    <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny">
-                                    <div class="avatar-ring"></div>
-                                </div>
-                                <div class="team-info">
-                                    <h3>Dr. Kristie Doheny</h3>
-                                    <p class="title">PsyD, Clinical Director</p>
-                                    <p class="specialty">Trauma & Anxiety Specialist</p>
-                                    <div class="experience-badge">15+ Years</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="team-card-modern">
-                            <div class="team-card-content">
-                                <div class="team-avatar">
-                                    <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Doug Uhlig">
-                                    <div class="avatar-ring"></div>
-                                </div>
-                                <div class="team-info">
-                                    <h3>Dr. Doug Uhlig</h3>
-                                    <p class="title">Licensed Psychologist</p>
-                                    <p class="specialty">Couples & CBT Specialist</p>
-                                    <div class="experience-badge">Expert Care</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="hero-actions">
-                        <a href="#about" class="btn-primary-modern">
-                            <span>Meet Our Team</span>
+                        <a href="#contact" class="btn-hero-primary">
+                            <span>Schedule Consultation</span>
                             <i class="ri-arrow-right-line"></i>
                         </a>
-                        <a href="#contact" class="btn-secondary-modern">
-                            <i class="ri-calendar-line"></i>
-                            <span>Book Consultation</span>
+                        <a href="tel:(646)971-7325" class="btn-hero-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call (646) 971-7325</span>
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Slide 3: Modern Services Overview -->
-        <div class="hero-slide" data-slide="2">
-            <div class="hero-background">
-                <img src="https://static.vecteezy.com/system/resources/thumbnails/051/963/254/small/diverse-group-of-people-forming-circle-smiling-together-photo.jpg" alt="Manhattan Business District">
-                <div class="hero-overlay hero-overlay-blue"></div>
-            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section class="about" id="about">
             <div class="container">
-                <div class="hero-content">
-                    <div class="hero-badge">
-                        <span>Comprehensive Care</span>
-                    </div>
-                    <h1 class="hero-title">Evidence-Based Mental Health Services</h1>
-                    <p class="hero-subtitle">Personalized therapy approaches designed for lasting change</p>
-                    
-                    <div class="services-showcase">
-                        <div class="service-pill">
-                            <div class="service-icon">
-                                <i class="ri-user-heart-line"></i>
+                <div class="section-header">
+                    <div class="section-tag">About Us</div>
+                    <h2 class="section-title">Leading Mental Health Care in Manhattan</h2>
+                    <p class="section-subtitle">Expert guidance from experienced professionals dedicated to your wellness journey</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-main">
+                        <div class="mission-card">
+                            <div class="card-icon">
+                                <i class="ri-heart-pulse-line"></i>
                             </div>
-                            <div class="service-content">
-                                <h3>Individual Therapy</h3>
-                                <p>One-on-one personalized sessions</p>
-                            </div>
-                        </div>
-                        
-                        <div class="service-pill">
-                            <div class="service-icon">
-                                <i class="ri-team-line"></i>
-                            </div>
-                            <div class="service-content">
-                                <h3>Couples Counseling</h3>
-                                <p>Relationship & communication therapy</p>
+                            <div class="card-content">
+                                <h3>Our Mission</h3>
+                                <p>At Holistic Psychological Services, our practice is led by Dr. Kristie Doheny and Dr. Doug Uhlig, bringing together decades of clinical expertise and compassionate care. Supported by a dedicated team of mental health professionals, we provide comprehensive psychological services tailored to each client's unique needs.</p>
                             </div>
                         </div>
                         
-                        <div class="service-pill">
-                            <div class="service-icon">
-                                <i class="ri-mental-health-line"></i>
+                        <div class="values-grid">
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="ri-award-line"></i>
+                                </div>
+                                <div class="value-content">
+                                    <h4>Licensed Excellence</h4>
+                                    <p>Board-certified psychologists with specialized training and years of experience</p>
+                                </div>
                             </div>
-                            <div class="service-content">
-                                <h3>Group Therapy</h3>
-                                <p>Community-based healing sessions</p>
+                            
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="ri-team-line"></i>
+                                </div>
+                                <div class="value-content">
+                                    <h4>Comprehensive Team</h4>
+                                    <p>Full spectrum of mental health professionals working together for your care</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <div class="value-icon">
+                                    <i class="ri-heart-line"></i>
+                                </div>
+                                <div class="value-content">
+                                    <h4>Holistic Approach</h4>
+                                    <p>Evidence-based therapy combined with compassionate, personalized care</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="stats-row">
-                        <div class="stat-modern">
-                            <div class="stat-number">500+</div>
-                            <div class="stat-label">Clients Served</div>
+                    <div class="about-leadership">
+                        <div class="leadership-card">
+                            <div class="leadership-header">
+                                <div class="header-icon">
+                                    <i class="ri-shield-star-line"></i>
+                                </div>
+                                <div class="header-content">
+                                    <h3>Practice Leadership</h3>
+                                    <p>Meet the founders leading our mission</p>
+                                </div>
+                            </div>
+                            
+                            <div class="leaders-container">
+                                <div class="leader-profile">
+                                    <div class="leader-image">
+                                        <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny">
+                                        <div class="leader-badge">
+                                            <i class="ri-star-line"></i>
+                                        </div>
+                                    </div>
+                                    <div class="leader-details">
+                                        <h4>Dr. Kristie Doheny</h4>
+                                        <div class="leader-title">PsyD, Owner & Clinical Director</div>
+                                        <div class="specialties">
+                                            <span class="specialty-tag">Trauma Specialist</span>
+                                            <span class="specialty-tag">Anxiety Expert</span>
+                                        </div>
+                                        <div class="experience-metric">
+                                            <span class="metric-number">15+</span>
+                                            <span class="metric-label">Years Experience</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="leader-profile">
+                                    <div class="leader-image">
+                                        <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Doug Uhlig">
+                                        <div class="leader-badge">
+                                            <i class="ri-star-line"></i>
+                                        </div>
+                                    </div>
+                                    <div class="leader-details">
+                                        <h4>Dr. Doug Uhlig</h4>
+                                        <div class="leader-title">Licensed Psychologist</div>
+                                        <div class="specialties">
+                                            <span class="specialty-tag">Couples Therapy</span>
+                                            <span class="specialty-tag">CBT Specialist</span>
+                                        </div>
+                                        <div class="experience-metric">
+                                            <span class="metric-number">Expert</span>
+                                            <span class="metric-label">Relationship Care</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-modern">
+                        
+                        <div class="team-stats-card">
+                            <div class="stats-header">
+                                <h4>Our Team</h4>
+                                <p>Dedicated professionals committed to your wellbeing</p>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="ri-group-line"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-number">8+</span>
+                                        <span class="stat-label">Team Members</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="ri-graduation-cap-line"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-number">50+</span>
+                                        <span class="stat-label">Years Combined Experience</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="specialties-overview">
+                                <h5>Areas of Expertise</h5>
+                                <div class="specialty-pills">
+                                    <span class="pill">Individual Therapy</span>
+                                    <span class="pill">Couples Counseling</span>
+                                    <span class="pill">Group Sessions</span>
+                                    <span class="pill">Trauma Care</span>
+                                    <span class="pill">Anxiety Treatment</span>
+                                    <span class="pill">Depression Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Services Section -->
+        <section class="services" id="services">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Our Services</div>
+                    <h2 class="section-title">Comprehensive Mental Health Care</h2>
+                    <p class="section-subtitle">Professional therapeutic services tailored to your unique needs and goals</p>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ri-user-heart-line"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Individual Therapy</h3>
+                            <p>One-on-one personalized sessions focused on your specific mental health needs and goals.</p>
+                            <ul class="service-features">
+                                <li>Anxiety & Depression Treatment</li>
+                                <li>Trauma Recovery (PTSD)</li>
+                                <li>Cognitive Behavioral Therapy</li>
+                                <li>ADHD & Behavioral Support</li>
+                            </ul>
+                            <a href="#contact" class="service-btn">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ri-team-line"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Couples Counseling</h3>
+                            <p>Relationship therapy to strengthen communication and resolve conflicts together.</p>
+                            <ul class="service-features">
+                                <li>Communication Skills Training</li>
+                                <li>Conflict Resolution</li>
+                                <li>Intimacy & Trust Building</li>
+                                <li>Pre-marital Counseling</li>
+                            </ul>
+                            <a href="#contact" class="service-btn">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ri-scales-3-line"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Family & Legal Services</h3>
+                            <p>Specialized services for family dynamics and legal psychological evaluations.</p>
+                            <ul class="service-features">
+                                <li>Custody Evaluations</li>
+                                <li>Reunification Therapy</li>
+                                <li>Family Counseling</li>
+                                <li>Court-Ordered Assessments</li>
+                            </ul>
+                            <a href="#contact" class="service-btn">Learn More</a>
+                        </div>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="ri-mental-health-line"></i>
+                        </div>
+                        <div class="service-content">
+                            <h3>Specialized Care</h3>
+                            <p>Targeted therapy for specific conditions and life circumstances.</p>
+                            <ul class="service-features">
+                                <li>Eating Disorder Treatment</li>
+                                <li>Sleep Disorder Therapy</li>
+                                <li>Mindfulness & Meditation</li>
+                                <li>Group Therapy Sessions</li>
+                            </ul>
+                            <a href="#contact" class="service-btn">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="services-cta">
+                    <h3>Ready to Begin Your Journey?</h3>
+                    <p>Take the first step towards better mental health and wellness today.</p>
+                    <div class="cta-buttons">
+                        <a href="#contact" class="btn-cta-primary">
+                            <i class="ri-calendar-check-line"></i>
+                            <span>Schedule Consultation</span>
+                        </a>
+                        <a href="tel:(646)971-7325" class="btn-cta-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call (646) 971-7325</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Team Section -->
+        <section class="team" id="team">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Our Team</div>
+                    <h2 class="section-title">Meet Our Dedicated Professionals</h2>
+                    <p class="section-subtitle">Experienced mental health professionals committed to your wellbeing</p>
+                </div>
+                
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-image-container">
+                            <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny" class="team-image">
+                            <div class="experience-badge">
+                                <span class="years">15+</span>
+                                <span class="text">Years</span>
+                            </div>
+                        </div>
+                        <div class="team-info">
+                            <h3>Dr. Kristie Doheny</h3>
+                            <div class="position">PsyD, Owner & Clinical Director</div>
+                            <div class="specialty">Trauma & Anxiety Specialist</div>
+                            <div class="credentials">
+                                <span class="credential">Licensed Psychologist</span>
+                                <span class="credential">PTSD Specialist</span>
+                                <span class="credential">CBT Certified</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-image-container">
+                            <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Doug Uhlig" class="team-image">
+                            <div class="experience-badge">
+                                <span class="years">Expert</span>
+                                <span class="text">Care</span>
+                            </div>
+                        </div>
+                        <div class="team-info">
+                            <h3>Dr. Doug Uhlig</h3>
+                            <div class="position">Licensed Psychologist</div>
+                            <div class="specialty">Couples & Relationship Specialist</div>
+                            <div class="credentials">
+                                <span class="credential">Licensed Psychologist</span>
+                                <span class="credential">Couples Therapy</span>
+                                <span class="credential">CBT Specialist</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-image-container">
+                            <img src="https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg" alt="Team Member" class="team-image">
+                            <div class="experience-badge">
+                                <span class="years">10+</span>
+                                <span class="text">Years</span>
+                            </div>
+                        </div>
+                        <div class="team-info">
+                            <h3>Our Support Team</h3>
+                            <div class="position">Licensed Therapists & Staff</div>
+                            <div class="specialty">Comprehensive Mental Health Support</div>
+                            <div class="credentials">
+                                <span class="credential">Group Therapy</span>
+                                <span class="credential">Family Counseling</span>
+                                <span class="credential">Specialized Care</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Reviews Section -->
+        <section class="reviews" id="reviews">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Client Reviews</div>
+                    <h2 class="section-title">What Our Clients Say</h2>
+                    <p class="section-subtitle">Real stories from those we've had the privilege to help on their mental wellness journey</p>
+                </div>
+                
+                <div class="reviews-content">
+                    <div class="hero-review">
+                        <div class="quote-mark">
+                            <i class="ri-double-quotes-l"></i>
+                        </div>
+                        <blockquote>
+                            "Dr. Doheny has been instrumental in helping me overcome my anxiety. Her holistic approach and genuine care created a safe space where I could truly heal. I'm forever grateful for the tools and insights she provided."
+                        </blockquote>
+                        <div class="review-author">
+                            <div class="author-avatar">SM</div>
+                            <div class="author-details">
+                                <div class="author-name">Sarah M.</div>
+                                <div class="author-type">Individual Therapy Client</div>
+                                <div class="rating">
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                    <i class="ri-star-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reviews-grid">
+                        <div class="review-card">
+                            <div class="quote-icon">
+                                <i class="ri-double-quotes-l"></i>
+                            </div>
+                            <div class="review-text">
+                                "Dr. Uhlig saved our marriage. His expertise in couples therapy helped us communicate better and rebuild our connection. We're stronger than ever thanks to his guidance and patience."
+                            </div>
+                            <div class="review-footer">
+                                <div class="client-initial">MJ</div>
+                                <div class="client-info">
+                                    <div class="client-name">Michael & Jennifer R.</div>
+                                    <div class="stars">
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="review-card">
+                            <div class="quote-icon">
+                                <i class="ri-double-quotes-l"></i>
+                            </div>
+                            <div class="review-text">
+                                "The entire team at Holistic Psychological Services is amazing. From the front desk to my therapist, everyone made me feel welcome and understood. This practice truly cares about their clients."
+                            </div>
+                            <div class="review-footer">
+                                <div class="client-initial">DL</div>
+                                <div class="client-info">
+                                    <div class="client-name">David L.</div>
+                                    <div class="stars">
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="review-card">
+                            <div class="quote-icon">
+                                <i class="ri-double-quotes-l"></i>
+                            </div>
+                            <div class="review-text">
+                                "After struggling with depression for years, I finally found hope through the compassionate care I received here. The personalized treatment plan and ongoing support changed my life completely."
+                            </div>
+                            <div class="review-footer">
+                                <div class="client-initial">EK</div>
+                                <div class="client-info">
+                                    <div class="client-name">Emily K.</div>
+                                    <div class="stars">
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                        <i class="ri-star-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="review-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="ri-star-line"></i>
+                            </div>
+                            <div class="stat-number">4.9</div>
+                            <div class="stat-label">Average Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="ri-user-smile-line"></i>
+                            </div>
+                            <div class="stat-number">200+</div>
+                            <div class="stat-label">Happy Clients</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="ri-time-line"></i>
+                            </div>
                             <div class="stat-number">15+</div>
                             <div class="stat-label">Years Experience</div>
                         </div>
-                        <div class="stat-modern">
-                            <div class="stat-number">95%</div>
-                            <div class="stat-label">Success Rate</div>
-                        </div>
-                    </div>
-                    
-                    <div class="hero-actions">
-                        <a href="#services" class="btn-primary-modern">
-                            <span>Explore Services</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </a>
-                        <a href="#contact" class="btn-secondary-modern">
-                            <i class="ri-phone-line"></i>
-                            <span>Get Started Today</span>
-                        </a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Slideshow Controls -->
-    <div class="hero-controls">
-        <div class="slide-indicators">
-            <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
-            <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
-            <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
-        </div>
-        <div class="slide-nav">
-            <button class="nav-btn prev" id="heroPrev" aria-label="Previous slide">
-                <i class="ri-arrow-left-s-line"></i>
-            </button>
-            <button class="nav-btn next" id="heroNext" aria-label="Next slide">
-                <i class="ri-arrow-right-s-line"></i>
-            </button>
-        </div>
-    </div>
-    
-    <!-- Progress Bar -->
-    <div class="slide-progress">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-    
-    <!-- Floating Contact Button -->
-    <div class="floating-contact" id="floatingContact">
-        <button class="floating-btn" id="floatingBtn" aria-label="Contact options">
-            <i class="ri-add-line"></i>
-        </button>
-        <div class="floating-menu" id="floatingMenu">
-            <a href="tel:(646)971-7325" class="floating-item" aria-label="Call us">
-                <i class="ri-phone-line"></i>
-            </a>
-            <a href="mailto:info@holisticpsychservices.com" class="floating-item" aria-label="Send email">
-                <i class="ri-mail-line"></i>
-            </a>
-            <a href="https://instagram.com/holisticpsychservices" target="_blank" class="floating-item" aria-label="Follow on Instagram">
-                <i class="ri-instagram-line"></i>
-            </a>
-        </div>
-    </div>
-</section>
-        
-      <!-- Modern About Section -->
-<section class="about-modern" id="about">
-    <div class="container">
-        <!-- Section Header -->
-        <div class="about-header" data-aos="fade-up">
-            <div class="section-badge">
-                <span>About Us</span>
-            </div>
-            <h2 class="section-title">Leading Mental Health Care in Manhattan</h2>
-            <p class="section-subtitle">Expert guidance from experienced professionals dedicated to your wellness journey</p>
-        </div>
-
-        <!-- Main Content Grid -->
-        <div class="about-content-grid">
-            
-            <!-- Left Side: Mission & Values -->
-            <div class="about-main-content" data-aos="fade-right">
-                <div class="content-card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <i class="ri-heart-pulse-line"></i>
-                        </div>
-                        <h3>Our Mission</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>At Holistic Psychological Services, our practice is led by Dr. Kristie Doheny and Dr. Doug Uhlig, bringing together decades of clinical expertise and compassionate care. Supported by a dedicated team of mental health professionals, we provide comprehensive psychological services tailored to each client's unique needs.</p>
-                    </div>
-                </div>
-
-                <!-- Core Values Grid -->
-                <div class="values-grid">
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="value-icon">
-                            <i class="ri-award-line"></i>
-                        </div>
-                        <div class="value-content">
-                            <h4>Licensed Excellence</h4>
-                            <p>Board-certified psychologists with specialized training and years of experience</p>
-                        </div>
-                        <div class="value-accent"></div>
-                    </div>
-
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="value-icon">
-                            <i class="ri-team-line"></i>
-                        </div>
-                        <div class="value-content">
-                            <h4>Comprehensive Team</h4>
-                            <p>Full spectrum of mental health professionals working together for your care</p>
-                        </div>
-                        <div class="value-accent"></div>
-                    </div>
-
-                    <div class="value-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="value-icon">
-                            <i class="ri-heart-line"></i>
-                        </div>
-                        <div class="value-content">
-                            <h4>Holistic Approach</h4>
-                            <p>Evidence-based therapy combined with compassionate, personalized care</p>
-                        </div>
-                        <div class="value-accent"></div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="about-actions" data-aos="fade-up" data-aos-delay="400">
-                    <a href="about.html" class="btn-modern-primary">
-                        <span>Learn More About Us</span>
-                        <i class="ri-arrow-right-line"></i>
-                    </a>
-                    <a href="#contact" class="btn-modern-secondary">
-                        <i class="ri-phone-line"></i>
-                        <span>Schedule Consultation</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Right Side: Leadership & Team -->
-            <div class="about-leadership-section" data-aos="fade-left">
-                
-                <!-- Leadership Card -->
-                <div class="leadership-card">
-                    <div class="leadership-header">
-                        <div class="header-icon">
-                            <i class="ri-shield-star-line"></i>
-                        </div>
-                        <div class="header-content">
-                            <h3>Practice Leadership</h3>
-                            <p>Meet the founders leading our mission</p>
-                        </div>
-                    </div>
-
-                    <div class="leaders-container">
-                        <div class="leader-profile" data-leader="kristie">
-                            <div class="leader-image-container">
-                                <div class="leader-image">
-                                    <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. Kristie Doheny">
-                                </div>
-                                <div class="leader-badge">
-                                    <i class="ri-star-line"></i>
-                                </div>
-                            </div>
-                            <div class="leader-details">
-                                <h4>Dr. Kristie Doheny</h4>
-                                <p class="leader-title">PsyD, Owner & Clinical Director</p>
-                                <div class="specialties">
-                                    <span class="specialty-tag">Trauma Specialist</span>
-                                    <span class="specialty-tag">Anxiety Expert</span>
-                                </div>
-                                <div class="experience-metric">
-                                    <span class="metric-number">15+</span>
-                                    <span class="metric-label">Years Experience</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="leader-profile" data-leader="doug">
-                            <div class="leader-image-container">
-                                <div class="leader-image">
-                                    <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Doug Uhlig">
-                                </div>
-                                <div class="leader-badge">
-                                    <i class="ri-star-line"></i>
-                                </div>
-                            </div>
-                            <div class="leader-details">
-                                <h4>Dr. Doug Uhlig</h4>
-                                <p class="leader-title">Licensed Psychologist</p>
-                                <div class="specialties">
-                                    <span class="specialty-tag">Couples Therapy</span>
-                                    <span class="specialty-tag">CBT Specialist</span>
-                                </div>
-                                <div class="experience-metric">
-                                    <span class="metric-number">Expert</span>
-                                    <span class="metric-label">Relationship Care</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Team Stats Card -->
-                <div class="team-stats-card" data-aos="fade-up" data-aos-delay="500">
-                    <div class="stats-header">
-                        <h4>Our Team</h4>
-                        <p>Dedicated professionals committed to your wellbeing</p>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <i class="ri-group-line"></i>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number" data-count="8">0</span>
-                                <span class="stat-plus">+</span>
-                                <span class="stat-label">Team Members</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <i class="ri-graduation-cap-line"></i>
-                            </div>
-                            <div class="stat-content">
-                                <span class="stat-number" data-count="50">0</span>
-                                <span class="stat-plus">+</span>
-                                <span class="stat-label">Years Combined Experience</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="specialties-overview">
-                        <h5>Areas of Expertise</h5>
-                        <div class="specialty-pills">
-                            <span class="pill">Individual Therapy</span>
-                            <span class="pill">Couples Counseling</span>
-                            <span class="pill">Group Sessions</span>
-                            <span class="pill">Trauma Care</span>
-                            <span class="pill">Anxiety Treatment</span>
-                            <span class="pill">Depression Support</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CTA Card -->
-                <div class="team-cta-card" data-aos="fade-up" data-aos-delay="600">
-                    <div class="cta-background">
-                        <i class="ri-team-line"></i>
-                    </div>
-                    <div class="cta-content">
-                        <h4>Meet Our Full Team</h4>
-                        <p>Discover the dedicated professionals who make our practice exceptional</p>
-                        <a href="team.html" class="cta-link">
-                            <span>View Team Profiles</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Background Elements -->
-    <div class="background-elements">
-        <div class="floating-shape shape-1"></div>
-        <div class="floating-shape shape-2"></div>
-        <div class="floating-shape shape-3"></div>
-    </div>
-</section>
-
-
-<!-- Enhanced Services Section -->       
-<section class="services-enhanced" id="services">
-    <div class="container">
-        <!-- Section Header -->
-        <div class="services-header">
-            <div class="services-badge">
-                <span>Our Services</span>
-            </div>
-            <h2 class="services-title">Comprehensive Mental Health Care</h2>
-            <p class="services-subtitle">Professional therapeutic services tailored to your unique needs and goals</p>
-        </div>
-
-        <!-- Enhanced Service Categories Filter -->
-        <div class="services-filter-container">
-            <div class="services-filter-tabs">
-                <button class="services-filter-tab active" data-category="all">
-                    <span>All Services</span>
-                    <div class="services-tab-indicator"></div>
-                </button>
-                <button class="services-filter-tab" data-category="individual">
-                    <span>Individual Therapy</span>
-                    <div class="services-tab-indicator"></div>
-                </button>
-                <button class="services-filter-tab" data-category="family">
-                    <span>Family & Legal</span>
-                    <div class="services-tab-indicator"></div>
-                </button>
-                <button class="services-filter-tab" data-category="specialized">
-                    <span>Specialized Care</span>
-                    <div class="services-tab-indicator"></div>
-                </button>
-            </div>
-        </div>
-
-        <!-- Enhanced Carousel Container -->
-        <div class="services-carousel-container">
-            <!-- Navigation Arrows -->
-            <button class="services-nav-btn services-prev" id="servicesPrevBtn" aria-label="Previous services">
-                <i class="ri-arrow-left-s-line"></i>
-                <div class="services-nav-ripple"></div>
-            </button>
-            <button class="services-nav-btn services-next" id="servicesNextBtn" aria-label="Next services">
-                <i class="ri-arrow-right-s-line"></i>
-                <div class="services-nav-ripple"></div>
-            </button>
-
-            <!-- Carousel Track -->
-            <div class="services-carousel-track-container">
-                <div class="services-carousel-track" id="servicesCarouselTrack">
-                    
-                    <!-- Individual Therapy Services -->
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-user-heart-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Anxiety Treatment</h3>
-                                <p class="services-description">Evidence-based therapy for anxiety disorders, panic attacks, and social anxiety using proven therapeutic approaches.</p>
-                                <ul class="services-features">
-                                    <li>Cognitive Behavioral Therapy</li>
-                                    <li>Exposure Therapy Techniques</li>
-                                    <li>Mindfulness-Based Interventions</li>
-                                    <li>Panic Attack Management</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#anxiety" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-emotion-sad-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Depression Therapy</h3>
-                                <p class="services-description">Comprehensive treatment for depression, mood disorders, and emotional wellness through specialized interventions.</p>
-                                <ul class="services-features">
-                                    <li>Individual Counseling Sessions</li>
-                                    <li>Behavioral Activation Therapy</li>
-                                    <li>Mood Disorder Treatment</li>
-                                    <li>Emotional Regulation Skills</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#depression" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-shield-cross-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">PTSD & Trauma Recovery</h3>
-                                <p class="services-description">Specialized trauma-informed therapy for PTSD, injury, illness, abuse recovery, and comprehensive healing.</p>
-                                <ul class="services-features">
-                                    <li>EMDR Therapy Sessions</li>
-                                    <li>Trauma-Focused CBT</li>
-                                    <li>Somatic Healing Approaches</li>
-                                    <li>Crisis Intervention Support</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#trauma" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-focus-3-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">ADHD & Behavioral Support</h3>
-                                <p class="services-description">Comprehensive treatment for Attention Deficit Disorder, behavioral problems, and Oppositional Defiant Disorder.</p>
-                                <ul class="services-features">
-                                    <li>Behavioral Intervention Plans</li>
-                                    <li>Executive Function Training</li>
-                                    <li>School Collaboration Services</li>
-                                    <li>Parent Training Programs</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#adhd" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-restaurant-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Eating Disorder Treatment</h3>
-                                <p class="services-description">Specialized comprehensive treatment for eating disorders, body image concerns, and nutritional wellness.</p>
-                                <ul class="services-features">
-                                    <li>Nutritional Counseling Support</li>
-                                    <li>Body Image Therapy</li>
-                                    <li>Family-Based Treatment</li>
-                                    <li>Recovery Planning</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#eating" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="individual">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-moon-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Sleep Disorder Therapy</h3>
-                                <p class="services-description">Professional treatment for sleep disorders, insomnia, and sleep-related anxiety using evidence-based methods.</p>
-                                <ul class="services-features">
-                                    <li>Sleep Hygiene Education</li>
-                                    <li>CBT for Insomnia (CBT-I)</li>
-                                    <li>Relaxation Techniques</li>
-                                    <li>Sleep Pattern Analysis</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#sleep" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Family & Legal Services -->
-                    <div class="services-card" data-category="family">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-team-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Reunification Therapy</h3>
-                                <p class="services-description">Specialized therapeutic services to rebuild and strengthen parent-child relationships after separation or estrangement.</p>
-                                <ul class="services-features">
-                                    <li>Court-Appointed Services</li>
-                                    <li>Structured Reunification Process</li>
-                                    <li>Progress Monitoring & Reports</li>
-                                    <li>Family System Assessment</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#reunification" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="family">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-scales-3-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Custody Evaluations</h3>
-                                <p class="services-description">Comprehensive psychological evaluations for child custody determinations and family court proceedings.</p>
-                                <ul class="services-features">
-                                    <li>Full Psychological Assessment</li>
-                                    <li>Child & Parent Interviews</li>
-                                    <li>Detailed Court Reports</li>
-                                    <li>Expert Testimony</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#custody" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Specialized Care -->
-                    <div class="services-card" data-category="specialized">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-heart-3-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Relationship Counseling</h3>
-                                <p class="services-description">Professional couples therapy to strengthen relationships, improve communication, and resolve conflicts.</p>
-                                <ul class="services-features">
-                                    <li>Gottman Method Therapy</li>
-                                    <li>Emotionally Focused Therapy</li>
-                                    <li>Communication Skills Training</li>
-                                    <li>Conflict Resolution</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#couples" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="services-card" data-category="specialized">
-                        <div class="services-card-content">
-                            <div class="services-icon">
-                                <i class="ri-meditation-line"></i>
-                                <div class="services-icon-glow"></div>
-                            </div>
-                            <div class="services-info">
-                                <h3 class="services-card-title">Mindfulness & Meditation</h3>
-                                <p class="services-description">Mindfulness-based interventions for stress reduction, anxiety management, and emotional regulation.</p>
-                                <ul class="services-features">
-                                    <li>MBSR Training Programs</li>
-                                    <li>Meditation Guidance</li>
-                                    <li>Stress Reduction Techniques</li>
-                                    <li>Emotional Regulation Skills</li>
-                                </ul>
-                                <div class="services-cta">
-                                    <a href="services.html#mindfulness" class="services-learn-more">
-                                        <span>Learn More</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Enhanced Carousel Indicators -->
-            <div class="services-indicators-container">
-                <div class="services-indicators" id="servicesIndicators">
-                    <!-- Indicators will be generated by JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Enhanced Call to Action -->
-        <div class="services-cta-section">
-            <div class="services-cta-content">
-                <h3>Ready to Begin Your Journey?</h3>
-                <p>Take the first step towards better mental health and wellness today.</p>
-                <div class="services-cta-buttons">
-                    <a href="#contact" class="services-cta-primary">
-                        <i class="ri-calendar-check-line"></i>
-                        <span>Schedule Consultation</span>
-                    </a>
-                    <a href="tel:(646)971-7325" class="services-cta-secondary">
-                        <i class="ri-phone-line"></i>
-                        <span>Call (646) 971-7325</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-        
-        <!-- Reviews & Social Section -->
-<section class="reviews-social" id="reviews">
-    <div class="container">
-        
-        <!-- Reviews/Testimonials Section -->
-        <div class="reviews-section">
-            <div class="section-header">
-                <h2 class="section-title">What Our Clients Say</h2>
-                <p class="section-subtitle">Real stories from those we've had the privilege to help on their mental wellness journey</p>
-            </div>
-            
-            <div class="testimonials-container">
-                <div class="testimonials-carousel" id="testimonialsCarousel">
-                    <div class="testimonials-track" id="testimonialsTrack">
-                        
-                        <!-- Testimonial 1 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "Dr. Doheny has been instrumental in helping me overcome my anxiety. Her holistic approach and genuine care created a safe space where I could truly heal. I'm forever grateful for the tools and insights she provided."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg" alt="Sarah M.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>Sarah M.</h4>
-                                        <p>Individual Therapy Client</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 2 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "Dr. Uhlig saved our marriage. His expertise in couples therapy helped us communicate better and rebuild our connection. We're stronger than ever thanks to his guidance and patience."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg" alt="Michael & Jennifer R.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>Michael & Jennifer R.</h4>
-                                        <p>Couples Counseling</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 3 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "The entire team at Holistic Psychological Services is amazing. From the front desk to my therapist, everyone made me feel welcome and understood. This practice truly cares about their clients."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg" alt="David L.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>David L.</h4>
-                                        <p>Long-term Client</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 4 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "After struggling with depression for years, I finally found hope through the compassionate care I received here. The personalized treatment plan and ongoing support changed my life completely."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg" alt="Emily K.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>Emily K.</h4>
-                                        <p>Depression Treatment</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 5 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "The trauma-informed approach here is exceptional. I felt safe and supported throughout my healing journey. The progress I've made seemed impossible before I started therapy here."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/3768911/pexels-photo-3768911.jpeg" alt="Rachel T.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>Rachel T.</h4>
-                                        <p>Trauma Therapy</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 6 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "Professional, compassionate, and effective. The group therapy sessions were incredibly valuable, and the individual attention I received was beyond my expectations. Highly recommend!"
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg" alt="James H.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>James H.</h4>
-                                        <p>Group & Individual Therapy</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Testimonial 7 -->
-                        <div class="testimonial-card">
-                            <div class="testimonial-content">
-                                <div class="testimonial-stars">
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                    <i class="ri-star-fill"></i>
-                                </div>
-                                <blockquote>
-                                    "Finding this practice was life-changing. The combination of evidence-based therapy and holistic care approach helped me develop coping strategies that work. I'm living my best life now."
-                                </blockquote>
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">
-                                        <img src="https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg" alt="Maria S.">
-                                    </div>
-                                    <div class="author-info">
-                                        <h4>Maria S.</h4>
-                                        <p>Anxiety & Life Coaching</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                
-                <!-- Carousel Controls -->
-                <div class="testimonials-controls">
-                    <button class="testimonial-nav prev" id="testimonialPrev" aria-label="Previous testimonial">
-                        <i class="ri-arrow-left-s-line"></i>
-                    </button>
-                    <div class="testimonial-indicators" id="testimonialIndicators">
-                        <!-- Indicators will be generated by JavaScript -->
-                    </div>
-                    <button class="testimonial-nav next" id="testimonialNext" aria-label="Next testimonial">
-                        <i class="ri-arrow-right-s-line"></i>
-                    </button>
-                </div>
-                
-                <!-- Review Stats -->
-                <div class="review-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">4.9</span>
-                        <div class="stat-stars">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                        </div>
-                        <span class="stat-label">Average Rating</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">200+</span>
-                        <span class="stat-label">Happy Clients</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">Years Experience</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Instagram Section -->
-        <div class="instagram-section">
-            <div class="section-header">
-                <h2 class="section-title">Follow Our Journey</h2>
-                <p class="section-subtitle">Stay connected with mental health tips, practice updates, and wellness inspiration</p>
-            </div>
-            
-            <div class="instagram-container">
-                <div class="instagram-header">
-                    <div class="instagram-info">
-                        <div class="instagram-icon">
-                            <i class="ri-instagram-line"></i>
-                        </div>
-                        <div class="instagram-details">
-                            <h3>@holisticpsychservices</h3>
-                            <p>Mental wellness tips & practice updates</p>
-                        </div>
-                    </div>
-                    <a href="https://instagram.com/holisticpsychservices" target="_blank" class="instagram-follow-btn">
-                        <i class="ri-instagram-line"></i>
-                        <span>Follow Us</span>
-                    </a>
-                </div>
-                
-                <div class="instagram-feed">
-                    <!-- Elfsight Instagram Feed -->
-                    <script src="https://elfsightcdn.com/platform.js" async></script>
-                    <div class="elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278" data-elfsight-app-lazy></div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</section>
+        </section>
         
         <!-- Contact Section -->
         <section class="contact" id="contact">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">Get in Touch</h2>
-                    <p class="section-subtitle">Ready to begin your journey to better mental health?</p>
+                    <div class="section-tag">Get in Touch</div>
+                    <h2 class="section-title">Start Your Wellness Journey Today</h2>
+                    <p class="section-subtitle">Ready to take the first step towards better mental health? Contact us to schedule your consultation.</p>
                 </div>
                 
-                <div class="contact-grid">
+                <div class="contact-content">
                     <div class="contact-info">
-                        <div class="contact-item">
-                            <div class="contact-icon">
+                        <div class="contact-card">
+                            <div class="card-icon">
                                 <i class="ri-map-pin-2-line"></i>
                             </div>
-                            <div class="contact-details">
+                            <div class="card-content">
                                 <h3>Office Location</h3>
                                 <p>274 Madison Ave, Suite 905<br>New York, NY 10016</p>
                             </div>
                         </div>
                         
-                        <div class="contact-item">
-                            <div class="contact-icon">
+                        <div class="contact-card">
+                            <div class="card-icon">
                                 <i class="ri-phone-line"></i>
                             </div>
-                            <div class="contact-details">
+                            <div class="card-content">
                                 <h3>Phone</h3>
-                                <p>(646) 971-7325</p>
+                                <p><a href="tel:(646)971-7325">(646) 971-7325</a></p>
                             </div>
                         </div>
                         
-                        <div class="contact-item">
-                            <div class="contact-icon">
+                        <div class="contact-card">
+                            <div class="card-icon">
+                                <i class="ri-mail-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Email</h3>
+                                <p><a href="mailto:info@holisticpsychservices.com">info@holisticpsychservices.com</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="card-icon">
                                 <i class="ri-time-line"></i>
                             </div>
-                            <div class="contact-details">
+                            <div class="card-content">
                                 <h3>Office Hours</h3>
                                 <p>Monday - Friday: 9:00 AM - 7:00 PM<br>Saturday: 10:00 AM - 4:00 PM</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="contact-form">
-                        <form id="contactForm" class="form">
+                    <div class="contact-form-container">
+                        <form class="contact-form" id="contactForm">
                             <div class="form-group">
-                                <label for="name">Full Name</label>
+                                <label for="name">Full Name *</label>
                                 <input type="text" id="name" name="name" required>
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="email">Email</label>
+                                    <label for="email">Email *</label>
                                     <input type="email" id="email" name="email" required>
                                 </div>
                                 <div class="form-group">
@@ -1159,17 +625,21 @@
                                     <option value="">Select a service</option>
                                     <option value="individual">Individual Therapy</option>
                                     <option value="couples">Couples Counseling</option>
-                                    <option value="group">Group Therapy</option>
+                                    <option value="family">Family Therapy</option>
+                                    <option value="legal">Legal/Custody Services</option>
                                     <option value="consultation">Initial Consultation</option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="message">Message</label>
-                                <textarea id="message" name="message" rows="4" placeholder="Tell us how we can help you..."></textarea>
+                                <textarea id="message" name="message" rows="5" placeholder="Tell us how we can help you..."></textarea>
                             </div>
                             
-                            <button type="submit" class="btn-primary">Send Message</button>
+                            <button type="submit" class="btn-submit">
+                                <span>Send Message</span>
+                                <i class="ri-send-plane-line"></i>
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -1180,45 +650,92 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <div class="footer-logo">
-                        <img src="images/logo.png" alt="Holistic Psychological Services">
-                        <div class="footer-text">
-                            <h3>Holistic Psychological Services</h3>
-                            <p>PLLC • Manhattan, NY</p>
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-brand">
+                    <div class="footer-logo-wrapper">
+                        <div class="footer-logo-container">
+                            <img src="images/logo.png" alt="Holistic Psychological Services" class="footer-logo">
+                        </div>
+                        <div class="footer-brand-text">
+                            <div class="brand-title">Holistic Psychological Services</div>
+                            <div class="brand-subtitle">PLLC • Manhattan, NY</div>
                         </div>
                     </div>
                     <p class="footer-description">
                         Professional mental health care in the heart of Manhattan. 
-                        Compassionate, evidence-based therapy for individuals and couples.
+                        Compassionate, evidence-based therapy for individuals, couples, and families.
                     </p>
+                    <div class="social-links">
+                        <a href="https://instagram.com/holisticpsychservices" class="social-link" target="_blank">
+                            <i class="ri-instagram-line"></i>
+                        </a>
+                        <a href="https://facebook.com/holisticpsychservices" class="social-link" target="_blank">
+                            <i class="ri-facebook-line"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/holisticpsychservices" class="social-link" target="_blank">
+                            <i class="ri-linkedin-line"></i>
+                        </a>
+                    </div>
                 </div>
                 
-                <div class="footer-links">
-                    <div class="footer-section">
+                <div class="footer-content">
+                    <div class="footer-widget">
                         <h4>Services</h4>
-                        <ul>
+                        <ul class="footer-links">
                             <li><a href="#services">Individual Therapy</a></li>
                             <li><a href="#services">Couples Counseling</a></li>
+                            <li><a href="#services">Family Therapy</a></li>
+                            <li><a href="#services">Legal Services</a></li>
                             <li><a href="#services">Group Therapy</a></li>
                         </ul>
                     </div>
                     
-                    <div class="footer-section">
-                        <h4>Contact</h4>
-                        <ul>
-                            <li>274 Madison Ave, Suite 905</li>
-                            <li>New York, NY 10016</li>
-                            <li><a href="tel:(646)971-7325">(646) 971-7325</a></li>
+                    <div class="footer-widget">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#team">Our Team</a></li>
+                            <li><a href="#reviews">Client Reviews</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#contact">Book Consultation</a></li>
                         </ul>
+                    </div>
+                    
+                    <div class="footer-widget">
+                        <h4>Contact Info</h4>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="ri-map-pin-2-line"></i>
+                                <div class="address-group">
+                                    <p>274 Madison Ave, Suite 905</p>
+                                    <p>New York, NY 10016</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="ri-phone-line"></i>
+                                <a href="tel:(646)971-7325">(646) 971-7325</a>
+                            </div>
+                            <div class="contact-item">
+                                <i class="ri-mail-line"></i>
+                                <a href="mailto:info@holisticpsychservices.com">info@holisticpsychservices.com</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2024 Holistic Psychological Services PLLC. All rights reserved.</p>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p class="copyright">&copy; 2024 Holistic Psychological Services PLLC. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#accessibility">Accessibility</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
