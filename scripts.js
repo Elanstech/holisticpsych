@@ -36,7 +36,7 @@ const STATE = {
     isMobileMenuOpen: false,
     currentSection: 'home',
     observers: new Map(),
-    isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce).matches,
+    isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     heroBackgroundIndex: 0,
     heroBackgroundInterval: null,
     isContactFabOpen: false,
@@ -1482,7 +1482,7 @@ const initializeContact = () => {
             const originalText = submitButton.innerHTML;
             submitButton.innerHTML = `
                 <span style="opacity: 0.8;">Sending...</span>
-                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 0.5rem;"></div>
             `;
             submitButton.disabled = true;
             
@@ -1497,6 +1497,10 @@ const initializeContact = () => {
                     }
                     @keyframes fadeOut {
                         to { opacity: 0; transform: translateY(-10px); }
+                    }
+                    @keyframes fadeInUp {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
                     }
                 `;
                 document.head.appendChild(style);
