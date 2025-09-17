@@ -178,14 +178,14 @@ button {
 /* ==========================================================================
    3. Header & Navigation - Modern Island Design
    ========================================================================== */
-/* Header Main Container */
+/* Header Main Container - UPDATED: Longer Island */
 .header {
     position: fixed;
     top: var(--space-lg);
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - var(--space-2xl));
-    max-width: 1300px;
+    max-width: 1400px; /* UPDATED: Increased from 1300px to 1400px for longer island */
     z-index: var(--z-fixed);
     transition: var(--transition-medium);
 }
@@ -197,7 +197,7 @@ button {
     border: 1px solid rgba(0, 216, 132, 0.15);
     border-radius: var(--radius-full);
     box-shadow: var(--shadow-lg);
-    padding: var(--space-md) var(--space-2xl);
+    padding: var(--space-md) var(--space-3xl); /* UPDATED: Increased from var(--space-2xl) to var(--space-3xl) */
     transition: var(--transition-medium);
 }
 
@@ -212,7 +212,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2xl);
+    gap: var(--space-3xl); /* UPDATED: Increased from var(--space-2xl) to var(--space-3xl) */
 }
 
 /* Brand Text (No Logo) */
@@ -736,9 +736,9 @@ button {
     box-shadow: var(--shadow-md);
 }
 
-/* Responsive States */
-@media (min-width: 992px) {
-    /* Show desktop nav by default */
+/* UPDATED: Responsive States for iPad 11" and Lower */
+@media (min-width: 1201px) {
+    /* Show desktop nav by default for screens larger than iPad 11" landscape */
     .desktop-nav {
         display: flex;
     }
@@ -765,7 +765,8 @@ button {
     }
 }
 
-@media (max-width: 991px) {
+/* UPDATED: iPad 11" and smaller - Use mobile version */
+@media (max-width: 1200px) {
     .desktop-nav {
         display: none;
     }
