@@ -863,7 +863,7 @@ button {
     background: var(--gray-50);
 }
 
-/* Hero Background System */
+/* Hero Background System - Clean without heavy overlay */
 .hero-background {
     position: absolute;
     top: 0;
@@ -899,32 +899,10 @@ button {
 }
 
 .hero-bg-image.active {
-    opacity: 1;
+    opacity: 0.15; /* Very subtle background visibility */
 }
 
-/* Sophisticated Light Overlay System */
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(0, 216, 132, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-        linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.85) 0%, 
-            rgba(255, 255, 255, 0.75) 25%,
-            rgba(255, 255, 255, 0.8) 50%,
-            rgba(255, 255, 255, 0.75) 75%,
-            rgba(255, 255, 255, 0.85) 100%
-        );
-    z-index: 2;
-    backdrop-filter: blur(0.5px);
-    -webkit-backdrop-filter: blur(0.5px);
-}
-
+/* Subtle texture overlay only */
 .hero-grain {
     position: absolute;
     top: 0;
@@ -936,10 +914,10 @@ button {
             45deg,
             transparent,
             transparent 1px,
-            rgba(0, 216, 132, 0.02) 1px,
-            rgba(0, 216, 132, 0.02) 2px
+            rgba(0, 216, 132, 0.01) 1px,
+            rgba(0, 216, 132, 0.01) 2px
         );
-    z-index: 3;
+    z-index: 2;
     opacity: 0.3;
 }
 
@@ -961,7 +939,7 @@ button {
     padding-top: var(--space-xl);
 }
 
-/* Logo Showcase - FIXED LOADING ISSUE */
+/* Logo Showcase */
 .logo-showcase {
     display: flex;
     justify-content: center;
@@ -997,7 +975,6 @@ button {
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* FIXED LOGO - Always visible by default */
 .hero-logo {
     width: 100%;
     height: 100%;
@@ -1006,7 +983,7 @@ button {
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     transition: var(--transition-medium);
     display: block;
-    opacity: 1; /* FIXED: Always visible by default */
+    opacity: 1;
 }
 
 .hero-logo-container:hover .hero-logo {
@@ -1047,7 +1024,7 @@ button {
     flex-direction: column;
     align-items: center;
     gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg); /* Reduced from var(--space-xl) to bring buttons closer */
     max-width: 800px;
 }
 
@@ -1078,7 +1055,7 @@ button {
     justify-content: center;
     gap: var(--space-sm);
     padding: var(--space-lg) var(--space-2xl);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 216, 132, 0.3);
@@ -1093,7 +1070,7 @@ button {
 }
 
 .hero-location:hover {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border-color: var(--primary-green);
     transform: translateY(-2px);
     box-shadow: 
@@ -1107,13 +1084,13 @@ button {
     filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
 }
 
-/* Hero Actions */
+/* Hero Actions - RAISED HIGHER */
 .hero-actions {
     display: flex;
     gap: var(--space-xl);
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: var(--space-lg);
+    margin-top: var(--space-sm); /* Reduced from var(--space-lg) to raise buttons */
 }
 
 .btn-hero-primary,
@@ -1151,7 +1128,7 @@ button {
 }
 
 .btn-hero-secondary {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     color: var(--primary-green);
     border-color: rgba(0, 216, 132, 0.4);
     backdrop-filter: blur(20px);
@@ -1162,7 +1139,7 @@ button {
 }
 
 .btn-hero-secondary:hover {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border-color: var(--primary-green);
     color: var(--gray-800);
     transform: translateY(-4px);
@@ -1315,6 +1292,7 @@ button {
         width: 100%;
         max-width: 400px;
         gap: var(--space-lg);
+        margin-top: 0; /* Even closer on mobile */
     }
     
     .btn-hero-primary,
@@ -1340,6 +1318,11 @@ button {
     
     .logo-showcase {
         margin-top: var(--space-lg);
+        margin-bottom: var(--space-xl); /* Maintain spacing on mobile */
+    }
+    
+    .hero-text {
+        margin-bottom: var(--space-md); /* Reduced on mobile */
     }
     
     .hero-location {
@@ -1352,7 +1335,7 @@ button {
     
     .hero-actions {
         gap: var(--space-md);
-        margin-top: var(--space-md);
+        margin-top: 0;
     }
     
     .btn-hero-primary,
