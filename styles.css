@@ -961,23 +961,24 @@ button {
     padding-top: var(--space-xl);
 }
 
-/* Logo Showcase */
+/* Logo Showcase - Moved Down & Tight Fit */
 .logo-showcase {
     display: flex;
     justify-content: center;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    margin-top: var(--space-xl); /* Added margin to move down */
 }
 
 .hero-logo-container {
     position: relative;
     width: 280px;
     height: 280px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-2xl);
+    padding: 8px; /* Minimal padding for tight fit */
     box-shadow: 
         0 0 80px rgba(0, 216, 132, 0.3),
         0 20px 60px rgba(0, 0, 0, 0.4),
@@ -985,6 +986,7 @@ button {
     border: 4px solid rgba(0, 216, 132, 0.4);
     transition: var(--transition-slow);
     animation: logoFloat 6s ease-in-out infinite;
+    overflow: hidden; /* Ensure logo doesn't overflow */
 }
 
 .hero-logo-container:hover {
@@ -998,64 +1000,15 @@ button {
 .hero-logo {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover; /* Changed from contain to cover for tight fit */
+    border-radius: 50%; /* Match container border radius */
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     transition: var(--transition-medium);
+    display: block; /* Ensure proper display */
 }
 
 .hero-logo-container:hover .hero-logo {
     transform: scale(1.02);
-}
-
-/* Logo Fallback */
-.logo-fallback {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-}
-
-.logo-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-lg);
-}
-
-.logo-icon i {
-    font-size: 2.5rem;
-    color: white;
-}
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-xs);
-}
-
-.logo-main {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary-green);
-    line-height: 1;
-    letter-spacing: -0.02em;
-}
-
-.logo-sub {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--gray-600);
-    letter-spacing: 0.1em;
 }
 
 /* Logo Ring and Glow Effects */
@@ -1383,6 +1336,10 @@ button {
         height: 180px;
     }
     
+    .logo-showcase {
+        margin-top: var(--space-lg); /* Reduced margin on mobile */
+    }
+    
     .hero-location {
         flex-direction: column;
         gap: var(--space-xs);
@@ -1422,6 +1379,7 @@ button {
         min-width: 180px;
     }
 }
+
 /* ==========================================================================
    5. About Section
    ========================================================================== */
