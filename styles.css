@@ -177,13 +177,14 @@ button {
 /* ==========================================================================
    3. Header & Navigation - Modern Island Design
    ========================================================================== */
+/* Header Main Container */
 .header {
     position: fixed;
     top: var(--space-lg);
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - var(--space-3xl));
-    max-width: 1000px;
+    width: calc(100% - var(--space-2xl));
+    max-width: 1300px; /* Increased from 1000px for more horizontal space */
     z-index: var(--z-fixed);
     transition: var(--transition-medium);
 }
@@ -195,7 +196,7 @@ button {
     border: 1px solid rgba(0, 216, 132, 0.15);
     border-radius: var(--radius-full);
     box-shadow: var(--shadow-lg);
-    padding: var(--space-md) var(--space-xl);
+    padding: var(--space-md) var(--space-2xl); /* Increased horizontal padding */
     transition: var(--transition-medium);
 }
 
@@ -210,7 +211,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-xl);
+    gap: var(--space-2xl); /* Increased gap for better spacing */
 }
 
 /* Brand Text (No Logo) */
@@ -218,6 +219,7 @@ button {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex-shrink: 0;
 }
 
 .brand-name {
@@ -239,6 +241,7 @@ button {
     display: flex;
     align-items: center;
     gap: var(--space-2xl);
+    transition: var(--transition-medium);
 }
 
 .nav-link {
@@ -248,6 +251,7 @@ button {
     position: relative;
     padding: var(--space-sm) 0;
     transition: var(--transition-medium);
+    white-space: nowrap;
 }
 
 .nav-link::after {
@@ -277,7 +281,8 @@ button {
 .header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-xl); /* Increased gap between phone and button */
+    flex-shrink: 0;
 }
 
 .phone-btn {
@@ -292,6 +297,7 @@ button {
     font-weight: 500;
     font-size: 0.875rem;
     transition: var(--transition-medium);
+    white-space: nowrap;
 }
 
 .phone-btn:hover {
@@ -313,6 +319,7 @@ button {
     font-size: 0.875rem;
     box-shadow: var(--shadow-md);
     transition: var(--transition-medium);
+    white-space: nowrap;
 }
 
 .btn-consultation:hover {
@@ -363,6 +370,52 @@ button {
 }
 
 .mobile-menu-toggle.active .toggle-line:nth-child(3) {
+    transform: rotate(-45deg) translate(4px, -4px);
+}
+
+/* Scroll Hamburger Menu (Desktop) */
+.scroll-hamburger-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 216, 132, 0.1);
+    border: 1px solid rgba(0, 216, 132, 0.2);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-hamburger-toggle:hover {
+    background: rgba(0, 216, 132, 0.15);
+    border-color: var(--primary-green);
+    transform: scale(1.05);
+}
+
+.hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: var(--primary-green);
+    border-radius: var(--radius-full);
+    transition: var(--transition-medium);
+    transform-origin: center;
+    margin: 2px 0;
+}
+
+.scroll-hamburger-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(4px, 4px);
+}
+
+.scroll-hamburger-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.scroll-hamburger-toggle.active .hamburger-line:nth-child(3) {
     transform: rotate(-45deg) translate(4px, -4px);
 }
 
@@ -682,7 +735,35 @@ button {
     box-shadow: var(--shadow-md);
 }
 
-/* Header Mobile Responsive */
+/* Responsive States */
+@media (min-width: 992px) {
+    /* Show desktop nav by default */
+    .desktop-nav {
+        display: flex;
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+    }
+    
+    .scroll-hamburger-toggle {
+        display: none;
+    }
+    
+    /* When scrolled, show hamburger and hide desktop nav */
+    .header.scrolled .desktop-nav {
+        display: none;
+    }
+    
+    .header.scrolled .header-actions {
+        display: none;
+    }
+    
+    .header.scrolled .scroll-hamburger-toggle {
+        display: flex;
+    }
+}
+
 @media (max-width: 991px) {
     .desktop-nav {
         display: none;
@@ -692,8 +773,16 @@ button {
         display: flex;
     }
     
+    .scroll-hamburger-toggle {
+        display: none;
+    }
+    
     .header-actions .phone-btn {
         display: none;
+    }
+    
+    .header-actions .btn-consultation {
+        display: none; /* Hide consultation button on mobile header */
     }
     
     .brand-name {
@@ -709,6 +798,7 @@ button {
     .header {
         top: var(--space-md);
         width: calc(100% - var(--space-xl));
+        max-width: none;
     }
     
     .header-island {
@@ -725,11 +815,6 @@ button {
     
     .mobile-brand-name {
         font-size: 1.125rem;
-    }
-    
-    .btn-consultation {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 0.8125rem;
     }
 }
 
