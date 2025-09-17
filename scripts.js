@@ -543,11 +543,11 @@ const initializeHeader = () => {
 };
 
 /* ==========================================================================
-   4. Hero Section - Clean Logo Design & Background Rotation
+   4. Hero Section - Clean Logo Design & Background Rotation - LOGO FIXED
    ========================================================================== */
 
 /**
- * Hero Controller Class - Updated with Clean Logo Design
+ * Hero Controller Class - FIXED LOGO LOADING ISSUE
  */
 class HeroController {
     constructor() {
@@ -570,30 +570,37 @@ class HeroController {
         this.initializeBackgroundRotation();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
-        this.initializeLogoLoading();
+        this.initializeLogoLoading(); // FIXED: Simple logo loading
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized with clean logo design');
+        console.log('✅ Hero section initialized with FIXED logo loading');
     }
     
- initializeLogoLoading() {
-    if (!this.logoImage) return;
-    
-    // Simple loading check - don't hide the logo initially
-    if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
-        // Image is already loaded
-        console.log('✅ Logo already loaded');
-        return;
+    // FIXED: Simplified logo loading - no hiding/showing transitions
+    initializeLogoLoading() {
+        if (!this.logoImage) return;
+        
+        // Simple check - logo is visible by default in CSS
+        if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
+            console.log('✅ Logo already loaded and visible');
+            return;
+        }
+        
+        // Only add load event listener if image isn't already loaded
+        this.logoImage.addEventListener('load', () => {
+            console.log('✅ Logo loaded successfully');
+            // Logo stays visible - no opacity changes needed
+        });
+        
+        // Error handling - keep logo visible even if image fails
+        this.logoImage.addEventListener('error', () => {
+            console.warn('Logo image failed to load, but container remains visible');
+            // Don't hide anything - let the container background show
+        });
+        
+        console.log('🔄 Logo loading initialized - logo remains visible');
     }
-    
-    // Only handle load event if image isn't already loaded
-    this.logoImage.addEventListener('load', () => {
-        console.log('✅ Logo loaded successfully');
-    });
-    
-    console.log('🔄 Logo loading...');
-}
     
     initializeBackgroundRotation() {
         if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
@@ -857,7 +864,7 @@ const initializeHero = () => {
         }
     });
     
-    console.log('✅ Hero section with clean logo design initialized');
+    console.log('✅ Hero section with FIXED logo loading initialized');
 };
 
 /* ==========================================================================
@@ -2204,7 +2211,7 @@ const initializeApp = () => {
     
     // Core functionality - order matters
     initializeHeader();           // Header & Mobile Menu System
-    initializeHero();            // Hero with Clean Logo & Background Rotation
+    initializeHero();            // Hero with FIXED Logo & Background Rotation
     initializeAbout();           // About Section with Animations & Interactions
     initializeServices();        // Services with Animations & Interactions
     initializeTeam();            // Team with Animations & Interactions
@@ -2229,7 +2236,7 @@ const initializeApp = () => {
         floatingActions.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
     }
     
-    console.log('✅ Holistic Psychological Services website initialized successfully!');
+    console.log('✅ Holistic Psychological Services website initialized successfully with FIXED logo!');
 };
 
 /**
