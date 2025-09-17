@@ -163,7 +163,7 @@ const staggerAnimations = (elements, className = 'fade-in', staggerDelay = CONFI
 };
 
 /* ==========================================================================
-   3. Header & Navigation - Complete Mobile Menu System with Scroll Behavior
+   3. Header & Navigation - Complete Mobile Menu System
    ========================================================================== */
 
 /**
@@ -176,7 +176,6 @@ class MobileMenuController {
         
         // Get DOM elements
         this.menuToggle = document.getElementById('mobileMenuToggle');
-        this.scrollHamburgerToggle = document.getElementById('scrollHamburgerToggle');
         this.menuPanel = document.getElementById('mobileMenuPanel');
         this.menuOverlay = document.getElementById('mobileMenuOverlay');
         this.menuClose = document.getElementById('mobileMenuClose');
@@ -188,7 +187,7 @@ class MobileMenuController {
     }
     
     init() {
-        if (!this.menuPanel || !this.menuOverlay) {
+        if (!this.menuToggle || !this.menuPanel || !this.menuOverlay) {
             console.warn('Mobile menu elements not found');
             return;
         }
@@ -201,21 +200,11 @@ class MobileMenuController {
     }
     
     bindEvents() {
-        // Mobile toggle menu
-        if (this.menuToggle) {
-            this.menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleMenu();
-            });
-        }
-        
-        // Scroll hamburger toggle (desktop)
-        if (this.scrollHamburgerToggle) {
-            this.scrollHamburgerToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleMenu();
-            });
-        }
+        // Toggle menu
+        this.menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMenu();
+        });
         
         // Close menu
         this.menuClose?.addEventListener('click', () => {
@@ -266,18 +255,9 @@ class MobileMenuController {
     }
     
     setupAccessibility() {
-        // Set initial ARIA attributes for mobile toggle
-        if (this.menuToggle) {
-            this.menuToggle.setAttribute('aria-expanded', 'false');
-            this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
-        }
-        
-        // Set initial ARIA attributes for scroll hamburger
-        if (this.scrollHamburgerToggle) {
-            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'false');
-            this.scrollHamburgerToggle.setAttribute('aria-controls', 'mobileMenuPanel');
-        }
-        
+        // Set initial ARIA attributes
+        this.menuToggle.setAttribute('aria-expanded', 'false');
+        this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
         this.menuPanel.setAttribute('aria-labelledby', 'mobileMenuToggle');
         this.menuPanel.setAttribute('role', 'dialog');
         this.menuPanel.setAttribute('aria-modal', 'true');
@@ -328,22 +308,14 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = true;
-        STATE.isMobileMenuOpen = true;
         
         // Prevent body scroll
         this.body.classList.add('menu-open');
         this.body.style.overflow = 'hidden';
         
-        // Update toggle button states
-        if (this.menuToggle) {
-            this.menuToggle.classList.add('active');
-            this.menuToggle.setAttribute('aria-expanded', 'true');
-        }
-        
-        if (this.scrollHamburgerToggle) {
-            this.scrollHamburgerToggle.classList.add('active');
-            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'true');
-        }
+        // Update toggle button state
+        this.menuToggle.classList.add('active');
+        this.menuToggle.setAttribute('aria-expanded', 'true');
         
         // Show overlay
         this.menuOverlay.classList.add('active');
@@ -353,14 +325,12 @@ class MobileMenuController {
             this.menuPanel.classList.add('active');
             
             // Reset nav link animations
-            if (!STATE.isReducedMotion) {
-                this.mobileNavLinks.forEach((link, index) => {
-                    link.style.animation = 'none';
-                    link.offsetHeight; // Trigger reflow
-                    link.style.animation = `slideInFromRight 0.5s ease forwards`;
-                    link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
-                });
-            }
+            this.mobileNavLinks.forEach((link, index) => {
+                link.style.animation = 'none';
+                link.offsetHeight; // Trigger reflow
+                link.style.animation = `slideInFromRight 0.5s ease forwards`;
+                link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
+            });
         });
         
         // Focus management
@@ -376,18 +346,10 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = false;
-        STATE.isMobileMenuOpen = false;
         
-        // Update toggle button states
-        if (this.menuToggle) {
-            this.menuToggle.classList.remove('active');
-            this.menuToggle.setAttribute('aria-expanded', 'false');
-        }
-        
-        if (this.scrollHamburgerToggle) {
-            this.scrollHamburgerToggle.classList.remove('active');
-            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'false');
-        }
+        // Update toggle button state
+        this.menuToggle.classList.remove('active');
+        this.menuToggle.setAttribute('aria-expanded', 'false');
         
         // Hide panel
         this.menuPanel.classList.remove('active');
@@ -403,9 +365,8 @@ class MobileMenuController {
             this.body.style.overflow = '';
             this.isAnimating = false;
             
-            // Return focus to appropriate toggle button
-            const activeToggle = STATE.isScrolled ? this.scrollHamburgerToggle : this.menuToggle;
-            activeToggle?.focus();
+            // Return focus to toggle button
+            this.menuToggle.focus();
             this.announceToScreenReader('Mobile menu closed');
         }, 400);
     }
@@ -481,7 +442,7 @@ class HeaderController {
     constructor() {
         this.header = document.getElementById('header');
         this.isScrolled = false;
-        this.scrollThreshold = 100; // Increased threshold for scroll behavior
+        this.scrollThreshold = 50;
         this.navLinks = document.querySelectorAll('.nav-link');
         
         this.init();
@@ -517,11 +478,7 @@ class HeaderController {
         
         if (scrolled !== this.isScrolled) {
             this.isScrolled = scrolled;
-            STATE.isScrolled = scrolled;
             this.header.classList.toggle('scrolled', scrolled);
-            
-            // Log state change for debugging
-            console.log(`Header ${scrolled ? 'scrolled' : 'unscrolled'} state`);
         }
         
         this.updateActiveNavigation();
@@ -589,6 +546,9 @@ const initializeHeader = () => {
    4. Hero Section - Background Rotation, Animations, Mobile Responsive
    ========================================================================== */
 
+/**
+ * Hero Controller Class - Updated with Light Overlay Design
+ */
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
@@ -609,11 +569,10 @@ class HeroController {
         this.initializeBackgroundRotation();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
-        this.initializeScrollParallax();
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized');
+        console.log('✅ Hero section initialized with light overlay design');
     }
     
     initializeBackgroundRotation() {
@@ -626,7 +585,7 @@ class HeroController {
         // Start rotation interval (8 seconds)
         this.backgroundInterval = setInterval(() => {
             this.rotateBackgroundImage();
-        }, 8000);
+        }, CONFIG.hero.backgroundTransitionDuration);
     }
     
     rotateBackgroundImage() {
@@ -752,12 +711,6 @@ class HeroController {
         });
     }
     
-    initializeScrollParallax() {
-        // Removed scroll parallax effect per user request
-        // Hero section now stays in place when scrolling
-        console.log('Scroll parallax disabled for hero section');
-    }
-    
     handleVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && this.backgroundInterval) {
@@ -825,7 +778,9 @@ class HeroController {
     }
 }
 
-// Enhanced Intersection Observer for Hero Animations
+/**
+ * Enhanced Intersection Observer for Hero Animations
+ */
 class HeroAnimationObserver {
     constructor() {
         this.heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-location, .btn-hero-primary, .btn-hero-secondary');
@@ -863,7 +818,9 @@ class HeroAnimationObserver {
     }
 }
 
-// Logo Error Handling
+/**
+ * Logo Error Handling
+ */
 class LogoHandler {
     constructor() {
         this.logoImg = document.querySelector('.hero-logo');
@@ -901,8 +858,10 @@ class LogoHandler {
     }
 }
 
-// Initialize everything when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Initialize hero section with all features
+ */
+const initializeHero = () => {
     // Initialize hero controller
     const heroController = new HeroController();
     
@@ -912,26 +871,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize logo handler
     const logoHandler = new LogoHandler();
     
-    // Make hero controller globally accessible for debugging
+    // Make hero controller globally accessible
     window.heroController = heroController;
     
-    console.log('🚀 Hero section fully initialized');
-});
-
-// Handle window resize
-window.addEventListener('resize', () => {
-    // Debounce resize events
-    clearTimeout(window.heroResizeTimeout);
-    window.heroResizeTimeout = setTimeout(() => {
-        // No transform resets needed since we removed parallax
-        console.log('Hero resize handled');
-    }, 250);
-});
-
-// Export for potential external use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { HeroController, HeroAnimationObserver, LogoHandler };
-}
+    // Cleanup interval when page is hidden
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && STATE.heroBackgroundInterval) {
+            clearInterval(STATE.heroBackgroundInterval);
+        } else if (!document.hidden) {
+            if (window.heroController && !window.heroController.isReducedMotion) {
+                window.heroController.initializeBackgroundRotation();
+            }
+        }
+    });
+    
+    console.log('✅ Hero section with all features initialized');
+};
 
 /* ==========================================================================
    5. About Section - Animations, Interactions, Mobile Responsive
@@ -1705,7 +1660,7 @@ const initializeContact = () => {
             const originalText = submitButton.innerHTML;
             submitButton.innerHTML = `
                 <span style="opacity: 0.8;">Sending...</span>
-                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 0.5rem;"></div>
+                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
             `;
             submitButton.disabled = true;
             
@@ -1720,10 +1675,6 @@ const initializeContact = () => {
                     }
                     @keyframes fadeOut {
                         to { opacity: 0; transform: translateY(-10px); }
-                    }
-                    @keyframes fadeInUp {
-                        from { opacity: 0; transform: translateY(20px); }
-                        to { opacity: 1; transform: translateY(0); }
                     }
                 `;
                 document.head.appendChild(style);
@@ -2281,7 +2232,7 @@ const initializeApp = () => {
     
     // Core functionality - order matters
     initializeHeader();           // Header & Mobile Menu System
-    initializeHero();            // Hero with Background Rotation & Animations
+    initializeHero();            // Hero with Background Rotation & Light Overlay
     initializeAbout();           // About Section with Animations & Interactions
     initializeServices();        // Services with Animations & Interactions
     initializeTeam();            // Team with Animations & Interactions
@@ -2354,13 +2305,8 @@ document.addEventListener('visibilitychange', () => {
         }
     } else {
         // Page is visible, resume background rotation
-        const backgroundImages = document.querySelectorAll('.hero-bg-image');
-        if (backgroundImages.length > 0 && !STATE.isReducedMotion) {
-            STATE.heroBackgroundInterval = setInterval(() => {
-                backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
-                STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
-                backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
-            }, CONFIG.hero.backgroundTransitionDuration);
+        if (window.heroController && !window.heroController.isReducedMotion) {
+            window.heroController.initializeBackgroundRotation();
         }
     }
 });
@@ -2372,9 +2318,19 @@ mediaQuery.addEventListener('change', (e) => {
     console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
     
     // Pause/resume background rotation based on motion preference
-    if (STATE.isReducedMotion && STATE.heroBackgroundInterval) {
-        clearInterval(STATE.heroBackgroundInterval);
+    if (STATE.isReducedMotion && window.heroController) {
+        window.heroController.destroy();
     }
+});
+
+// Handle window resize for hero section
+window.addEventListener('resize', () => {
+    // Debounce resize events
+    clearTimeout(window.heroResizeTimeout);
+    window.heroResizeTimeout = setTimeout(() => {
+        // No transform resets needed since we removed parallax
+        console.log('Hero resize handled');
+    }, 250);
 });
 
 // Export for potential external use
@@ -2394,7 +2350,8 @@ window.HolisticPsychServices = {
     },
     classes: {
         MobileMenuController,
-        HeaderController
+        HeaderController,
+        HeroController
     }
 };
 
@@ -2414,20 +2371,29 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
             console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
         },
         pauseBackgrounds: () => {
-            if (STATE.heroBackgroundInterval) {
-                clearInterval(STATE.heroBackgroundInterval);
+            if (window.heroController) {
+                window.heroController.destroy();
                 console.log('Background rotation paused');
             }
         },
         resumeBackgrounds: () => {
-            const backgroundImages = document.querySelectorAll('.hero-bg-image');
-            if (backgroundImages.length > 0) {
-                STATE.heroBackgroundInterval = setInterval(() => {
-                    backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
-                    STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
-                    backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
-                }, CONFIG.hero.backgroundTransitionDuration);
+            if (window.heroController) {
+                window.heroController.initializeBackgroundRotation();
                 console.log('Background rotation resumed');
+            }
+        },
+        hero: {
+            nextBackground: () => {
+                if (window.heroController) {
+                    window.heroController.nextBackground();
+                    console.log('Switched to next background');
+                }
+            },
+            toggleRotation: () => {
+                if (window.heroController) {
+                    window.heroController.toggleBackgroundRotation();
+                    console.log('Toggled background rotation');
+                }
             }
         },
         sections: {
