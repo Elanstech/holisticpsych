@@ -577,31 +577,23 @@ class HeroController {
         console.log('✅ Hero section initialized with clean logo design');
     }
     
-    initializeLogoLoading() {
-        if (!this.logoImage) return;
-        
-        // Set initial state for smooth loading
-        this.logoImage.style.opacity = '0';
-        this.logoImage.style.transition = 'opacity 0.5s ease';
-        
-        // Handle successful load
-        this.logoImage.addEventListener('load', () => {
-            console.log('✅ Logo loaded successfully');
-            this.logoImage.style.opacity = '1';
-        });
-        
-        // If image is already cached and loaded
-        if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
-            this.logoImage.style.opacity = '1';
-        }
-        
-        // Add error handling that doesn't hide the logo
-        this.logoImage.addEventListener('error', () => {
-            console.warn('Logo image failed to load, but keeping container visible');
-            // Don't hide the logo - just log the error
-            // The container will remain visible with its background
-        });
+ initializeLogoLoading() {
+    if (!this.logoImage) return;
+    
+    // Simple loading check - don't hide the logo initially
+    if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
+        // Image is already loaded
+        console.log('✅ Logo already loaded');
+        return;
     }
+    
+    // Only handle load event if image isn't already loaded
+    this.logoImage.addEventListener('load', () => {
+        console.log('✅ Logo loaded successfully');
+    });
+    
+    console.log('🔄 Logo loading...');
+}
     
     initializeBackgroundRotation() {
         if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
