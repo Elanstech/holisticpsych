@@ -546,9 +546,6 @@ const initializeHeader = () => {
    4. Hero Section - Clean Logo Design & Background Rotation - LOGO FIXED
    ========================================================================== */
 
-/**
- * Hero Controller Class - FIXED LOGO LOADING ISSUE
- */
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
@@ -570,51 +567,55 @@ class HeroController {
         this.initializeBackgroundRotation();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
-        this.initializeLogoLoading(); // FIXED: Simple logo loading
+        this.initializeLogoLoading();
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized with FIXED logo loading');
+        console.log('✅ Hero section initialized with clean backgrounds');
     }
     
-    // FIXED: Simplified logo loading - no hiding/showing transitions
+    /**
+     * Initialize logo loading - Simple and reliable
+     */
     initializeLogoLoading() {
         if (!this.logoImage) return;
         
-        // Simple check - logo is visible by default in CSS
+        // Logo is visible by default in CSS, just ensure it loads properly
         if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
             console.log('✅ Logo already loaded and visible');
             return;
         }
         
-        // Only add load event listener if image isn't already loaded
         this.logoImage.addEventListener('load', () => {
             console.log('✅ Logo loaded successfully');
-            // Logo stays visible - no opacity changes needed
         });
         
-        // Error handling - keep logo visible even if image fails
         this.logoImage.addEventListener('error', () => {
             console.warn('Logo image failed to load, but container remains visible');
-            // Don't hide anything - let the container background show
         });
         
-        console.log('🔄 Logo loading initialized - logo remains visible');
+        console.log('🔄 Logo loading initialized');
     }
     
+    /**
+     * Initialize background image rotation with subtle opacity
+     */
     initializeBackgroundRotation() {
         if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
         
-        // Show first image immediately
+        // Show first image immediately with subtle opacity
         this.backgroundImages[0].classList.add('active');
         this.currentImageIndex = 0;
         
         // Start rotation interval (8 seconds)
         this.backgroundInterval = setInterval(() => {
             this.rotateBackgroundImage();
-        }, CONFIG.hero.backgroundTransitionDuration);
+        }, 8000);
     }
     
+    /**
+     * Rotate to next background image
+     */
     rotateBackgroundImage() {
         if (this.isReducedMotion) return;
         
@@ -626,8 +627,13 @@ class HeroController {
         
         // Show next image with smooth transition
         this.backgroundImages[this.currentImageIndex].classList.add('active');
+        
+        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1}`);
     }
     
+    /**
+     * Initialize logo interactions
+     */
     initializeLogoInteractions() {
         if (!this.logoContainer || this.isReducedMotion) return;
         
@@ -662,6 +668,9 @@ class HeroController {
         });
     }
     
+    /**
+     * Initialize button effects
+     */
     initializeButtonEffects() {
         this.heroButtons.forEach(button => {
             this.addButtonRippleEffect(button);
@@ -669,6 +678,9 @@ class HeroController {
         });
     }
     
+    /**
+     * Add ripple effect to buttons
+     */
     addButtonRippleEffect(button) {
         button.addEventListener('click', (e) => {
             if (this.isReducedMotion) return;
@@ -710,6 +722,9 @@ class HeroController {
         });
     }
     
+    /**
+     * Add ripple animation styles
+     */
     addRippleStyles(size) {
         const style = document.createElement('style');
         style.id = 'hero-ripple-animation';
@@ -725,11 +740,12 @@ class HeroController {
         document.head.appendChild(style);
     }
     
+    /**
+     * Add button hover enhancements
+     */
     addButtonHoverEnhancement(button) {
-        // Subtle hover effect enhancement
         button.addEventListener('mouseenter', () => {
             if (this.isReducedMotion) return;
-            
             button.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         });
         
@@ -738,6 +754,9 @@ class HeroController {
         });
     }
     
+    /**
+     * Handle page visibility changes
+     */
     handleVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && this.backgroundInterval) {
@@ -748,6 +767,9 @@ class HeroController {
         });
     }
     
+    /**
+     * Handle motion preference changes
+     */
     handleMotionPreference() {
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         mediaQuery.addEventListener('change', (e) => {
@@ -761,22 +783,30 @@ class HeroController {
         });
     }
     
-    // Public method to manually trigger background rotation
+    /**
+     * Public method to manually trigger background rotation
+     */
     nextBackground() {
         this.rotateBackgroundImage();
     }
     
-    // Public method to pause/resume background rotation
+    /**
+     * Public method to pause/resume background rotation
+     */
     toggleBackgroundRotation() {
         if (this.backgroundInterval) {
             clearInterval(this.backgroundInterval);
             this.backgroundInterval = null;
+            console.log('🔄 Background rotation paused');
         } else {
             this.initializeBackgroundRotation();
+            console.log('▶️ Background rotation resumed');
         }
     }
     
-    // Cleanup method
+    /**
+     * Cleanup method
+     */
     destroy() {
         if (this.backgroundInterval) {
             clearInterval(this.backgroundInterval);
@@ -790,11 +820,13 @@ class HeroController {
         if (this.logoContainer) {
             this.logoContainer.replaceWith(this.logoContainer.cloneNode(true));
         }
+        
+        console.log('🧹 Hero controller destroyed');
     }
 }
 
 /**
- * Enhanced Intersection Observer for Hero Animations
+ * Hero Animation Observer for entrance animations
  */
 class HeroAnimationObserver {
     constructor() {
@@ -837,13 +869,29 @@ class HeroAnimationObserver {
             
             observer.observe(element);
         });
+        
+        console.log('✅ Hero entrance animations initialized');
     }
 }
 
 /**
  * Initialize hero section with all features
  */
-const initializeHero = () => {
+function initializeHero() {
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            startHeroInitialization();
+        });
+    } else {
+        startHeroInitialization();
+    }
+}
+
+/**
+ * Start hero initialization
+ */
+function startHeroInitialization() {
     // Initialize hero controller
     const heroController = new HeroController();
     
@@ -853,19 +901,85 @@ const initializeHero = () => {
     // Make hero controller globally accessible
     window.heroController = heroController;
     
-    // Cleanup interval when page is hidden
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden && STATE.heroBackgroundInterval) {
-            clearInterval(STATE.heroBackgroundInterval);
-        } else if (!document.hidden) {
-            if (window.heroController && !window.heroController.isReducedMotion) {
-                window.heroController.initializeBackgroundRotation();
-            }
+    // Handle window focus/blur for performance
+    window.addEventListener('focus', () => {
+        if (heroController && !heroController.isReducedMotion && !heroController.backgroundInterval) {
+            heroController.initializeBackgroundRotation();
         }
     });
     
-    console.log('✅ Hero section with FIXED logo loading initialized');
+    window.addEventListener('blur', () => {
+        if (heroController && heroController.backgroundInterval) {
+            clearInterval(heroController.backgroundInterval);
+            heroController.backgroundInterval = null;
+        }
+    });
+    
+    console.log('✅ Hero section fully initialized with clean backgrounds');
+}
+
+/**
+ * Utility functions for external use
+ */
+const heroUtils = {
+    /**
+     * Get hero controller instance
+     */
+    getController() {
+        return window.heroController;
+    },
+    
+    /**
+     * Manually switch to next background
+     */
+    nextBackground() {
+        if (window.heroController) {
+            window.heroController.nextBackground();
+        }
+    },
+    
+    /**
+     * Toggle background rotation
+     */
+    toggleRotation() {
+        if (window.heroController) {
+            window.heroController.toggleBackgroundRotation();
+        }
+    },
+    
+    /**
+     * Check if hero is initialized
+     */
+    isInitialized() {
+        return !!window.heroController;
+    }
 };
+
+// Auto-initialize hero section
+initializeHero();
+
+// Export for potential external use
+window.heroUtils = heroUtils;
+
+// Development helpers (remove in production)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    window.heroDebug = {
+        controller: () => window.heroController,
+        nextBg: () => heroUtils.nextBackground(),
+        toggleRotation: () => heroUtils.toggleRotation(),
+        status: () => {
+            const controller = window.heroController;
+            console.log('Hero Status:', {
+                initialized: !!controller,
+                hasInterval: !!(controller && controller.backgroundInterval),
+                currentIndex: controller ? controller.currentImageIndex : null,
+                reducedMotion: controller ? controller.isReducedMotion : null
+            });
+        }
+    };
+    
+    console.log('🔧 Hero debug tools available: window.heroDebug');
+}
 
 /* ==========================================================================
    5. About Section - Animations, Interactions, Mobile Responsive
