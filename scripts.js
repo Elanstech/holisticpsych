@@ -543,17 +543,18 @@ const initializeHeader = () => {
 };
 
 /* ==========================================================================
-   4. Hero Section - Background Rotation, Animations, Mobile Responsive
+   4. Hero Section - Clean Logo Design & Background Rotation
    ========================================================================== */
 
 /**
- * Hero Controller Class - Updated with Light Overlay Design
+ * Hero Controller Class - Updated with Clean Logo Design
  */
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
         this.backgroundImages = document.querySelectorAll('.hero-bg-image');
         this.logoContainer = document.querySelector('.hero-logo-container');
+        this.logoImage = document.querySelector('.hero-logo');
         this.heroButtons = document.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
         
         this.currentImageIndex = 0;
@@ -569,10 +570,37 @@ class HeroController {
         this.initializeBackgroundRotation();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
+        this.initializeLogoLoading();
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized with light overlay design');
+        console.log('✅ Hero section initialized with clean logo design');
+    }
+    
+    initializeLogoLoading() {
+        if (!this.logoImage) return;
+        
+        // Set initial state for smooth loading
+        this.logoImage.style.opacity = '0';
+        this.logoImage.style.transition = 'opacity 0.5s ease';
+        
+        // Handle successful load
+        this.logoImage.addEventListener('load', () => {
+            console.log('✅ Logo loaded successfully');
+            this.logoImage.style.opacity = '1';
+        });
+        
+        // If image is already cached and loaded
+        if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
+            this.logoImage.style.opacity = '1';
+        }
+        
+        // Add error handling that doesn't hide the logo
+        this.logoImage.addEventListener('error', () => {
+            console.warn('Logo image failed to load, but keeping container visible');
+            // Don't hide the logo - just log the error
+            // The container will remain visible with its background
+        });
     }
     
     initializeBackgroundRotation() {
@@ -638,7 +666,7 @@ class HeroController {
     initializeButtonEffects() {
         this.heroButtons.forEach(button => {
             this.addButtonRippleEffect(button);
-            this.addButtonHoverSound(button);
+            this.addButtonHoverEnhancement(button);
         });
     }
     
@@ -698,7 +726,7 @@ class HeroController {
         document.head.appendChild(style);
     }
     
-    addButtonHoverSound(button) {
+    addButtonHoverEnhancement(button) {
         // Subtle hover effect enhancement
         button.addEventListener('mouseenter', () => {
             if (this.isReducedMotion) return;
@@ -734,18 +762,6 @@ class HeroController {
         });
     }
     
-    // Utility function for throttling
-    throttle(func, limit) {
-        let inThrottle;
-        return function(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-    
     // Public method to manually trigger background rotation
     nextBackground() {
         this.rotateBackgroundImage();
@@ -767,7 +783,7 @@ class HeroController {
             clearInterval(this.backgroundInterval);
         }
         
-        // Remove event listeners if needed
+        // Remove event listeners
         this.heroButtons.forEach(button => {
             button.replaceWith(button.cloneNode(true));
         });
@@ -790,7 +806,14 @@ class HeroAnimationObserver {
     }
     
     init() {
-        if (this.isReducedMotion) return;
+        if (this.isReducedMotion) {
+            // Show all elements immediately if reduced motion is preferred
+            this.heroElements.forEach(element => {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            });
+            return;
+        }
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
@@ -819,46 +842,6 @@ class HeroAnimationObserver {
 }
 
 /**
- * Logo Error Handling
- */
-class LogoHandler {
-    constructor() {
-        this.logoImg = document.querySelector('.hero-logo');
-        this.logoFallback = document.querySelector('.logo-fallback');
-        
-        this.init();
-    }
-    
-    init() {
-        if (!this.logoImg) return;
-        
-        // Handle logo load error
-        this.logoImg.addEventListener('error', () => {
-            console.warn('Logo image failed to load, showing fallback');
-            this.showFallback();
-        });
-        
-        // Handle successful load
-        this.logoImg.addEventListener('load', () => {
-            console.log('✅ Logo loaded successfully');
-            this.logoImg.style.opacity = '1';
-        });
-        
-        // Set initial state
-        this.logoImg.style.opacity = '0';
-        this.logoImg.style.transition = 'opacity 0.5s ease';
-    }
-    
-    showFallback() {
-        if (this.logoImg && this.logoFallback) {
-            this.logoImg.style.display = 'none';
-            this.logoFallback.style.display = 'flex';
-            this.logoFallback.style.opacity = '1';
-        }
-    }
-}
-
-/**
  * Initialize hero section with all features
  */
 const initializeHero = () => {
@@ -867,9 +850,6 @@ const initializeHero = () => {
     
     // Initialize animation observer
     const animationObserver = new HeroAnimationObserver();
-    
-    // Initialize logo handler
-    const logoHandler = new LogoHandler();
     
     // Make hero controller globally accessible
     window.heroController = heroController;
@@ -885,7 +865,7 @@ const initializeHero = () => {
         }
     });
     
-    console.log('✅ Hero section with all features initialized');
+    console.log('✅ Hero section with clean logo design initialized');
 };
 
 /* ==========================================================================
@@ -2157,7 +2137,7 @@ const initializePerformanceOptimizations = () => {
     // Preload critical resources
     const preloadCriticalResources = () => {
         const criticalImages = [
-            'images/logo.png'
+            'logo copy.png'
         ];
         
         criticalImages.forEach(src => {
@@ -2232,7 +2212,7 @@ const initializeApp = () => {
     
     // Core functionality - order matters
     initializeHeader();           // Header & Mobile Menu System
-    initializeHero();            // Hero with Background Rotation & Light Overlay
+    initializeHero();            // Hero with Clean Logo & Background Rotation
     initializeAbout();           // About Section with Animations & Interactions
     initializeServices();        // Services with Animations & Interactions
     initializeTeam();            // Team with Animations & Interactions
@@ -2328,7 +2308,6 @@ window.addEventListener('resize', () => {
     // Debounce resize events
     clearTimeout(window.heroResizeTimeout);
     window.heroResizeTimeout = setTimeout(() => {
-        // No transform resets needed since we removed parallax
         console.log('Hero resize handled');
     }, 250);
 });
