@@ -753,22 +753,9 @@ class HeroController {
     }
     
     initializeScrollParallax() {
-        if (this.isReducedMotion) return;
-        
-        const handleScroll = this.throttle(() => {
-            const scrolled = window.pageYOffset;
-            const parallaxValue = scrolled * 0.3;
-            
-            if (scrolled < window.innerHeight) {
-                this.heroSection.style.transform = `translateY(${parallaxValue}px)`;
-                
-                // Fade out hero content as user scrolls
-                const opacity = Math.max(0, 1 - (scrolled / window.innerHeight) * 1.5);
-                this.heroSection.style.opacity = opacity;
-            }
-        }, 16);
-        
-        window.addEventListener('scroll', handleScroll);
+        // Removed scroll parallax effect per user request
+        // Hero section now stays in place when scrolling
+        console.log('Scroll parallax disabled for hero section');
     }
     
     handleVisibilityChange() {
@@ -936,15 +923,8 @@ window.addEventListener('resize', () => {
     // Debounce resize events
     clearTimeout(window.heroResizeTimeout);
     window.heroResizeTimeout = setTimeout(() => {
-        // Re-initialize parallax calculations
-        if (window.heroController && !window.heroController.isReducedMotion) {
-            // Reset any transforms
-            const heroSection = document.querySelector('.hero');
-            if (heroSection) {
-                heroSection.style.transform = '';
-                heroSection.style.opacity = '1';
-            }
-        }
+        // No transform resets needed since we removed parallax
+        console.log('Hero resize handled');
     }, 250);
 });
 
