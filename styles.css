@@ -404,7 +404,7 @@ button {
 }
 
 .hero-bg-1 {
-    background-image: linear-gradient(rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.05)), url('https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg');
+    background-image: linear-gradient(rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.05)), url('https://images.pexels.com/photos/635279/pexels-photo-635279.jpeg');
 }
 
 .hero-bg-2 {
@@ -412,7 +412,7 @@ button {
 }
 
 .hero-bg-3 {
-    background-image: linear-gradient(rgba(139, 92, 246, 0.1), rgba(0, 216, 132, 0.05)), url('https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg');
+    background-image: linear-gradient(rgba(139, 92, 246, 0.1), rgba(0, 216, 132, 0.05)), url('https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg');
 }
 
 .hero-bg-image.active {
