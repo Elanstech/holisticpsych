@@ -589,169 +589,369 @@ const initializeHeader = () => {
    4. Hero Section - Background Rotation, Animations, Mobile Responsive
    ========================================================================== */
 
-/**
- * Initialize hero section with all features
- */
-const initializeHero = () => {
-    const heroSection = document.querySelector('.hero');
-    const logoContainer = document.querySelector('.hero-logo-container');
-    const heroContent = document.querySelector('.hero-content');
-    const backgroundImages = document.querySelectorAll('.hero-bg-image');
+class HeroController {
+    constructor() {
+        this.heroSection = document.querySelector('.hero');
+        this.backgroundImages = document.querySelectorAll('.hero-bg-image');
+        this.logoContainer = document.querySelector('.hero-logo-container');
+        this.heroButtons = document.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
+        
+        this.currentImageIndex = 0;
+        this.backgroundInterval = null;
+        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        this.init();
+    }
     
-    if (!heroSection) return;
+    init() {
+        if (!this.heroSection) return;
+        
+        this.initializeBackgroundRotation();
+        this.initializeLogoInteractions();
+        this.initializeButtonEffects();
+        this.initializeScrollParallax();
+        this.handleVisibilityChange();
+        this.handleMotionPreference();
+        
+        console.log('✅ Hero section initialized');
+    }
     
-    // Hero Background Rotation System
-    const initializeBackgroundRotation = () => {
-        if (backgroundImages.length > 0 && !STATE.isReducedMotion) {
-            // Show first image immediately
-            backgroundImages[0].classList.add('active');
-            STATE.heroBackgroundIndex = 0;
-            
-            // Start rotation interval
-            STATE.heroBackgroundInterval = setInterval(() => {
-                // Hide current image
-                backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
-                
-                // Move to next image
-                STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
-                
-                // Show next image
-                backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
-            }, CONFIG.hero.backgroundTransitionDuration);
-        }
-    };
+    initializeBackgroundRotation() {
+        if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
+        
+        // Show first image immediately
+        this.backgroundImages[0].classList.add('active');
+        this.currentImageIndex = 0;
+        
+        // Start rotation interval (8 seconds)
+        this.backgroundInterval = setInterval(() => {
+            this.rotateBackgroundImage();
+        }, 8000);
+    }
     
-    // Enhanced Logo Interactions
-    const initializeLogoInteractions = () => {
-        if (!logoContainer) return;
+    rotateBackgroundImage() {
+        if (this.isReducedMotion) return;
+        
+        // Hide current image
+        this.backgroundImages[this.currentImageIndex].classList.remove('active');
+        
+        // Move to next image
+        this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
+        
+        // Show next image with smooth transition
+        this.backgroundImages[this.currentImageIndex].classList.add('active');
+    }
+    
+    initializeLogoInteractions() {
+        if (!this.logoContainer || this.isReducedMotion) return;
         
         let isHovered = false;
         
         const handleMouseEnter = () => {
-            if (!isHovered && !STATE.isReducedMotion) {
+            if (!isHovered) {
                 isHovered = true;
-                logoContainer.style.transform = 'scale(1.05) rotate(2deg)';
+                this.logoContainer.style.transform = 'scale(1.05) rotate(2deg)';
+                this.logoContainer.style.filter = 'brightness(1.1)';
             }
         };
         
         const handleMouseLeave = () => {
             if (isHovered) {
                 isHovered = false;
-                logoContainer.style.transform = '';
+                this.logoContainer.style.transform = '';
+                this.logoContainer.style.filter = '';
             }
         };
         
-        logoContainer.addEventListener('mouseenter', handleMouseEnter);
-        logoContainer.addEventListener('mouseleave', handleMouseLeave);
+        this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
+        this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
         
-        // Add subtle parallax effect
-        const handleParallax = throttle(() => {
-            if (!STATE.isReducedMotion && STATE.scrollPosition < window.innerHeight) {
-                const parallaxValue = STATE.scrollPosition * 0.2;
-                logoContainer.style.transform = `translateY(${parallaxValue}px)`;
+        // Logo click animation
+        this.logoContainer.addEventListener('click', () => {
+            if (this.isReducedMotion) return;
+            
+            this.logoContainer.style.animation = 'none';
+            this.logoContainer.offsetHeight; // Trigger reflow
+            this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
+        });
+    }
+    
+    initializeButtonEffects() {
+        this.heroButtons.forEach(button => {
+            this.addButtonRippleEffect(button);
+            this.addButtonHoverSound(button);
+        });
+    }
+    
+    addButtonRippleEffect(button) {
+        button.addEventListener('click', (e) => {
+            if (this.isReducedMotion) return;
+            
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 1.5;
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            const ripple = document.createElement('span');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                width: 0;
+                height: 0;
+                left: ${e.clientX - rect.left}px;
+                top: ${e.clientY - rect.top}px;
+                transform: translate(-50%, -50%);
+                animation: heroRipple 0.8s ease-out;
+                pointer-events: none;
+                z-index: 1000;
+            `;
+            
+            button.style.position = 'relative';
+            button.style.overflow = 'hidden';
+            button.appendChild(ripple);
+            
+            // Add ripple animation if not exists
+            if (!document.querySelector('#hero-ripple-animation')) {
+                this.addRippleStyles(size);
+            }
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.remove();
+                }
+            }, 800);
+        });
+    }
+    
+    addRippleStyles(size) {
+        const style = document.createElement('style');
+        style.id = 'hero-ripple-animation';
+        style.textContent = `
+            @keyframes heroRipple {
+                to {
+                    width: ${size}px;
+                    height: ${size}px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    addButtonHoverSound(button) {
+        // Subtle hover effect enhancement
+        button.addEventListener('mouseenter', () => {
+            if (this.isReducedMotion) return;
+            
+            button.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            button.style.transition = 'all 0.3s ease';
+        });
+    }
+    
+    initializeScrollParallax() {
+        if (this.isReducedMotion) return;
+        
+        const handleScroll = this.throttle(() => {
+            const scrolled = window.pageYOffset;
+            const parallaxValue = scrolled * 0.3;
+            
+            if (scrolled < window.innerHeight) {
+                this.heroSection.style.transform = `translateY(${parallaxValue}px)`;
+                
+                // Fade out hero content as user scrolls
+                const opacity = Math.max(0, 1 - (scrolled / window.innerHeight) * 1.5);
+                this.heroSection.style.opacity = opacity;
             }
         }, 16);
         
-        window.addEventListener('scroll', handleParallax);
-    };
+        window.addEventListener('scroll', handleScroll);
+    }
     
-    // Hero Content Animations
-    const initializeHeroAnimations = () => {
-        if (heroContent && !STATE.isReducedMotion) {
-            const elements = heroContent.querySelectorAll('.hero-title, .hero-subtitle, .hero-location, .hero-actions > *');
-            staggerAnimations(elements, 'fade-in', 200);
-        }
-    };
-    
-    // Hero Button Interactions
-    const initializeHeroButtons = () => {
-        const heroButtons = heroSection.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
-        
-        heroButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                if (STATE.isReducedMotion) return;
-                
-                // Create ripple effect
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height) * 1.5;
-                
-                ripple.style.cssText = `
-                    position: absolute;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.6);
-                    width: 0;
-                    height: 0;
-                    left: ${e.clientX - rect.left}px;
-                    top: ${e.clientY - rect.top}px;
-                    transform: translate(-50%, -50%);
-                    animation: ripple 0.6s ease-out;
-                    pointer-events: none;
-                    z-index: 1000;
-                `;
-                
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-                
-                // Add ripple animation if not exists
-                if (!document.querySelector('#hero-ripple-animation')) {
-                    const style = document.createElement('style');
-                    style.id = 'hero-ripple-animation';
-                    style.textContent = `
-                        @keyframes ripple {
-                            to {
-                                width: ${size}px;
-                                height: ${size}px;
-                                opacity: 0;
-                            }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-                
-                setTimeout(() => {
-                    if (ripple.parentNode) {
-                        ripple.remove();
-                    }
-                }, 600);
-            });
-        });
-    };
-    
-    // Hero Mobile Responsive Adjustments
-    const initializeHeroMobile = () => {
-        const handleResize = debounce(() => {
-            // Adjust hero content for mobile
-            if (isMobile()) {
-                heroContent?.classList.add('mobile-optimized');
-            } else {
-                heroContent?.classList.remove('mobile-optimized');
+    handleVisibilityChange() {
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.backgroundInterval) {
+                clearInterval(this.backgroundInterval);
+            } else if (!document.hidden && !this.isReducedMotion) {
+                this.initializeBackgroundRotation();
             }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
+        });
+    }
     
-    // Initialize all hero features
-    initializeBackgroundRotation();
-    initializeLogoInteractions();
-    initializeHeroAnimations();
-    initializeHeroButtons();
-    initializeHeroMobile();
+    handleMotionPreference() {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        mediaQuery.addEventListener('change', (e) => {
+            this.isReducedMotion = e.matches;
+            
+            if (this.isReducedMotion && this.backgroundInterval) {
+                clearInterval(this.backgroundInterval);
+            } else if (!this.isReducedMotion) {
+                this.initializeBackgroundRotation();
+            }
+        });
+    }
     
-    // Cleanup interval when page is hidden
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden && STATE.heroBackgroundInterval) {
-            clearInterval(STATE.heroBackgroundInterval);
-        } else if (!document.hidden) {
-            initializeBackgroundRotation();
+    // Utility function for throttling
+    throttle(func, limit) {
+        let inThrottle;
+        return function(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+    
+    // Public method to manually trigger background rotation
+    nextBackground() {
+        this.rotateBackgroundImage();
+    }
+    
+    // Public method to pause/resume background rotation
+    toggleBackgroundRotation() {
+        if (this.backgroundInterval) {
+            clearInterval(this.backgroundInterval);
+            this.backgroundInterval = null;
+        } else {
+            this.initializeBackgroundRotation();
         }
-    });
+    }
     
-    console.log('✅ Hero section with all features initialized');
-};
+    // Cleanup method
+    destroy() {
+        if (this.backgroundInterval) {
+            clearInterval(this.backgroundInterval);
+        }
+        
+        // Remove event listeners if needed
+        this.heroButtons.forEach(button => {
+            button.replaceWith(button.cloneNode(true));
+        });
+        
+        if (this.logoContainer) {
+            this.logoContainer.replaceWith(this.logoContainer.cloneNode(true));
+        }
+    }
+}
+
+// Enhanced Intersection Observer for Hero Animations
+class HeroAnimationObserver {
+    constructor() {
+        this.heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-location, .btn-hero-primary, .btn-hero-secondary');
+        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        this.init();
+    }
+    
+    init() {
+        if (this.isReducedMotion) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 200);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        this.heroElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            observer.observe(element);
+        });
+    }
+}
+
+// Logo Error Handling
+class LogoHandler {
+    constructor() {
+        this.logoImg = document.querySelector('.hero-logo');
+        this.logoFallback = document.querySelector('.logo-fallback');
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.logoImg) return;
+        
+        // Handle logo load error
+        this.logoImg.addEventListener('error', () => {
+            console.warn('Logo image failed to load, showing fallback');
+            this.showFallback();
+        });
+        
+        // Handle successful load
+        this.logoImg.addEventListener('load', () => {
+            console.log('✅ Logo loaded successfully');
+            this.logoImg.style.opacity = '1';
+        });
+        
+        // Set initial state
+        this.logoImg.style.opacity = '0';
+        this.logoImg.style.transition = 'opacity 0.5s ease';
+    }
+    
+    showFallback() {
+        if (this.logoImg && this.logoFallback) {
+            this.logoImg.style.display = 'none';
+            this.logoFallback.style.display = 'flex';
+            this.logoFallback.style.opacity = '1';
+        }
+    }
+}
+
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize hero controller
+    const heroController = new HeroController();
+    
+    // Initialize animation observer
+    const animationObserver = new HeroAnimationObserver();
+    
+    // Initialize logo handler
+    const logoHandler = new LogoHandler();
+    
+    // Make hero controller globally accessible for debugging
+    window.heroController = heroController;
+    
+    console.log('🚀 Hero section fully initialized');
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    // Debounce resize events
+    clearTimeout(window.heroResizeTimeout);
+    window.heroResizeTimeout = setTimeout(() => {
+        // Re-initialize parallax calculations
+        if (window.heroController && !window.heroController.isReducedMotion) {
+            // Reset any transforms
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                heroSection.style.transform = '';
+                heroSection.style.opacity = '1';
+            }
+        }
+    }, 250);
+});
+
+// Export for potential external use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { HeroController, HeroAnimationObserver, LogoHandler };
+}
 
 /* ==========================================================================
    5. About Section - Animations, Interactions, Mobile Responsive
