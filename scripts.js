@@ -1,6 +1,6 @@
 /* ==========================================================================
    HOLISTIC PSYCHOLOGICAL SERVICES - REDESIGNED JAVASCRIPT
-   Modern, Sleek, Minimalistic Interactions
+   Modern, Sleek, Minimalistic Interactions with Enhanced Features
    ========================================================================== */
 
 /* ==========================================================================
@@ -20,6 +20,13 @@ const CONFIG = {
     },
     mobile: {
         breakpoint: 768
+    },
+    hero: {
+        backgroundTransitionDuration: 8000, // 8 seconds between background changes
+        backgroundImages: 3
+    },
+    fab: {
+        showDelay: 1000
     }
 };
 
@@ -29,7 +36,11 @@ const STATE = {
     isMobileMenuOpen: false,
     currentSection: 'home',
     observers: new Map(),
-    isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    heroBackgroundIndex: 0,
+    heroBackgroundInterval: null,
+    isContactFabOpen: false,
+    scrollPosition: 0
 };
 
 /* ==========================================================================
@@ -105,6 +116,21 @@ const smoothScrollTo = (target) => {
     });
 };
 
+/**
+ * Smooth scroll to top
+ */
+const smoothScrollToTop = () => {
+    if (STATE.isReducedMotion) {
+        window.scrollTo(0, 0);
+        return;
+    }
+    
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
 /* ==========================================================================
    3. Animation Helpers
    ========================================================================== */
@@ -158,6 +184,7 @@ const initializeHeader = () => {
     // Handle scroll effects
     const handleScroll = throttle(() => {
         const scrolled = window.scrollY > 50;
+        STATE.scrollPosition = window.scrollY;
         
         if (scrolled !== STATE.isScrolled) {
             STATE.isScrolled = scrolled;
@@ -165,6 +192,7 @@ const initializeHeader = () => {
         }
         
         updateActiveNavigation();
+        updateBackToTopButton();
     }, 16);
     
     // Handle mobile menu toggle
@@ -268,18 +296,40 @@ const initializeHeader = () => {
 };
 
 /* ==========================================================================
-   5. Hero Section
+   5. Hero Section with Background Rotation
    ========================================================================== */
 
 /**
- * Initialize hero section
+ * Initialize hero section with rotating backgrounds
  */
 const initializeHero = () => {
     const heroSection = document.querySelector('.hero');
     const logoContainer = document.querySelector('.hero-logo-container');
     const heroContent = document.querySelector('.hero-content');
+    const backgroundImages = document.querySelectorAll('.hero-bg-image');
     
     if (!heroSection) return;
+    
+    // Initialize background rotation
+    const initializeBackgroundRotation = () => {
+        if (backgroundImages.length > 0 && !STATE.isReducedMotion) {
+            // Show first image immediately
+            backgroundImages[0].classList.add('active');
+            STATE.heroBackgroundIndex = 0;
+            
+            // Start rotation interval
+            STATE.heroBackgroundInterval = setInterval(() => {
+                // Hide current image
+                backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
+                
+                // Move to next image
+                STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
+                
+                // Show next image
+                backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
+            }, CONFIG.hero.backgroundTransitionDuration);
+        }
+    };
     
     // Enhanced logo interactions
     if (logoContainer) {
@@ -304,9 +354,8 @@ const initializeHero = () => {
         
         // Add subtle parallax effect
         const handleScroll = throttle(() => {
-            if (!STATE.isReducedMotion) {
-                const scrolled = window.pageYOffset;
-                const parallaxValue = scrolled * 0.2;
+            if (!STATE.isReducedMotion && STATE.scrollPosition < window.innerHeight) {
+                const parallaxValue = STATE.scrollPosition * 0.2;
                 logoContainer.style.transform = `translateY(${parallaxValue}px)`;
             }
         }, 16);
@@ -320,11 +369,181 @@ const initializeHero = () => {
         staggerAnimations(elements, 'fade-in', 200);
     }
     
-    console.log('✅ Hero section initialized');
+    // Initialize background rotation
+    initializeBackgroundRotation();
+    
+    // Cleanup interval when page is hidden
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && STATE.heroBackgroundInterval) {
+            clearInterval(STATE.heroBackgroundInterval);
+        } else if (!document.hidden) {
+            initializeBackgroundRotation();
+        }
+    });
+    
+    console.log('✅ Hero section with background rotation initialized');
 };
 
 /* ==========================================================================
-   6. Scroll Animations
+   6. Floating Action Buttons
+   ========================================================================== */
+
+/**
+ * Initialize back to top button
+ */
+const initializeBackToTopButton = () => {
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    if (!backToTopBtn) return;
+    
+    // Handle back to top click
+    backToTopBtn.addEventListener('click', () => {
+        smoothScrollToTop();
+        
+        // Announce to screen readers
+        if (window.announceToScreenReader) {
+            window.announceToScreenReader('Scrolled to top of page');
+        }
+    });
+    
+    // Add keyboard support
+    backToTopBtn.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            smoothScrollToTop();
+        }
+    });
+    
+    console.log('✅ Back to top button initialized');
+};
+
+/**
+ * Update back to top button visibility
+ */
+const updateBackToTopButton = () => {
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    if (!backToTopBtn) return;
+    
+    const shouldShow = STATE.scrollPosition > 300;
+    backToTopBtn.classList.toggle('visible', shouldShow);
+};
+
+/**
+ * Initialize contact FAB
+ */
+const initializeContactFAB = () => {
+    const contactFab = document.getElementById('contactFab');
+    const contactOptions = document.getElementById('contactOptions');
+    
+    if (!contactFab || !contactOptions) return;
+    
+    // Toggle contact options
+    const toggleContactOptions = () => {
+        STATE.isContactFabOpen = !STATE.isContactFabOpen;
+        contactFab.classList.toggle('active', STATE.isContactFabOpen);
+        contactOptions.classList.toggle('active', STATE.isContactFabOpen);
+        
+        // Update ARIA attributes
+        contactFab.setAttribute('aria-expanded', STATE.isContactFabOpen.toString());
+        
+        // Announce to screen readers
+        if (window.announceToScreenReader) {
+            const message = STATE.isContactFabOpen ? 'Contact options opened' : 'Contact options closed';
+            window.announceToScreenReader(message);
+        }
+    };
+    
+    // Close contact options
+    const closeContactOptions = () => {
+        if (STATE.isContactFabOpen) {
+            STATE.isContactFabOpen = false;
+            contactFab.classList.remove('active');
+            contactOptions.classList.remove('active');
+            contactFab.setAttribute('aria-expanded', 'false');
+        }
+    };
+    
+    // Handle FAB click
+    contactFab.addEventListener('click', toggleContactOptions);
+    
+    // Handle keyboard navigation
+    contactFab.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleContactOptions();
+        } else if (event.key === 'Escape') {
+            closeContactOptions();
+        }
+    });
+    
+    // Close when clicking outside
+    document.addEventListener('click', (event) => {
+        if (STATE.isContactFabOpen && 
+            !contactFab.contains(event.target) && 
+            !contactOptions.contains(event.target)) {
+            closeContactOptions();
+        }
+    });
+    
+    // Handle contact option clicks with analytics tracking
+    const contactOptionLinks = contactOptions.querySelectorAll('.contact-option');
+    contactOptionLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            const optionType = link.classList.contains('phone') ? 'phone' :
+                              link.classList.contains('email') ? 'email' :
+                              link.classList.contains('instagram') ? 'instagram' :
+                              link.classList.contains('review') ? 'review' : 'unknown';
+            
+            // Track the interaction (you can integrate with your analytics here)
+            console.log(`Contact option clicked: ${optionType}`);
+            
+            // Close options after click (except for review which opens in new tab)
+            if (optionType !== 'review' && optionType !== 'instagram') {
+                setTimeout(closeContactOptions, 300);
+            }
+            
+            // Announce to screen readers
+            if (window.announceToScreenReader) {
+                const actionMessages = {
+                    phone: 'Calling phone number',
+                    email: 'Opening email client',
+                    instagram: 'Opening Instagram page',
+                    review: 'Opening Google reviews'
+                };
+                window.announceToScreenReader(actionMessages[optionType] || 'Contact option selected');
+            }
+        });
+    });
+    
+    // Set initial ARIA attributes
+    contactFab.setAttribute('aria-expanded', 'false');
+    contactFab.setAttribute('aria-haspopup', 'true');
+    
+    console.log('✅ Contact FAB initialized');
+};
+
+/**
+ * Initialize all floating action buttons
+ */
+const initializeFloatingActions = () => {
+    // Show FABs after a delay
+    setTimeout(() => {
+        const floatingActions = document.querySelector('.floating-actions');
+        if (floatingActions) {
+            floatingActions.style.opacity = '1';
+            floatingActions.style.visibility = 'visible';
+        }
+    }, CONFIG.fab.showDelay);
+    
+    initializeBackToTopButton();
+    initializeContactFAB();
+    
+    console.log('✅ Floating actions initialized');
+};
+
+/* ==========================================================================
+   7. Scroll Animations
    ========================================================================== */
 
 /**
@@ -517,7 +736,7 @@ const animateStatNumbers = (statItems) => {
 };
 
 /* ==========================================================================
-   7. Form Handling
+   8. Form Handling
    ========================================================================== */
 
 /**
@@ -632,7 +851,7 @@ const initializeContactForm = () => {
         messageElement.className = 'form-message';
         messageElement.textContent = message;
         
-        const bgColor = type === 'success' ? 'var(--primary-teal)' : '#ef4444';
+        const bgColor = type === 'success' ? 'var(--primary-green)' : '#ef4444';
         messageElement.style.cssText = `
             background: ${bgColor};
             color: white;
@@ -646,6 +865,11 @@ const initializeContactForm = () => {
         `;
         
         form.insertBefore(messageElement, form.firstChild);
+        
+        // Announce to screen readers
+        if (window.announceToScreenReader) {
+            window.announceToScreenReader(message);
+        }
         
         // Auto-remove after 5 seconds
         setTimeout(() => {
@@ -698,6 +922,13 @@ const initializeContactForm = () => {
         }
         
         try {
+            // Collect form data
+            const formData = new FormData(form);
+            const formObject = Object.fromEntries(formData);
+            
+            // Log form submission (replace with actual API call)
+            console.log('Form submitted:', formObject);
+            
             // Simulate form submission (replace with actual endpoint)
             await new Promise(resolve => setTimeout(resolve, 2000));
             
@@ -712,6 +943,9 @@ const initializeContactForm = () => {
             
             // Clear any remaining errors
             inputs.forEach(input => removeFieldError(input));
+            
+            // Track successful submission
+            console.log('Contact form submitted successfully');
             
         } catch (error) {
             console.error('Form submission error:', error);
@@ -737,7 +971,7 @@ const initializeContactForm = () => {
         // Enhanced focus effects
         input.addEventListener('focus', (e) => {
             e.target.style.transform = 'translateY(-1px)';
-            e.target.style.boxShadow = '0 4px 12px rgba(64, 224, 208, 0.2)';
+            e.target.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
         });
         
         input.addEventListener('blur', (e) => {
@@ -750,7 +984,7 @@ const initializeContactForm = () => {
 };
 
 /* ==========================================================================
-   8. Enhanced Interactions
+   9. Enhanced Interactions
    ========================================================================== */
 
 /**
@@ -904,7 +1138,7 @@ const initializeButtonEffects = () => {
 };
 
 /* ==========================================================================
-   9. Accessibility Enhancements
+   10. Accessibility Enhancements
    ========================================================================== */
 
 /**
@@ -920,7 +1154,7 @@ const initializeAccessibility = () => {
         position: absolute;
         top: -40px;
         left: 8px;
-        background: var(--primary-teal);
+        background: var(--primary-green);
         color: white;
         padding: 8px 16px;
         text-decoration: none;
@@ -987,7 +1221,7 @@ const initializeAccessibility = () => {
 };
 
 /* ==========================================================================
-   10. Performance Optimizations
+   11. Performance Optimizations
    ========================================================================== */
 
 /**
@@ -1060,7 +1294,7 @@ const initializePerformanceOptimizations = () => {
 };
 
 /* ==========================================================================
-   11. Error Handling
+   12. Error Handling
    ========================================================================== */
 
 /**
@@ -1093,7 +1327,7 @@ const initializeErrorHandling = () => {
 };
 
 /* ==========================================================================
-   12. Main Initialization
+   13. Main Initialization
    ========================================================================== */
 
 /**
@@ -1112,6 +1346,9 @@ const initializeApp = () => {
     initializeCardInteractions();
     initializeButtonEffects();
     
+    // Floating actions
+    initializeFloatingActions();
+    
     // Accessibility & Performance
     initializeAccessibility();
     initializePerformanceOptimizations();
@@ -1120,6 +1357,14 @@ const initializeApp = () => {
     // Mark app as initialized
     document.body.classList.add('app-initialized');
     
+    // Initial setup for floating actions visibility
+    const floatingActions = document.querySelector('.floating-actions');
+    if (floatingActions) {
+        floatingActions.style.opacity = '0';
+        floatingActions.style.visibility = 'hidden';
+        floatingActions.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+    }
+    
     console.log('✅ Holistic Psychological Services website initialized successfully!');
 };
 
@@ -1127,6 +1372,11 @@ const initializeApp = () => {
  * Cleanup function for when page unloads
  */
 const cleanup = () => {
+    // Clear background rotation interval
+    if (STATE.heroBackgroundInterval) {
+        clearInterval(STATE.heroBackgroundInterval);
+    }
+    
     // Clear all observers
     STATE.observers.forEach(observer => {
         observer.disconnect();
@@ -1140,7 +1390,7 @@ const cleanup = () => {
 };
 
 /* ==========================================================================
-   13. Event Listeners & Bootstrap
+   14. Event Listeners & Bootstrap
    ========================================================================== */
 
 // Initialize when DOM is ready
@@ -1154,11 +1404,36 @@ if (document.readyState === 'loading') {
 // Cleanup when page unloads
 window.addEventListener('beforeunload', cleanup);
 
+// Handle page visibility changes
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Page is hidden, pause background rotation
+        if (STATE.heroBackgroundInterval) {
+            clearInterval(STATE.heroBackgroundInterval);
+        }
+    } else {
+        // Page is visible, resume background rotation
+        const backgroundImages = document.querySelectorAll('.hero-bg-image');
+        if (backgroundImages.length > 0 && !STATE.isReducedMotion) {
+            STATE.heroBackgroundInterval = setInterval(() => {
+                backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
+                STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
+                backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
+            }, CONFIG.hero.backgroundTransitionDuration);
+        }
+    }
+});
+
 // Handle reduced motion preference changes
 const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 mediaQuery.addEventListener('change', (e) => {
     STATE.isReducedMotion = e.matches;
     console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
+    
+    // Pause/resume background rotation based on motion preference
+    if (STATE.isReducedMotion && STATE.heroBackgroundInterval) {
+        clearInterval(STATE.heroBackgroundInterval);
+    }
 });
 
 // Export for potential external use
@@ -1169,7 +1444,8 @@ window.HolisticPsychServices = {
         debounce,
         throttle,
         isMobile,
-        smoothScrollTo
+        smoothScrollTo,
+        smoothScrollToTop
     },
     animations: {
         animateElement,
@@ -1178,11 +1454,11 @@ window.HolisticPsychServices = {
 };
 
 /* ==========================================================================
-   14. Development Helpers (Remove in production)
+   15. Development Helpers (Remove in production)
    ========================================================================== */
 
 // Development mode helpers
-if (process?.env?.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
     // Add development console commands
     window.dev = {
         state: () => console.log('Current State:', STATE),
@@ -1191,6 +1467,23 @@ if (process?.env?.NODE_ENV === 'development' || window.location.hostname === 'lo
         toggleReducedMotion: () => {
             STATE.isReducedMotion = !STATE.isReducedMotion;
             console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
+        },
+        pauseBackgrounds: () => {
+            if (STATE.heroBackgroundInterval) {
+                clearInterval(STATE.heroBackgroundInterval);
+                console.log('Background rotation paused');
+            }
+        },
+        resumeBackgrounds: () => {
+            const backgroundImages = document.querySelectorAll('.hero-bg-image');
+            if (backgroundImages.length > 0) {
+                STATE.heroBackgroundInterval = setInterval(() => {
+                    backgroundImages[STATE.heroBackgroundIndex].classList.remove('active');
+                    STATE.heroBackgroundIndex = (STATE.heroBackgroundIndex + 1) % backgroundImages.length;
+                    backgroundImages[STATE.heroBackgroundIndex].classList.add('active');
+                }, CONFIG.hero.backgroundTransitionDuration);
+                console.log('Background rotation resumed');
+            }
         }
     };
     
