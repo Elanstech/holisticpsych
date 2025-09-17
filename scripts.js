@@ -163,7 +163,7 @@ const staggerAnimations = (elements, className = 'fade-in', staggerDelay = CONFI
 };
 
 /* ==========================================================================
-   3. Header & Navigation - Complete Mobile Menu System
+   3. Header & Navigation - Complete Mobile Menu System with Scroll Behavior
    ========================================================================== */
 
 /**
@@ -176,6 +176,7 @@ class MobileMenuController {
         
         // Get DOM elements
         this.menuToggle = document.getElementById('mobileMenuToggle');
+        this.scrollHamburgerToggle = document.getElementById('scrollHamburgerToggle');
         this.menuPanel = document.getElementById('mobileMenuPanel');
         this.menuOverlay = document.getElementById('mobileMenuOverlay');
         this.menuClose = document.getElementById('mobileMenuClose');
@@ -187,7 +188,7 @@ class MobileMenuController {
     }
     
     init() {
-        if (!this.menuToggle || !this.menuPanel || !this.menuOverlay) {
+        if (!this.menuPanel || !this.menuOverlay) {
             console.warn('Mobile menu elements not found');
             return;
         }
@@ -200,11 +201,21 @@ class MobileMenuController {
     }
     
     bindEvents() {
-        // Toggle menu
-        this.menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleMenu();
-        });
+        // Mobile toggle menu
+        if (this.menuToggle) {
+            this.menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+        }
+        
+        // Scroll hamburger toggle (desktop)
+        if (this.scrollHamburgerToggle) {
+            this.scrollHamburgerToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+        }
         
         // Close menu
         this.menuClose?.addEventListener('click', () => {
@@ -255,9 +266,18 @@ class MobileMenuController {
     }
     
     setupAccessibility() {
-        // Set initial ARIA attributes
-        this.menuToggle.setAttribute('aria-expanded', 'false');
-        this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
+        // Set initial ARIA attributes for mobile toggle
+        if (this.menuToggle) {
+            this.menuToggle.setAttribute('aria-expanded', 'false');
+            this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
+        }
+        
+        // Set initial ARIA attributes for scroll hamburger
+        if (this.scrollHamburgerToggle) {
+            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'false');
+            this.scrollHamburgerToggle.setAttribute('aria-controls', 'mobileMenuPanel');
+        }
+        
         this.menuPanel.setAttribute('aria-labelledby', 'mobileMenuToggle');
         this.menuPanel.setAttribute('role', 'dialog');
         this.menuPanel.setAttribute('aria-modal', 'true');
@@ -308,14 +328,22 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = true;
+        STATE.isMobileMenuOpen = true;
         
         // Prevent body scroll
         this.body.classList.add('menu-open');
         this.body.style.overflow = 'hidden';
         
-        // Update toggle button state
-        this.menuToggle.classList.add('active');
-        this.menuToggle.setAttribute('aria-expanded', 'true');
+        // Update toggle button states
+        if (this.menuToggle) {
+            this.menuToggle.classList.add('active');
+            this.menuToggle.setAttribute('aria-expanded', 'true');
+        }
+        
+        if (this.scrollHamburgerToggle) {
+            this.scrollHamburgerToggle.classList.add('active');
+            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'true');
+        }
         
         // Show overlay
         this.menuOverlay.classList.add('active');
@@ -325,12 +353,14 @@ class MobileMenuController {
             this.menuPanel.classList.add('active');
             
             // Reset nav link animations
-            this.mobileNavLinks.forEach((link, index) => {
-                link.style.animation = 'none';
-                link.offsetHeight; // Trigger reflow
-                link.style.animation = `slideInFromRight 0.5s ease forwards`;
-                link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
-            });
+            if (!STATE.isReducedMotion) {
+                this.mobileNavLinks.forEach((link, index) => {
+                    link.style.animation = 'none';
+                    link.offsetHeight; // Trigger reflow
+                    link.style.animation = `slideInFromRight 0.5s ease forwards`;
+                    link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
+                });
+            }
         });
         
         // Focus management
@@ -346,10 +376,18 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = false;
+        STATE.isMobileMenuOpen = false;
         
-        // Update toggle button state
-        this.menuToggle.classList.remove('active');
-        this.menuToggle.setAttribute('aria-expanded', 'false');
+        // Update toggle button states
+        if (this.menuToggle) {
+            this.menuToggle.classList.remove('active');
+            this.menuToggle.setAttribute('aria-expanded', 'false');
+        }
+        
+        if (this.scrollHamburgerToggle) {
+            this.scrollHamburgerToggle.classList.remove('active');
+            this.scrollHamburgerToggle.setAttribute('aria-expanded', 'false');
+        }
         
         // Hide panel
         this.menuPanel.classList.remove('active');
@@ -365,8 +403,9 @@ class MobileMenuController {
             this.body.style.overflow = '';
             this.isAnimating = false;
             
-            // Return focus to toggle button
-            this.menuToggle.focus();
+            // Return focus to appropriate toggle button
+            const activeToggle = STATE.isScrolled ? this.scrollHamburgerToggle : this.menuToggle;
+            activeToggle?.focus();
             this.announceToScreenReader('Mobile menu closed');
         }, 400);
     }
@@ -442,7 +481,7 @@ class HeaderController {
     constructor() {
         this.header = document.getElementById('header');
         this.isScrolled = false;
-        this.scrollThreshold = 50;
+        this.scrollThreshold = 100; // Increased threshold for scroll behavior
         this.navLinks = document.querySelectorAll('.nav-link');
         
         this.init();
@@ -478,7 +517,11 @@ class HeaderController {
         
         if (scrolled !== this.isScrolled) {
             this.isScrolled = scrolled;
+            STATE.isScrolled = scrolled;
             this.header.classList.toggle('scrolled', scrolled);
+            
+            // Log state change for debugging
+            console.log(`Header ${scrolled ? 'scrolled' : 'unscrolled'} state`);
         }
         
         this.updateActiveNavigation();
