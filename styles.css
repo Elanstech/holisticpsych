@@ -456,8 +456,8 @@ button {
 }
 
 .hero-logo-container {
-    width: 290px; /* 4x bigger than original 80px */
-    height: 290px; /* 4x bigger than original 80px */
+    width: 250px; /* 4x bigger than original 80px */
+    height: 250px; /* 4x bigger than original 80px */
     background: var(--white);
     border-radius: 50%;
     display: flex;
