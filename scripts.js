@@ -1,6 +1,7 @@
 /* ==========================================================================
    HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE ORGANIZED JAVASCRIPT
    Modern, Sleek, Minimalistic Interactions with Enhanced Features
+   Updated Hero Section with Raised Buttons & Clean Backgrounds
    ========================================================================== */
 
 /* ==========================================================================
@@ -543,9 +544,12 @@ const initializeHeader = () => {
 };
 
 /* ==========================================================================
-   4. Hero Section - Clean Logo Design & Background Rotation - LOGO FIXED
+   4. Hero Section - UPDATED Clean Background Rotation & Logo Interactions
    ========================================================================== */
 
+/**
+ * Hero Controller Class - UPDATED with Clean Backgrounds
+ */
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
@@ -571,7 +575,7 @@ class HeroController {
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized with clean backgrounds');
+        console.log('✅ Hero section initialized with clean backgrounds and raised buttons');
     }
     
     /**
@@ -610,7 +614,9 @@ class HeroController {
         // Start rotation interval (8 seconds)
         this.backgroundInterval = setInterval(() => {
             this.rotateBackgroundImage();
-        }, 8000);
+        }, CONFIG.hero.backgroundTransitionDuration);
+        
+        console.log('🔄 Background rotation started with clean style');
     }
     
     /**
@@ -628,7 +634,7 @@ class HeroController {
         // Show next image with smooth transition
         this.backgroundImages[this.currentImageIndex].classList.add('active');
         
-        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1}`);
+        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1} (clean style)`);
     }
     
     /**
@@ -669,7 +675,7 @@ class HeroController {
     }
     
     /**
-     * Initialize button effects
+     * Initialize button effects with enhanced ripples
      */
     initializeButtonEffects() {
         this.heroButtons.forEach(button => {
@@ -761,8 +767,10 @@ class HeroController {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && this.backgroundInterval) {
                 clearInterval(this.backgroundInterval);
+                console.log('⏸️ Background rotation paused (page hidden)');
             } else if (!document.hidden && !this.isReducedMotion) {
                 this.initializeBackgroundRotation();
+                console.log('▶️ Background rotation resumed (page visible)');
             }
         });
     }
@@ -777,8 +785,10 @@ class HeroController {
             
             if (this.isReducedMotion && this.backgroundInterval) {
                 clearInterval(this.backgroundInterval);
+                console.log('⏸️ Background rotation paused (reduced motion)');
             } else if (!this.isReducedMotion) {
                 this.initializeBackgroundRotation();
+                console.log('▶️ Background rotation enabled (motion allowed)');
             }
         });
     }
@@ -826,7 +836,7 @@ class HeroController {
 }
 
 /**
- * Hero Animation Observer for entrance animations
+ * Enhanced Intersection Observer for Hero Animations
  */
 class HeroAnimationObserver {
     constructor() {
@@ -877,21 +887,7 @@ class HeroAnimationObserver {
 /**
  * Initialize hero section with all features
  */
-function initializeHero() {
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            startHeroInitialization();
-        });
-    } else {
-        startHeroInitialization();
-    }
-}
-
-/**
- * Start hero initialization
- */
-function startHeroInitialization() {
+const initializeHero = () => {
     // Initialize hero controller
     const heroController = new HeroController();
     
@@ -915,71 +911,8 @@ function startHeroInitialization() {
         }
     });
     
-    console.log('✅ Hero section fully initialized with clean backgrounds');
-}
-
-/**
- * Utility functions for external use
- */
-const heroUtils = {
-    /**
-     * Get hero controller instance
-     */
-    getController() {
-        return window.heroController;
-    },
-    
-    /**
-     * Manually switch to next background
-     */
-    nextBackground() {
-        if (window.heroController) {
-            window.heroController.nextBackground();
-        }
-    },
-    
-    /**
-     * Toggle background rotation
-     */
-    toggleRotation() {
-        if (window.heroController) {
-            window.heroController.toggleBackgroundRotation();
-        }
-    },
-    
-    /**
-     * Check if hero is initialized
-     */
-    isInitialized() {
-        return !!window.heroController;
-    }
+    console.log('✅ Hero section fully initialized with clean backgrounds and raised buttons');
 };
-
-// Auto-initialize hero section
-initializeHero();
-
-// Export for potential external use
-window.heroUtils = heroUtils;
-
-// Development helpers (remove in production)
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    window.heroDebug = {
-        controller: () => window.heroController,
-        nextBg: () => heroUtils.nextBackground(),
-        toggleRotation: () => heroUtils.toggleRotation(),
-        status: () => {
-            const controller = window.heroController;
-            console.log('Hero Status:', {
-                initialized: !!controller,
-                hasInterval: !!(controller && controller.backgroundInterval),
-                currentIndex: controller ? controller.currentImageIndex : null,
-                reducedMotion: controller ? controller.isReducedMotion : null
-            });
-        }
-    };
-    
-    console.log('🔧 Hero debug tools available: window.heroDebug');
-}
 
 /* ==========================================================================
    5. About Section - Animations, Interactions, Mobile Responsive
@@ -2325,7 +2258,7 @@ const initializeApp = () => {
     
     // Core functionality - order matters
     initializeHeader();           // Header & Mobile Menu System
-    initializeHero();            // Hero with FIXED Logo & Background Rotation
+    initializeHero();            // Hero with UPDATED Clean Backgrounds & Raised Buttons
     initializeAbout();           // About Section with Animations & Interactions
     initializeServices();        // Services with Animations & Interactions
     initializeTeam();            // Team with Animations & Interactions
@@ -2350,7 +2283,7 @@ const initializeApp = () => {
         floatingActions.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
     }
     
-    console.log('✅ Holistic Psychological Services website initialized successfully with FIXED logo!');
+    console.log('✅ Holistic Psychological Services website initialized successfully with UPDATED hero!');
 };
 
 /**
