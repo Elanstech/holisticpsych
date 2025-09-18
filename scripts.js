@@ -1728,39 +1728,6 @@ class AboutSectionController {
     }
 }
 
-/* ========================================
-   INITIALIZATION & GLOBAL EXPOSURE
-   ======================================== */
-
-// Initialize the about section
-let aboutController;
-
-function initializeAboutSection() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            aboutController = new AboutSectionController();
-        });
-    } else {
-        aboutController = new AboutSectionController();
-    }
-}
-
-// Start initialization
-initializeAboutSection();
-
-// Expose to global scope for debugging
-window.AboutSection = {
-    controller: aboutController,
-    config: ABOUT_CONFIG
-};
-
-// Handle cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (aboutController) {
-        aboutController.destroy();
-    }
-});
-
 console.log('About section JavaScript loaded and ready');
 
 /* ========================================
