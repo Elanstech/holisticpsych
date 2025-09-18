@@ -901,7 +901,7 @@ button {
 }
 
 .hero-bg-image.active {
-    opacity: 0.08; /* FIXED: Reduced from 0.15 to 0.08 for more subtle background */
+    opacity: 0.01; /* FIXED: Reduced from 0.15 to 0.08 for more subtle background */
 }
 
 /* Subtle texture overlay only */
