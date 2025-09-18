@@ -901,7 +901,7 @@ button {
 }
 
 .hero-bg-image.active {
-    opacity: 0.15; /* Very subtle background visibility */
+    opacity: 0.08; /* FIXED: Reduced from 0.15 to 0.08 for more subtle background */
 }
 
 /* Subtle texture overlay only */
@@ -1026,7 +1026,7 @@ button {
     flex-direction: column;
     align-items: center;
     gap: var(--space-lg);
-    margin-bottom: var(--space-lg); /* UPDATED: Reduced from var(--space-xl) to bring buttons closer */
+    margin-bottom: var(--space-md); /* FIXED: Reduced from var(--space-lg) to bring buttons closer */
     max-width: 800px;
 }
 
@@ -1086,13 +1086,13 @@ button {
     filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
 }
 
-/* Hero Actions - UPDATED: RAISED HIGHER */
+/* Hero Actions - FIXED: RAISED HIGHER */
 .hero-actions {
     display: flex;
     gap: var(--space-xl);
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: var(--space-sm); /* UPDATED: Reduced from var(--space-lg) to raise buttons */
+    margin-top: 0; /* FIXED: Removed margin-top to raise buttons higher */
 }
 
 .btn-hero-primary,
@@ -1294,7 +1294,7 @@ button {
         width: 100%;
         max-width: 400px;
         gap: var(--space-lg);
-        margin-top: 0; /* UPDATED: Even closer on mobile */
+        margin-top: 0; /* FIXED: Buttons closer on mobile too */
     }
     
     .btn-hero-primary,
@@ -1324,7 +1324,7 @@ button {
     }
     
     .hero-text {
-        margin-bottom: var(--space-md); /* UPDATED: Reduced on mobile */
+        margin-bottom: var(--space-sm); /* FIXED: Reduced on mobile */
     }
     
     .hero-location {
@@ -1337,7 +1337,7 @@ button {
     
     .hero-actions {
         gap: var(--space-md);
-        margin-top: 0; /* UPDATED: Closer on mobile */
+        margin-top: 0; /* FIXED: Closer on mobile */
     }
     
     .btn-hero-primary,
