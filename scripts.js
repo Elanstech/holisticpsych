@@ -1,37 +1,47 @@
 /* ==========================================================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - FIXED JAVASCRIPT
-   Modern, Sleek, Minimalistic Interactions with Enhanced Features
-   FIXED: Logo Loading & Mobile Menu Issues
+   HOLISTIC PSYCHOLOGICAL SERVICES - OPTIMIZED JAVASCRIPT
+   Modern, Performance-Focused, Modular Architecture
    ========================================================================== */
 
 /* ==========================================================================
-   1. Global Variables & Configuration
+   1. Configuration & Global State
    ========================================================================== */
-
-// Configuration object
 const CONFIG = {
+    // Animation settings
     animations: {
         duration: 300,
         easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
         stagger: 100
     },
+    
+    // Scroll settings
     scroll: {
         offset: 100,
         threshold: 0.1
     },
-    mobile: {
-        breakpoint: 768
+    
+    // Breakpoints
+    breakpoints: {
+        mobile: 768,
+        tablet: 1024,
+        desktop: 1200
     },
+    
+    // Hero settings
     hero: {
-        backgroundTransitionDuration: 8000, // 8 seconds between background changes
-        backgroundImages: 3
+        backgroundTransitionDuration: 5000, // 5 seconds
+        overlayOpacity: 0.4, // Controllable overlay opacity
+        zoomScale: 1.1,
+        transitionDuration: 2000
     },
+    
+    // FAB settings
     fab: {
         showDelay: 1000
     }
 };
 
-// Global state
+// Global state management
 const STATE = {
     isScrolled: false,
     isMobileMenuOpen: false,
@@ -41,141 +51,210 @@ const STATE = {
     heroBackgroundIndex: 0,
     heroBackgroundInterval: null,
     isContactFabOpen: false,
-    scrollPosition: 0
+    scrollPosition: 0,
+    isInitialized: false
 };
 
 /* ==========================================================================
    2. Utility Functions
    ========================================================================== */
-
-/**
- * Debounce function to limit function calls
- * @param {Function} func - Function to debounce
- * @param {number} wait - Wait time in milliseconds
- * @returns {Function} Debounced function
- */
-const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
+class Utils {
+    static debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
             clearTimeout(timeout);
-            func(...args);
+            timeout = setTimeout(later, wait);
         };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-};
+    }
 
-/**
- * Throttle function to limit function calls
- * @param {Function} func - Function to throttle
- * @param {number} limit - Time limit in milliseconds
- * @returns {Function} Throttled function
- */
-const throttle = (func, limit) => {
-    let inThrottle;
-    return function executedFunction(...args) {
-        if (!inThrottle) {
-            func.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
+    static throttle(func, limit) {
+        let inThrottle;
+        return function executedFunction(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    static isMobile() {
+        return window.innerWidth < CONFIG.breakpoints.mobile;
+    }
+
+    static isTablet() {
+        return window.innerWidth < CONFIG.breakpoints.tablet;
+    }
+
+    static isDesktop() {
+        return window.innerWidth >= CONFIG.breakpoints.desktop;
+    }
+
+    static getOffsetTop(element) {
+        const rect = element.getBoundingClientRect();
+        return rect.top + window.pageYOffset;
+    }
+
+    static smoothScrollTo(target) {
+        const targetPosition = Utils.getOffsetTop(target) - CONFIG.scroll.offset;
+        
+        if (STATE.isReducedMotion) {
+            window.scrollTo(0, targetPosition);
+            return;
         }
-    };
-};
-
-/**
- * Check if device is mobile
- * @returns {boolean} True if mobile device
- */
-const isMobile = () => window.innerWidth < CONFIG.mobile.breakpoint;
-
-/**
- * Get element's offset top
- * @param {Element} element - Target element
- * @returns {number} Offset top value
- */
-const getOffsetTop = (element) => {
-    const rect = element.getBoundingClientRect();
-    return rect.top + window.pageYOffset;
-};
-
-/**
- * Smooth scroll to element
- * @param {Element} target - Target element
- */
-const smoothScrollTo = (target) => {
-    const targetPosition = getOffsetTop(target) - 100;
-    
-    if (STATE.isReducedMotion) {
-        window.scrollTo(0, targetPosition);
-        return;
+        
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
     }
-    
-    window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-    });
-};
 
-/**
- * Smooth scroll to top
- */
-const smoothScrollToTop = () => {
-    if (STATE.isReducedMotion) {
-        window.scrollTo(0, 0);
-        return;
+    static smoothScrollToTop() {
+        if (STATE.isReducedMotion) {
+            window.scrollTo(0, 0);
+            return;
+        }
+        
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
-    
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
 
-/**
- * Add animation class with delay
- * @param {Element} element - Target element
- * @param {string} className - Animation class name
- * @param {number} delay - Delay in milliseconds
- */
-const animateElement = (element, className = 'fade-in', delay = 0) => {
-    if (STATE.isReducedMotion) {
-        element.classList.add('visible');
-        return;
+    static announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+        
+        announcement.style.cssText = `
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        `;
+        
+        document.body.appendChild(announcement);
+        
+        setTimeout(() => {
+            if (announcement.parentNode) {
+                document.body.removeChild(announcement);
+            }
+        }, 1000);
     }
-    
-    setTimeout(() => {
-        element.classList.add(className);
-        element.classList.add('visible');
-    }, delay);
-};
 
-/**
- * Stagger animations for multiple elements
- * @param {NodeList} elements - Elements to animate
- * @param {string} className - Animation class name
- * @param {number} staggerDelay - Delay between elements
- */
-const staggerAnimations = (elements, className = 'fade-in', staggerDelay = CONFIG.animations.stagger) => {
-    elements.forEach((element, index) => {
-        const delay = STATE.isReducedMotion ? 0 : index * staggerDelay;
-        animateElement(element, className, delay);
-    });
-};
+    static animateElement(element, className = 'fade-in', delay = 0) {
+        if (STATE.isReducedMotion) {
+            element.classList.add('visible');
+            return;
+        }
+        
+        setTimeout(() => {
+            element.classList.add(className);
+            element.classList.add('visible');
+        }, delay);
+    }
+
+    static staggerAnimations(elements, className = 'fade-in', staggerDelay = CONFIG.animations.stagger) {
+        elements.forEach((element, index) => {
+            const delay = STATE.isReducedMotion ? 0 : index * staggerDelay;
+            Utils.animateElement(element, className, delay);
+        });
+    }
+}
 
 /* ==========================================================================
-   3. Header & Navigation - FIXED Mobile Menu System
+   3. Header & Navigation System
    ========================================================================== */
+class HeaderController {
+    constructor() {
+        this.header = document.getElementById('header');
+        this.isScrolled = false;
+        this.scrollThreshold = 50;
+        this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.header) return;
+        
+        this.bindEvents();
+        this.checkScrollPosition();
+        
+        console.log('✅ Header controller initialized');
+    }
+    
+    bindEvents() {
+        window.addEventListener('scroll', Utils.throttle(() => {
+            this.handleScroll();
+        }, 16));
+        
+        window.addEventListener('resize', Utils.debounce(() => {
+            this.handleResize();
+        }, 250));
+    }
+    
+    handleScroll() {
+        const scrolled = window.scrollY > this.scrollThreshold;
+        STATE.scrollPosition = window.scrollY;
+        
+        if (scrolled !== this.isScrolled) {
+            this.isScrolled = scrolled;
+            this.header.classList.toggle('scrolled', scrolled);
+        }
+        
+        this.updateActiveNavigation();
+    }
+    
+    handleResize() {
+        this.checkScrollPosition();
+    }
+    
+    updateActiveNavigation() {
+        const sections = document.querySelectorAll('section[id]');
+        let currentSection = '';
+        
+        sections.forEach(section => {
+            const sectionTop = Utils.getOffsetTop(section) - CONFIG.scroll.offset;
+            const sectionHeight = section.clientHeight;
+            const scrollPosition = window.pageYOffset;
+            
+            if (scrollPosition >= sectionTop && 
+                scrollPosition < sectionTop + sectionHeight) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+        
+        if (currentSection && currentSection !== STATE.currentSection) {
+            STATE.currentSection = currentSection;
+            
+            this.navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                link.classList.toggle('active', linkHref === `#${currentSection}`);
+            });
+        }
+    }
+    
+    checkScrollPosition() {
+        this.handleScroll();
+    }
+}
 
-/**
- * FIXED: Mobile Menu Controller Class
- */
+/* ==========================================================================
+   4. Mobile Menu System
+   ========================================================================== */
 class MobileMenuController {
     constructor() {
         this.isOpen = false;
         this.isAnimating = false;
         
-        // Get DOM elements
         this.menuToggle = document.getElementById('mobileMenuToggle');
         this.menuPanel = document.getElementById('mobileMenuPanel');
         this.menuOverlay = document.getElementById('mobileMenuOverlay');
@@ -198,11 +277,11 @@ class MobileMenuController {
         this.setupAccessibility();
         this.syncActiveStates();
         
-        console.log('✅ FIXED mobile menu initialized');
+        console.log('✅ Mobile menu controller initialized');
     }
     
     bindEvents() {
-        // FIXED: Mobile toggle menu
+        // Mobile toggle
         if (this.menuToggle) {
             this.menuToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -210,7 +289,7 @@ class MobileMenuController {
             });
         }
 
-        // FIXED: Scroll hamburger menu (desktop)
+        // Scroll hamburger
         if (this.scrollHamburger) {
             this.scrollHamburger.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -239,7 +318,7 @@ class MobileMenuController {
             });
         });
         
-        // Handle desktop nav links (sync mobile menu state)
+        // Handle desktop nav links
         this.desktopNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -247,7 +326,7 @@ class MobileMenuController {
                 const targetSection = document.querySelector(targetId);
                 
                 if (targetSection) {
-                    smoothScrollTo(targetSection);
+                    Utils.smoothScrollTo(targetSection);
                     this.updateActiveStates(targetId);
                 }
             });
@@ -262,7 +341,7 @@ class MobileMenuController {
         
         // Handle resize
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 1200 && this.isOpen) {
+            if (window.innerWidth > CONFIG.breakpoints.desktop && this.isOpen) {
                 this.closeMenu();
             }
         });
@@ -299,7 +378,6 @@ class MobileMenuController {
             this.menuPanel.setAttribute('aria-modal', 'true');
         }
         
-        // Add focus trap when menu is open
         this.setupFocusTrap();
     }
     
@@ -316,13 +394,11 @@ class MobileMenuController {
         this.menuPanel.addEventListener('keydown', (e) => {
             if (e.key === 'Tab' && this.isOpen) {
                 if (e.shiftKey) {
-                    // Shift + Tab
                     if (document.activeElement === this.firstFocusable) {
                         e.preventDefault();
                         this.lastFocusable?.focus();
                     }
                 } else {
-                    // Tab
                     if (document.activeElement === this.lastFocusable) {
                         e.preventDefault();
                         this.firstFocusable?.focus();
@@ -347,6 +423,7 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = true;
+        STATE.isMobileMenuOpen = true;
         
         // Prevent body scroll
         this.body.classList.add('menu-open');
@@ -389,7 +466,7 @@ class MobileMenuController {
             if (this.menuClose) {
                 this.menuClose.focus();
             }
-            this.announceToScreenReader('Mobile menu opened');
+            Utils.announceToScreenReader('Mobile menu opened');
         }, 400);
     }
     
@@ -398,6 +475,7 @@ class MobileMenuController {
         
         this.isAnimating = true;
         this.isOpen = false;
+        STATE.isMobileMenuOpen = false;
         
         // Update toggle button states
         if (this.menuToggle) {
@@ -429,12 +507,12 @@ class MobileMenuController {
             this.isAnimating = false;
             
             // Return focus to toggle button
-            if (this.menuToggle && window.innerWidth <= 1200) {
+            if (this.menuToggle && Utils.isMobile()) {
                 this.menuToggle.focus();
-            } else if (this.scrollHamburger && window.innerWidth > 1200) {
+            } else if (this.scrollHamburger && Utils.isDesktop()) {
                 this.scrollHamburger.focus();
             }
-            this.announceToScreenReader('Mobile menu closed');
+            Utils.announceToScreenReader('Mobile menu closed');
         }, 400);
     }
     
@@ -445,176 +523,49 @@ class MobileMenuController {
         const targetSection = document.querySelector(targetId);
         
         if (targetSection) {
-            // Update active states
             this.updateActiveStates(targetId);
-            
-            // Close menu
             this.closeMenu();
             
-            // Scroll to section with delay to allow menu close animation
             setTimeout(() => {
-                smoothScrollTo(targetSection);
+                Utils.smoothScrollTo(targetSection);
             }, 200);
         }
     }
     
     updateActiveStates(activeHref) {
-        // Update mobile nav links
         this.mobileNavLinks.forEach(link => {
             link.classList.toggle('active', link.getAttribute('href') === activeHref);
         });
         
-        // Update desktop nav links
         this.desktopNavLinks.forEach(link => {
             link.classList.toggle('active', link.getAttribute('href') === activeHref);
         });
     }
     
     syncActiveStates() {
-        // Find currently active desktop link
         const activeDesktopLink = document.querySelector('.desktop-nav .nav-link.active');
         if (activeDesktopLink) {
             const activeHref = activeDesktopLink.getAttribute('href');
             this.updateActiveStates(activeHref);
         }
     }
-    
-    announceToScreenReader(message) {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        
-        announcement.style.cssText = `
-            position: absolute;
-            left: -10000px;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        `;
-        
-        document.body.appendChild(announcement);
-        
-        setTimeout(() => {
-            document.body.removeChild(announcement);
-        }, 1000);
-    }
 }
-
-/**
- * Enhanced Header Controller
- */
-class HeaderController {
-    constructor() {
-        this.header = document.getElementById('header');
-        this.isScrolled = false;
-        this.scrollThreshold = 50;
-        this.navLinks = document.querySelectorAll('.nav-link');
-        
-        this.init();
-    }
-    
-    init() {
-        if (!this.header) return;
-        
-        this.bindEvents();
-        this.checkScrollPosition();
-        
-        console.log('✅ Header controller initialized');
-    }
-    
-    bindEvents() {
-        window.addEventListener('scroll', throttle(() => {
-            this.handleScroll();
-        }, 16));
-        
-        window.addEventListener('resize', debounce(() => {
-            this.handleResize();
-        }, 250));
-    }
-    
-    handleScroll() {
-        const scrolled = window.scrollY > this.scrollThreshold;
-        STATE.scrollPosition = window.scrollY;
-        
-        if (scrolled !== this.isScrolled) {
-            this.isScrolled = scrolled;
-            this.header.classList.toggle('scrolled', scrolled);
-        }
-        
-        this.updateActiveNavigation();
-    }
-    
-    handleResize() {
-        this.checkScrollPosition();
-    }
-    
-    updateActiveNavigation() {
-        const sections = document.querySelectorAll('section[id]');
-        let currentSection = '';
-        
-        sections.forEach(section => {
-            const sectionTop = getOffsetTop(section) - CONFIG.scroll.offset;
-            const sectionHeight = section.clientHeight;
-            const scrollPosition = window.pageYOffset;
-            
-            if (scrollPosition >= sectionTop && 
-                scrollPosition < sectionTop + sectionHeight) {
-                currentSection = section.getAttribute('id');
-            }
-        });
-        
-        if (currentSection && currentSection !== STATE.currentSection) {
-            STATE.currentSection = currentSection;
-            
-            // Update all nav links
-            this.navLinks.forEach(link => {
-                const linkHref = link.getAttribute('href');
-                link.classList.toggle('active', linkHref === `#${currentSection}`);
-            });
-            
-            // Update mobile nav links too
-            document.querySelectorAll('.mobile-nav-link').forEach(link => {
-                const linkHref = link.getAttribute('href');
-                link.classList.toggle('active', linkHref === `#${currentSection}`);
-            });
-        }
-    }
-    
-    checkScrollPosition() {
-        this.handleScroll();
-    }
-}
-
-/**
- * Initialize Header System
- */
-const initializeHeader = () => {
-    window.mobileMenuController = new MobileMenuController();
-    window.headerController = new HeaderController();
-    
-    console.log('✅ Complete FIXED header system initialized');
-};
 
 /* ==========================================================================
-   4. Hero Section - FIXED Logo Loading & Clean Background Rotation
+   5. Hero Section Controller with Enhanced Background System
    ========================================================================== */
-
-/**
- * FIXED: Hero Controller Class with Reliable Logo Loading
- */
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
         this.backgroundImages = document.querySelectorAll('.hero-bg-image');
+        this.heroOverlay = document.getElementById('heroOverlay');
         this.logoContainer = document.querySelector('.hero-logo-container');
         this.logoImage = document.querySelector('.hero-logo');
         this.heroButtons = document.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
         
         this.currentImageIndex = 0;
         this.backgroundInterval = null;
-        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.isReducedMotion = STATE.isReducedMotion;
         
         this.init();
     }
@@ -622,45 +573,38 @@ class HeroController {
     init() {
         if (!this.heroSection) return;
         
-        this.initializeLogoLoading(); // FIXED: Load this first and reliably
-        this.initializeBackgroundRotation();
+        this.initializeLogoLoading();
+        this.initializeBackgroundSystem();
+        this.initializeOverlayControl();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ FIXED Hero section initialized with reliable logo loading');
+        console.log('✅ Hero section initialized with enhanced background system');
     }
     
-    /**
-     * FIXED: Initialize logo loading - Always works reliably
-     */
     initializeLogoLoading() {
         if (!this.logoImage || !this.logoContainer) return;
         
-        console.log('🔄 Starting logo loading process...');
+        console.log('🔄 Loading logo...');
         
-        // Ensure logo container is visible immediately
         this.logoContainer.style.opacity = '1';
         this.logoContainer.style.visibility = 'visible';
         
-        // Function to handle successful logo load
         const handleLogoSuccess = () => {
             console.log('✅ Logo loaded successfully');
             this.logoImage.style.opacity = '1';
             this.logoImage.style.visibility = 'visible';
             
-            // Start any logo animations
             if (!this.isReducedMotion) {
                 this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
             }
         };
         
-        // Function to handle logo load error
         const handleLogoError = () => {
-            console.warn('⚠️ Logo image failed to load, but container remains visible');
+            console.warn('⚠️ Logo failed to load, showing fallback');
             
-            // Create fallback content if logo fails
             const fallback = document.createElement('div');
             fallback.style.cssText = `
                 width: 200px;
@@ -679,84 +623,101 @@ class HeroController {
             `;
             fallback.innerHTML = 'Holistic<br>Psych<br>Services';
             
-            // Replace failed image with fallback
             this.logoImage.style.display = 'none';
             this.logoContainer.appendChild(fallback);
         };
         
-        // Check if logo is already loaded
         if (this.logoImage.complete) {
             if (this.logoImage.naturalHeight !== 0) {
-                // Image is loaded and valid
                 handleLogoSuccess();
             } else {
-                // Image is loaded but invalid/broken
                 handleLogoError();
             }
         } else {
-            // Image is not yet loaded, set up listeners
             this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
             this.logoImage.addEventListener('error', handleLogoError, { once: true });
             
-            // Fallback timeout - if logo doesn't load within 3 seconds, show fallback
             setTimeout(() => {
                 if (this.logoImage.naturalHeight === 0) {
-                    console.warn('⚠️ Logo timeout - using fallback');
                     handleLogoError();
                 }
             }, 3000);
         }
         
-        // Force logo visibility regardless of loading state
         setTimeout(() => {
             this.logoContainer.style.opacity = '1';
             this.logoContainer.style.visibility = 'visible';
             this.logoImage.style.opacity = '1';
             this.logoImage.style.visibility = 'visible';
         }, 100);
-        
-        console.log('✅ Logo loading initialized with fallbacks');
     }
     
-    /**
-     * Initialize background image rotation with subtle opacity
-     */
-    initializeBackgroundRotation() {
+    initializeBackgroundSystem() {
         if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
         
-        // Show first image immediately with subtle opacity
+        // Show first image immediately
         this.backgroundImages[0].classList.add('active');
         this.currentImageIndex = 0;
         
-        // Start rotation interval (8 seconds)
+        // Start rotation interval
         this.backgroundInterval = setInterval(() => {
             this.rotateBackgroundImage();
         }, CONFIG.hero.backgroundTransitionDuration);
         
-        console.log('🔄 Background rotation started with clean style');
+        console.log('🔄 Background rotation started (5-second intervals with zoom)');
     }
     
-    /**
-     * Rotate to next background image
-     */
     rotateBackgroundImage() {
         if (this.isReducedMotion) return;
         
-        // Hide current image
-        this.backgroundImages[this.currentImageIndex].classList.remove('active');
+        const currentImage = this.backgroundImages[this.currentImageIndex];
+        
+        // Remove active class from current image
+        currentImage.classList.remove('active');
         
         // Move to next image
         this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
+        const nextImage = this.backgroundImages[this.currentImageIndex];
         
-        // Show next image with smooth transition
-        this.backgroundImages[this.currentImageIndex].classList.add('active');
+        // Add active class to next image (triggers zoom and fade)
+        nextImage.classList.add('active');
         
-        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1} (clean style)`);
+        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1} with zoom effect`);
     }
     
-    /**
-     * Initialize logo interactions
-     */
+    initializeOverlayControl() {
+        if (!this.heroOverlay) return;
+        
+        // Set initial overlay opacity from CSS variable
+        const overlayOpacity = getComputedStyle(document.documentElement)
+            .getPropertyValue('--hero-overlay-opacity') || CONFIG.hero.overlayOpacity;
+        
+        // Apply overlay styles
+        this.heroOverlay.style.background = `linear-gradient(135deg, 
+            rgba(0, 216, 132, ${overlayOpacity}) 0%, 
+            rgba(14, 165, 233, ${overlayOpacity * 0.8}) 50%,
+            rgba(139, 92, 246, ${overlayOpacity * 0.6}) 100%)`;
+        
+        console.log(`🎨 Hero overlay set to ${overlayOpacity} opacity`);
+    }
+    
+    setOverlayOpacity(opacity) {
+        if (!this.heroOverlay) return;
+        
+        const clampedOpacity = Math.max(0, Math.min(1, opacity));
+        
+        // Update CSS variable
+        document.documentElement.style.setProperty('--hero-overlay-opacity', clampedOpacity);
+        
+        // Update overlay background
+        this.heroOverlay.style.background = `linear-gradient(135deg, 
+            rgba(0, 216, 132, ${clampedOpacity}) 0%, 
+            rgba(14, 165, 233, ${clampedOpacity * 0.8}) 50%,
+            rgba(139, 92, 246, ${clampedOpacity * 0.6}) 100%)`;
+        
+        console.log(`🎨 Hero overlay opacity updated to ${clampedOpacity}`);
+    }
+    
     initializeLogoInteractions() {
         if (!this.logoContainer || this.isReducedMotion) return;
         
@@ -781,19 +742,15 @@ class HeroController {
         this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
         this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
         
-        // Logo click animation
         this.logoContainer.addEventListener('click', () => {
             if (this.isReducedMotion) return;
             
             this.logoContainer.style.animation = 'none';
-            this.logoContainer.offsetHeight; // Trigger reflow
+            this.logoContainer.offsetHeight;
             this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
         });
     }
     
-    /**
-     * Initialize button effects with enhanced ripples
-     */
     initializeButtonEffects() {
         this.heroButtons.forEach(button => {
             this.addButtonRippleEffect(button);
@@ -801,17 +758,13 @@ class HeroController {
         });
     }
     
-    /**
-     * Add ripple effect to buttons
-     */
     addButtonRippleEffect(button) {
         button.addEventListener('click', (e) => {
             if (this.isReducedMotion) return;
             
             const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height) * 1.5;
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
             
             const ripple = document.createElement('span');
             ripple.style.cssText = `
@@ -820,8 +773,8 @@ class HeroController {
                 background: rgba(255, 255, 255, 0.6);
                 width: 0;
                 height: 0;
-                left: ${e.clientX - rect.left}px;
-                top: ${e.clientY - rect.top}px;
+                left: ${x}px;
+                top: ${y}px;
                 transform: translate(-50%, -50%);
                 animation: heroRipple 0.8s ease-out;
                 pointer-events: none;
@@ -834,7 +787,7 @@ class HeroController {
             
             // Add ripple animation if not exists
             if (!document.querySelector('#hero-ripple-animation')) {
-                this.addRippleStyles(size);
+                this.addRippleStyles();
             }
             
             setTimeout(() => {
@@ -845,17 +798,14 @@ class HeroController {
         });
     }
     
-    /**
-     * Add ripple animation styles
-     */
-    addRippleStyles(size) {
+    addRippleStyles() {
         const style = document.createElement('style');
         style.id = 'hero-ripple-animation';
         style.textContent = `
             @keyframes heroRipple {
                 to {
-                    width: ${size}px;
-                    height: ${size}px;
+                    width: 100px;
+                    height: 100px;
                     opacity: 0;
                 }
             }
@@ -863,9 +813,6 @@ class HeroController {
         document.head.appendChild(style);
     }
     
-    /**
-     * Add button hover enhancements
-     */
     addButtonHoverEnhancement(button) {
         button.addEventListener('mouseenter', () => {
             if (this.isReducedMotion) return;
@@ -877,69 +824,55 @@ class HeroController {
         });
     }
     
-    /**
-     * Handle page visibility changes
-     */
     handleVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && this.backgroundInterval) {
                 clearInterval(this.backgroundInterval);
                 console.log('⏸️ Background rotation paused (page hidden)');
             } else if (!document.hidden && !this.isReducedMotion) {
-                this.initializeBackgroundRotation();
+                this.initializeBackgroundSystem();
                 console.log('▶️ Background rotation resumed (page visible)');
             }
         });
     }
     
-    /**
-     * Handle motion preference changes
-     */
     handleMotionPreference() {
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         mediaQuery.addEventListener('change', (e) => {
             this.isReducedMotion = e.matches;
+            STATE.isReducedMotion = e.matches;
             
             if (this.isReducedMotion && this.backgroundInterval) {
                 clearInterval(this.backgroundInterval);
                 console.log('⏸️ Background rotation paused (reduced motion)');
             } else if (!this.isReducedMotion) {
-                this.initializeBackgroundRotation();
+                this.initializeBackgroundSystem();
                 console.log('▶️ Background rotation enabled (motion allowed)');
             }
         });
     }
     
-    /**
-     * Public method to manually trigger background rotation
-     */
+    // Public methods
     nextBackground() {
         this.rotateBackgroundImage();
     }
     
-    /**
-     * Public method to pause/resume background rotation
-     */
     toggleBackgroundRotation() {
         if (this.backgroundInterval) {
             clearInterval(this.backgroundInterval);
             this.backgroundInterval = null;
             console.log('🔄 Background rotation paused');
         } else {
-            this.initializeBackgroundRotation();
+            this.initializeBackgroundSystem();
             console.log('▶️ Background rotation resumed');
         }
     }
     
-    /**
-     * Cleanup method
-     */
     destroy() {
         if (this.backgroundInterval) {
             clearInterval(this.backgroundInterval);
         }
         
-        // Remove event listeners
         this.heroButtons.forEach(button => {
             button.replaceWith(button.cloneNode(true));
         });
@@ -952,95 +885,29 @@ class HeroController {
     }
 }
 
-/**
- * Enhanced Intersection Observer for Hero Animations
- */
-class HeroAnimationObserver {
+/* ==========================================================================
+   6. Section Animation Controller
+   ========================================================================== */
+class SectionAnimationController {
     constructor() {
-        this.heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-location, .btn-hero-primary, .btn-hero-secondary');
-        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
+        this.sections = document.querySelectorAll('section');
         this.init();
     }
     
     init() {
-        if (this.isReducedMotion) {
-            // Show all elements immediately if reduced motion is preferred
-            this.heroElements.forEach(element => {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            });
-            return;
-        }
+        this.initializeAboutAnimations();
+        this.initializeServicesAnimations();
+        this.initializeTeamAnimations();
+        this.initializeReviewsAnimations();
+        this.initializeContactAnimations();
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 200);
-                    
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-        
-        this.heroElements.forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(30px)';
-            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            
-            observer.observe(element);
-        });
-        
-        console.log('✅ Hero entrance animations initialized');
+        console.log('✅ Section animations initialized');
     }
-}
-
-/**
- * Initialize hero section with all features
- */
-const initializeHero = () => {
-    // Initialize hero controller
-    const heroController = new HeroController();
     
-    // Initialize animation observer
-    const animationObserver = new HeroAnimationObserver();
-    
-    // Make hero controller globally accessible
-    window.heroController = heroController;
-    
-    // Handle window focus/blur for performance
-    window.addEventListener('focus', () => {
-        if (heroController && !heroController.isReducedMotion && !heroController.backgroundInterval) {
-            heroController.initializeBackgroundRotation();
-        }
-    });
-    
-    window.addEventListener('blur', () => {
-        if (heroController && heroController.backgroundInterval) {
-            clearInterval(heroController.backgroundInterval);
-            heroController.backgroundInterval = null;
-        }
-    });
-    
-    console.log('✅ FIXED Hero section fully initialized with reliable logo loading');
-};
-
-/* ==========================================================================
-   5. About Section - Animations, Interactions, Mobile Responsive
-   ========================================================================== */
-
-const initializeAbout = () => {
-    const aboutSection = document.querySelector('.about');
-    if (!aboutSection) return;
-    
-    // About Section Scroll Animations
-    const initializeAboutAnimations = () => {
+    initializeAboutAnimations() {
+        const aboutSection = document.querySelector('.about');
+        if (!aboutSection) return;
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1049,25 +916,21 @@ const initializeAbout = () => {
                     const missionCard = entry.target.querySelector('.mission-card');
                     const statsCard = entry.target.querySelector('.team-stats-card');
                     
-                    // Animate mission card first
                     if (missionCard) {
-                        animateElement(missionCard, 'fade-in', 0);
+                        Utils.animateElement(missionCard, 'fade-in', 0);
                     }
                     
-                    // Then animate value items
                     setTimeout(() => {
-                        staggerAnimations(valueItems, 'fade-in', 150);
+                        Utils.staggerAnimations(valueItems, 'fade-in', 150);
                     }, 200);
                     
-                    // Animate leader profiles
                     setTimeout(() => {
-                        staggerAnimations(leaderProfiles, 'fade-in', 100);
+                        Utils.staggerAnimations(leaderProfiles, 'fade-in', 100);
                     }, 400);
                     
-                    // Finally animate stats card
                     if (statsCard) {
                         setTimeout(() => {
-                            animateElement(statsCard, 'fade-in', 0);
+                            Utils.animateElement(statsCard, 'fade-in', 0);
                         }, 600);
                     }
                     
@@ -1078,139 +941,23 @@ const initializeAbout = () => {
         
         observer.observe(aboutSection);
         STATE.observers.set('about', observer);
-    };
+    }
     
-    // About Interactive Elements
-    const initializeAboutInteractions = () => {
-        // Value item hover effects
-        const valueItems = aboutSection.querySelectorAll('.value-item');
-        valueItems.forEach(item => {
-            let isHovered = false;
-            
-            item.addEventListener('mouseenter', () => {
-                if (!isHovered && !STATE.isReducedMotion) {
-                    isHovered = true;
-                    const icon = item.querySelector('.value-icon');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1) rotate(5deg)';
-                    }
-                }
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                if (isHovered) {
-                    isHovered = false;
-                    const icon = item.querySelector('.value-icon');
-                    if (icon) {
-                        icon.style.transform = '';
-                    }
-                }
-            });
-        });
+    initializeServicesAnimations() {
+        const servicesSection = document.querySelector('.services');
+        if (!servicesSection) return;
         
-        // Leader profile interactions
-        const leaderProfiles = aboutSection.querySelectorAll('.leader-profile');
-        leaderProfiles.forEach(profile => {
-            profile.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const image = profile.querySelector('.leader-image img');
-                    const badge = profile.querySelector('.leader-badge');
-                    
-                    if (image) {
-                        image.style.transform = 'scale(1.1)';
-                    }
-                    if (badge) {
-                        badge.style.transform = 'scale(1.2) rotate(10deg)';
-                    }
-                }
-            });
-            
-            profile.addEventListener('mouseleave', () => {
-                const image = profile.querySelector('.leader-image img');
-                const badge = profile.querySelector('.leader-badge');
-                
-                if (image) {
-                    image.style.transform = '';
-                }
-                if (badge) {
-                    badge.style.transform = '';
-                }
-            });
-        });
-        
-        // Stats animation on hover
-        const statItems = aboutSection.querySelectorAll('.stat-item');
-        statItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const icon = item.querySelector('.stat-icon');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1) rotateY(10deg)';
-                    }
-                }
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                const icon = item.querySelector('.stat-icon');
-                if (icon) {
-                    icon.style.transform = '';
-                }
-            });
-        });
-    };
-    
-    // About Mobile Responsive Features
-    const initializeAboutMobile = () => {
-        const handleResize = debounce(() => {
-            const leaderProfiles = aboutSection.querySelectorAll('.leader-profile');
-            
-            if (isMobile()) {
-                // Stack leader profiles vertically on mobile
-                leaderProfiles.forEach(profile => {
-                    profile.classList.add('mobile-stacked');
-                });
-            } else {
-                leaderProfiles.forEach(profile => {
-                    profile.classList.remove('mobile-stacked');
-                });
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize all about features
-    initializeAboutAnimations();
-    initializeAboutInteractions();
-    initializeAboutMobile();
-    
-    console.log('✅ About section with all features initialized');
-};
-
-/* ==========================================================================
-   6. Services Section - Animations, Interactions, Mobile Responsive
-   ========================================================================== */
-
-const initializeServices = () => {
-    const servicesSection = document.querySelector('.services');
-    if (!servicesSection) return;
-    
-    // Services Section Scroll Animations
-    const initializeServicesAnimations = () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const serviceCards = entry.target.querySelectorAll('.service-card');
                     const ctaSection = entry.target.querySelector('.services-cta');
                     
-                    // Animate service cards
-                    staggerAnimations(serviceCards, 'fade-in', 200);
+                    Utils.staggerAnimations(serviceCards, 'fade-in', 200);
                     
-                    // Animate CTA section after cards
                     if (ctaSection) {
                         setTimeout(() => {
-                            animateElement(ctaSection, 'fade-in', 0);
+                            Utils.animateElement(ctaSection, 'fade-in', 0);
                         }, serviceCards.length * 200 + 400);
                     }
                     
@@ -1221,11 +968,503 @@ const initializeServices = () => {
         
         observer.observe(servicesSection);
         STATE.observers.set('services', observer);
-    };
+    }
     
-    // Services Interactive Elements
-    const initializeServicesInteractions = () => {
-        const serviceCards = servicesSection.querySelectorAll('.service-card');
+    initializeTeamAnimations() {
+        const teamSection = document.querySelector('.team');
+        if (!teamSection) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const teamCards = entry.target.querySelectorAll('.team-card');
+                    Utils.staggerAnimations(teamCards, 'fade-in', 250);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        observer.observe(teamSection);
+        STATE.observers.set('team', observer);
+    }
+    
+    initializeReviewsAnimations() {
+        const reviewsSection = document.querySelector('.reviews');
+        if (!reviewsSection) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const heroReview = entry.target.querySelector('.hero-review');
+                    const reviewCards = entry.target.querySelectorAll('.review-card');
+                    const statItems = entry.target.querySelectorAll('.review-stats .stat-item');
+                    
+                    if (heroReview) {
+                        Utils.animateElement(heroReview, 'fade-in', 0);
+                    }
+                    
+                    setTimeout(() => {
+                        Utils.staggerAnimations(reviewCards, 'fade-in', 200);
+                    }, 300);
+                    
+                    setTimeout(() => {
+                        Utils.staggerAnimations(statItems, 'fade-in', 150);
+                        setTimeout(() => {
+                            this.animateStatNumbers(statItems);
+                        }, 500);
+                    }, 600 + (reviewCards.length * 200));
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        observer.observe(reviewsSection);
+        STATE.observers.set('reviews', observer);
+    }
+    
+    initializeContactAnimations() {
+        const contactSection = document.querySelector('.contact');
+        if (!contactSection) return;
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const contactCards = entry.target.querySelectorAll('.contact-card');
+                    const formContainer = entry.target.querySelector('.contact-form-container');
+                    
+                    Utils.staggerAnimations(contactCards, 'slide-left', 150);
+                    
+                    if (formContainer) {
+                        setTimeout(() => {
+                            Utils.animateElement(formContainer, 'slide-right', 0);
+                        }, 300);
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(contactSection);
+        STATE.observers.set('contact', observer);
+    }
+    
+    animateStatNumbers(statItems) {
+        if (STATE.isReducedMotion) return;
+        
+        statItems.forEach(item => {
+            const numberElement = item.querySelector('.stat-number');
+            if (!numberElement) return;
+            
+            const finalValue = numberElement.textContent;
+            const numericValue = parseFloat(finalValue.replace(/[^\d.]/g, ''));
+            
+            if (isNaN(numericValue)) return;
+            
+            let currentValue = 0;
+            const increment = numericValue / 30;
+            const suffix = finalValue.replace(numericValue.toString(), '');
+            
+            const updateCounter = () => {
+                currentValue += increment;
+                
+                if (currentValue >= numericValue) {
+                    numberElement.textContent = finalValue;
+                    return;
+                }
+                
+                const displayValue = Math.floor(currentValue);
+                numberElement.textContent = displayValue + suffix;
+                requestAnimationFrame(updateCounter);
+            };
+            
+            updateCounter();
+        });
+    }
+}
+
+/* ==========================================================================
+   7. Contact Form Controller
+   ========================================================================== */
+class ContactFormController {
+    constructor() {
+        this.form = document.getElementById('contactForm');
+        this.inputs = null;
+        this.submitButton = null;
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.form) return;
+        
+        this.inputs = this.form.querySelectorAll('input, select, textarea');
+        this.submitButton = this.form.querySelector('.btn-submit');
+        
+        this.bindEvents();
+        
+        console.log('✅ Contact form controller initialized');
+    }
+    
+    bindEvents() {
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        this.inputs.forEach(input => {
+            input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('input', () => this.removeFieldError(input));
+            
+            input.addEventListener('focus', (e) => {
+                e.target.style.transform = 'translateY(-1px)';
+                e.target.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
+            });
+            
+            input.addEventListener('blur', (e) => {
+                e.target.style.transform = '';
+                e.target.style.boxShadow = '';
+            });
+        });
+    }
+    
+    validateField(field) {
+        const value = field.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+        
+        this.removeFieldError(field);
+        
+        if (field.hasAttribute('required') && !value) {
+            isValid = false;
+            errorMessage = 'This field is required';
+        }
+        
+        if (field.type === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address';
+            }
+        }
+        
+        if (field.type === 'tel' && value) {
+            const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+            const cleanPhone = value.replace(/[\s\-\(\)]/g, '');
+            if (cleanPhone.length > 0 && !phoneRegex.test(cleanPhone)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid phone number';
+            }
+        }
+        
+        if (!isValid) {
+            this.showFieldError(field, errorMessage);
+        }
+        
+        return isValid;
+    }
+    
+    showFieldError(field, message) {
+        const formGroup = field.closest('.form-group');
+        const errorElement = document.createElement('span');
+        errorElement.className = 'field-error';
+        errorElement.textContent = message;
+        errorElement.style.cssText = `
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        `;
+        
+        formGroup.appendChild(errorElement);
+        field.style.borderColor = '#ef4444';
+        field.setAttribute('aria-invalid', 'true');
+        field.setAttribute('aria-describedby', errorElement.id = `error-${field.name}`);
+    }
+    
+    removeFieldError(field) {
+        const formGroup = field.closest('.form-group');
+        const errorElement = formGroup.querySelector('.field-error');
+        
+        if (errorElement) {
+            errorElement.remove();
+        }
+        
+        field.style.borderColor = '';
+        field.setAttribute('aria-invalid', 'false');
+        field.removeAttribute('aria-describedby');
+    }
+    
+    validateForm() {
+        const requiredFields = this.form.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+        
+        return isValid;
+    }
+    
+    showFormMessage(message, type = 'success') {
+        const existingMessage = this.form.querySelector('.form-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = 'form-message';
+        messageElement.textContent = message;
+        
+        const bgColor = type === 'success' ? 'var(--primary-green)' : '#ef4444';
+        messageElement.style.cssText = `
+            background: ${bgColor};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeInUp 0.5s ease;
+            box-shadow: var(--shadow-md);
+        `;
+        
+        this.form.insertBefore(messageElement, this.form.firstChild);
+        
+        Utils.announceToScreenReader(message);
+        
+        setTimeout(() => {
+            if (messageElement.parentNode) {
+                messageElement.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => {
+                    messageElement.remove();
+                }, 300);
+            }
+        }, 5000);
+        
+        messageElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+    }
+    
+    async handleSubmit(event) {
+        event.preventDefault();
+        
+        if (!this.validateForm()) {
+            this.showFormMessage('Please correct the errors above.', 'error');
+            return;
+        }
+        
+        const originalText = this.submitButton.innerHTML;
+        this.submitButton.innerHTML = `
+            <span style="opacity: 0.8;">Sending...</span>
+            <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px;"></div>
+        `;
+        this.submitButton.disabled = true;
+        
+        if (!document.querySelector('#contact-loading-animation')) {
+            const style = document.createElement('style');
+            style.id = 'contact-loading-animation';
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes fadeOut {
+                    to { opacity: 0; transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        try {
+            const formData = new FormData(this.form);
+            const formObject = Object.fromEntries(formData);
+            
+            console.log('Form submitted:', formObject);
+            
+            // Simulate form submission
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            this.showFormMessage(
+                'Thank you for your message! We will contact you within 24 hours to discuss your needs and schedule a consultation.',
+                'success'
+            );
+            
+            this.form.reset();
+            
+            this.inputs.forEach(input => this.removeFieldError(input));
+            
+            console.log('Contact form submitted successfully');
+            
+        } catch (error) {
+            console.error('Form submission error:', error);
+            this.showFormMessage(
+                'We apologize, but there was an error sending your message. Please try again or call us directly at (646) 971-7325.',
+                'error'
+            );
+        } finally {
+            this.submitButton.innerHTML = originalText;
+            this.submitButton.disabled = false;
+        }
+    }
+}
+
+/* ==========================================================================
+   8. Floating Action Buttons Controller
+   ========================================================================== */
+class FloatingActionsController {
+    constructor() {
+        this.backToTopBtn = document.getElementById('backToTop');
+        this.contactFab = document.getElementById('contactFab');
+        this.contactOptions = document.getElementById('contactOptions');
+        this.isContactFabOpen = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.initializeBackToTop();
+        this.initializeContactFAB();
+        this.showFABs();
+        
+        window.addEventListener('scroll', Utils.throttle(() => {
+            this.updateBackToTopButton();
+        }, 16));
+        
+        console.log('✅ Floating actions controller initialized');
+    }
+    
+    initializeBackToTop() {
+        if (!this.backToTopBtn) return;
+        
+        this.backToTopBtn.addEventListener('click', () => {
+            Utils.smoothScrollToTop();
+            Utils.announceToScreenReader('Scrolled to top of page');
+        });
+        
+        this.backToTopBtn.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                Utils.smoothScrollToTop();
+            }
+        });
+    }
+    
+    initializeContactFAB() {
+        if (!this.contactFab || !this.contactOptions) return;
+        
+        const toggleContactOptions = () => {
+            this.isContactFabOpen = !this.isContactFabOpen;
+            STATE.isContactFabOpen = this.isContactFabOpen;
+            
+            this.contactFab.classList.toggle('active', this.isContactFabOpen);
+            this.contactOptions.classList.toggle('active', this.isContactFabOpen);
+            
+            this.contactFab.setAttribute('aria-expanded', this.isContactFabOpen.toString());
+            
+            const message = this.isContactFabOpen ? 'Contact options opened' : 'Contact options closed';
+            Utils.announceToScreenReader(message);
+        };
+        
+        const closeContactOptions = () => {
+            if (this.isContactFabOpen) {
+                this.isContactFabOpen = false;
+                STATE.isContactFabOpen = false;
+                this.contactFab.classList.remove('active');
+                this.contactOptions.classList.remove('active');
+                this.contactFab.setAttribute('aria-expanded', 'false');
+            }
+        };
+        
+        this.contactFab.addEventListener('click', toggleContactOptions);
+        
+        this.contactFab.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleContactOptions();
+            } else if (event.key === 'Escape') {
+                closeContactOptions();
+            }
+        });
+        
+        document.addEventListener('click', (event) => {
+            if (this.isContactFabOpen && 
+                !this.contactFab.contains(event.target) && 
+                !this.contactOptions.contains(event.target)) {
+                closeContactOptions();
+            }
+        });
+        
+        const contactOptionLinks = this.contactOptions.querySelectorAll('.contact-option');
+        contactOptionLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                const optionType = link.classList.contains('phone') ? 'phone' :
+                                  link.classList.contains('email') ? 'email' :
+                                  link.classList.contains('instagram') ? 'instagram' :
+                                  link.classList.contains('review') ? 'review' : 'unknown';
+                
+                console.log(`Contact option clicked: ${optionType}`);
+                
+                if (optionType !== 'review' && optionType !== 'instagram') {
+                    setTimeout(closeContactOptions, 300);
+                }
+                
+                const actionMessages = {
+                    phone: 'Calling phone number',
+                    email: 'Opening email client',
+                    instagram: 'Opening Instagram page',
+                    review: 'Opening Google reviews'
+                };
+                
+                Utils.announceToScreenReader(actionMessages[optionType] || 'Contact option selected');
+            });
+        });
+        
+        this.contactFab.setAttribute('aria-expanded', 'false');
+        this.contactFab.setAttribute('aria-haspopup', 'true');
+    }
+    
+    updateBackToTopButton() {
+        if (!this.backToTopBtn) return;
+        
+        const shouldShow = STATE.scrollPosition > 300;
+        this.backToTopBtn.classList.toggle('visible', shouldShow);
+    }
+    
+    showFABs() {
+        setTimeout(() => {
+            const floatingActions = document.querySelector('.floating-actions');
+            if (floatingActions) {
+                floatingActions.style.opacity = '1';
+                floatingActions.style.visibility = 'visible';
+            }
+        }, CONFIG.fab.showDelay);
+    }
+}
+
+/* ==========================================================================
+   9. Interactive Elements Controller
+   ========================================================================== */
+class InteractiveElementsController {
+    constructor() {
+        this.init();
+    }
+    
+    init() {
+        this.initializeServiceCardInteractions();
+        this.initializeTeamCardInteractions();
+        this.initializeReviewCardInteractions();
+        this.initializeContactCardInteractions();
+        this.initializeButtonRippleEffects();
+        
+        console.log('✅ Interactive elements controller initialized');
+    }
+    
+    initializeServiceCardInteractions() {
+        const serviceCards = document.querySelectorAll('.service-card');
         
         serviceCards.forEach(card => {
             let isHovered = false;
@@ -1265,116 +1504,10 @@ const initializeServices = () => {
             card.addEventListener('mouseenter', handleMouseEnter);
             card.addEventListener('mouseleave', handleMouseLeave);
         });
-        
-        // Service buttons with ripple effect
-        const serviceButtons = servicesSection.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary');
-        serviceButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                if (STATE.isReducedMotion) return;
-                
-                // Create ripple effect
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height) * 1.5;
-                
-                ripple.style.cssText = `
-                    position: absolute;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.6);
-                    width: 0;
-                    height: 0;
-                    left: ${e.clientX - rect.left}px;
-                    top: ${e.clientY - rect.top}px;
-                    transform: translate(-50%, -50%);
-                    animation: servicesRipple 0.6s ease-out;
-                    pointer-events: none;
-                    z-index: 1000;
-                `;
-                
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-                
-                // Add ripple animation if not exists
-                if (!document.querySelector('#services-ripple-animation')) {
-                    const style = document.createElement('style');
-                    style.id = 'services-ripple-animation';
-                    style.textContent = `
-                        @keyframes servicesRipple {
-                            to {
-                                width: ${size}px;
-                                height: ${size}px;
-                                opacity: 0;
-                            }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-                
-                setTimeout(() => {
-                    if (ripple.parentNode) {
-                        ripple.remove();
-                    }
-                }, 600);
-            });
-        });
-    };
+    }
     
-    // Services Mobile Responsive Features
-    const initializeServicesMobile = () => {
-        const handleResize = debounce(() => {
-            const servicesGrid = servicesSection.querySelector('.services-grid');
-            const ctaButtons = servicesSection.querySelector('.cta-buttons');
-            
-            if (isMobile()) {
-                // Optimize for mobile
-                servicesGrid?.classList.add('mobile-optimized');
-                ctaButtons?.classList.add('mobile-stacked');
-            } else {
-                servicesGrid?.classList.remove('mobile-optimized');
-                ctaButtons?.classList.remove('mobile-stacked');
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize all services features
-    initializeServicesAnimations();
-    initializeServicesInteractions();
-    initializeServicesMobile();
-    
-    console.log('✅ Services section with all features initialized');
-};
-
-/* ==========================================================================
-   7. Team Section - Animations, Interactions, Mobile Responsive
-   ========================================================================== */
-
-const initializeTeam = () => {
-    const teamSection = document.querySelector('.team');
-    if (!teamSection) return;
-    
-    // Team Section Scroll Animations
-    const initializeTeamAnimations = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const teamCards = entry.target.querySelectorAll('.team-card');
-                    staggerAnimations(teamCards, 'fade-in', 250);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        observer.observe(teamSection);
-        STATE.observers.set('team', observer);
-    };
-    
-    // Team Interactive Elements
-    const initializeTeamInteractions = () => {
-        const teamCards = teamSection.querySelectorAll('.team-card');
+    initializeTeamCardInteractions() {
+        const teamCards = document.querySelectorAll('.team-card');
         
         teamCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -1390,7 +1523,6 @@ const initializeTeam = () => {
                         image.style.transform = 'scale(1.05)';
                     }
                     
-                    // Animate credentials
                     credentials.forEach((cred, index) => {
                         setTimeout(() => {
                             cred.style.transform = 'translateY(-2px)';
@@ -1416,114 +1548,10 @@ const initializeTeam = () => {
                 });
             });
         });
-    };
+    }
     
-    // Team Mobile Responsive Features
-    const initializeTeamMobile = () => {
-        const handleResize = debounce(() => {
-            const teamGrid = teamSection.querySelector('.team-grid');
-            
-            if (isMobile()) {
-                teamGrid?.classList.add('mobile-single-column');
-            } else {
-                teamGrid?.classList.remove('mobile-single-column');
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize all team features
-    initializeTeamAnimations();
-    initializeTeamInteractions();
-    initializeTeamMobile();
-    
-    console.log('✅ Team section with all features initialized');
-};
-
-/* ==========================================================================
-   8. Reviews Section - Animations, Stats Counter, Mobile Responsive
-   ========================================================================== */
-
-const initializeReviews = () => {
-    const reviewsSection = document.querySelector('.reviews');
-    if (!reviewsSection) return;
-    
-    // Animate stat numbers with counting effect
-    const animateStatNumbers = (statItems) => {
-        if (STATE.isReducedMotion) return;
-        
-        statItems.forEach(item => {
-            const numberElement = item.querySelector('.stat-number');
-            if (!numberElement) return;
-            
-            const finalValue = numberElement.textContent;
-            const numericValue = parseFloat(finalValue.replace(/[^\d.]/g, ''));
-            
-            if (isNaN(numericValue)) return;
-            
-            let currentValue = 0;
-            const increment = numericValue / 30; // 30 steps
-            const suffix = finalValue.replace(numericValue.toString(), '');
-            
-            const updateCounter = () => {
-                currentValue += increment;
-                
-                if (currentValue >= numericValue) {
-                    numberElement.textContent = finalValue;
-                    return;
-                }
-                
-                const displayValue = Math.floor(currentValue);
-                numberElement.textContent = displayValue + suffix;
-                requestAnimationFrame(updateCounter);
-            };
-            
-            updateCounter();
-        });
-    };
-    
-    // Reviews Section Scroll Animations
-    const initializeReviewsAnimations = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const heroReview = entry.target.querySelector('.hero-review');
-                    const reviewCards = entry.target.querySelectorAll('.review-card');
-                    const statItems = entry.target.querySelectorAll('.review-stats .stat-item');
-                    
-                    // Animate hero review first
-                    if (heroReview) {
-                        animateElement(heroReview, 'fade-in', 0);
-                    }
-                    
-                    // Then animate review cards
-                    setTimeout(() => {
-                        staggerAnimations(reviewCards, 'fade-in', 200);
-                    }, 300);
-                    
-                    // Finally animate stats with counters
-                    setTimeout(() => {
-                        staggerAnimations(statItems, 'fade-in', 150);
-                        // Animate stat numbers
-                        setTimeout(() => {
-                            animateStatNumbers(statItems);
-                        }, 500);
-                    }, 600 + (reviewCards.length * 200));
-                    
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        observer.observe(reviewsSection);
-        STATE.observers.set('reviews', observer);
-    };
-    
-    // Reviews Interactive Elements
-    const initializeReviewsInteractions = () => {
-        const reviewCards = reviewsSection.querySelectorAll('.review-card');
+    initializeReviewCardInteractions() {
+        const reviewCards = document.querySelectorAll('.review-card');
         
         reviewCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -1536,7 +1564,6 @@ const initializeReviews = () => {
                         initial.style.background = 'var(--gradient-primary)';
                     }
                     
-                    // Animate stars
                     stars.forEach((star, index) => {
                         setTimeout(() => {
                             star.style.transform = 'scale(1.2)';
@@ -1559,345 +1586,10 @@ const initializeReviews = () => {
                 });
             });
         });
-        
-        // Hero review interactions
-        const heroReview = reviewsSection.querySelector('.hero-review');
-        if (heroReview) {
-            const authorAvatar = heroReview.querySelector('.author-avatar');
-            const ratingStars = heroReview.querySelectorAll('.rating i');
-            
-            heroReview.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    if (authorAvatar) {
-                        authorAvatar.style.transform = 'scale(1.1)';
-                    }
-                    
-                    ratingStars.forEach((star, index) => {
-                        setTimeout(() => {
-                            star.style.transform = 'rotate(360deg) scale(1.2)';
-                        }, index * 100);
-                    });
-                }
-            });
-            
-            heroReview.addEventListener('mouseleave', () => {
-                if (authorAvatar) {
-                    authorAvatar.style.transform = '';
-                }
-                
-                ratingStars.forEach(star => {
-                    star.style.transform = '';
-                });
-            });
-        }
-    };
+    }
     
-    // Reviews Mobile Responsive Features
-    const initializeReviewsMobile = () => {
-        const handleResize = debounce(() => {
-            const reviewsGrid = reviewsSection.querySelector('.reviews-grid');
-            const reviewStats = reviewsSection.querySelector('.review-stats');
-            
-            if (isMobile()) {
-                reviewsGrid?.classList.add('mobile-single-column');
-                reviewStats?.classList.add('mobile-optimized');
-            } else {
-                reviewsGrid?.classList.remove('mobile-single-column');
-                reviewStats?.classList.remove('mobile-optimized');
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize all reviews features
-    initializeReviewsAnimations();
-    initializeReviewsInteractions();
-    initializeReviewsMobile();
-    
-    console.log('✅ Reviews section with all features initialized');
-};
-
-/* ==========================================================================
-   9. Contact Section - Form Handling, Validation, Animations, Mobile
-   ========================================================================== */
-
-const initializeContact = () => {
-    const contactSection = document.querySelector('.contact');
-    const form = document.getElementById('contactForm');
-    
-    if (!contactSection) return;
-    
-    // Contact Form Handling
-    const initializeContactForm = () => {
-        if (!form) return;
-        
-        const inputs = form.querySelectorAll('input, select, textarea');
-        const submitButton = form.querySelector('.btn-submit');
-        
-        // Form validation
-        const validateField = (field) => {
-            const value = field.value.trim();
-            let isValid = true;
-            let errorMessage = '';
-            
-            // Remove existing error
-            removeFieldError(field);
-            
-            // Required field validation
-            if (field.hasAttribute('required') && !value) {
-                isValid = false;
-                errorMessage = 'This field is required';
-            }
-            
-            // Email validation
-            if (field.type === 'email' && value) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Please enter a valid email address';
-                }
-            }
-            
-            // Phone validation (optional but if provided, should be valid)
-            if (field.type === 'tel' && value) {
-                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-                const cleanPhone = value.replace(/[\s\-\(\)]/g, '');
-                if (cleanPhone.length > 0 && !phoneRegex.test(cleanPhone)) {
-                    isValid = false;
-                    errorMessage = 'Please enter a valid phone number';
-                }
-            }
-            
-            if (!isValid) {
-                showFieldError(field, errorMessage);
-            }
-            
-            return isValid;
-        };
-        
-        // Show field error
-        const showFieldError = (field, message) => {
-            const formGroup = field.closest('.form-group');
-            const errorElement = document.createElement('span');
-            errorElement.className = 'field-error';
-            errorElement.textContent = message;
-            errorElement.style.cssText = `
-                color: #ef4444;
-                font-size: 0.875rem;
-                margin-top: 0.25rem;
-                display: block;
-                animation: fadeInUp 0.3s ease;
-            `;
-            
-            formGroup.appendChild(errorElement);
-            field.style.borderColor = '#ef4444';
-            field.setAttribute('aria-invalid', 'true');
-            field.setAttribute('aria-describedby', errorElement.id = `error-${field.name}`);
-        };
-        
-        // Remove field error
-        const removeFieldError = (field) => {
-            const formGroup = field.closest('.form-group');
-            const errorElement = formGroup.querySelector('.field-error');
-            
-            if (errorElement) {
-                errorElement.remove();
-            }
-            
-            field.style.borderColor = '';
-            field.setAttribute('aria-invalid', 'false');
-            field.removeAttribute('aria-describedby');
-        };
-        
-        // Validate entire form
-        const validateForm = () => {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!validateField(field)) {
-                    isValid = false;
-                }
-            });
-            
-            return isValid;
-        };
-        
-        // Show form message
-        const showFormMessage = (message, type = 'success') => {
-            // Remove existing message
-            const existingMessage = form.querySelector('.form-message');
-            if (existingMessage) {
-                existingMessage.remove();
-            }
-            
-            // Create new message
-            const messageElement = document.createElement('div');
-            messageElement.className = 'form-message';
-            messageElement.textContent = message;
-            
-            const bgColor = type === 'success' ? 'var(--primary-green)' : '#ef4444';
-            messageElement.style.cssText = `
-                background: ${bgColor};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: var(--radius-lg);
-                margin-bottom: 1.5rem;
-                text-align: center;
-                font-weight: 500;
-                animation: fadeInUp 0.5s ease;
-                box-shadow: var(--shadow-md);
-            `;
-            
-            form.insertBefore(messageElement, form.firstChild);
-            
-            // Announce to screen readers
-            if (window.announceToScreenReader) {
-                window.announceToScreenReader(message);
-            }
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (messageElement.parentNode) {
-                    messageElement.style.animation = 'fadeOut 0.3s ease forwards';
-                    setTimeout(() => {
-                        messageElement.remove();
-                    }, 300);
-                }
-            }, 5000);
-            
-            // Scroll to message
-            messageElement.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
-        };
-        
-        // Handle form submission
-        const handleSubmit = async (event) => {
-            event.preventDefault();
-            
-            if (!validateForm()) {
-                showFormMessage('Please correct the errors above.', 'error');
-                return;
-            }
-            
-            // Show loading state
-            const originalText = submitButton.innerHTML;
-            submitButton.innerHTML = `
-                <span style="opacity: 0.8;">Sending...</span>
-                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px;"></div>
-            `;
-            submitButton.disabled = true;
-            
-            // Add CSS for loading animation if not exists
-            if (!document.querySelector('#contact-loading-animation')) {
-                const style = document.createElement('style');
-                style.id = 'contact-loading-animation';
-                style.textContent = `
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                    @keyframes fadeOut {
-                        to { opacity: 0; transform: translateY(-10px); }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            try {
-                // Collect form data
-                const formData = new FormData(form);
-                const formObject = Object.fromEntries(formData);
-                
-                // Log form submission (replace with actual API call)
-                console.log('Form submitted:', formObject);
-                
-                // Simulate form submission (replace with actual endpoint)
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Show success message
-                showFormMessage(
-                    'Thank you for your message! We will contact you within 24 hours to discuss your needs and schedule a consultation.',
-                    'success'
-                );
-                
-                // Reset form
-                form.reset();
-                
-                // Clear any remaining errors
-                inputs.forEach(input => removeFieldError(input));
-                
-                // Track successful submission
-                console.log('Contact form submitted successfully');
-                
-            } catch (error) {
-                console.error('Form submission error:', error);
-                showFormMessage(
-                    'We apologize, but there was an error sending your message. Please try again or call us directly at (646) 971-7325.',
-                    'error'
-                );
-            } finally {
-                // Restore button
-                submitButton.innerHTML = originalText;
-                submitButton.disabled = false;
-            }
-        };
-        
-        // Event listeners
-        form.addEventListener('submit', handleSubmit);
-        
-        // Real-time validation
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => validateField(input));
-            input.addEventListener('input', () => removeFieldError(input));
-            
-            // Enhanced focus effects
-            input.addEventListener('focus', (e) => {
-                e.target.style.transform = 'translateY(-1px)';
-                e.target.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
-            });
-            
-            input.addEventListener('blur', (e) => {
-                e.target.style.transform = '';
-                e.target.style.boxShadow = '';
-            });
-        });
-    };
-    
-    // Contact Section Animations
-    const initializeContactAnimations = () => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const contactCards = entry.target.querySelectorAll('.contact-card');
-                    const formContainer = entry.target.querySelector('.contact-form-container');
-                    
-                    // Animate contact cards
-                    staggerAnimations(contactCards, 'slide-left', 150);
-                    
-                    // Animate form container
-                    if (formContainer) {
-                        setTimeout(() => {
-                            animateElement(formContainer, 'slide-right', 0);
-                        }, 300);
-                    }
-                    
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.2 });
-        
-        observer.observe(contactSection);
-        STATE.observers.set('contact', observer);
-    };
-    
-    // Contact Interactive Elements
-    const initializeContactInteractions = () => {
-        const contactCards = contactSection.querySelectorAll('.contact-card');
+    initializeContactCardInteractions() {
+        const contactCards = document.querySelectorAll('.contact-card');
         
         contactCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -1916,359 +1608,200 @@ const initializeContact = () => {
                 }
             });
         });
-    };
-    
-    // Contact Mobile Responsive Features
-    const initializeContactMobile = () => {
-        const handleResize = debounce(() => {
-            const contactContent = contactSection.querySelector('.contact-content');
-            
-            if (isMobile()) {
-                contactContent?.classList.add('mobile-stacked');
-            } else {
-                contactContent?.classList.remove('mobile-stacked');
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize all contact features
-    initializeContactForm();
-    initializeContactAnimations();
-    initializeContactInteractions();
-    initializeContactMobile();
-    
-    console.log('✅ Contact section with all features initialized');
-};
-
-/* ==========================================================================
-   10. Footer - Mobile Responsive Features
-   ========================================================================== */
-
-const initializeFooter = () => {
-    const footer = document.querySelector('.footer');
-    if (!footer) return;
-    
-    // Footer Social Links Interactions
-    const initializeFooterInteractions = () => {
-        const socialLinks = footer.querySelectorAll('.social-link');
-        
-        socialLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    link.style.transform = 'translateY(-3px) scale(1.1)';
-                }
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                link.style.transform = '';
-            });
-        });
-        
-        // Footer links hover effects
-        const footerLinks = footer.querySelectorAll('.footer-links a');
-        footerLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    link.style.transform = 'translateX(5px)';
-                }
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                link.style.transform = '';
-            });
-        });
-    };
-    
-    // Footer Mobile Responsive Features
-    const initializeFooterMobile = () => {
-        const handleResize = debounce(() => {
-            const footerContent = footer.querySelector('.footer-content');
-            const footerBottomContent = footer.querySelector('.footer-bottom-content');
-            
-            if (isMobile()) {
-                footerContent?.classList.add('mobile-stacked');
-                footerBottomContent?.classList.add('mobile-centered');
-            } else {
-                footerContent?.classList.remove('mobile-stacked');
-                footerBottomContent?.classList.remove('mobile-centered');
-            }
-        }, 250);
-        
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Initial call
-    };
-    
-    // Initialize footer features
-    initializeFooterInteractions();
-    initializeFooterMobile();
-    
-    console.log('✅ Footer with responsive features initialized');
-};
-
-/* ==========================================================================
-   11. Floating Action Buttons - Complete System
-   ========================================================================== */
-
-const initializeBackToTopButton = () => {
-    const backToTopBtn = document.getElementById('backToTop');
-    
-    if (!backToTopBtn) return;
-    
-    // Handle back to top click
-    backToTopBtn.addEventListener('click', () => {
-        smoothScrollToTop();
-        
-        // Announce to screen readers
-        if (window.announceToScreenReader) {
-            window.announceToScreenReader('Scrolled to top of page');
-        }
-    });
-    
-    // Add keyboard support
-    backToTopBtn.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            smoothScrollToTop();
-        }
-    });
-    
-    console.log('✅ Back to top button initialized');
-};
-
-const updateBackToTopButton = () => {
-    const backToTopBtn = document.getElementById('backToTop');
-    
-    if (!backToTopBtn) return;
-    
-    const shouldShow = STATE.scrollPosition > 300;
-    backToTopBtn.classList.toggle('visible', shouldShow);
-};
-
-const initializeContactFAB = () => {
-    const contactFab = document.getElementById('contactFab');
-    const contactOptions = document.getElementById('contactOptions');
-    
-    if (!contactFab || !contactOptions) return;
-    
-    // Toggle contact options
-    const toggleContactOptions = () => {
-        STATE.isContactFabOpen = !STATE.isContactFabOpen;
-        contactFab.classList.toggle('active', STATE.isContactFabOpen);
-        contactOptions.classList.toggle('active', STATE.isContactFabOpen);
-        
-        // Update ARIA attributes
-        contactFab.setAttribute('aria-expanded', STATE.isContactFabOpen.toString());
-        
-        // Announce to screen readers
-        if (window.announceToScreenReader) {
-            const message = STATE.isContactFabOpen ? 'Contact options opened' : 'Contact options closed';
-            window.announceToScreenReader(message);
-        }
-    };
-    
-    // Close contact options
-    const closeContactOptions = () => {
-        if (STATE.isContactFabOpen) {
-            STATE.isContactFabOpen = false;
-            contactFab.classList.remove('active');
-            contactOptions.classList.remove('active');
-            contactFab.setAttribute('aria-expanded', 'false');
-        }
-    };
-    
-    // Handle FAB click
-    contactFab.addEventListener('click', toggleContactOptions);
-    
-    // Handle keyboard navigation
-    contactFab.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            toggleContactOptions();
-        } else if (event.key === 'Escape') {
-            closeContactOptions();
-        }
-    });
-    
-    // Close when clicking outside
-    document.addEventListener('click', (event) => {
-        if (STATE.isContactFabOpen && 
-            !contactFab.contains(event.target) && 
-            !contactOptions.contains(event.target)) {
-            closeContactOptions();
-        }
-    });
-    
-    // Handle contact option clicks with analytics tracking
-    const contactOptionLinks = contactOptions.querySelectorAll('.contact-option');
-    contactOptionLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
-            const optionType = link.classList.contains('phone') ? 'phone' :
-                              link.classList.contains('email') ? 'email' :
-                              link.classList.contains('instagram') ? 'instagram' :
-                              link.classList.contains('review') ? 'review' : 'unknown';
-            
-            // Track the interaction (you can integrate with your analytics here)
-            console.log(`Contact option clicked: ${optionType}`);
-            
-            // Close options after click (except for review which opens in new tab)
-            if (optionType !== 'review' && optionType !== 'instagram') {
-                setTimeout(closeContactOptions, 300);
-            }
-            
-            // Announce to screen readers
-            if (window.announceToScreenReader) {
-                const actionMessages = {
-                    phone: 'Calling phone number',
-                    email: 'Opening email client',
-                    instagram: 'Opening Instagram page',
-                    review: 'Opening Google reviews'
-                };
-                window.announceToScreenReader(actionMessages[optionType] || 'Contact option selected');
-            }
-        });
-    });
-    
-    // Set initial ARIA attributes
-    contactFab.setAttribute('aria-expanded', 'false');
-    contactFab.setAttribute('aria-haspopup', 'true');
-    
-    console.log('✅ Contact FAB initialized');
-};
-
-const initializeFloatingActions = () => {
-    // Show FABs after a delay
-    setTimeout(() => {
-        const floatingActions = document.querySelector('.floating-actions');
-        if (floatingActions) {
-            floatingActions.style.opacity = '1';
-            floatingActions.style.visibility = 'visible';
-        }
-    }, CONFIG.fab.showDelay);
-    
-    initializeBackToTopButton();
-    initializeContactFAB();
-    
-    // Handle scroll to update back to top button
-    window.addEventListener('scroll', throttle(() => {
-        updateBackToTopButton();
-    }, 16));
-    
-    console.log('✅ Floating actions system initialized');
-};
-
-/* ==========================================================================
-   12. Accessibility Enhancements
-   ========================================================================== */
-
-const initializeAccessibility = () => {
-    // Add skip link
-    const skipLink = document.createElement('a');
-    skipLink.href = '#main';
-    skipLink.textContent = 'Skip to main content';
-    skipLink.className = 'skip-link';
-    skipLink.style.cssText = `
-        position: absolute;
-        top: -40px;
-        left: 8px;
-        background: var(--primary-green);
-        color: white;
-        padding: 8px 16px;
-        text-decoration: none;
-        border-radius: 4px;
-        z-index: 9999;
-        font-weight: 600;
-        transition: top 0.3s ease;
-    `;
-    
-    skipLink.addEventListener('focus', () => {
-        skipLink.style.top = '8px';
-    });
-    
-    skipLink.addEventListener('blur', () => {
-        skipLink.style.top = '-40px';
-    });
-    
-    document.body.insertBefore(skipLink, document.body.firstChild);
-    
-    // Add main landmark if not exists
-    const main = document.querySelector('main') || document.querySelector('.main');
-    if (main && !main.id) {
-        main.id = 'main';
     }
     
-    // Add proper ARIA labels
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section, index) => {
-        if (!section.getAttribute('aria-label') && !section.querySelector('h1, h2, h3')) {
-            section.setAttribute('aria-label', `Section ${index + 1}`);
-        }
-    });
-    
-    // Announce dynamic content changes
-    const liveRegion = document.createElement('div');
-    liveRegion.id = 'live-region';
-    liveRegion.setAttribute('aria-live', 'polite');
-    liveRegion.setAttribute('aria-atomic', 'true');
-    liveRegion.style.cssText = `
-        position: absolute;
-        left: -10000px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-    `;
-    document.body.appendChild(liveRegion);
-    
-    // Store reference for other functions to use
-    window.announceToScreenReader = (message) => {
-        liveRegion.textContent = message;
-    };
-    
-    console.log('✅ Accessibility features initialized');
-};
+    initializeButtonRippleEffects() {
+        const buttons = document.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (STATE.isReducedMotion) return;
+                
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height) * 1.5;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.6);
+                    width: 0;
+                    height: 0;
+                    left: ${e.clientX - rect.left}px;
+                    top: ${e.clientY - rect.top}px;
+                    transform: translate(-50%, -50%);
+                    animation: buttonRipple 0.6s ease-out;
+                    pointer-events: none;
+                    z-index: 1000;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                if (!document.querySelector('#button-ripple-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'button-ripple-animation';
+                    style.textContent = `
+                        @keyframes buttonRipple {
+                            to {
+                                width: ${size}px;
+                                height: ${size}px;
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                setTimeout(() => {
+                    if (ripple.parentNode) {
+                        ripple.remove();
+                    }
+                }, 600);
+            });
+        });
+    }
+}
 
 /* ==========================================================================
-   13. Performance Optimizations
+   10. Performance & Accessibility Controller
    ========================================================================== */
-
-const initializePerformanceOptimizations = () => {
-    // Lazy load images
-    const images = document.querySelectorAll('img[src]');
+class PerformanceController {
+    constructor() {
+        this.init();
+    }
     
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    
-                    // Add fade-in effect
-                    img.style.opacity = '0';
-                    img.style.transition = 'opacity 0.3s ease';
-                    
-                    img.onload = () => {
-                        img.style.opacity = '1';
-                    };
-                    
-                    imageObserver.unobserve(img);
+    init() {
+        this.initializeLazyLoading();
+        this.initializeAccessibility();
+        this.initializeErrorHandling();
+        this.initializePerformanceOptimizations();
+        
+        console.log('✅ Performance controller initialized');
+    }
+    
+    initializeLazyLoading() {
+        const images = document.querySelectorAll('img[src]');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease';
+                        
+                        img.onload = () => {
+                            img.style.opacity = '1';
+                        };
+                        
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => {
+                if (!img.classList.contains('hero-logo')) {
+                    imageObserver.observe(img);
                 }
+            });
+        }
+    }
+    
+    initializeAccessibility() {
+        // Add skip link
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main';
+        skipLink.textContent = 'Skip to main content';
+        skipLink.className = 'skip-link';
+        skipLink.style.cssText = `
+            position: absolute;
+            top: -40px;
+            left: 8px;
+            background: var(--primary-green);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 9999;
+            font-weight: 600;
+            transition: top 0.3s ease;
+        `;
+        
+        skipLink.addEventListener('focus', () => {
+            skipLink.style.top = '8px';
+        });
+        
+        skipLink.addEventListener('blur', () => {
+            skipLink.style.top = '-40px';
+        });
+        
+        document.body.insertBefore(skipLink, document.body.firstChild);
+        
+        // Add main landmark if not exists
+        const main = document.querySelector('main') || document.querySelector('.main');
+        if (main && !main.id) {
+            main.id = 'main';
+        }
+        
+        // Add proper ARIA labels
+        const sections = document.querySelectorAll('section');
+        sections.forEach((section, index) => {
+            if (!section.getAttribute('aria-label') && !section.querySelector('h1, h2, h3')) {
+                section.setAttribute('aria-label', `Section ${index + 1}`);
+            }
+        });
+        
+        // Create live region for announcements
+        const liveRegion = document.createElement('div');
+        liveRegion.id = 'live-region';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.cssText = `
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        `;
+        document.body.appendChild(liveRegion);
+        
+        // Store reference for other functions to use
+        window.announceToScreenReader = (message) => {
+            liveRegion.textContent = message;
+        };
+    }
+    
+    initializeErrorHandling() {
+        window.addEventListener('error', (event) => {
+            console.error('JavaScript Error:', {
+                message: event.message,
+                filename: event.filename,
+                lineno: event.lineno,
+                colno: event.colno,
+                error: event.error
             });
         });
         
-        images.forEach(img => {
-            // Don't lazy load the hero logo
-            if (!img.classList.contains('hero-logo')) {
-                imageObserver.observe(img);
-            }
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled Promise Rejection:', event.reason);
         });
     }
     
-    // Preload critical resources
-    const preloadCriticalResources = () => {
-        const criticalImages = [
-            'logo copy.png'
-        ];
+    initializePerformanceOptimizations() {
+        // Debounce resize events
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                console.log('Layout recalculated after resize');
+            }, 250);
+        });
+        
+        // Preload critical resources
+        const criticalImages = ['logo copy.png'];
         
         criticalImages.forEach(src => {
             const link = document.createElement('link');
@@ -2277,229 +1810,511 @@ const initializePerformanceOptimizations = () => {
             link.as = 'image';
             document.head.appendChild(link);
         });
-    };
-    
-    // Debounce resize events
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            // Recalculate any layout-dependent features
-            console.log('Layout recalculated after resize');
-        }, 250);
-    });
-    
-    // Initialize critical resource preloading
-    preloadCriticalResources();
-    
-    console.log('✅ Performance optimizations initialized');
-};
-
-/* ==========================================================================
-   14. Error Handling
-   ========================================================================== */
-
-const initializeErrorHandling = () => {
-    // Global error handler
-    window.addEventListener('error', (event) => {
-        console.error('JavaScript Error:', {
-            message: event.message,
-            filename: event.filename,
-            lineno: event.lineno,
-            colno: event.colno,
-            error: event.error
-        });
-    });
-    
-    // Promise rejection handler
-    window.addEventListener('unhandledrejection', (event) => {
-        console.error('Unhandled Promise Rejection:', event.reason);
-    });
-    
-    console.log('✅ Error handling initialized');
-};
-
-/* ==========================================================================
-   15. Main Initialization & Bootstrap - FIXED
-   ========================================================================== */
-
-/**
- * FIXED: Initialize all functionality when DOM is loaded
- */
-const initializeApp = () => {
-    console.log('🚀 Initializing FIXED Holistic Psychological Services website...');
-    
-    // Core functionality - order matters
-    initializeHeader();           // FIXED Header & Mobile Menu System
-    initializeHero();            // FIXED Hero with Reliable Logo Loading
-    initializeAbout();           // About Section with Animations & Interactions
-    initializeServices();        // Services with Animations & Interactions
-    initializeTeam();            // Team with Animations & Interactions
-    initializeReviews();         // Reviews with Stats Counter & Animations
-    initializeContact();         // Contact Form & Validation & Animations
-    initializeFooter();          // Footer with Responsive Features
-    
-    // Enhanced functionality
-    initializeFloatingActions(); // Back to Top & Contact FAB
-    initializeAccessibility();   // Accessibility Features
-    initializePerformanceOptimizations(); // Performance Features
-    initializeErrorHandling();   // Error Handling
-    
-    // Mark app as initialized
-    document.body.classList.add('app-initialized');
-    
-    // Initial setup for floating actions visibility
-    const floatingActions = document.querySelector('.floating-actions');
-    if (floatingActions) {
-        floatingActions.style.opacity = '0';
-        floatingActions.style.visibility = 'hidden';
-        floatingActions.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
     }
-    
-    console.log('✅ FIXED Holistic Psychological Services website initialized successfully!');
-};
-
-/**
- * Cleanup function for when page unloads
- */
-const cleanup = () => {
-    // Clear background rotation interval
-    if (STATE.heroBackgroundInterval) {
-        clearInterval(STATE.heroBackgroundInterval);
-    }
-    
-    // Clear all observers
-    STATE.observers.forEach(observer => {
-        observer.disconnect();
-    });
-    STATE.observers.clear();
-    
-    console.log('🧹 Cleanup completed');
-};
-
-/* ==========================================================================
-   16. Event Listeners & Bootstrap - FIXED
-   ========================================================================== */
-
-// FIXED: Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    // DOM already loaded
-    initializeApp();
 }
 
-// Cleanup when page unloads
-window.addEventListener('beforeunload', cleanup);
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        // Page is hidden, pause background rotation
-        if (STATE.heroBackgroundInterval) {
-            clearInterval(STATE.heroBackgroundInterval);
-        }
-    } else {
-        // Page is visible, resume background rotation
-        if (window.heroController && !window.heroController.isReducedMotion) {
-            window.heroController.initializeBackgroundRotation();
-        }
+/* ==========================================================================
+   11. Main Application Controller
+   ========================================================================== */
+class HolisticPsychServicesApp {
+    constructor() {
+        this.controllers = {};
+        this.isInitialized = false;
+        
+        this.init();
     }
-});
-
-// Handle reduced motion preference changes
-const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-mediaQuery.addEventListener('change', (e) => {
-    STATE.isReducedMotion = e.matches;
-    console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
     
-    // Pause/resume background rotation based on motion preference
-    if (STATE.isReducedMotion && window.heroController) {
-        window.heroController.destroy();
+    init() {
+        if (this.isInitialized) return;
+        
+        console.log('🚀 Initializing Holistic Psychological Services website...');
+        
+        // Initialize controllers in order
+        this.controllers.performance = new PerformanceController();
+        this.controllers.header = new HeaderController();
+        this.controllers.mobileMenu = new MobileMenuController();
+        this.controllers.hero = new HeroController();
+        this.controllers.sectionAnimations = new SectionAnimationController();
+        this.controllers.contactForm = new ContactFormController();
+        this.controllers.floatingActions = new FloatingActionsController();
+        this.controllers.interactiveElements = new InteractiveElementsController();
+        
+        // Mark app as initialized
+        document.body.classList.add('app-initialized');
+        STATE.isInitialized = true;
+        this.isInitialized = true;
+        
+        // Setup cleanup
+        this.setupCleanup();
+        
+        // Handle motion preference changes
+        this.handleMotionPreferenceChanges();
+        
+        console.log('✅ Holistic Psychological Services website initialized successfully!');
+    }
+    
+    setupCleanup() {
+        window.addEventListener('beforeunload', () => {
+            this.cleanup();
+        });
+        
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pause();
+            } else {
+                this.resume();
+            }
+        });
+    }
+    
+    handleMotionPreferenceChanges() {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        mediaQuery.addEventListener('change', (e) => {
+            STATE.isReducedMotion = e.matches;
+            console.log(`Motion preference: ${STATE.isReducedMotion ? 'reduced' : 'normal'}`);
+            
+            if (STATE.isReducedMotion && this.controllers.hero) {
+                this.controllers.hero.destroy();
+            }
+        });
+    }
+    
+    pause() {
+        if (this.controllers.hero && this.controllers.hero.backgroundInterval) {
+            clearInterval(this.controllers.hero.backgroundInterval);
+            this.controllers.hero.backgroundInterval = null;
+            console.log('⏸️ App paused (page hidden)');
+        }
+    }
+    
+    resume() {
+        if (this.controllers.hero && !this.controllers.hero.backgroundInterval && !STATE.isReducedMotion) {
+            this.controllers.hero.initializeBackgroundSystem();
+            console.log('▶️ App resumed (page visible)');
+        }
+    }
+    
+    cleanup() {
+        // Clear hero background interval
+        if (this.controllers.hero && this.controllers.hero.backgroundInterval) {
+            clearInterval(this.controllers.hero.backgroundInterval);
+        }
+        
+        // Clear all observers
+        STATE.observers.forEach(observer => {
+            observer.disconnect();
+        });
+        STATE.observers.clear();
+        
+        console.log('🧹 App cleanup completed');
+    }
+    
+    // Public API methods
+    setHeroOverlayOpacity(opacity) {
+        if (this.controllers.hero) {
+            this.controllers.hero.setOverlayOpacity(opacity);
+        }
+    }
+    
+    toggleHeroBackgroundRotation() {
+        if (this.controllers.hero) {
+            this.controllers.hero.toggleBackgroundRotation();
+        }
+    }
+    
+    nextHeroBackground() {
+        if (this.controllers.hero) {
+            this.controllers.hero.nextBackground();
+        }
+    }
+    
+    getState() {
+        return { ...STATE };
+    }
+    
+    getConfig() {
+        return { ...CONFIG };
+    }
+}
+
+/* ==========================================================================
+   12. Event Listeners & Bootstrap
+   ========================================================================== */
+
+// Initialize app when DOM is ready
+function initializeApp() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.holisticApp = new HolisticPsychServicesApp();
+        });
+    } else {
+        window.holisticApp = new HolisticPsychServicesApp();
+    }
+}
+
+// Handle window focus/blur for performance
+window.addEventListener('focus', () => {
+    if (window.holisticApp && window.holisticApp.controllers.hero && !STATE.isReducedMotion) {
+        window.holisticApp.resume();
     }
 });
 
-// Handle window resize for hero section
-window.addEventListener('resize', () => {
-    // Debounce resize events
-    clearTimeout(window.heroResizeTimeout);
-    window.heroResizeTimeout = setTimeout(() => {
-        console.log('Hero resize handled');
-    }, 250);
+window.addEventListener('blur', () => {
+    if (window.holisticApp) {
+        window.holisticApp.pause();
+    }
 });
 
-// Export for potential external use
+// Handle resize events for responsive behavior
+window.addEventListener('resize', Utils.debounce(() => {
+    // Update mobile/desktop states
+    const wasMobile = STATE.isMobile;
+    const isNowMobile = Utils.isMobile();
+    
+    if (wasMobile !== isNowMobile) {
+        console.log(`Device type changed: ${isNowMobile ? 'mobile' : 'desktop'}`);
+        
+        // Close mobile menu if switching to desktop
+        if (!isNowMobile && STATE.isMobileMenuOpen && window.holisticApp && window.holisticApp.controllers.mobileMenu) {
+            window.holisticApp.controllers.mobileMenu.closeMenu();
+        }
+    }
+    
+    STATE.isMobile = isNowMobile;
+}, 250));
+
+/* ==========================================================================
+   13. Global API & Developer Tools
+   ========================================================================== */
+
+// Export for external use
 window.HolisticPsychServices = {
     STATE,
     CONFIG,
-    utils: {
-        debounce,
-        throttle,
-        isMobile,
-        smoothScrollTo,
-        smoothScrollToTop
-    },
-    animations: {
-        animateElement,
-        staggerAnimations
-    },
-    classes: {
-        MobileMenuController,
-        HeaderController,
-        HeroController
-    }
+    Utils,
+    
+    // Main app instance (will be available after initialization)
+    app: null,
+    
+    // Utility functions
+    smoothScrollTo: Utils.smoothScrollTo,
+    smoothScrollToTop: Utils.smoothScrollToTop,
+    announceToScreenReader: Utils.announceToScreenReader,
+    
+    // Animation utilities
+    animateElement: Utils.animateElement,
+    staggerAnimations: Utils.staggerAnimations,
+    
+    // Device detection
+    isMobile: Utils.isMobile,
+    isTablet: Utils.isTablet,
+    isDesktop: Utils.isDesktop,
+    
+    // Performance utilities
+    debounce: Utils.debounce,
+    throttle: Utils.throttle
 };
 
 /* ==========================================================================
-   17. Development Helpers (Remove in production)
+   14. Development & Debug Tools
    ========================================================================== */
 
-// Development mode helpers
-if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+// Development mode helpers (remove in production)
+if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || 
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1') {
+    
     // Add development console commands
     window.dev = {
+        // State inspection
         state: () => console.log('Current State:', STATE),
         config: () => console.log('Configuration:', CONFIG),
         observers: () => console.log('Active Observers:', STATE.observers),
+        
+        // Motion controls
         toggleReducedMotion: () => {
             STATE.isReducedMotion = !STATE.isReducedMotion;
             console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
         },
-        pauseBackgrounds: () => {
-            if (window.heroController) {
-                window.heroController.destroy();
-                console.log('Background rotation paused');
-            }
-        },
-        resumeBackgrounds: () => {
-            if (window.heroController) {
-                window.heroController.initializeBackgroundRotation();
-                console.log('Background rotation resumed');
-            }
-        },
+        
+        // Hero controls
         hero: {
+            setOverlay: (opacity) => {
+                if (window.holisticApp) {
+                    window.holisticApp.setHeroOverlayOpacity(opacity);
+                }
+            },
             nextBackground: () => {
-                if (window.heroController) {
-                    window.heroController.nextBackground();
+                if (window.holisticApp) {
+                    window.holisticApp.nextHeroBackground();
                     console.log('Switched to next background');
                 }
             },
             toggleRotation: () => {
-                if (window.heroController) {
-                    window.heroController.toggleBackgroundRotation();
+                if (window.holisticApp) {
+                    window.holisticApp.toggleHeroBackgroundRotation();
                     console.log('Toggled background rotation');
+                }
+            },
+            pauseBackgrounds: () => {
+                if (window.holisticApp && window.holisticApp.controllers.hero) {
+                    window.holisticApp.controllers.hero.destroy();
+                    console.log('Background rotation paused');
+                }
+            },
+            resumeBackgrounds: () => {
+                if (window.holisticApp && window.holisticApp.controllers.hero) {
+                    window.holisticApp.controllers.hero.initializeBackgroundSystem();
+                    console.log('Background rotation resumed');
                 }
             }
         },
+        
+        // Menu controls
+        menu: {
+            open: () => {
+                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
+                    window.holisticApp.controllers.mobileMenu.openMenu();
+                }
+            },
+            close: () => {
+                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
+                    window.holisticApp.controllers.mobileMenu.closeMenu();
+                }
+            },
+            toggle: () => {
+                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
+                    window.holisticApp.controllers.mobileMenu.toggleMenu();
+                }
+            }
+        },
+        
+        // Section controls
         sections: {
-            hero: () => initializeHero(),
-            about: () => initializeAbout(),
-            services: () => initializeServices(),
-            team: () => initializeTeam(),
-            reviews: () => initializeReviews(),
-            contact: () => initializeContact()
+            animateAll: () => {
+                document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
+                    el.classList.add('visible');
+                });
+                console.log('All section animations triggered');
+            },
+            resetAnimations: () => {
+                document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
+                    el.classList.remove('visible');
+                });
+                console.log('All section animations reset');
+            }
+        },
+        
+        // Performance tools
+        performance: {
+            observers: () => console.log('Active Observers:', STATE.observers.size),
+            memory: () => {
+                if (performance.memory) {
+                    console.log('Memory usage:', {
+                        used: Math.round(performance.memory.usedJSHeapSize / 1048576) + ' MB',
+                        total: Math.round(performance.memory.totalJSHeapSize / 1048576) + ' MB',
+                        limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576) + ' MB'
+                    });
+                } else {
+                    console.log('Memory API not available');
+                }
+            },
+            timing: () => {
+                const timing = performance.timing;
+                const navigationStart = timing.navigationStart;
+                console.log('Page Load Timing:', {
+                    'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart + 'ms',
+                    'TCP Connection': timing.connectEnd - timing.connectStart + 'ms',
+                    'Request': timing.responseStart - timing.requestStart + 'ms',
+                    'Response': timing.responseEnd - timing.responseStart + 'ms',
+                    'DOM Processing': timing.domComplete - timing.domLoading + 'ms',
+                    'Total Load Time': timing.loadEventEnd - navigationStart + 'ms'
+                });
+            }
+        },
+        
+        // Utility functions
+        utils: {
+            scrollTo: (selector) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    Utils.smoothScrollTo(element);
+                    console.log(`Scrolled to ${selector}`);
+                } else {
+                    console.warn(`Element not found: ${selector}`);
+                }
+            },
+            highlight: (selector) => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.outline = '3px solid red';
+                    setTimeout(() => {
+                        el.style.outline = '';
+                    }, 2000);
+                });
+                console.log(`Highlighted ${elements.length} elements: ${selector}`);
+            },
+            showGridOverlay: () => {
+                const overlay = document.createElement('div');
+                overlay.id = 'dev-grid-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: repeating-linear-gradient(
+                        0deg,
+                        transparent,
+                        transparent 23px,
+                        rgba(255, 0, 0, 0.1) 24px
+                    ),
+                    repeating-linear-gradient(
+                        90deg,
+                        transparent,
+                        transparent 23px,
+                        rgba(255, 0, 0, 0.1) 24px
+                    );
+                    pointer-events: none;
+                    z-index: 10000;
+                `;
+                document.body.appendChild(overlay);
+                
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        overlay.remove();
+                    }
+                }, 5000);
+                
+                console.log('Grid overlay shown for 5 seconds');
+            }
+        },
+        
+        // Test functions
+        test: {
+            animations: () => {
+                console.log('Testing animations...');
+                const testElement = document.createElement('div');
+                testElement.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    width: 100px;
+                    height: 100px;
+                    background: var(--primary-green);
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 10000;
+                `;
+                document.body.appendChild(testElement);
+                
+                Utils.animateElement(testElement, 'fade-in');
+                
+                setTimeout(() => {
+                    testElement.remove();
+                }, 2000);
+            },
+            
+            responsiveness: () => {
+                console.log('Current breakpoint info:', {
+                    windowWidth: window.innerWidth,
+                    isMobile: Utils.isMobile(),
+                    isTablet: Utils.isTablet(),
+                    isDesktop: Utils.isDesktop(),
+                    mobileBp: CONFIG.breakpoints.mobile,
+                    tabletBp: CONFIG.breakpoints.tablet,
+                    desktopBp: CONFIG.breakpoints.desktop
+                });
+            },
+            
+            accessibility: () => {
+                const issues = [];
+                
+                // Check for images without alt text
+                const images = document.querySelectorAll('img:not([alt])');
+                if (images.length > 0) {
+                    issues.push(`${images.length} images without alt text`);
+                }
+                
+                // Check for buttons without aria-label or text
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach((btn, index) => {
+                    if (!btn.textContent.trim() && !btn.getAttribute('aria-label')) {
+                        issues.push(`Button ${index + 1} has no accessible text`);
+                    }
+                });
+                
+                // Check for headings hierarchy
+                const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                let lastLevel = 0;
+                headings.forEach((heading, index) => {
+                    const level = parseInt(heading.tagName[1]);
+                    if (level > lastLevel + 1) {
+                        issues.push(`Heading level skip at heading ${index + 1} (${heading.tagName})`);
+                    }
+                    lastLevel = level;
+                });
+                
+                if (issues.length === 0) {
+                    console.log('✅ No obvious accessibility issues found');
+                } else {
+                    console.warn('⚠️ Accessibility issues found:', issues);
+                }
+            }
         }
     };
     
     console.log('🔧 Development mode active. Use window.dev for debugging.');
+    console.log('Available commands:');
+    console.log('  window.dev.state() - View current state');
+    console.log('  window.dev.hero.setOverlay(0.3) - Set hero overlay opacity');
+    console.log('  window.dev.hero.nextBackground() - Switch background');
+    console.log('  window.dev.test.animations() - Test animations');
+    console.log('  window.dev.utils.scrollTo("#about") - Scroll to section');
 }
+
+/* ==========================================================================
+   15. Initialize Application
+   ========================================================================== */
+
+// Start the application
+initializeApp();
+
+// Set reference to app instance when it's created
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.holisticApp) {
+        window.HolisticPsychServices.app = window.holisticApp;
+    }
+});
+
+/* ==========================================================================
+   16. Export Statement (for module systems)
+   ========================================================================== */
+
+// For environments that support modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        HolisticPsychServicesApp,
+        Utils,
+        CONFIG,
+        STATE
+    };
+}
+
+// For AMD/RequireJS
+if (typeof define === 'function' && define.amd) {
+    define('holistic-psych-services', [], function() {
+        return {
+            HolisticPsychServicesApp,
+            Utils,
+            CONFIG,
+            STATE
+        };
+    });
+}
+
+console.log('📋 Holistic Psychological Services JavaScript loaded and ready');
+
+/* ==========================================================================
+   END OF FILE
+   ========================================================================== */
