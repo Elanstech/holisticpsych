@@ -878,9 +878,6 @@ button {
     animation: float4 22s ease-in-out infinite reverse;
 }
 
-/* ==========================================================================
-   Enhanced Hero Content
-   ========================================================================== */
 .hero .hero-content {
     display: flex;
     flex-direction: column;
@@ -892,12 +889,9 @@ button {
     z-index: 4;
 }
 
-/* ==========================================================================
-   Enhanced Logo
-   ========================================================================== */
 .hero .hero-logo-container {
     position: relative;
-    margin-top: 5rem;
+    margin-top: 8rem;
     width: 320px;
     height: 320px;
     background: rgba(255, 255, 255, 0.98);
