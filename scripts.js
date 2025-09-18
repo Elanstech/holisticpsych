@@ -1,11 +1,12 @@
-/* ==========================================================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - OPTIMIZED JAVASCRIPT
-   Modern, Performance-Focused, Modular Architecture
-   ========================================================================== */
+/* ========================================
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE SCRIPT
+   Manhattan Mental Health - Professional Experience
+   Restructured for Easy Component Management
+   ======================================== */
 
-/* ==========================================================================
-   1. Configuration & Global State
-   ========================================================================== */
+/* ========================================
+   CONFIGURATION & GLOBAL STATE
+   ======================================== */
 const CONFIG = {
     // Animation settings
     animations: {
@@ -29,10 +30,33 @@ const CONFIG = {
     
     // Hero settings
     hero: {
-        backgroundTransitionDuration: 5000, // 5 seconds
-        overlayOpacity: 0.4, // Controllable overlay opacity
-        zoomScale: 1.1,
-        transitionDuration: 2000
+        // Typewriter settings
+        typewriter: {
+            texts: [
+                "Professional Mental Health Care in the Heart of Manhattan",
+                "Compassionate Therapy for Individuals, Couples & Families",
+                "Expert Psychological Services with Dr. Kristie Doheny & Dr. Doug Uhlig",
+                "Evidence-Based Treatment with a Holistic Approach"
+            ],
+            typeSpeed: 80,
+            deleteSpeed: 50,
+            pauseDuration: 2000,
+            cursorBlinkSpeed: 1000
+        },
+        
+        // Background rotation settings
+        background: {
+            transitionDuration: 6000, // 6 seconds
+            images: [
+                'https://images.pexels.com/photos/635279/pexels-photo-635279.jpeg',
+                'images/hero1.png',
+                'https://images.unsplash.com/photo-1680458842367-0d47f573ca2b?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            ]
+        },
+        
+        backgroundTransitionDuration: 5000,
+        overlayOpacity: 0.4,
+        zoomScale: 1.1
     },
     
     // FAB settings
@@ -48,16 +72,25 @@ const STATE = {
     currentSection: 'home',
     observers: new Map(),
     isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    heroBackgroundIndex: 0,
-    heroBackgroundInterval: null,
-    isContactFabOpen: false,
+    
+    // Hero state
+    hero: {
+        typewriterIndex: 0,
+        typewriterPosition: 0,
+        isTyping: true,
+        typewriterTimeout: null,
+        backgroundIndex: 0,
+        backgroundInterval: null,
+        isInitialized: false
+    },
+    
     scrollPosition: 0,
     isInitialized: false
 };
 
-/* ==========================================================================
-   2. Utility Functions
-   ========================================================================== */
+/* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
 class Utils {
     static debounce(func, wait) {
         let timeout;
@@ -169,9 +202,9 @@ class Utils {
     }
 }
 
-/* ==========================================================================
-   3. Header & Navigation System
-   ========================================================================== */
+/* ========================================
+   HEADER & NAVIGATION SYSTEM
+   ======================================== */
 class HeaderController {
     constructor() {
         this.header = document.getElementById('header');
@@ -179,16 +212,16 @@ class HeaderController {
         this.scrollThreshold = 50;
         this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
         
-        this.init();
+        if (this.header) {
+            this.init();
+        }
     }
     
     init() {
-        if (!this.header) return;
-        
         this.bindEvents();
         this.checkScrollPosition();
         
-        console.log('✅ Header controller initialized');
+        console.log('Header controller initialized');
     }
     
     bindEvents() {
@@ -245,11 +278,15 @@ class HeaderController {
     checkScrollPosition() {
         this.handleScroll();
     }
+
+    destroy() {
+        console.log('Header controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   4. Mobile Menu System
-   ========================================================================== */
+/* ========================================
+   MOBILE MENU SYSTEM
+   ======================================== */
 class MobileMenuController {
     constructor() {
         this.isOpen = false;
@@ -264,20 +301,17 @@ class MobileMenuController {
         this.desktopNavLinks = document.querySelectorAll('.desktop-nav .nav-link');
         this.body = document.body;
         
-        this.init();
+        if (this.menuToggle || this.scrollHamburger) {
+            this.init();
+        }
     }
     
     init() {
-        if (!this.menuToggle || !this.menuPanel || !this.menuOverlay) {
-            console.warn('Mobile menu elements not found');
-            return;
-        }
-        
         this.bindEvents();
         this.setupAccessibility();
         this.syncActiveStates();
         
-        console.log('✅ Mobile menu controller initialized');
+        console.log('Mobile menu controller initialized');
     }
     
     bindEvents() {
@@ -549,82 +583,256 @@ class MobileMenuController {
             this.updateActiveStates(activeHref);
         }
     }
+
+    destroy() {
+        this.closeMenu();
+        console.log('Mobile menu controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   5. Hero Section Controller with Enhanced Background System
-   ========================================================================== */
-class HeroController {
-    constructor() {
-        this.heroSection = document.querySelector('.hero');
-        this.backgroundImages = document.querySelectorAll('.hero-bg-image');
-        this.heroOverlay = document.getElementById('heroOverlay');
-        this.logoContainer = document.querySelector('.hero-logo-container');
-        this.logoImage = document.querySelector('.hero-logo');
-        this.heroButtons = document.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
+/* ========================================
+   ENHANCED HERO SECTION CONTROLLER
+   ======================================== */
+class EnhancedTypewriterController {
+    constructor(element) {
+        this.element = element;
+        this.texts = CONFIG.hero.typewriter.texts;
+        this.currentTextIndex = 0;
+        this.currentCharIndex = 0;
+        this.isDeleting = false;
+        this.isInitialized = false;
         
-        this.currentImageIndex = 0;
-        this.backgroundInterval = null;
-        this.isReducedMotion = STATE.isReducedMotion;
-        
-        this.init();
+        if (this.element) {
+            this.init();
+        }
     }
     
     init() {
-        if (!this.heroSection) return;
+        if (!this.element || this.isInitialized) return;
         
-        this.initializeLogoLoading();
-        this.initializeBackgroundSystem();
-        this.initializeOverlayControl();
-        this.initializeLogoInteractions();
-        this.initializeButtonEffects();
-        this.handleVisibilityChange();
-        this.handleMotionPreference();
+        this.element.textContent = '';
+        this.isInitialized = true;
         
-        console.log('✅ Hero section initialized with enhanced background system');
+        // Start typewriter after a delay
+        setTimeout(() => {
+            this.typeText();
+        }, 1000);
+        
+        console.log('Enhanced typewriter effect initialized');
     }
     
-    initializeLogoLoading() {
-        if (!this.logoImage || !this.logoContainer) return;
+    typeText() {
+        if (STATE.isReducedMotion) {
+            this.element.textContent = this.texts[0];
+            return;
+        }
         
-        console.log('🔄 Loading logo...');
+        const currentText = this.texts[this.currentTextIndex];
         
-        this.logoContainer.style.opacity = '1';
-        this.logoContainer.style.visibility = 'visible';
+        if (!this.isDeleting) {
+            // Typing
+            if (this.currentCharIndex < currentText.length) {
+                this.element.textContent = currentText.substring(0, this.currentCharIndex + 1);
+                this.currentCharIndex++;
+                
+                STATE.hero.typewriterTimeout = setTimeout(() => {
+                    this.typeText();
+                }, this.getTypeSpeed());
+            } else {
+                // Pause before deleting
+                STATE.hero.typewriterTimeout = setTimeout(() => {
+                    this.isDeleting = true;
+                    this.typeText();
+                }, CONFIG.hero.typewriter.pauseDuration);
+            }
+        } else {
+            // Deleting
+            if (this.currentCharIndex > 0) {
+                this.element.textContent = currentText.substring(0, this.currentCharIndex - 1);
+                this.currentCharIndex--;
+                
+                STATE.hero.typewriterTimeout = setTimeout(() => {
+                    this.typeText();
+                }, CONFIG.hero.typewriter.deleteSpeed);
+            } else {
+                // Move to next text
+                this.isDeleting = false;
+                this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
+                
+                STATE.hero.typewriterTimeout = setTimeout(() => {
+                    this.typeText();
+                }, 500);
+            }
+        }
+    }
+    
+    getTypeSpeed() {
+        // Add some randomness to typing speed for natural feel
+        const baseSpeed = CONFIG.hero.typewriter.typeSpeed;
+        const variance = baseSpeed * 0.3;
+        return baseSpeed + (Math.random() * variance - variance / 2);
+    }
+    
+    pause() {
+        if (STATE.hero.typewriterTimeout) {
+            clearTimeout(STATE.hero.typewriterTimeout);
+            STATE.hero.typewriterTimeout = null;
+        }
+    }
+    
+    resume() {
+        if (!STATE.hero.typewriterTimeout && this.isInitialized) {
+            this.typeText();
+        }
+    }
+    
+    destroy() {
+        this.pause();
+        this.isInitialized = false;
+    }
+}
+
+class EnhancedBackgroundController {
+    constructor() {
+        this.backgroundImages = document.querySelectorAll('.hero-bg-image');
+        this.currentIndex = 0;
+        this.isInitialized = false;
+        
+        if (this.backgroundImages.length > 0) {
+            this.init();
+        }
+    }
+    
+    async init() {
+        if (!this.backgroundImages.length || this.isInitialized) return;
+        
+        try {
+            // Preload all background images
+            await this.preloadImages();
+            
+            // Set first image as active
+            this.backgroundImages[0].classList.add('active');
+            this.currentIndex = 0;
+            
+            // Start rotation if motion is allowed
+            if (!STATE.isReducedMotion) {
+                this.startRotation();
+            }
+            
+            this.isInitialized = true;
+            console.log('Enhanced background controller initialized');
+            
+        } catch (error) {
+            console.warn('Some background images failed to load:', error);
+            // Continue with available images
+            this.isInitialized = true;
+        }
+    }
+    
+    async preloadImages() {
+        const preloadPromises = CONFIG.hero.background.images.map(src => 
+            this.preloadImage(src).catch(err => {
+                console.warn(`Failed to preload image: ${src}`, err);
+                return null;
+            })
+        );
+        
+        const results = await Promise.allSettled(preloadPromises);
+        const loadedCount = results.filter(result => result.status === 'fulfilled').length;
+        
+        console.log(`Preloaded ${loadedCount}/${CONFIG.hero.background.images.length} background images`);
+    }
+    
+    preloadImage(src) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+    
+    startRotation() {
+        if (STATE.hero.backgroundInterval || STATE.isReducedMotion) return;
+        
+        STATE.hero.backgroundInterval = setInterval(() => {
+            this.nextBackground();
+        }, CONFIG.hero.background.transitionDuration);
+        
+        console.log('Enhanced background rotation started');
+    }
+    
+    stopRotation() {
+        if (STATE.hero.backgroundInterval) {
+            clearInterval(STATE.hero.backgroundInterval);
+            STATE.hero.backgroundInterval = null;
+            console.log('Enhanced background rotation stopped');
+        }
+    }
+    
+    nextBackground() {
+        if (!this.backgroundImages.length || STATE.isReducedMotion) return;
+        
+        // Remove active class from current image
+        this.backgroundImages[this.currentIndex].classList.remove('active');
+        
+        // Move to next image
+        this.currentIndex = (this.currentIndex + 1) % this.backgroundImages.length;
+        
+        // Add active class to next image
+        this.backgroundImages[this.currentIndex].classList.add('active');
+        
+        console.log(`Switched to background ${this.currentIndex + 1} with zoom effect`);
+    }
+    
+    setBackground(index) {
+        if (index < 0 || index >= this.backgroundImages.length) return;
+        
+        this.backgroundImages[this.currentIndex].classList.remove('active');
+        this.currentIndex = index;
+        this.backgroundImages[this.currentIndex].classList.add('active');
+    }
+    
+    destroy() {
+        this.stopRotation();
+        this.isInitialized = false;
+    }
+}
+
+class EnhancedLogoController {
+    constructor() {
+        this.logoContainer = document.querySelector('.hero-logo-container');
+        this.logoImage = document.querySelector('.hero-logo');
+        this.isInitialized = false;
+        
+        if (this.logoContainer && this.logoImage) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.setupLogoLoading();
+        this.setupLogoInteractions();
+        this.isInitialized = true;
+        
+        console.log('Enhanced logo controller initialized');
+    }
+    
+    setupLogoLoading() {
+        console.log('Loading enhanced hero logo...');
         
         const handleLogoSuccess = () => {
-            console.log('✅ Logo loaded successfully');
+            console.log('Enhanced hero logo loaded successfully');
             this.logoImage.style.opacity = '1';
-            this.logoImage.style.visibility = 'visible';
             
-            if (!this.isReducedMotion) {
+            if (!STATE.isReducedMotion) {
                 this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
             }
         };
         
         const handleLogoError = () => {
-            console.warn('⚠️ Logo failed to load, showing fallback');
-            
-            const fallback = document.createElement('div');
-            fallback.style.cssText = `
-                width: 200px;
-                height: 200px;
-                background: var(--gradient-primary);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-family: var(--font-heading);
-                font-size: 2rem;
-                font-weight: 700;
-                text-align: center;
-                line-height: 1.2;
-            `;
-            fallback.innerHTML = 'Holistic<br>Psych<br>Services';
-            
-            this.logoImage.style.display = 'none';
-            this.logoContainer.appendChild(fallback);
+            console.warn('Enhanced hero logo failed to load, showing fallback');
+            this.createFallbackLogo();
         };
         
         if (this.logoImage.complete) {
@@ -637,96 +845,54 @@ class HeroController {
             this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
             this.logoImage.addEventListener('error', handleLogoError, { once: true });
             
+            // Fallback timeout
             setTimeout(() => {
                 if (this.logoImage.naturalHeight === 0) {
                     handleLogoError();
                 }
             }, 3000);
         }
-        
-        setTimeout(() => {
-            this.logoContainer.style.opacity = '1';
-            this.logoContainer.style.visibility = 'visible';
-            this.logoImage.style.opacity = '1';
-            this.logoImage.style.visibility = 'visible';
-        }, 100);
     }
     
-    initializeBackgroundSystem() {
-        if (this.backgroundImages.length === 0 || this.isReducedMotion) return;
+    createFallbackLogo() {
+        const fallback = document.createElement('div');
+        fallback.className = 'logo-fallback';
+        fallback.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+            flex-direction: column;
+        `;
         
-        // Show first image immediately
-        this.backgroundImages[0].classList.add('active');
-        this.currentImageIndex = 0;
+        fallback.innerHTML = `
+            <div>Holistic</div>
+            <div style="font-size: 0.8em; margin: -0.2em 0;">Psychological</div>
+            <div>Services</div>
+        `;
         
-        // Start rotation interval
-        this.backgroundInterval = setInterval(() => {
-            this.rotateBackgroundImage();
-        }, CONFIG.hero.backgroundTransitionDuration);
-        
-        console.log('🔄 Background rotation started (5-second intervals with zoom)');
+        this.logoImage.style.display = 'none';
+        this.logoContainer.appendChild(fallback);
     }
     
-    rotateBackgroundImage() {
-        if (this.isReducedMotion) return;
-        
-        const currentImage = this.backgroundImages[this.currentImageIndex];
-        
-        // Remove active class from current image
-        currentImage.classList.remove('active');
-        
-        // Move to next image
-        this.currentImageIndex = (this.currentImageIndex + 1) % this.backgroundImages.length;
-        const nextImage = this.backgroundImages[this.currentImageIndex];
-        
-        // Add active class to next image (triggers zoom and fade)
-        nextImage.classList.add('active');
-        
-        console.log(`🖼️ Switched to background ${this.currentImageIndex + 1} with zoom effect`);
-    }
-    
-    initializeOverlayControl() {
-        if (!this.heroOverlay) return;
-        
-        // Set initial overlay opacity from CSS variable
-        const overlayOpacity = getComputedStyle(document.documentElement)
-            .getPropertyValue('--hero-overlay-opacity') || CONFIG.hero.overlayOpacity;
-        
-        // Apply overlay styles
-        this.heroOverlay.style.background = `linear-gradient(135deg, 
-            rgba(0, 216, 132, ${overlayOpacity}) 0%, 
-            rgba(14, 165, 233, ${overlayOpacity * 0.8}) 50%,
-            rgba(139, 92, 246, ${overlayOpacity * 0.6}) 100%)`;
-        
-        console.log(`🎨 Hero overlay set to ${overlayOpacity} opacity`);
-    }
-    
-    setOverlayOpacity(opacity) {
-        if (!this.heroOverlay) return;
-        
-        const clampedOpacity = Math.max(0, Math.min(1, opacity));
-        
-        // Update CSS variable
-        document.documentElement.style.setProperty('--hero-overlay-opacity', clampedOpacity);
-        
-        // Update overlay background
-        this.heroOverlay.style.background = `linear-gradient(135deg, 
-            rgba(0, 216, 132, ${clampedOpacity}) 0%, 
-            rgba(14, 165, 233, ${clampedOpacity * 0.8}) 50%,
-            rgba(139, 92, 246, ${clampedOpacity * 0.6}) 100%)`;
-        
-        console.log(`🎨 Hero overlay opacity updated to ${clampedOpacity}`);
-    }
-    
-    initializeLogoInteractions() {
-        if (!this.logoContainer || this.isReducedMotion) return;
+    setupLogoInteractions() {
+        if (STATE.isReducedMotion) return;
         
         let isHovered = false;
         
         const handleMouseEnter = () => {
             if (!isHovered) {
                 isHovered = true;
-                this.logoContainer.style.transform = 'scale(1.05) rotate(2deg)';
+                this.logoContainer.style.transform = 'scale(1.05) rotate(3deg)';
                 this.logoContainer.style.filter = 'brightness(1.1)';
             }
         };
@@ -739,159 +905,277 @@ class HeroController {
             }
         };
         
+        const handleClick = () => {
+            this.logoContainer.style.animation = 'none';
+            this.logoContainer.offsetHeight; // Force reflow
+            this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
+            
+            if (typeof Utils !== 'undefined' && Utils.announceToScreenReader) {
+                Utils.announceToScreenReader('Logo animation restarted');
+            }
+        };
+        
         this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
         this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
+        this.logoContainer.addEventListener('click', handleClick);
         
-        this.logoContainer.addEventListener('click', () => {
-            if (this.isReducedMotion) return;
-            
-            this.logoContainer.style.animation = 'none';
-            this.logoContainer.offsetHeight;
-            this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
-        });
+        // Touch support
+        this.logoContainer.addEventListener('touchstart', handleMouseEnter, { passive: true });
+        this.logoContainer.addEventListener('touchend', handleMouseLeave, { passive: true });
+    }
+
+    destroy() {
+        this.isInitialized = false;
+    }
+}
+
+class EnhancedScrollIndicatorController {
+    constructor() {
+        this.scrollIndicator = document.querySelector('.scroll-indicator');
+        
+        if (this.scrollIndicator) {
+            this.init();
+        }
     }
     
-    initializeButtonEffects() {
-        this.heroButtons.forEach(button => {
-            this.addButtonRippleEffect(button);
-            this.addButtonHoverEnhancement(button);
-        });
+    init() {
+        this.scrollIndicator.addEventListener('click', this.handleScrollClick.bind(this));
+        this.setupScrollListening();
+        
+        console.log('Enhanced scroll indicator initialized');
     }
     
-    addButtonRippleEffect(button) {
-        button.addEventListener('click', (e) => {
-            if (this.isReducedMotion) return;
-            
-            const rect = button.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const ripple = document.createElement('span');
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.6);
-                width: 0;
-                height: 0;
-                left: ${x}px;
-                top: ${y}px;
-                transform: translate(-50%, -50%);
-                animation: heroRipple 0.8s ease-out;
-                pointer-events: none;
-                z-index: 1000;
-            `;
-            
-            button.style.position = 'relative';
-            button.style.overflow = 'hidden';
-            button.appendChild(ripple);
-            
-            // Add ripple animation if not exists
-            if (!document.querySelector('#hero-ripple-animation')) {
-                this.addRippleStyles();
+    handleScrollClick() {
+        const nextSection = document.querySelector('#about') || 
+                           document.querySelector('section:not(.hero)') ||
+                           document.querySelector('main > *:not(.hero)');
+        
+        if (nextSection) {
+            if (typeof Utils !== 'undefined' && Utils.smoothScrollTo) {
+                Utils.smoothScrollTo(nextSection);
+            } else {
+                nextSection.scrollIntoView({ behavior: 'smooth' });
             }
             
+            if (typeof Utils !== 'undefined' && Utils.announceToScreenReader) {
+                Utils.announceToScreenReader('Scrolled to next section');
+            }
+        }
+    }
+    
+    setupScrollListening() {
+        const handleScroll = this.throttle(() => {
+            const scrolled = window.pageYOffset > 100;
+            
+            if (this.scrollIndicator) {
+                this.scrollIndicator.style.opacity = scrolled ? '0' : '1';
+                this.scrollIndicator.style.visibility = scrolled ? 'hidden' : 'visible';
+            }
+        }, 16);
+        
+        window.addEventListener('scroll', handleScroll);
+    }
+    
+    throttle(func, limit) {
+        let inThrottle;
+        return function executedFunction(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    destroy() {
+        // Clean up if needed
+    }
+}
+
+class HeroController {
+    constructor() {
+        this.heroSection = document.querySelector('.hero');
+        this.controllers = {};
+        this.isInitialized = false;
+        
+        if (this.heroSection) {
+            this.init();
+        }
+    }
+    
+    async init() {
+        if (this.isInitialized) return;
+        
+        console.log('Initializing Enhanced Hero section...');
+        
+        try {
+            // Initialize core controllers
+            this.controllers.background = new EnhancedBackgroundController();
+            this.controllers.logo = new EnhancedLogoController();
+            this.controllers.scrollIndicator = new EnhancedScrollIndicatorController();
+            
+            // Initialize typewriter after a small delay
+            await this.initializeTypewriter();
+            
+            // Set up visibility handling
+            this.setupVisibilityHandling();
+            
+            // Set up motion preferences
+            this.setupMotionPreferences();
+            
+            // Mark as initialized
+            this.isInitialized = true;
+            STATE.hero.isInitialized = true;
+            
+            console.log('Enhanced Hero section initialized successfully!');
+            
+        } catch (error) {
+            console.error('Enhanced Hero initialization failed:', error);
+            this.handleInitializationError(error);
+        }
+    }
+    
+    async initializeTypewriter() {
+        return new Promise((resolve) => {
             setTimeout(() => {
-                if (ripple.parentNode) {
-                    ripple.remove();
+                const typewriterElement = document.getElementById('typewriterText');
+                if (typewriterElement) {
+                    this.controllers.typewriter = new EnhancedTypewriterController(typewriterElement);
                 }
-            }, 800);
+                resolve();
+            }, 1500);
         });
     }
     
-    addRippleStyles() {
-        const style = document.createElement('style');
-        style.id = 'hero-ripple-animation';
-        style.textContent = `
-            @keyframes heroRipple {
-                to {
-                    width: 100px;
-                    height: 100px;
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    addButtonHoverEnhancement(button) {
-        button.addEventListener('mouseenter', () => {
-            if (this.isReducedMotion) return;
-            button.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        });
-        
-        button.addEventListener('mouseleave', () => {
-            button.style.transition = 'all 0.3s ease';
-        });
-    }
-    
-    handleVisibilityChange() {
+    setupVisibilityHandling() {
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && this.backgroundInterval) {
-                clearInterval(this.backgroundInterval);
-                console.log('⏸️ Background rotation paused (page hidden)');
-            } else if (!document.hidden && !this.isReducedMotion) {
-                this.initializeBackgroundSystem();
-                console.log('▶️ Background rotation resumed (page visible)');
+            if (document.hidden) {
+                // Pause animations when page is hidden
+                if (this.controllers.background) {
+                    this.controllers.background.stopRotation();
+                }
+                if (this.controllers.typewriter) {
+                    this.controllers.typewriter.pause();
+                }
+                console.log('Enhanced Hero animations paused (page hidden)');
+            } else {
+                // Resume animations when page is visible
+                if (this.controllers.background && !STATE.isReducedMotion) {
+                    this.controllers.background.startRotation();
+                }
+                if (this.controllers.typewriter) {
+                    this.controllers.typewriter.resume();
+                }
+                console.log('Enhanced Hero animations resumed (page visible)');
             }
         });
     }
     
-    handleMotionPreference() {
+    setupMotionPreferences() {
         const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-        mediaQuery.addEventListener('change', (e) => {
-            this.isReducedMotion = e.matches;
+        
+        const handleMotionChange = (e) => {
             STATE.isReducedMotion = e.matches;
+            console.log(`Enhanced Hero motion preference: ${STATE.isReducedMotion ? 'reduced' : 'normal'}`);
             
-            if (this.isReducedMotion && this.backgroundInterval) {
-                clearInterval(this.backgroundInterval);
-                console.log('⏸️ Background rotation paused (reduced motion)');
-            } else if (!this.isReducedMotion) {
-                this.initializeBackgroundSystem();
-                console.log('▶️ Background rotation enabled (motion allowed)');
+            if (STATE.isReducedMotion) {
+                // Stop all animations
+                if (this.controllers.background) {
+                    this.controllers.background.stopRotation();
+                }
+            } else {
+                // Re-enable animations
+                if (this.controllers.background) {
+                    this.controllers.background.startRotation();
+                }
             }
-        });
+        };
+        
+        mediaQuery.addEventListener('change', handleMotionChange);
+        handleMotionChange(mediaQuery); // Initial check
     }
     
-    // Public methods
+    handleInitializationError(error) {
+        // Fallback: show static content
+        const typewriterElement = document.getElementById('typewriterText');
+        if (typewriterElement) {
+            typewriterElement.textContent = 'Professional Mental Health Care in Manhattan';
+        }
+        
+        // Remove problematic animations
+        const glassPanel = document.querySelector('.glass-panel');
+        if (glassPanel) {
+            glassPanel.style.animation = 'none';
+            glassPanel.style.opacity = '1';
+            glassPanel.style.transform = 'none';
+        }
+        
+        console.warn('Enhanced Hero section loaded with reduced functionality due to error');
+    }
+    
+    // Public API methods
     nextBackground() {
-        this.rotateBackgroundImage();
+        if (this.controllers.background) {
+            this.controllers.background.nextBackground();
+        }
+    }
+    
+    setBackground(index) {
+        if (this.controllers.background) {
+            this.controllers.background.setBackground(index);
+        }
     }
     
     toggleBackgroundRotation() {
-        if (this.backgroundInterval) {
-            clearInterval(this.backgroundInterval);
-            this.backgroundInterval = null;
-            console.log('🔄 Background rotation paused');
+        if (!this.controllers.background) return;
+        
+        if (STATE.hero.backgroundInterval) {
+            this.controllers.background.stopRotation();
         } else {
-            this.initializeBackgroundSystem();
-            console.log('▶️ Background rotation resumed');
+            this.controllers.background.startRotation();
+        }
+    }
+    
+    restartTypewriter() {
+        if (this.controllers.typewriter) {
+            this.controllers.typewriter.destroy();
+            setTimeout(() => {
+                const typewriterElement = document.getElementById('typewriterText');
+                if (typewriterElement) {
+                    this.controllers.typewriter = new EnhancedTypewriterController(typewriterElement);
+                }
+            }, 100);
         }
     }
     
     destroy() {
-        if (this.backgroundInterval) {
-            clearInterval(this.backgroundInterval);
+        // Clear all timeouts and intervals
+        if (STATE.hero.typewriterTimeout) {
+            clearTimeout(STATE.hero.typewriterTimeout);
+        }
+        if (STATE.hero.backgroundInterval) {
+            clearInterval(STATE.hero.backgroundInterval);
         }
         
-        this.heroButtons.forEach(button => {
-            button.replaceWith(button.cloneNode(true));
+        // Destroy controllers
+        Object.values(this.controllers).forEach(controller => {
+            if (controller.destroy) controller.destroy();
         });
         
-        if (this.logoContainer) {
-            this.logoContainer.replaceWith(this.logoContainer.cloneNode(true));
-        }
-        
-        console.log('🧹 Hero controller destroyed');
+        console.log('Enhanced Hero section cleanup completed');
     }
 }
 
-/* ==========================================================================
-   6. Section Animation Controller
-   ========================================================================== */
+/* ========================================
+   SECTION ANIMATION CONTROLLER
+   ======================================== */
 class SectionAnimationController {
     constructor() {
         this.sections = document.querySelectorAll('section');
-        this.init();
+        
+        if (this.sections.length > 0) {
+            this.init();
+        }
     }
     
     init() {
@@ -901,7 +1185,7 @@ class SectionAnimationController {
         this.initializeReviewsAnimations();
         this.initializeContactAnimations();
         
-        console.log('✅ Section animations initialized');
+        console.log('Section animations initialized');
     }
     
     initializeAboutAnimations() {
@@ -1082,29 +1366,35 @@ class SectionAnimationController {
             updateCounter();
         });
     }
+
+    destroy() {
+        STATE.observers.forEach(observer => observer.disconnect());
+        STATE.observers.clear();
+        console.log('Section animations destroyed');
+    }
 }
 
-/* ==========================================================================
-   7. Contact Form Controller
-   ========================================================================== */
+/* ========================================
+   CONTACT FORM CONTROLLER
+   ======================================== */
 class ContactFormController {
     constructor() {
         this.form = document.getElementById('contactForm');
         this.inputs = null;
         this.submitButton = null;
         
-        this.init();
+        if (this.form) {
+            this.init();
+        }
     }
     
     init() {
-        if (!this.form) return;
-        
         this.inputs = this.form.querySelectorAll('input, select, textarea');
         this.submitButton = this.form.querySelector('.btn-submit');
         
         this.bindEvents();
         
-        console.log('✅ Contact form controller initialized');
+        console.log('Contact form controller initialized');
     }
     
     bindEvents() {
@@ -1310,11 +1600,15 @@ class ContactFormController {
             this.submitButton.disabled = false;
         }
     }
+
+    destroy() {
+        console.log('Contact form controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   8. Floating Action Buttons Controller
-   ========================================================================== */
+/* ========================================
+   FLOATING ACTION BUTTONS CONTROLLER
+   ======================================== */
 class FloatingActionsController {
     constructor() {
         this.backToTopBtn = document.getElementById('backToTop');
@@ -1322,7 +1616,9 @@ class FloatingActionsController {
         this.contactOptions = document.getElementById('contactOptions');
         this.isContactFabOpen = false;
         
-        this.init();
+        if (this.backToTopBtn || this.contactFab) {
+            this.init();
+        }
     }
     
     init() {
@@ -1334,7 +1630,7 @@ class FloatingActionsController {
             this.updateBackToTopButton();
         }, 16));
         
-        console.log('✅ Floating actions controller initialized');
+        console.log('Floating actions controller initialized');
     }
     
     initializeBackToTop() {
@@ -1443,11 +1739,15 @@ class FloatingActionsController {
             }
         }, CONFIG.fab.showDelay);
     }
+
+    destroy() {
+        console.log('Floating actions controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   9. Interactive Elements Controller
-   ========================================================================== */
+/* ========================================
+   INTERACTIVE ELEMENTS CONTROLLER
+   ======================================== */
 class InteractiveElementsController {
     constructor() {
         this.init();
@@ -1460,7 +1760,7 @@ class InteractiveElementsController {
         this.initializeContactCardInteractions();
         this.initializeButtonRippleEffects();
         
-        console.log('✅ Interactive elements controller initialized');
+        console.log('Interactive elements controller initialized');
     }
     
     initializeServiceCardInteractions() {
@@ -1662,11 +1962,15 @@ class InteractiveElementsController {
             });
         });
     }
+
+    destroy() {
+        console.log('Interactive elements controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   10. Performance & Accessibility Controller
-   ========================================================================== */
+/* ========================================
+   PERFORMANCE & ACCESSIBILITY CONTROLLER
+   ======================================== */
 class PerformanceController {
     constructor() {
         this.init();
@@ -1678,7 +1982,7 @@ class PerformanceController {
         this.initializeErrorHandling();
         this.initializePerformanceOptimizations();
         
-        console.log('✅ Performance controller initialized');
+        console.log('Performance controller initialized');
     }
     
     initializeLazyLoading() {
@@ -1811,46 +2115,116 @@ class PerformanceController {
             document.head.appendChild(link);
         });
     }
+
+    destroy() {
+        console.log('Performance controller destroyed');
+    }
 }
 
-/* ==========================================================================
-   11. Main Application Controller
-   ========================================================================== */
+/* ========================================
+   MAIN APPLICATION CONTROLLER
+   ======================================== */
 class HolisticPsychServicesApp {
     constructor() {
-        this.controllers = {};
+        this.components = new Map();
         this.isInitialized = false;
+        this.isMobile = window.innerWidth <= 768;
         
         this.init();
     }
     
     init() {
-        if (this.isInitialized) return;
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.initializeComponents());
+        } else {
+            this.initializeComponents();
+        }
         
-        console.log('🚀 Initializing Holistic Psychological Services website...');
+        this.setupGlobalEvents();
+    }
+
+    initializeComponents() {
+        try {
+            console.log('Initializing Holistic Psychological Services website...');
+            
+            // Initialize controllers in order
+            this.components.set('performance', new PerformanceController());
+            this.components.set('header', new HeaderController());
+            this.components.set('mobileMenu', new MobileMenuController());
+            this.components.set('hero', new HeroController());
+            this.components.set('sectionAnimations', new SectionAnimationController());
+            this.components.set('contactForm', new ContactFormController());
+            this.components.set('floatingActions', new FloatingActionsController());
+            this.components.set('interactiveElements', new InteractiveElementsController());
+            
+            // Mark app as initialized
+            document.body.classList.add('app-initialized');
+            STATE.isInitialized = true;
+            this.isInitialized = true;
+            
+            // Setup cleanup
+            this.setupCleanup();
+            
+            // Handle motion preference changes
+            this.handleMotionPreferenceChanges();
+            
+            // Expose components globally for debugging
+            window.holisticComponents = this.components;
+            window.mobileMenu = this.components.get('mobileMenu');
+            
+            console.log('Holistic Psychological Services website initialized successfully!');
+            
+        } catch (error) {
+            console.error('Component initialization failed:', error);
+            this.handleInitializationError(error);
+        }
+    }
+
+    handleInitializationError(error) {
+        // Fallback initialization for critical components
+        try {
+            this.components.set('header', new HeaderController());
+            this.components.set('mobileMenu', new MobileMenuController());
+            
+            console.warn('Fallback initialization completed');
+        } catch (fallbackError) {
+            console.error('Fallback initialization failed:', fallbackError);
+        }
+    }
+    
+    setupGlobalEvents() {
+        window.addEventListener('resize', this.debounce(() => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 768;
+            
+            if (wasMobile !== this.isMobile) {
+                this.handleScreenSizeChange();
+            }
+        }, 250));
+
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
+
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                if (typeof AOS !== 'undefined') {
+                    AOS.refresh();
+                }
+            }, 500);
+        });
+    }
+
+    handleScreenSizeChange() {
+        const mobileMenu = this.components.get('mobileMenu');
+        if (mobileMenu && !this.isMobile && mobileMenu.isOpen) {
+            mobileMenu.closeMenu();
+        }
         
-        // Initialize controllers in order
-        this.controllers.performance = new PerformanceController();
-        this.controllers.header = new HeaderController();
-        this.controllers.mobileMenu = new MobileMenuController();
-        this.controllers.hero = new HeroController();
-        this.controllers.sectionAnimations = new SectionAnimationController();
-        this.controllers.contactForm = new ContactFormController();
-        this.controllers.floatingActions = new FloatingActionsController();
-        this.controllers.interactiveElements = new InteractiveElementsController();
-        
-        // Mark app as initialized
-        document.body.classList.add('app-initialized');
-        STATE.isInitialized = true;
-        this.isInitialized = true;
-        
-        // Setup cleanup
-        this.setupCleanup();
-        
-        // Handle motion preference changes
-        this.handleMotionPreferenceChanges();
-        
-        console.log('✅ Holistic Psychological Services website initialized successfully!');
+        const floatingActions = this.components.get('floatingActions');
+        if (floatingActions && floatingActions.isContactFabOpen) {
+            floatingActions.closeContactOptions();
+        }
     }
     
     setupCleanup() {
@@ -1873,31 +2247,36 @@ class HolisticPsychServicesApp {
             STATE.isReducedMotion = e.matches;
             console.log(`Motion preference: ${STATE.isReducedMotion ? 'reduced' : 'normal'}`);
             
-            if (STATE.isReducedMotion && this.controllers.hero) {
-                this.controllers.hero.destroy();
+            if (STATE.isReducedMotion) {
+                const hero = this.components.get('hero');
+                if (hero && hero.destroy) {
+                    hero.destroy();
+                }
             }
         });
     }
     
     pause() {
-        if (this.controllers.hero && this.controllers.hero.backgroundInterval) {
-            clearInterval(this.controllers.hero.backgroundInterval);
-            this.controllers.hero.backgroundInterval = null;
-            console.log('⏸️ App paused (page hidden)');
+        const hero = this.components.get('hero');
+        if (hero && hero.controllers && hero.controllers.background) {
+            hero.controllers.background.stopRotation();
+            console.log('App paused (page hidden)');
         }
     }
     
     resume() {
-        if (this.controllers.hero && !this.controllers.hero.backgroundInterval && !STATE.isReducedMotion) {
-            this.controllers.hero.initializeBackgroundSystem();
-            console.log('▶️ App resumed (page visible)');
+        const hero = this.components.get('hero');
+        if (hero && hero.controllers && hero.controllers.background && !STATE.isReducedMotion) {
+            hero.controllers.background.startRotation();
+            console.log('App resumed (page visible)');
         }
     }
     
     cleanup() {
-        // Clear hero background interval
-        if (this.controllers.hero && this.controllers.hero.backgroundInterval) {
-            clearInterval(this.controllers.hero.backgroundInterval);
+        // Clear hero intervals
+        const hero = this.components.get('hero');
+        if (hero && hero.destroy) {
+            hero.destroy();
         }
         
         // Clear all observers
@@ -1906,25 +2285,39 @@ class HolisticPsychServicesApp {
         });
         STATE.observers.clear();
         
-        console.log('🧹 App cleanup completed');
+        // Destroy all components
+        this.components.forEach(component => {
+            if (component.destroy) {
+                component.destroy();
+            }
+        });
+        
+        console.log('App cleanup completed');
     }
     
     // Public API methods
+    getComponent(name) {
+        return this.components.get(name);
+    }
+
     setHeroOverlayOpacity(opacity) {
-        if (this.controllers.hero) {
-            this.controllers.hero.setOverlayOpacity(opacity);
+        const hero = this.components.get('hero');
+        if (hero && hero.setOverlayOpacity) {
+            hero.setOverlayOpacity(opacity);
         }
     }
     
     toggleHeroBackgroundRotation() {
-        if (this.controllers.hero) {
-            this.controllers.hero.toggleBackgroundRotation();
+        const hero = this.components.get('hero');
+        if (hero && hero.toggleBackgroundRotation) {
+            hero.toggleBackgroundRotation();
         }
     }
     
     nextHeroBackground() {
-        if (this.controllers.hero) {
-            this.controllers.hero.nextBackground();
+        const hero = this.components.get('hero');
+        if (hero && hero.nextBackground) {
+            hero.nextBackground();
         }
     }
     
@@ -1935,59 +2328,30 @@ class HolisticPsychServicesApp {
     getConfig() {
         return { ...CONFIG };
     }
-}
 
-/* ==========================================================================
-   12. Event Listeners & Bootstrap
-   ========================================================================== */
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
-// Initialize app when DOM is ready
-function initializeApp() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            window.holisticApp = new HolisticPsychServicesApp();
-        });
-    } else {
-        window.holisticApp = new HolisticPsychServicesApp();
+    destroy() {
+        this.cleanup();
+        console.log('HolisticPsychServicesApp destroyed');
     }
 }
 
-// Handle window focus/blur for performance
-window.addEventListener('focus', () => {
-    if (window.holisticApp && window.holisticApp.controllers.hero && !STATE.isReducedMotion) {
-        window.holisticApp.resume();
-    }
-});
+/* ========================================
+   GLOBAL API & UTILITIES
+   ======================================== */
 
-window.addEventListener('blur', () => {
-    if (window.holisticApp) {
-        window.holisticApp.pause();
-    }
-});
-
-// Handle resize events for responsive behavior
-window.addEventListener('resize', Utils.debounce(() => {
-    // Update mobile/desktop states
-    const wasMobile = STATE.isMobile;
-    const isNowMobile = Utils.isMobile();
-    
-    if (wasMobile !== isNowMobile) {
-        console.log(`Device type changed: ${isNowMobile ? 'mobile' : 'desktop'}`);
-        
-        // Close mobile menu if switching to desktop
-        if (!isNowMobile && STATE.isMobileMenuOpen && window.holisticApp && window.holisticApp.controllers.mobileMenu) {
-            window.holisticApp.controllers.mobileMenu.closeMenu();
-        }
-    }
-    
-    STATE.isMobile = isNowMobile;
-}, 250));
-
-/* ==========================================================================
-   13. Global API & Developer Tools
-   ========================================================================== */
-
-// Export for external use
+// Enhanced Hero API (integrated from the enhanced hero file)
 window.HolisticPsychServices = {
     STATE,
     CONFIG,
@@ -2012,12 +2376,90 @@ window.HolisticPsychServices = {
     
     // Performance utilities
     debounce: Utils.debounce,
-    throttle: Utils.throttle
+    throttle: Utils.throttle,
+    
+    // Enhanced hero methods
+    enhancedHero: {
+        nextBackground: () => {
+            if (window.holisticApp) {
+                window.holisticApp.nextHeroBackground();
+            }
+        },
+        
+        toggleRotation: () => {
+            if (window.holisticApp) {
+                window.holisticApp.toggleHeroBackgroundRotation();
+            }
+        },
+        
+        restartTypewriter: () => {
+            const hero = window.holisticApp?.getComponent('hero');
+            if (hero && hero.restartTypewriter) {
+                hero.restartTypewriter();
+            }
+        },
+        
+        setBackground: (index) => {
+            const hero = window.holisticApp?.getComponent('hero');
+            if (hero && hero.setBackground) {
+                hero.setBackground(index);
+            }
+        }
+    }
 };
 
-/* ==========================================================================
-   14. Development & Debug Tools
-   ========================================================================== */
+/* ========================================
+   INITIALIZATION
+   ======================================== */
+
+// Initialize app when DOM is ready
+function initializeApp() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.holisticApp = new HolisticPsychServicesApp();
+        });
+    } else {
+        window.holisticApp = new HolisticPsychServicesApp();
+    }
+}
+
+// Handle window focus/blur for performance
+window.addEventListener('focus', () => {
+    if (window.holisticApp && !STATE.isReducedMotion) {
+        window.holisticApp.resume();
+    }
+});
+
+window.addEventListener('blur', () => {
+    if (window.holisticApp) {
+        window.holisticApp.pause();
+    }
+});
+
+// Handle resize events for responsive behavior
+window.addEventListener('resize', Utils.debounce(() => {
+    // Update mobile/desktop states
+    const wasMobile = STATE.isMobile;
+    const isNowMobile = Utils.isMobile();
+    
+    if (wasMobile !== isNowMobile) {
+        console.log(`Device type changed: ${isNowMobile ? 'mobile' : 'desktop'}`);
+        
+        // Close mobile menu if switching to desktop
+        if (!isNowMobile && STATE.isMobileMenuOpen && window.holisticApp) {
+            const mobileMenu = window.holisticApp.getComponent('mobileMenu');
+            if (mobileMenu && mobileMenu.closeMenu) {
+                mobileMenu.closeMenu();
+            }
+        }
+    }
+    
+    STATE.isMobile = isNowMobile;
+}, 250));
+
+/* ========================================
+   DEVELOPMENT & DEBUG TOOLS
+   ======================================== */
 
 // Development mode helpers (remove in production)
 if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || 
@@ -2056,16 +2498,11 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
                     console.log('Toggled background rotation');
                 }
             },
-            pauseBackgrounds: () => {
-                if (window.holisticApp && window.holisticApp.controllers.hero) {
-                    window.holisticApp.controllers.hero.destroy();
-                    console.log('Background rotation paused');
-                }
-            },
-            resumeBackgrounds: () => {
-                if (window.holisticApp && window.holisticApp.controllers.hero) {
-                    window.holisticApp.controllers.hero.initializeBackgroundSystem();
-                    console.log('Background rotation resumed');
+            restartTypewriter: () => {
+                const hero = window.holisticApp?.getComponent('hero');
+                if (hero && hero.restartTypewriter) {
+                    hero.restartTypewriter();
+                    console.log('Typewriter restarted');
                 }
             }
         },
@@ -2073,18 +2510,21 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
         // Menu controls
         menu: {
             open: () => {
-                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
-                    window.holisticApp.controllers.mobileMenu.openMenu();
+                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
+                if (mobileMenu && mobileMenu.openMenu) {
+                    mobileMenu.openMenu();
                 }
             },
             close: () => {
-                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
-                    window.holisticApp.controllers.mobileMenu.closeMenu();
+                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
+                if (mobileMenu && mobileMenu.closeMenu) {
+                    mobileMenu.closeMenu();
                 }
             },
             toggle: () => {
-                if (window.holisticApp && window.holisticApp.controllers.mobileMenu) {
-                    window.holisticApp.controllers.mobileMenu.toggleMenu();
+                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
+                if (mobileMenu && mobileMenu.toggleMenu) {
+                    mobileMenu.toggleMenu();
                 }
             }
         },
@@ -2105,177 +2545,28 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
             }
         },
         
-        // Performance tools
-        performance: {
-            observers: () => console.log('Active Observers:', STATE.observers.size),
-            memory: () => {
-                if (performance.memory) {
-                    console.log('Memory usage:', {
-                        used: Math.round(performance.memory.usedJSHeapSize / 1048576) + ' MB',
-                        total: Math.round(performance.memory.totalJSHeapSize / 1048576) + ' MB',
-                        limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576) + ' MB'
-                    });
-                } else {
-                    console.log('Memory API not available');
+        // Component controls
+        components: {
+            list: () => {
+                if (window.holisticApp) {
+                    console.log('Active components:', Array.from(window.holisticApp.components.keys()));
                 }
             },
-            timing: () => {
-                const timing = performance.timing;
-                const navigationStart = timing.navigationStart;
-                console.log('Page Load Timing:', {
-                    'DNS Lookup': timing.domainLookupEnd - timing.domainLookupStart + 'ms',
-                    'TCP Connection': timing.connectEnd - timing.connectStart + 'ms',
-                    'Request': timing.responseStart - timing.requestStart + 'ms',
-                    'Response': timing.responseEnd - timing.responseStart + 'ms',
-                    'DOM Processing': timing.domComplete - timing.domLoading + 'ms',
-                    'Total Load Time': timing.loadEventEnd - navigationStart + 'ms'
-                });
-            }
-        },
-        
-        // Utility functions
-        utils: {
-            scrollTo: (selector) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    Utils.smoothScrollTo(element);
-                    console.log(`Scrolled to ${selector}`);
-                } else {
-                    console.warn(`Element not found: ${selector}`);
-                }
-            },
-            highlight: (selector) => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    el.style.outline = '3px solid red';
-                    setTimeout(() => {
-                        el.style.outline = '';
-                    }, 2000);
-                });
-                console.log(`Highlighted ${elements.length} elements: ${selector}`);
-            },
-            showGridOverlay: () => {
-                const overlay = document.createElement('div');
-                overlay.id = 'dev-grid-overlay';
-                overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: repeating-linear-gradient(
-                        0deg,
-                        transparent,
-                        transparent 23px,
-                        rgba(255, 0, 0, 0.1) 24px
-                    ),
-                    repeating-linear-gradient(
-                        90deg,
-                        transparent,
-                        transparent 23px,
-                        rgba(255, 0, 0, 0.1) 24px
-                    );
-                    pointer-events: none;
-                    z-index: 10000;
-                `;
-                document.body.appendChild(overlay);
-                
-                setTimeout(() => {
-                    if (overlay.parentNode) {
-                        overlay.remove();
-                    }
-                }, 5000);
-                
-                console.log('Grid overlay shown for 5 seconds');
-            }
-        },
-        
-        // Test functions
-        test: {
-            animations: () => {
-                console.log('Testing animations...');
-                const testElement = document.createElement('div');
-                testElement.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    width: 100px;
-                    height: 100px;
-                    background: var(--primary-green);
-                    border-radius: 50%;
-                    transform: translate(-50%, -50%);
-                    z-index: 10000;
-                `;
-                document.body.appendChild(testElement);
-                
-                Utils.animateElement(testElement, 'fade-in');
-                
-                setTimeout(() => {
-                    testElement.remove();
-                }, 2000);
-            },
-            
-            responsiveness: () => {
-                console.log('Current breakpoint info:', {
-                    windowWidth: window.innerWidth,
-                    isMobile: Utils.isMobile(),
-                    isTablet: Utils.isTablet(),
-                    isDesktop: Utils.isDesktop(),
-                    mobileBp: CONFIG.breakpoints.mobile,
-                    tabletBp: CONFIG.breakpoints.tablet,
-                    desktopBp: CONFIG.breakpoints.desktop
-                });
-            },
-            
-            accessibility: () => {
-                const issues = [];
-                
-                // Check for images without alt text
-                const images = document.querySelectorAll('img:not([alt])');
-                if (images.length > 0) {
-                    issues.push(`${images.length} images without alt text`);
-                }
-                
-                // Check for buttons without aria-label or text
-                const buttons = document.querySelectorAll('button');
-                buttons.forEach((btn, index) => {
-                    if (!btn.textContent.trim() && !btn.getAttribute('aria-label')) {
-                        issues.push(`Button ${index + 1} has no accessible text`);
-                    }
-                });
-                
-                // Check for headings hierarchy
-                const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                let lastLevel = 0;
-                headings.forEach((heading, index) => {
-                    const level = parseInt(heading.tagName[1]);
-                    if (level > lastLevel + 1) {
-                        issues.push(`Heading level skip at heading ${index + 1} (${heading.tagName})`);
-                    }
-                    lastLevel = level;
-                });
-                
-                if (issues.length === 0) {
-                    console.log('✅ No obvious accessibility issues found');
-                } else {
-                    console.warn('⚠️ Accessibility issues found:', issues);
+            get: (name) => {
+                if (window.holisticApp) {
+                    return window.holisticApp.getComponent(name);
                 }
             }
         }
     };
     
-    console.log('🔧 Development mode active. Use window.dev for debugging.');
+    console.log('Development mode active. Use window.dev for debugging.');
     console.log('Available commands:');
     console.log('  window.dev.state() - View current state');
-    console.log('  window.dev.hero.setOverlay(0.3) - Set hero overlay opacity');
     console.log('  window.dev.hero.nextBackground() - Switch background');
-    console.log('  window.dev.test.animations() - Test animations');
-    console.log('  window.dev.utils.scrollTo("#about") - Scroll to section');
+    console.log('  window.dev.hero.restartTypewriter() - Restart typewriter');
+    console.log('  window.dev.components.list() - List all components');
 }
-
-/* ==========================================================================
-   15. Initialize Application
-   ========================================================================== */
 
 // Start the application
 initializeApp();
@@ -2286,10 +2577,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.HolisticPsychServices.app = window.holisticApp;
     }
 });
-
-/* ==========================================================================
-   16. Export Statement (for module systems)
-   ========================================================================== */
 
 // For environments that support modules
 if (typeof module !== 'undefined' && module.exports) {
@@ -2313,8 +2600,4 @@ if (typeof define === 'function' && define.amd) {
     });
 }
 
-console.log('📋 Holistic Psychological Services JavaScript loaded and ready');
-
-/* ==========================================================================
-   END OF FILE
-   ========================================================================== */
+console.log('Holistic Psychological Services JavaScript loaded and ready');
