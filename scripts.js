@@ -1,7 +1,7 @@
 /* ==========================================================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE ORGANIZED JAVASCRIPT
+   HOLISTIC PSYCHOLOGICAL SERVICES - FIXED JAVASCRIPT
    Modern, Sleek, Minimalistic Interactions with Enhanced Features
-   Updated Hero Section with Raised Buttons & Clean Backgrounds
+   FIXED: Logo Loading & Mobile Menu Issues
    ========================================================================== */
 
 /* ==========================================================================
@@ -164,11 +164,11 @@ const staggerAnimations = (elements, className = 'fade-in', staggerDelay = CONFI
 };
 
 /* ==========================================================================
-   3. Header & Navigation - Complete Mobile Menu System
+   3. Header & Navigation - FIXED Mobile Menu System
    ========================================================================== */
 
 /**
- * Mobile Menu Controller Class
+ * FIXED: Mobile Menu Controller Class
  */
 class MobileMenuController {
     constructor() {
@@ -180,6 +180,7 @@ class MobileMenuController {
         this.menuPanel = document.getElementById('mobileMenuPanel');
         this.menuOverlay = document.getElementById('mobileMenuOverlay');
         this.menuClose = document.getElementById('mobileMenuClose');
+        this.scrollHamburger = document.getElementById('scrollHamburgerToggle');
         this.mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
         this.desktopNavLinks = document.querySelectorAll('.desktop-nav .nav-link');
         this.body = document.body;
@@ -197,25 +198,39 @@ class MobileMenuController {
         this.setupAccessibility();
         this.syncActiveStates();
         
-        console.log('✅ Modern mobile menu initialized');
+        console.log('✅ FIXED mobile menu initialized');
     }
     
     bindEvents() {
-        // Toggle menu
-        this.menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleMenu();
-        });
+        // FIXED: Mobile toggle menu
+        if (this.menuToggle) {
+            this.menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+        }
+
+        // FIXED: Scroll hamburger menu (desktop)
+        if (this.scrollHamburger) {
+            this.scrollHamburger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleMenu();
+            });
+        }
         
         // Close menu
-        this.menuClose?.addEventListener('click', () => {
-            this.closeMenu();
-        });
+        if (this.menuClose) {
+            this.menuClose.addEventListener('click', () => {
+                this.closeMenu();
+            });
+        }
         
         // Close on overlay click
-        this.menuOverlay.addEventListener('click', () => {
-            this.closeMenu();
-        });
+        if (this.menuOverlay) {
+            this.menuOverlay.addEventListener('click', () => {
+                this.closeMenu();
+            });
+        }
         
         // Handle mobile nav links
         this.mobileNavLinks.forEach(link => {
@@ -226,8 +241,15 @@ class MobileMenuController {
         
         // Handle desktop nav links (sync mobile menu state)
         this.desktopNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                this.updateActiveStates(link.getAttribute('href'));
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    smoothScrollTo(targetSection);
+                    this.updateActiveStates(targetId);
+                }
             });
         });
         
@@ -240,34 +262,50 @@ class MobileMenuController {
         
         // Handle resize
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 991 && this.isOpen) {
+            if (window.innerWidth > 1200 && this.isOpen) {
                 this.closeMenu();
             }
         });
         
         // Prevent scroll on touch move when menu is open
-        this.menuPanel.addEventListener('touchmove', (e) => {
-            e.stopPropagation();
-        });
+        if (this.menuPanel) {
+            this.menuPanel.addEventListener('touchmove', (e) => {
+                e.stopPropagation();
+            });
+        }
         
-        this.menuOverlay.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        });
+        if (this.menuOverlay) {
+            this.menuOverlay.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            });
+        }
     }
     
     setupAccessibility() {
         // Set initial ARIA attributes
-        this.menuToggle.setAttribute('aria-expanded', 'false');
-        this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
-        this.menuPanel.setAttribute('aria-labelledby', 'mobileMenuToggle');
-        this.menuPanel.setAttribute('role', 'dialog');
-        this.menuPanel.setAttribute('aria-modal', 'true');
+        if (this.menuToggle) {
+            this.menuToggle.setAttribute('aria-expanded', 'false');
+            this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
+        }
+        
+        if (this.scrollHamburger) {
+            this.scrollHamburger.setAttribute('aria-expanded', 'false');
+            this.scrollHamburger.setAttribute('aria-controls', 'mobileMenuPanel');
+        }
+        
+        if (this.menuPanel) {
+            this.menuPanel.setAttribute('aria-labelledby', 'mobileMenuToggle');
+            this.menuPanel.setAttribute('role', 'dialog');
+            this.menuPanel.setAttribute('aria-modal', 'true');
+        }
         
         // Add focus trap when menu is open
         this.setupFocusTrap();
     }
     
     setupFocusTrap() {
+        if (!this.menuPanel) return;
+        
         const focusableElements = this.menuPanel.querySelectorAll(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
@@ -314,30 +352,43 @@ class MobileMenuController {
         this.body.classList.add('menu-open');
         this.body.style.overflow = 'hidden';
         
-        // Update toggle button state
-        this.menuToggle.classList.add('active');
-        this.menuToggle.setAttribute('aria-expanded', 'true');
+        // Update toggle button states
+        if (this.menuToggle) {
+            this.menuToggle.classList.add('active');
+            this.menuToggle.setAttribute('aria-expanded', 'true');
+        }
+        
+        if (this.scrollHamburger) {
+            this.scrollHamburger.classList.add('active');
+            this.scrollHamburger.setAttribute('aria-expanded', 'true');
+        }
         
         // Show overlay
-        this.menuOverlay.classList.add('active');
+        if (this.menuOverlay) {
+            this.menuOverlay.classList.add('active');
+        }
         
         // Show panel with delay for smooth animation
-        requestAnimationFrame(() => {
-            this.menuPanel.classList.add('active');
-            
-            // Reset nav link animations
-            this.mobileNavLinks.forEach((link, index) => {
-                link.style.animation = 'none';
-                link.offsetHeight; // Trigger reflow
-                link.style.animation = `slideInFromRight 0.5s ease forwards`;
-                link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
+        if (this.menuPanel) {
+            requestAnimationFrame(() => {
+                this.menuPanel.classList.add('active');
+                
+                // Reset nav link animations
+                this.mobileNavLinks.forEach((link, index) => {
+                    link.style.animation = 'none';
+                    link.offsetHeight; // Trigger reflow
+                    link.style.animation = `slideInFromRight 0.5s ease forwards`;
+                    link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
+                });
             });
-        });
+        }
         
         // Focus management
         setTimeout(() => {
             this.isAnimating = false;
-            this.menuClose?.focus();
+            if (this.menuClose) {
+                this.menuClose.focus();
+            }
             this.announceToScreenReader('Mobile menu opened');
         }, 400);
     }
@@ -348,16 +399,27 @@ class MobileMenuController {
         this.isAnimating = true;
         this.isOpen = false;
         
-        // Update toggle button state
-        this.menuToggle.classList.remove('active');
-        this.menuToggle.setAttribute('aria-expanded', 'false');
+        // Update toggle button states
+        if (this.menuToggle) {
+            this.menuToggle.classList.remove('active');
+            this.menuToggle.setAttribute('aria-expanded', 'false');
+        }
+        
+        if (this.scrollHamburger) {
+            this.scrollHamburger.classList.remove('active');
+            this.scrollHamburger.setAttribute('aria-expanded', 'false');
+        }
         
         // Hide panel
-        this.menuPanel.classList.remove('active');
+        if (this.menuPanel) {
+            this.menuPanel.classList.remove('active');
+        }
         
         // Hide overlay with delay
         setTimeout(() => {
-            this.menuOverlay.classList.remove('active');
+            if (this.menuOverlay) {
+                this.menuOverlay.classList.remove('active');
+            }
         }, 100);
         
         // Re-enable body scroll
@@ -367,7 +429,11 @@ class MobileMenuController {
             this.isAnimating = false;
             
             // Return focus to toggle button
-            this.menuToggle.focus();
+            if (this.menuToggle && window.innerWidth <= 1200) {
+                this.menuToggle.focus();
+            } else if (this.scrollHamburger && window.innerWidth > 1200) {
+                this.scrollHamburger.focus();
+            }
             this.announceToScreenReader('Mobile menu closed');
         }, 400);
     }
@@ -466,11 +532,6 @@ class HeaderController {
         window.addEventListener('resize', debounce(() => {
             this.handleResize();
         }, 250));
-        
-        // Handle navigation links
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => this.handleNavClick(e, link));
-        });
     }
     
     handleScroll() {
@@ -487,23 +548,6 @@ class HeaderController {
     
     handleResize() {
         this.checkScrollPosition();
-    }
-    
-    handleNavClick(event, link) {
-        event.preventDefault();
-        
-        const targetId = link.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-        
-        if (targetSection) {
-            smoothScrollTo(targetSection);
-            this.updateActiveNavLink(link);
-        }
-    }
-    
-    updateActiveNavLink(activeLink) {
-        this.navLinks.forEach(link => link.classList.remove('active'));
-        activeLink?.classList.add('active');
     }
     
     updateActiveNavigation() {
@@ -523,8 +567,18 @@ class HeaderController {
         
         if (currentSection && currentSection !== STATE.currentSection) {
             STATE.currentSection = currentSection;
-            const activeLink = document.querySelector(`.nav-link[href="#${currentSection}"]`);
-            this.updateActiveNavLink(activeLink);
+            
+            // Update all nav links
+            this.navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                link.classList.toggle('active', linkHref === `#${currentSection}`);
+            });
+            
+            // Update mobile nav links too
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                const linkHref = link.getAttribute('href');
+                link.classList.toggle('active', linkHref === `#${currentSection}`);
+            });
         }
     }
     
@@ -537,18 +591,18 @@ class HeaderController {
  * Initialize Header System
  */
 const initializeHeader = () => {
-    new MobileMenuController();
-    new HeaderController();
+    window.mobileMenuController = new MobileMenuController();
+    window.headerController = new HeaderController();
     
-    console.log('✅ Complete header system initialized');
+    console.log('✅ Complete FIXED header system initialized');
 };
 
 /* ==========================================================================
-   4. Hero Section - UPDATED Clean Background Rotation & Logo Interactions
+   4. Hero Section - FIXED Logo Loading & Clean Background Rotation
    ========================================================================== */
 
 /**
- * Hero Controller Class - UPDATED with Clean Backgrounds
+ * FIXED: Hero Controller Class with Reliable Logo Loading
  */
 class HeroController {
     constructor() {
@@ -568,37 +622,100 @@ class HeroController {
     init() {
         if (!this.heroSection) return;
         
+        this.initializeLogoLoading(); // FIXED: Load this first and reliably
         this.initializeBackgroundRotation();
         this.initializeLogoInteractions();
         this.initializeButtonEffects();
-        this.initializeLogoLoading();
         this.handleVisibilityChange();
         this.handleMotionPreference();
         
-        console.log('✅ Hero section initialized with clean backgrounds and raised buttons');
+        console.log('✅ FIXED Hero section initialized with reliable logo loading');
     }
     
     /**
-     * Initialize logo loading - Simple and reliable
+     * FIXED: Initialize logo loading - Always works reliably
      */
     initializeLogoLoading() {
-        if (!this.logoImage) return;
+        if (!this.logoImage || !this.logoContainer) return;
         
-        // Logo is visible by default in CSS, just ensure it loads properly
-        if (this.logoImage.complete && this.logoImage.naturalHeight !== 0) {
-            console.log('✅ Logo already loaded and visible');
-            return;
+        console.log('🔄 Starting logo loading process...');
+        
+        // Ensure logo container is visible immediately
+        this.logoContainer.style.opacity = '1';
+        this.logoContainer.style.visibility = 'visible';
+        
+        // Function to handle successful logo load
+        const handleLogoSuccess = () => {
+            console.log('✅ Logo loaded successfully');
+            this.logoImage.style.opacity = '1';
+            this.logoImage.style.visibility = 'visible';
+            
+            // Start any logo animations
+            if (!this.isReducedMotion) {
+                this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
+            }
+        };
+        
+        // Function to handle logo load error
+        const handleLogoError = () => {
+            console.warn('⚠️ Logo image failed to load, but container remains visible');
+            
+            // Create fallback content if logo fails
+            const fallback = document.createElement('div');
+            fallback.style.cssText = `
+                width: 200px;
+                height: 200px;
+                background: var(--gradient-primary);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-family: var(--font-heading);
+                font-size: 2rem;
+                font-weight: 700;
+                text-align: center;
+                line-height: 1.2;
+            `;
+            fallback.innerHTML = 'Holistic<br>Psych<br>Services';
+            
+            // Replace failed image with fallback
+            this.logoImage.style.display = 'none';
+            this.logoContainer.appendChild(fallback);
+        };
+        
+        // Check if logo is already loaded
+        if (this.logoImage.complete) {
+            if (this.logoImage.naturalHeight !== 0) {
+                // Image is loaded and valid
+                handleLogoSuccess();
+            } else {
+                // Image is loaded but invalid/broken
+                handleLogoError();
+            }
+        } else {
+            // Image is not yet loaded, set up listeners
+            this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
+            this.logoImage.addEventListener('error', handleLogoError, { once: true });
+            
+            // Fallback timeout - if logo doesn't load within 3 seconds, show fallback
+            setTimeout(() => {
+                if (this.logoImage.naturalHeight === 0) {
+                    console.warn('⚠️ Logo timeout - using fallback');
+                    handleLogoError();
+                }
+            }, 3000);
         }
         
-        this.logoImage.addEventListener('load', () => {
-            console.log('✅ Logo loaded successfully');
-        });
+        // Force logo visibility regardless of loading state
+        setTimeout(() => {
+            this.logoContainer.style.opacity = '1';
+            this.logoContainer.style.visibility = 'visible';
+            this.logoImage.style.opacity = '1';
+            this.logoImage.style.visibility = 'visible';
+        }, 100);
         
-        this.logoImage.addEventListener('error', () => {
-            console.warn('Logo image failed to load, but container remains visible');
-        });
-        
-        console.log('🔄 Logo loading initialized');
+        console.log('✅ Logo loading initialized with fallbacks');
     }
     
     /**
@@ -911,16 +1028,13 @@ const initializeHero = () => {
         }
     });
     
-    console.log('✅ Hero section fully initialized with clean backgrounds and raised buttons');
+    console.log('✅ FIXED Hero section fully initialized with reliable logo loading');
 };
 
 /* ==========================================================================
    5. About Section - Animations, Interactions, Mobile Responsive
    ========================================================================== */
 
-/**
- * Initialize about section with all features
- */
 const initializeAbout = () => {
     const aboutSection = document.querySelector('.about');
     if (!aboutSection) return;
@@ -1078,9 +1192,6 @@ const initializeAbout = () => {
    6. Services Section - Animations, Interactions, Mobile Responsive
    ========================================================================== */
 
-/**
- * Initialize services section with all features
- */
 const initializeServices = () => {
     const servicesSection = document.querySelector('.services');
     if (!servicesSection) return;
@@ -1241,9 +1352,6 @@ const initializeServices = () => {
    7. Team Section - Animations, Interactions, Mobile Responsive
    ========================================================================== */
 
-/**
- * Initialize team section with all features
- */
 const initializeTeam = () => {
     const teamSection = document.querySelector('.team');
     if (!teamSection) return;
@@ -1338,9 +1446,6 @@ const initializeTeam = () => {
    8. Reviews Section - Animations, Stats Counter, Mobile Responsive
    ========================================================================== */
 
-/**
- * Initialize reviews section with all features
- */
 const initializeReviews = () => {
     const reviewsSection = document.querySelector('.reviews');
     if (!reviewsSection) return;
@@ -1518,9 +1623,6 @@ const initializeReviews = () => {
    9. Contact Section - Form Handling, Validation, Animations, Mobile
    ========================================================================== */
 
-/**
- * Initialize contact section with all features
- */
 const initializeContact = () => {
     const contactSection = document.querySelector('.contact');
     const form = document.getElementById('contactForm');
@@ -1686,7 +1788,7 @@ const initializeContact = () => {
             const originalText = submitButton.innerHTML;
             submitButton.innerHTML = `
                 <span style="opacity: 0.8;">Sending...</span>
-                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 8px;"></div>
             `;
             submitButton.disabled = true;
             
@@ -1845,9 +1947,6 @@ const initializeContact = () => {
    10. Footer - Mobile Responsive Features
    ========================================================================== */
 
-/**
- * Initialize footer with responsive features
- */
 const initializeFooter = () => {
     const footer = document.querySelector('.footer');
     if (!footer) return;
@@ -1913,9 +2012,6 @@ const initializeFooter = () => {
    11. Floating Action Buttons - Complete System
    ========================================================================== */
 
-/**
- * Initialize back to top button
- */
 const initializeBackToTopButton = () => {
     const backToTopBtn = document.getElementById('backToTop');
     
@@ -1942,9 +2038,6 @@ const initializeBackToTopButton = () => {
     console.log('✅ Back to top button initialized');
 };
 
-/**
- * Update back to top button visibility
- */
 const updateBackToTopButton = () => {
     const backToTopBtn = document.getElementById('backToTop');
     
@@ -1954,9 +2047,6 @@ const updateBackToTopButton = () => {
     backToTopBtn.classList.toggle('visible', shouldShow);
 };
 
-/**
- * Initialize contact FAB
- */
 const initializeContactFAB = () => {
     const contactFab = document.getElementById('contactFab');
     const contactOptions = document.getElementById('contactOptions');
@@ -2048,9 +2138,6 @@ const initializeContactFAB = () => {
     console.log('✅ Contact FAB initialized');
 };
 
-/**
- * Initialize all floating action buttons
- */
 const initializeFloatingActions = () => {
     // Show FABs after a delay
     setTimeout(() => {
@@ -2076,9 +2163,6 @@ const initializeFloatingActions = () => {
    12. Accessibility Enhancements
    ========================================================================== */
 
-/**
- * Initialize accessibility features
- */
 const initializeAccessibility = () => {
     // Add skip link
     const skipLink = document.createElement('a');
@@ -2149,9 +2233,6 @@ const initializeAccessibility = () => {
    13. Performance Optimizations
    ========================================================================== */
 
-/**
- * Initialize performance optimizations
- */
 const initializePerformanceOptimizations = () => {
     // Lazy load images
     const images = document.querySelectorAll('img[src]');
@@ -2176,7 +2257,10 @@ const initializePerformanceOptimizations = () => {
         });
         
         images.forEach(img => {
-            imageObserver.observe(img);
+            // Don't lazy load the hero logo
+            if (!img.classList.contains('hero-logo')) {
+                imageObserver.observe(img);
+            }
         });
     }
     
@@ -2201,9 +2285,7 @@ const initializePerformanceOptimizations = () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             // Recalculate any layout-dependent features
-            if (STATE.isMobileMenuOpen && !isMobile()) {
-                // This is handled by MobileMenuController
-            }
+            console.log('Layout recalculated after resize');
         }, 250);
     });
     
@@ -2217,9 +2299,6 @@ const initializePerformanceOptimizations = () => {
    14. Error Handling
    ========================================================================== */
 
-/**
- * Initialize error handling
- */
 const initializeErrorHandling = () => {
     // Global error handler
     window.addEventListener('error', (event) => {
@@ -2230,35 +2309,29 @@ const initializeErrorHandling = () => {
             colno: event.colno,
             error: event.error
         });
-        
-        // You could send this to an error reporting service
-        // reportError(event);
     });
     
     // Promise rejection handler
     window.addEventListener('unhandledrejection', (event) => {
         console.error('Unhandled Promise Rejection:', event.reason);
-        
-        // You could send this to an error reporting service
-        // reportError(event);
     });
     
     console.log('✅ Error handling initialized');
 };
 
 /* ==========================================================================
-   15. Main Initialization & Bootstrap
+   15. Main Initialization & Bootstrap - FIXED
    ========================================================================== */
 
 /**
- * Initialize all functionality when DOM is loaded
+ * FIXED: Initialize all functionality when DOM is loaded
  */
 const initializeApp = () => {
-    console.log('🚀 Initializing Holistic Psychological Services website...');
+    console.log('🚀 Initializing FIXED Holistic Psychological Services website...');
     
     // Core functionality - order matters
-    initializeHeader();           // Header & Mobile Menu System
-    initializeHero();            // Hero with UPDATED Clean Backgrounds & Raised Buttons
+    initializeHeader();           // FIXED Header & Mobile Menu System
+    initializeHero();            // FIXED Hero with Reliable Logo Loading
     initializeAbout();           // About Section with Animations & Interactions
     initializeServices();        // Services with Animations & Interactions
     initializeTeam();            // Team with Animations & Interactions
@@ -2283,7 +2356,7 @@ const initializeApp = () => {
         floatingActions.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
     }
     
-    console.log('✅ Holistic Psychological Services website initialized successfully with UPDATED hero!');
+    console.log('✅ FIXED Holistic Psychological Services website initialized successfully!');
 };
 
 /**
@@ -2301,17 +2374,14 @@ const cleanup = () => {
     });
     STATE.observers.clear();
     
-    // Remove event listeners if needed
-    // (Most will be automatically cleaned up)
-    
     console.log('🧹 Cleanup completed');
 };
 
 /* ==========================================================================
-   16. Event Listeners & Bootstrap
+   16. Event Listeners & Bootstrap - FIXED
    ========================================================================== */
 
-// Initialize when DOM is ready
+// FIXED: Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
