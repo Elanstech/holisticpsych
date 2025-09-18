@@ -1095,6 +1095,22 @@ class HeroController {
    ABOUT SECTION
    ======================================== */
 
+const ABOUT_CONFIG = {
+    animations: {
+        duration: 600,
+        stagger: 150,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    },
+    scroll: {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    },
+    stats: {
+        animationSpeed: 50,
+        duration: 2000
+    }
+};
+
 class AboutSectionController {
     constructor() {
         // State management
@@ -1222,7 +1238,7 @@ class AboutSectionController {
         if (width < 1200) return 'lg';
         return 'xl';
     }
-   
+
     setupImageLoading() {
         const images = document.querySelectorAll('.about-preview img');
         
@@ -1336,7 +1352,7 @@ class AboutSectionController {
             fallback.style.opacity = '1';
         }, 100);
     }
-   
+
     setupScrollAnimations() {
         const options = {
             threshold: ABOUT_CONFIG.scroll.threshold,
@@ -1704,7 +1720,7 @@ class AboutSectionController {
         
         console.warn('About section loaded with reduced functionality due to error');
     }
-
+   
     pause() {
         console.log('About section paused (page hidden)');
     }
@@ -1727,6 +1743,34 @@ class AboutSectionController {
         console.log('About section cleanup completed');
     }
 }
+
+let aboutController;
+
+function initializeAboutSection() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            aboutController = new AboutSectionController();
+        });
+    } else {
+        aboutController = new AboutSectionController();
+    }
+}
+
+// Start initialization
+initializeAboutSection();
+
+// Expose to global scope for debugging
+window.AboutSection = {
+    controller: aboutController,
+    config: ABOUT_CONFIG
+};
+
+// Handle cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (aboutController) {
+        aboutController.destroy();
+    }
+});
 
 console.log('About section JavaScript loaded and ready');
 
