@@ -1,7 +1,7 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE SCRIPT
+   HOLISTIC PSYCHOLOGICAL SERVICES - REORGANIZED BY SECTION
    Manhattan Mental Health - Professional Experience
-   Restructured for Easy Component Management
+   Organized by Website Sections for Easy Maintenance
    ======================================== */
 
 /* ========================================
@@ -30,7 +30,6 @@ const CONFIG = {
     
     // Hero settings
     hero: {
-        // Typewriter settings
         typewriter: {
             texts: [
                 "Professional Mental Health Care in the Heart of Manhattan",
@@ -43,17 +42,14 @@ const CONFIG = {
             pauseDuration: 2000,
             cursorBlinkSpeed: 1000
         },
-        
-        // Background rotation settings
         background: {
-            transitionDuration: 6000, // 6 seconds
+            transitionDuration: 6000,
             images: [
                 'https://images.pexels.com/photos/635279/pexels-photo-635279.jpeg',
                 'images/hero1.png',
                 'https://images.unsplash.com/photo-1680458842367-0d47f573ca2b?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
             ]
         },
-        
         backgroundTransitionDuration: 5000,
         overlayOpacity: 0.4,
         zoomScale: 1.1
@@ -72,8 +68,6 @@ const STATE = {
     currentSection: 'home',
     observers: new Map(),
     isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    
-    // Hero state
     hero: {
         typewriterIndex: 0,
         typewriterPosition: 0,
@@ -83,7 +77,6 @@ const STATE = {
         backgroundInterval: null,
         isInitialized: false
     },
-    
     scrollPosition: 0,
     isInitialized: false
 };
@@ -220,7 +213,6 @@ class HeaderController {
     init() {
         this.bindEvents();
         this.checkScrollPosition();
-        
         console.log('Header controller initialized');
     }
     
@@ -310,12 +302,10 @@ class MobileMenuController {
         this.bindEvents();
         this.setupAccessibility();
         this.syncActiveStates();
-        
         console.log('Mobile menu controller initialized');
     }
     
     bindEvents() {
-        // Mobile toggle
         if (this.menuToggle) {
             this.menuToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -323,7 +313,6 @@ class MobileMenuController {
             });
         }
 
-        // Scroll hamburger
         if (this.scrollHamburger) {
             this.scrollHamburger.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -331,28 +320,24 @@ class MobileMenuController {
             });
         }
         
-        // Close menu
         if (this.menuClose) {
             this.menuClose.addEventListener('click', () => {
                 this.closeMenu();
             });
         }
         
-        // Close on overlay click
         if (this.menuOverlay) {
             this.menuOverlay.addEventListener('click', () => {
                 this.closeMenu();
             });
         }
         
-        // Handle mobile nav links
         this.mobileNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 this.handleNavClick(e, link);
             });
         });
         
-        // Handle desktop nav links
         this.desktopNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -366,21 +351,18 @@ class MobileMenuController {
             });
         });
         
-        // Close on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isOpen) {
                 this.closeMenu();
             }
         });
         
-        // Handle resize
         window.addEventListener('resize', () => {
             if (window.innerWidth > CONFIG.breakpoints.desktop && this.isOpen) {
                 this.closeMenu();
             }
         });
         
-        // Prevent scroll on touch move when menu is open
         if (this.menuPanel) {
             this.menuPanel.addEventListener('touchmove', (e) => {
                 e.stopPropagation();
@@ -395,7 +377,6 @@ class MobileMenuController {
     }
     
     setupAccessibility() {
-        // Set initial ARIA attributes
         if (this.menuToggle) {
             this.menuToggle.setAttribute('aria-expanded', 'false');
             this.menuToggle.setAttribute('aria-controls', 'mobileMenuPanel');
@@ -459,11 +440,9 @@ class MobileMenuController {
         this.isOpen = true;
         STATE.isMobileMenuOpen = true;
         
-        // Prevent body scroll
         this.body.classList.add('menu-open');
         this.body.style.overflow = 'hidden';
         
-        // Update toggle button states
         if (this.menuToggle) {
             this.menuToggle.classList.add('active');
             this.menuToggle.setAttribute('aria-expanded', 'true');
@@ -474,27 +453,23 @@ class MobileMenuController {
             this.scrollHamburger.setAttribute('aria-expanded', 'true');
         }
         
-        // Show overlay
         if (this.menuOverlay) {
             this.menuOverlay.classList.add('active');
         }
         
-        // Show panel with delay for smooth animation
         if (this.menuPanel) {
             requestAnimationFrame(() => {
                 this.menuPanel.classList.add('active');
                 
-                // Reset nav link animations
                 this.mobileNavLinks.forEach((link, index) => {
                     link.style.animation = 'none';
-                    link.offsetHeight; // Trigger reflow
+                    link.offsetHeight;
                     link.style.animation = `slideInFromRight 0.5s ease forwards`;
                     link.style.animationDelay = `${0.1 + (index * 0.05)}s`;
                 });
             });
         }
         
-        // Focus management
         setTimeout(() => {
             this.isAnimating = false;
             if (this.menuClose) {
@@ -511,7 +486,6 @@ class MobileMenuController {
         this.isOpen = false;
         STATE.isMobileMenuOpen = false;
         
-        // Update toggle button states
         if (this.menuToggle) {
             this.menuToggle.classList.remove('active');
             this.menuToggle.setAttribute('aria-expanded', 'false');
@@ -522,25 +496,21 @@ class MobileMenuController {
             this.scrollHamburger.setAttribute('aria-expanded', 'false');
         }
         
-        // Hide panel
         if (this.menuPanel) {
             this.menuPanel.classList.remove('active');
         }
         
-        // Hide overlay with delay
         setTimeout(() => {
             if (this.menuOverlay) {
                 this.menuOverlay.classList.remove('active');
             }
         }, 100);
         
-        // Re-enable body scroll
         setTimeout(() => {
             this.body.classList.remove('menu-open');
             this.body.style.overflow = '';
             this.isAnimating = false;
             
-            // Return focus to toggle button
             if (this.menuToggle && Utils.isMobile()) {
                 this.menuToggle.focus();
             } else if (this.scrollHamburger && Utils.isDesktop()) {
@@ -591,9 +561,11 @@ class MobileMenuController {
 }
 
 /* ========================================
-   ENHANCED HERO SECTION CONTROLLER
+   HERO SECTION
    ======================================== */
-class EnhancedTypewriterController {
+
+// Typewriter Effect Controller
+class HeroTypewriterController {
     constructor(element) {
         this.element = element;
         this.texts = CONFIG.hero.typewriter.texts;
@@ -613,12 +585,11 @@ class EnhancedTypewriterController {
         this.element.textContent = '';
         this.isInitialized = true;
         
-        // Start typewriter after a delay
         setTimeout(() => {
             this.typeText();
         }, 1000);
         
-        console.log('Enhanced typewriter effect initialized');
+        console.log('Hero typewriter effect initialized');
     }
     
     typeText() {
@@ -630,7 +601,6 @@ class EnhancedTypewriterController {
         const currentText = this.texts[this.currentTextIndex];
         
         if (!this.isDeleting) {
-            // Typing
             if (this.currentCharIndex < currentText.length) {
                 this.element.textContent = currentText.substring(0, this.currentCharIndex + 1);
                 this.currentCharIndex++;
@@ -639,14 +609,12 @@ class EnhancedTypewriterController {
                     this.typeText();
                 }, this.getTypeSpeed());
             } else {
-                // Pause before deleting
                 STATE.hero.typewriterTimeout = setTimeout(() => {
                     this.isDeleting = true;
                     this.typeText();
                 }, CONFIG.hero.typewriter.pauseDuration);
             }
         } else {
-            // Deleting
             if (this.currentCharIndex > 0) {
                 this.element.textContent = currentText.substring(0, this.currentCharIndex - 1);
                 this.currentCharIndex--;
@@ -655,7 +623,6 @@ class EnhancedTypewriterController {
                     this.typeText();
                 }, CONFIG.hero.typewriter.deleteSpeed);
             } else {
-                // Move to next text
                 this.isDeleting = false;
                 this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
                 
@@ -667,7 +634,6 @@ class EnhancedTypewriterController {
     }
     
     getTypeSpeed() {
-        // Add some randomness to typing speed for natural feel
         const baseSpeed = CONFIG.hero.typewriter.typeSpeed;
         const variance = baseSpeed * 0.3;
         return baseSpeed + (Math.random() * variance - variance / 2);
@@ -692,7 +658,8 @@ class EnhancedTypewriterController {
     }
 }
 
-class EnhancedBackgroundController {
+// Background Controller
+class HeroBackgroundController {
     constructor() {
         this.backgroundImages = document.querySelectorAll('.hero-bg-image');
         this.currentIndex = 0;
@@ -707,24 +674,20 @@ class EnhancedBackgroundController {
         if (!this.backgroundImages.length || this.isInitialized) return;
         
         try {
-            // Preload all background images
             await this.preloadImages();
             
-            // Set first image as active
             this.backgroundImages[0].classList.add('active');
             this.currentIndex = 0;
             
-            // Start rotation if motion is allowed
             if (!STATE.isReducedMotion) {
                 this.startRotation();
             }
             
             this.isInitialized = true;
-            console.log('Enhanced background controller initialized');
+            console.log('Hero background controller initialized');
             
         } catch (error) {
-            console.warn('Some background images failed to load:', error);
-            // Continue with available images
+            console.warn('Some hero background images failed to load:', error);
             this.isInitialized = true;
         }
     }
@@ -732,7 +695,7 @@ class EnhancedBackgroundController {
     async preloadImages() {
         const preloadPromises = CONFIG.hero.background.images.map(src => 
             this.preloadImage(src).catch(err => {
-                console.warn(`Failed to preload image: ${src}`, err);
+                console.warn(`Failed to preload hero image: ${src}`, err);
                 return null;
             })
         );
@@ -740,7 +703,7 @@ class EnhancedBackgroundController {
         const results = await Promise.allSettled(preloadPromises);
         const loadedCount = results.filter(result => result.status === 'fulfilled').length;
         
-        console.log(`Preloaded ${loadedCount}/${CONFIG.hero.background.images.length} background images`);
+        console.log(`Preloaded ${loadedCount}/${CONFIG.hero.background.images.length} hero background images`);
     }
     
     preloadImage(src) {
@@ -759,30 +722,25 @@ class EnhancedBackgroundController {
             this.nextBackground();
         }, CONFIG.hero.background.transitionDuration);
         
-        console.log('Enhanced background rotation started');
+        console.log('Hero background rotation started');
     }
     
     stopRotation() {
         if (STATE.hero.backgroundInterval) {
             clearInterval(STATE.hero.backgroundInterval);
             STATE.hero.backgroundInterval = null;
-            console.log('Enhanced background rotation stopped');
+            console.log('Hero background rotation stopped');
         }
     }
     
     nextBackground() {
         if (!this.backgroundImages.length || STATE.isReducedMotion) return;
         
-        // Remove active class from current image
         this.backgroundImages[this.currentIndex].classList.remove('active');
-        
-        // Move to next image
         this.currentIndex = (this.currentIndex + 1) % this.backgroundImages.length;
-        
-        // Add active class to next image
         this.backgroundImages[this.currentIndex].classList.add('active');
         
-        console.log(`Switched to background ${this.currentIndex + 1} with zoom effect`);
+        console.log(`Switched to hero background ${this.currentIndex + 1}`);
     }
     
     setBackground(index) {
@@ -799,7 +757,8 @@ class EnhancedBackgroundController {
     }
 }
 
-class EnhancedLogoController {
+// Logo Controller
+class HeroLogoController {
     constructor() {
         this.logoContainer = document.querySelector('.hero-logo-container');
         this.logoImage = document.querySelector('.hero-logo');
@@ -815,14 +774,14 @@ class EnhancedLogoController {
         this.setupLogoInteractions();
         this.isInitialized = true;
         
-        console.log('Enhanced logo controller initialized');
+        console.log('Hero logo controller initialized');
     }
     
     setupLogoLoading() {
-        console.log('Loading enhanced hero logo...');
+        console.log('Loading hero logo...');
         
         const handleLogoSuccess = () => {
-            console.log('Enhanced hero logo loaded successfully');
+            console.log('Hero logo loaded successfully');
             this.logoImage.style.opacity = '1';
             
             if (!STATE.isReducedMotion) {
@@ -831,7 +790,7 @@ class EnhancedLogoController {
         };
         
         const handleLogoError = () => {
-            console.warn('Enhanced hero logo failed to load, showing fallback');
+            console.warn('Hero logo failed to load, showing fallback');
             this.createFallbackLogo();
         };
         
@@ -845,7 +804,6 @@ class EnhancedLogoController {
             this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
             this.logoImage.addEventListener('error', handleLogoError, { once: true });
             
-            // Fallback timeout
             setTimeout(() => {
                 if (this.logoImage.naturalHeight === 0) {
                     handleLogoError();
@@ -907,19 +865,16 @@ class EnhancedLogoController {
         
         const handleClick = () => {
             this.logoContainer.style.animation = 'none';
-            this.logoContainer.offsetHeight; // Force reflow
+            this.logoContainer.offsetHeight;
             this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
             
-            if (typeof Utils !== 'undefined' && Utils.announceToScreenReader) {
-                Utils.announceToScreenReader('Logo animation restarted');
-            }
+            Utils.announceToScreenReader('Logo animation restarted');
         };
         
         this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
         this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
         this.logoContainer.addEventListener('click', handleClick);
         
-        // Touch support
         this.logoContainer.addEventListener('touchstart', handleMouseEnter, { passive: true });
         this.logoContainer.addEventListener('touchend', handleMouseLeave, { passive: true });
     }
@@ -929,7 +884,8 @@ class EnhancedLogoController {
     }
 }
 
-class EnhancedScrollIndicatorController {
+// Scroll Indicator Controller
+class HeroScrollIndicatorController {
     constructor() {
         this.scrollIndicator = document.querySelector('.scroll-indicator');
         
@@ -942,7 +898,7 @@ class EnhancedScrollIndicatorController {
         this.scrollIndicator.addEventListener('click', this.handleScrollClick.bind(this));
         this.setupScrollListening();
         
-        console.log('Enhanced scroll indicator initialized');
+        console.log('Hero scroll indicator initialized');
     }
     
     handleScrollClick() {
@@ -951,20 +907,13 @@ class EnhancedScrollIndicatorController {
                            document.querySelector('main > *:not(.hero)');
         
         if (nextSection) {
-            if (typeof Utils !== 'undefined' && Utils.smoothScrollTo) {
-                Utils.smoothScrollTo(nextSection);
-            } else {
-                nextSection.scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            if (typeof Utils !== 'undefined' && Utils.announceToScreenReader) {
-                Utils.announceToScreenReader('Scrolled to next section');
-            }
+            Utils.smoothScrollTo(nextSection);
+            Utils.announceToScreenReader('Scrolled to next section');
         }
     }
     
     setupScrollListening() {
-        const handleScroll = this.throttle(() => {
+        const handleScroll = Utils.throttle(() => {
             const scrolled = window.pageYOffset > 100;
             
             if (this.scrollIndicator) {
@@ -975,23 +924,13 @@ class EnhancedScrollIndicatorController {
         
         window.addEventListener('scroll', handleScroll);
     }
-    
-    throttle(func, limit) {
-        let inThrottle;
-        return function executedFunction(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
 
     destroy() {
         // Clean up if needed
     }
 }
 
+// Main Hero Controller
 class HeroController {
     constructor() {
         this.heroSection = document.querySelector('.hero');
@@ -1006,31 +945,25 @@ class HeroController {
     async init() {
         if (this.isInitialized) return;
         
-        console.log('Initializing Enhanced Hero section...');
+        console.log('Initializing Hero section...');
         
         try {
-            // Initialize core controllers
-            this.controllers.background = new EnhancedBackgroundController();
-            this.controllers.logo = new EnhancedLogoController();
-            this.controllers.scrollIndicator = new EnhancedScrollIndicatorController();
+            this.controllers.background = new HeroBackgroundController();
+            this.controllers.logo = new HeroLogoController();
+            this.controllers.scrollIndicator = new HeroScrollIndicatorController();
             
-            // Initialize typewriter after a small delay
             await this.initializeTypewriter();
             
-            // Set up visibility handling
             this.setupVisibilityHandling();
-            
-            // Set up motion preferences
             this.setupMotionPreferences();
             
-            // Mark as initialized
             this.isInitialized = true;
             STATE.hero.isInitialized = true;
             
-            console.log('Enhanced Hero section initialized successfully!');
+            console.log('Hero section initialized successfully!');
             
         } catch (error) {
-            console.error('Enhanced Hero initialization failed:', error);
+            console.error('Hero initialization failed:', error);
             this.handleInitializationError(error);
         }
     }
@@ -1040,7 +973,7 @@ class HeroController {
             setTimeout(() => {
                 const typewriterElement = document.getElementById('typewriterText');
                 if (typewriterElement) {
-                    this.controllers.typewriter = new EnhancedTypewriterController(typewriterElement);
+                    this.controllers.typewriter = new HeroTypewriterController(typewriterElement);
                 }
                 resolve();
             }, 1500);
@@ -1050,23 +983,21 @@ class HeroController {
     setupVisibilityHandling() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Pause animations when page is hidden
                 if (this.controllers.background) {
                     this.controllers.background.stopRotation();
                 }
                 if (this.controllers.typewriter) {
                     this.controllers.typewriter.pause();
                 }
-                console.log('Enhanced Hero animations paused (page hidden)');
+                console.log('Hero animations paused (page hidden)');
             } else {
-                // Resume animations when page is visible
                 if (this.controllers.background && !STATE.isReducedMotion) {
                     this.controllers.background.startRotation();
                 }
                 if (this.controllers.typewriter) {
                     this.controllers.typewriter.resume();
                 }
-                console.log('Enhanced Hero animations resumed (page visible)');
+                console.log('Hero animations resumed (page visible)');
             }
         });
     }
@@ -1076,15 +1007,13 @@ class HeroController {
         
         const handleMotionChange = (e) => {
             STATE.isReducedMotion = e.matches;
-            console.log(`Enhanced Hero motion preference: ${STATE.isReducedMotion ? 'reduced' : 'normal'}`);
+            console.log(`Hero motion preference: ${STATE.isReducedMotion ? 'reduced' : 'normal'}`);
             
             if (STATE.isReducedMotion) {
-                // Stop all animations
                 if (this.controllers.background) {
                     this.controllers.background.stopRotation();
                 }
             } else {
-                // Re-enable animations
                 if (this.controllers.background) {
                     this.controllers.background.startRotation();
                 }
@@ -1092,17 +1021,15 @@ class HeroController {
         };
         
         mediaQuery.addEventListener('change', handleMotionChange);
-        handleMotionChange(mediaQuery); // Initial check
+        handleMotionChange(mediaQuery);
     }
     
     handleInitializationError(error) {
-        // Fallback: show static content
         const typewriterElement = document.getElementById('typewriterText');
         if (typewriterElement) {
             typewriterElement.textContent = 'Professional Mental Health Care in Manhattan';
         }
         
-        // Remove problematic animations
         const glassPanel = document.querySelector('.glass-panel');
         if (glassPanel) {
             glassPanel.style.animation = 'none';
@@ -1110,7 +1037,7 @@ class HeroController {
             glassPanel.style.transform = 'none';
         }
         
-        console.warn('Enhanced Hero section loaded with reduced functionality due to error');
+        console.warn('Hero section loaded with reduced functionality due to error');
     }
     
     // Public API methods
@@ -1142,14 +1069,13 @@ class HeroController {
             setTimeout(() => {
                 const typewriterElement = document.getElementById('typewriterText');
                 if (typewriterElement) {
-                    this.controllers.typewriter = new EnhancedTypewriterController(typewriterElement);
+                    this.controllers.typewriter = new HeroTypewriterController(typewriterElement);
                 }
             }, 100);
         }
     }
     
     destroy() {
-        // Clear all timeouts and intervals
         if (STATE.hero.typewriterTimeout) {
             clearTimeout(STATE.hero.typewriterTimeout);
         }
@@ -1157,41 +1083,32 @@ class HeroController {
             clearInterval(STATE.hero.backgroundInterval);
         }
         
-        // Destroy controllers
         Object.values(this.controllers).forEach(controller => {
             if (controller.destroy) controller.destroy();
         });
         
-        console.log('Enhanced Hero section cleanup completed');
+        console.log('Hero section cleanup completed');
     }
 }
 
 /* ========================================
-   SECTION ANIMATION CONTROLLER
+   ABOUT SECTION
    ======================================== */
-class SectionAnimationController {
+class AboutSectionController {
     constructor() {
-        this.sections = document.querySelectorAll('section');
+        this.aboutSection = document.querySelector('.about');
         
-        if (this.sections.length > 0) {
+        if (this.aboutSection) {
             this.init();
         }
     }
     
     init() {
-        this.initializeAboutAnimations();
-        this.initializeServicesAnimations();
-        this.initializeTeamAnimations();
-        this.initializeReviewsAnimations();
-        this.initializeContactAnimations();
-        
-        console.log('Section animations initialized');
+        this.initializeAnimations();
+        console.log('About section initialized');
     }
     
-    initializeAboutAnimations() {
-        const aboutSection = document.querySelector('.about');
-        if (!aboutSection) return;
-        
+    initializeAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1223,14 +1140,39 @@ class SectionAnimationController {
             });
         }, { threshold: 0.2 });
         
-        observer.observe(aboutSection);
+        observer.observe(this.aboutSection);
         STATE.observers.set('about', observer);
     }
-    
-    initializeServicesAnimations() {
-        const servicesSection = document.querySelector('.services');
-        if (!servicesSection) return;
+
+    destroy() {
+        const observer = STATE.observers.get('about');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('about');
+        }
+        console.log('About section destroyed');
+    }
+}
+
+/* ========================================
+   SERVICES SECTION
+   ======================================== */
+class ServicesSectionController {
+    constructor() {
+        this.servicesSection = document.querySelector('.services');
         
+        if (this.servicesSection) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.initializeAnimations();
+        this.initializeInteractions();
+        console.log('Services section initialized');
+    }
+    
+    initializeAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1250,14 +1192,82 @@ class SectionAnimationController {
             });
         }, { threshold: 0.1 });
         
-        observer.observe(servicesSection);
+        observer.observe(this.servicesSection);
         STATE.observers.set('services', observer);
     }
     
-    initializeTeamAnimations() {
-        const teamSection = document.querySelector('.team');
-        if (!teamSection) return;
+    initializeInteractions() {
+        const serviceCards = document.querySelectorAll('.service-card');
         
+        serviceCards.forEach(card => {
+            let isHovered = false;
+            
+            const handleMouseEnter = () => {
+                if (!isHovered && !STATE.isReducedMotion) {
+                    isHovered = true;
+                    const icon = card.querySelector('.service-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(5deg)';
+                    }
+                    
+                    const features = card.querySelectorAll('.service-features li');
+                    features.forEach((feature, index) => {
+                        setTimeout(() => {
+                            feature.style.transform = 'translateX(5px)';
+                        }, index * 50);
+                    });
+                }
+            };
+            
+            const handleMouseLeave = () => {
+                if (isHovered) {
+                    isHovered = false;
+                    const icon = card.querySelector('.service-icon');
+                    if (icon) {
+                        icon.style.transform = '';
+                    }
+                    
+                    const features = card.querySelectorAll('.service-features li');
+                    features.forEach(feature => {
+                        feature.style.transform = '';
+                    });
+                }
+            };
+            
+            card.addEventListener('mouseenter', handleMouseEnter);
+            card.addEventListener('mouseleave', handleMouseLeave);
+        });
+    }
+
+    destroy() {
+        const observer = STATE.observers.get('services');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('services');
+        }
+        console.log('Services section destroyed');
+    }
+}
+
+/* ========================================
+   TEAM SECTION
+   ======================================== */
+class TeamSectionController {
+    constructor() {
+        this.teamSection = document.querySelector('.team');
+        
+        if (this.teamSection) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.initializeAnimations();
+        this.initializeInteractions();
+        console.log('Team section initialized');
+    }
+    
+    initializeAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1268,14 +1278,83 @@ class SectionAnimationController {
             });
         }, { threshold: 0.1 });
         
-        observer.observe(teamSection);
+        observer.observe(this.teamSection);
         STATE.observers.set('team', observer);
     }
     
-    initializeReviewsAnimations() {
-        const reviewsSection = document.querySelector('.reviews');
-        if (!reviewsSection) return;
+    initializeInteractions() {
+        const teamCards = document.querySelectorAll('.team-card');
         
+        teamCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!STATE.isReducedMotion) {
+                    const badge = card.querySelector('.experience-badge');
+                    const image = card.querySelector('.team-image');
+                    const credentials = card.querySelectorAll('.credential');
+                    
+                    if (badge) {
+                        badge.style.transform = 'scale(1.1) rotate(-5deg)';
+                    }
+                    if (image) {
+                        image.style.transform = 'scale(1.05)';
+                    }
+                    
+                    credentials.forEach((cred, index) => {
+                        setTimeout(() => {
+                            cred.style.transform = 'translateY(-2px)';
+                        }, index * 100);
+                    });
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const badge = card.querySelector('.experience-badge');
+                const image = card.querySelector('.team-image');
+                const credentials = card.querySelectorAll('.credential');
+                
+                if (badge) {
+                    badge.style.transform = '';
+                }
+                if (image) {
+                    image.style.transform = '';
+                }
+                
+                credentials.forEach(cred => {
+                    cred.style.transform = '';
+                });
+            });
+        });
+    }
+
+    destroy() {
+        const observer = STATE.observers.get('team');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('team');
+        }
+        console.log('Team section destroyed');
+    }
+}
+
+/* ========================================
+   REVIEWS SECTION
+   ======================================== */
+class ReviewsSectionController {
+    constructor() {
+        this.reviewsSection = document.querySelector('.reviews');
+        
+        if (this.reviewsSection) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.initializeAnimations();
+        this.initializeInteractions();
+        console.log('Reviews section initialized');
+    }
+    
+    initializeAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1303,35 +1382,46 @@ class SectionAnimationController {
             });
         }, { threshold: 0.1 });
         
-        observer.observe(reviewsSection);
+        observer.observe(this.reviewsSection);
         STATE.observers.set('reviews', observer);
     }
     
-    initializeContactAnimations() {
-        const contactSection = document.querySelector('.contact');
-        if (!contactSection) return;
+    initializeInteractions() {
+        const reviewCards = document.querySelectorAll('.review-card');
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const contactCards = entry.target.querySelectorAll('.contact-card');
-                    const formContainer = entry.target.querySelector('.contact-form-container');
+        reviewCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!STATE.isReducedMotion) {
+                    const initial = card.querySelector('.client-initial');
+                    const stars = card.querySelectorAll('.stars i');
                     
-                    Utils.staggerAnimations(contactCards, 'slide-left', 150);
-                    
-                    if (formContainer) {
-                        setTimeout(() => {
-                            Utils.animateElement(formContainer, 'slide-right', 0);
-                        }, 300);
+                    if (initial) {
+                        initial.style.transform = 'scale(1.1) rotate(5deg)';
+                        initial.style.background = 'var(--gradient-primary)';
                     }
                     
-                    observer.unobserve(entry.target);
+                    stars.forEach((star, index) => {
+                        setTimeout(() => {
+                            star.style.transform = 'scale(1.2)';
+                        }, index * 50);
+                    });
                 }
             });
-        }, { threshold: 0.2 });
-        
-        observer.observe(contactSection);
-        STATE.observers.set('contact', observer);
+            
+            card.addEventListener('mouseleave', () => {
+                const initial = card.querySelector('.client-initial');
+                const stars = card.querySelectorAll('.stars i');
+                
+                if (initial) {
+                    initial.style.transform = '';
+                    initial.style.background = '';
+                }
+                
+                stars.forEach(star => {
+                    star.style.transform = '';
+                });
+            });
+        });
     }
     
     animateStatNumbers(statItems) {
@@ -1368,36 +1458,96 @@ class SectionAnimationController {
     }
 
     destroy() {
-        STATE.observers.forEach(observer => observer.disconnect());
-        STATE.observers.clear();
-        console.log('Section animations destroyed');
+        const observer = STATE.observers.get('reviews');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('reviews');
+        }
+        console.log('Reviews section destroyed');
     }
 }
 
 /* ========================================
-   CONTACT FORM CONTROLLER
+   CONTACT SECTION
    ======================================== */
-class ContactFormController {
+class ContactSectionController {
     constructor() {
+        this.contactSection = document.querySelector('.contact');
         this.form = document.getElementById('contactForm');
         this.inputs = null;
         this.submitButton = null;
         
-        if (this.form) {
+        if (this.contactSection) {
             this.init();
         }
     }
     
     init() {
+        this.initializeAnimations();
+        this.initializeInteractions();
+        
+        if (this.form) {
+            this.initializeForm();
+        }
+        
+        console.log('Contact section initialized');
+    }
+    
+    initializeAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const contactCards = entry.target.querySelectorAll('.contact-card');
+                    const formContainer = entry.target.querySelector('.contact-form-container');
+                    
+                    Utils.staggerAnimations(contactCards, 'slide-left', 150);
+                    
+                    if (formContainer) {
+                        setTimeout(() => {
+                            Utils.animateElement(formContainer, 'slide-right', 0);
+                        }, 300);
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        observer.observe(this.contactSection);
+        STATE.observers.set('contact', observer);
+    }
+    
+    initializeInteractions() {
+        const contactCards = document.querySelectorAll('.contact-card');
+        
+        contactCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!STATE.isReducedMotion) {
+                    const icon = card.querySelector('.card-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(5deg)';
+                    }
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const icon = card.querySelector('.card-icon');
+                if (icon) {
+                    icon.style.transform = '';
+                }
+            });
+        });
+    }
+    
+    initializeForm() {
         this.inputs = this.form.querySelectorAll('input, select, textarea');
         this.submitButton = this.form.querySelector('.btn-submit');
         
-        this.bindEvents();
-        
-        console.log('Contact form controller initialized');
+        this.bindFormEvents();
+        console.log('Contact form initialized');
     }
     
-    bindEvents() {
+    bindFormEvents() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         
         this.inputs.forEach(input => {
@@ -1573,9 +1723,8 @@ class ContactFormController {
             const formData = new FormData(this.form);
             const formObject = Object.fromEntries(formData);
             
-            console.log('Form submitted:', formObject);
+            console.log('Contact form submitted:', formObject);
             
-            // Simulate form submission
             await new Promise(resolve => setTimeout(resolve, 2000));
             
             this.showFormMessage(
@@ -1590,7 +1739,7 @@ class ContactFormController {
             console.log('Contact form submitted successfully');
             
         } catch (error) {
-            console.error('Form submission error:', error);
+            console.error('Contact form submission error:', error);
             this.showFormMessage(
                 'We apologize, but there was an error sending your message. Please try again or call us directly at (646) 971-7325.',
                 'error'
@@ -1602,12 +1751,17 @@ class ContactFormController {
     }
 
     destroy() {
-        console.log('Contact form controller destroyed');
+        const observer = STATE.observers.get('contact');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('contact');
+        }
+        console.log('Contact section destroyed');
     }
 }
 
 /* ========================================
-   FLOATING ACTION BUTTONS CONTROLLER
+   FLOATING ACTION BUTTONS
    ======================================== */
 class FloatingActionsController {
     constructor() {
@@ -1746,7 +1900,7 @@ class FloatingActionsController {
 }
 
 /* ========================================
-   INTERACTIVE ELEMENTS CONTROLLER
+   INTERACTIVE ELEMENTS & BUTTON EFFECTS
    ======================================== */
 class InteractiveElementsController {
     constructor() {
@@ -1754,160 +1908,8 @@ class InteractiveElementsController {
     }
     
     init() {
-        this.initializeServiceCardInteractions();
-        this.initializeTeamCardInteractions();
-        this.initializeReviewCardInteractions();
-        this.initializeContactCardInteractions();
         this.initializeButtonRippleEffects();
-        
         console.log('Interactive elements controller initialized');
-    }
-    
-    initializeServiceCardInteractions() {
-        const serviceCards = document.querySelectorAll('.service-card');
-        
-        serviceCards.forEach(card => {
-            let isHovered = false;
-            
-            const handleMouseEnter = () => {
-                if (!isHovered && !STATE.isReducedMotion) {
-                    isHovered = true;
-                    const icon = card.querySelector('.service-icon');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1) rotate(5deg)';
-                    }
-                    
-                    const features = card.querySelectorAll('.service-features li');
-                    features.forEach((feature, index) => {
-                        setTimeout(() => {
-                            feature.style.transform = 'translateX(5px)';
-                        }, index * 50);
-                    });
-                }
-            };
-            
-            const handleMouseLeave = () => {
-                if (isHovered) {
-                    isHovered = false;
-                    const icon = card.querySelector('.service-icon');
-                    if (icon) {
-                        icon.style.transform = '';
-                    }
-                    
-                    const features = card.querySelectorAll('.service-features li');
-                    features.forEach(feature => {
-                        feature.style.transform = '';
-                    });
-                }
-            };
-            
-            card.addEventListener('mouseenter', handleMouseEnter);
-            card.addEventListener('mouseleave', handleMouseLeave);
-        });
-    }
-    
-    initializeTeamCardInteractions() {
-        const teamCards = document.querySelectorAll('.team-card');
-        
-        teamCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const badge = card.querySelector('.experience-badge');
-                    const image = card.querySelector('.team-image');
-                    const credentials = card.querySelectorAll('.credential');
-                    
-                    if (badge) {
-                        badge.style.transform = 'scale(1.1) rotate(-5deg)';
-                    }
-                    if (image) {
-                        image.style.transform = 'scale(1.05)';
-                    }
-                    
-                    credentials.forEach((cred, index) => {
-                        setTimeout(() => {
-                            cred.style.transform = 'translateY(-2px)';
-                        }, index * 100);
-                    });
-                }
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                const badge = card.querySelector('.experience-badge');
-                const image = card.querySelector('.team-image');
-                const credentials = card.querySelectorAll('.credential');
-                
-                if (badge) {
-                    badge.style.transform = '';
-                }
-                if (image) {
-                    image.style.transform = '';
-                }
-                
-                credentials.forEach(cred => {
-                    cred.style.transform = '';
-                });
-            });
-        });
-    }
-    
-    initializeReviewCardInteractions() {
-        const reviewCards = document.querySelectorAll('.review-card');
-        
-        reviewCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const initial = card.querySelector('.client-initial');
-                    const stars = card.querySelectorAll('.stars i');
-                    
-                    if (initial) {
-                        initial.style.transform = 'scale(1.1) rotate(5deg)';
-                        initial.style.background = 'var(--gradient-primary)';
-                    }
-                    
-                    stars.forEach((star, index) => {
-                        setTimeout(() => {
-                            star.style.transform = 'scale(1.2)';
-                        }, index * 50);
-                    });
-                }
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                const initial = card.querySelector('.client-initial');
-                const stars = card.querySelectorAll('.stars i');
-                
-                if (initial) {
-                    initial.style.transform = '';
-                    initial.style.background = '';
-                }
-                
-                stars.forEach(star => {
-                    star.style.transform = '';
-                });
-            });
-        });
-    }
-    
-    initializeContactCardInteractions() {
-        const contactCards = document.querySelectorAll('.contact-card');
-        
-        contactCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const icon = card.querySelector('.card-icon');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1) rotate(5deg)';
-                    }
-                }
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                const icon = card.querySelector('.card-icon');
-                if (icon) {
-                    icon.style.transform = '';
-                }
-            });
-        });
     }
     
     initializeButtonRippleEffects() {
@@ -1969,7 +1971,7 @@ class InteractiveElementsController {
 }
 
 /* ========================================
-   PERFORMANCE & ACCESSIBILITY CONTROLLER
+   PERFORMANCE & ACCESSIBILITY
    ======================================== */
 class PerformanceController {
     constructor() {
@@ -2015,7 +2017,6 @@ class PerformanceController {
     }
     
     initializeAccessibility() {
-        // Add skip link
         const skipLink = document.createElement('a');
         skipLink.href = '#main';
         skipLink.textContent = 'Skip to main content';
@@ -2044,13 +2045,11 @@ class PerformanceController {
         
         document.body.insertBefore(skipLink, document.body.firstChild);
         
-        // Add main landmark if not exists
         const main = document.querySelector('main') || document.querySelector('.main');
         if (main && !main.id) {
             main.id = 'main';
         }
         
-        // Add proper ARIA labels
         const sections = document.querySelectorAll('section');
         sections.forEach((section, index) => {
             if (!section.getAttribute('aria-label') && !section.querySelector('h1, h2, h3')) {
@@ -2058,7 +2057,6 @@ class PerformanceController {
             }
         });
         
-        // Create live region for announcements
         const liveRegion = document.createElement('div');
         liveRegion.id = 'live-region';
         liveRegion.setAttribute('aria-live', 'polite');
@@ -2072,7 +2070,6 @@ class PerformanceController {
         `;
         document.body.appendChild(liveRegion);
         
-        // Store reference for other functions to use
         window.announceToScreenReader = (message) => {
             liveRegion.textContent = message;
         };
@@ -2095,7 +2092,6 @@ class PerformanceController {
     }
     
     initializePerformanceOptimizations() {
-        // Debounce resize events
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -2104,7 +2100,6 @@ class PerformanceController {
             }, 250);
         });
         
-        // Preload critical resources
         const criticalImages = ['logo copy.png'];
         
         criticalImages.forEach(src => {
@@ -2147,28 +2142,25 @@ class HolisticPsychServicesApp {
         try {
             console.log('Initializing Holistic Psychological Services website...');
             
-            // Initialize controllers in order
             this.components.set('performance', new PerformanceController());
             this.components.set('header', new HeaderController());
             this.components.set('mobileMenu', new MobileMenuController());
             this.components.set('hero', new HeroController());
-            this.components.set('sectionAnimations', new SectionAnimationController());
-            this.components.set('contactForm', new ContactFormController());
+            this.components.set('about', new AboutSectionController());
+            this.components.set('services', new ServicesSectionController());
+            this.components.set('team', new TeamSectionController());
+            this.components.set('reviews', new ReviewsSectionController());
+            this.components.set('contact', new ContactSectionController());
             this.components.set('floatingActions', new FloatingActionsController());
             this.components.set('interactiveElements', new InteractiveElementsController());
             
-            // Mark app as initialized
             document.body.classList.add('app-initialized');
             STATE.isInitialized = true;
             this.isInitialized = true;
             
-            // Setup cleanup
             this.setupCleanup();
-            
-            // Handle motion preference changes
             this.handleMotionPreferenceChanges();
             
-            // Expose components globally for debugging
             window.holisticComponents = this.components;
             window.mobileMenu = this.components.get('mobileMenu');
             
@@ -2181,7 +2173,6 @@ class HolisticPsychServicesApp {
     }
 
     handleInitializationError(error) {
-        // Fallback initialization for critical components
         try {
             this.components.set('header', new HeaderController());
             this.components.set('mobileMenu', new MobileMenuController());
@@ -2193,7 +2184,7 @@ class HolisticPsychServicesApp {
     }
     
     setupGlobalEvents() {
-        window.addEventListener('resize', this.debounce(() => {
+        window.addEventListener('resize', Utils.debounce(() => {
             const wasMobile = this.isMobile;
             this.isMobile = window.innerWidth <= 768;
             
@@ -2273,19 +2264,16 @@ class HolisticPsychServicesApp {
     }
     
     cleanup() {
-        // Clear hero intervals
         const hero = this.components.get('hero');
         if (hero && hero.destroy) {
             hero.destroy();
         }
         
-        // Clear all observers
         STATE.observers.forEach(observer => {
             observer.disconnect();
         });
         STATE.observers.clear();
         
-        // Destroy all components
         this.components.forEach(component => {
             if (component.destroy) {
                 component.destroy();
@@ -2329,18 +2317,6 @@ class HolisticPsychServicesApp {
         return { ...CONFIG };
     }
 
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
     destroy() {
         this.cleanup();
         console.log('HolisticPsychServicesApp destroyed');
@@ -2348,38 +2324,32 @@ class HolisticPsychServicesApp {
 }
 
 /* ========================================
-   GLOBAL API & UTILITIES
+   GLOBAL API & INITIALIZATION
    ======================================== */
 
-// Enhanced Hero API (integrated from the enhanced hero file)
+// Global API
 window.HolisticPsychServices = {
     STATE,
     CONFIG,
     Utils,
     
-    // Main app instance (will be available after initialization)
     app: null,
     
-    // Utility functions
     smoothScrollTo: Utils.smoothScrollTo,
     smoothScrollToTop: Utils.smoothScrollToTop,
     announceToScreenReader: Utils.announceToScreenReader,
     
-    // Animation utilities
     animateElement: Utils.animateElement,
     staggerAnimations: Utils.staggerAnimations,
     
-    // Device detection
     isMobile: Utils.isMobile,
     isTablet: Utils.isTablet,
     isDesktop: Utils.isDesktop,
     
-    // Performance utilities
     debounce: Utils.debounce,
     throttle: Utils.throttle,
     
-    // Enhanced hero methods
-    enhancedHero: {
+    heroAPI: {
         nextBackground: () => {
             if (window.holisticApp) {
                 window.holisticApp.nextHeroBackground();
@@ -2408,11 +2378,7 @@ window.HolisticPsychServices = {
     }
 };
 
-/* ========================================
-   INITIALIZATION
-   ======================================== */
-
-// Initialize app when DOM is ready
+// Initialize app
 function initializeApp() {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
@@ -2423,7 +2389,7 @@ function initializeApp() {
     }
 }
 
-// Handle window focus/blur for performance
+// Performance event handlers
 window.addEventListener('focus', () => {
     if (window.holisticApp && !STATE.isReducedMotion) {
         window.holisticApp.resume();
@@ -2436,16 +2402,13 @@ window.addEventListener('blur', () => {
     }
 });
 
-// Handle resize events for responsive behavior
 window.addEventListener('resize', Utils.debounce(() => {
-    // Update mobile/desktop states
     const wasMobile = STATE.isMobile;
     const isNowMobile = Utils.isMobile();
     
     if (wasMobile !== isNowMobile) {
         console.log(`Device type changed: ${isNowMobile ? 'mobile' : 'desktop'}`);
         
-        // Close mobile menu if switching to desktop
         if (!isNowMobile && STATE.isMobileMenuOpen && window.holisticApp) {
             const mobileMenu = window.holisticApp.getComponent('mobileMenu');
             if (mobileMenu && mobileMenu.closeMenu) {
@@ -2457,35 +2420,22 @@ window.addEventListener('resize', Utils.debounce(() => {
     STATE.isMobile = isNowMobile;
 }, 250));
 
-/* ========================================
-   DEVELOPMENT & DEBUG TOOLS
-   ======================================== */
-
-// Development mode helpers (remove in production)
+// Development tools
 if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || 
     window.location.hostname === 'localhost' || 
     window.location.hostname === '127.0.0.1') {
     
-    // Add development console commands
     window.dev = {
-        // State inspection
         state: () => console.log('Current State:', STATE),
         config: () => console.log('Configuration:', CONFIG),
         observers: () => console.log('Active Observers:', STATE.observers),
         
-        // Motion controls
         toggleReducedMotion: () => {
             STATE.isReducedMotion = !STATE.isReducedMotion;
             console.log(`Reduced motion: ${STATE.isReducedMotion ? 'enabled' : 'disabled'}`);
         },
         
-        // Hero controls
         hero: {
-            setOverlay: (opacity) => {
-                if (window.holisticApp) {
-                    window.holisticApp.setHeroOverlayOpacity(opacity);
-                }
-            },
             nextBackground: () => {
                 if (window.holisticApp) {
                     window.holisticApp.nextHeroBackground();
@@ -2507,45 +2457,6 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
             }
         },
         
-        // Menu controls
-        menu: {
-            open: () => {
-                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
-                if (mobileMenu && mobileMenu.openMenu) {
-                    mobileMenu.openMenu();
-                }
-            },
-            close: () => {
-                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
-                if (mobileMenu && mobileMenu.closeMenu) {
-                    mobileMenu.closeMenu();
-                }
-            },
-            toggle: () => {
-                const mobileMenu = window.holisticApp?.getComponent('mobileMenu');
-                if (mobileMenu && mobileMenu.toggleMenu) {
-                    mobileMenu.toggleMenu();
-                }
-            }
-        },
-        
-        // Section controls
-        sections: {
-            animateAll: () => {
-                document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
-                    el.classList.add('visible');
-                });
-                console.log('All section animations triggered');
-            },
-            resetAnimations: () => {
-                document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
-                    el.classList.remove('visible');
-                });
-                console.log('All section animations reset');
-            }
-        },
-        
-        // Component controls
         components: {
             list: () => {
                 if (window.holisticApp) {
@@ -2561,11 +2472,6 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
     };
     
     console.log('Development mode active. Use window.dev for debugging.');
-    console.log('Available commands:');
-    console.log('  window.dev.state() - View current state');
-    console.log('  window.dev.hero.nextBackground() - Switch background');
-    console.log('  window.dev.hero.restartTypewriter() - Restart typewriter');
-    console.log('  window.dev.components.list() - List all components');
 }
 
 // Start the application
@@ -2578,7 +2484,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// For environments that support modules
+// Module exports
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         HolisticPsychServicesApp,
@@ -2588,7 +2494,6 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 }
 
-// For AMD/RequireJS
 if (typeof define === 'function' && define.amd) {
     define('holistic-psych-services', [], function() {
         return {
