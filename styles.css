@@ -2608,122 +2608,12 @@ button {
 }
 
 /* ==========================================================================
-   13. Accessibility & Performance
-   ========================================================================== */
-
-/* Focus Styles */
-.nav-link:focus,
-.btn-consultation:focus,
-.btn-hero-primary:focus,
-.btn-hero-secondary:focus,
-.btn-submit:focus,
-.social-link:focus,
-.back-to-top:focus,
-.contact-fab:focus,
-.contact-option:focus {
-    outline: 2px solid var(--primary-green);
-    outline-offset: 2px;
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-    
-    .hero-logo-container {
-        animation: none;
-    }
-    
-    .hero-bg-image {
-        transition: none;
-    }
-    
-    .hero-bg-image.active {
-        transform: scale(1);
-    }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-    :root {
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-        --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.6);
-    }
-}
-
-/* ==========================================================================
    14. Mobile Responsive Breakpoints
    ========================================================================== */
 
-/* Tablet Styles */
-@media (max-width: 991px) {
-    .container {
-        padding: 0 var(--space-lg);
-    }
-    
-    .hero-actions {
-        flex-direction: column;
-        width: 100%;
-        max-width: 400px;
-        gap: var(--space-lg);
-    }
-    
-    .btn-hero-primary,
-    .btn-hero-secondary {
-        width: 100%;
-    }
-    
-    .contact-content {
-        grid-template-columns: 1fr;
-        gap: var(--space-2xl);
-    }
-    
-    .footer-top .container {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-}
-
 /* Mobile Styles */
 @media (max-width: 767px) {
-    .container {
-        padding: 0 var(--space-md);
-    }
-    
-    .hero {
-        padding-top: 50px;
-    }
-    
-    .hero-content {
-        gap: var(--space-lg);
-        padding-top: var(--space-lg);
-    }
-    
-    .hero-logo-container {
-        width: 180px;
-        height: 180px;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: var(--space-md);
-    }
-    
-    .footer-bottom-content {
-        flex-direction: column;
-        gap: var(--space-md);
-        text-align: center;
-    }
-    
-    .floating-actions {
+   .floating-actions {
         bottom: var(--space-lg);
         right: var(--space-lg);
     }
@@ -2731,23 +2621,6 @@ button {
 
 /* Small Mobile Styles */
 @media (max-width: 480px) {
-    .hero-logo-container {
-        width: 160px;
-        height: 160px;
-    }
-    
-    .hero-location {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 0.875rem;
-    }
-    
-    .btn-hero-primary,
-    .btn-hero-secondary {
-        padding: var(--space-sm) var(--space-lg);
-        font-size: 0.9375rem;
-        min-width: 180px;
-    }
-    
     .contact-fab {
         width: 56px;
         height: 56px;
@@ -2758,31 +2631,5 @@ button {
         width: 48px;
         height: 48px;
         font-size: 1.25rem;
-    }
-}
-
-/* ==========================================================================
-   15. Print Styles
-   ========================================================================== */
-@media print {
-    .header,
-    .hero,
-    .footer,
-    .floating-actions {
-        display: none;
-    }
-    
-    .section-tag {
-        background: none;
-        color: var(--gray-800);
-        border: 1px solid var(--gray-800);
-    }
-    
-    .service-card,
-    .team-card,
-    .review-card {
-        break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid var(--gray-800);
     }
 }
