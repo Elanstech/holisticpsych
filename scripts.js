@@ -1,5 +1,5 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE JAVASCRIPT
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE WEBSITE JS
    Manhattan Mental Health - Professional Experience
    Organized by Website Sections for Easy Maintenance
    ======================================== */
@@ -757,6 +757,180 @@ class HeroBackgroundController {
     }
 }
 
+// Logo Controller
+class HeroLogoController {
+    constructor() {
+        this.logoContainer = document.querySelector('.hero-logo-container');
+        this.logoImage = document.querySelector('.hero-logo');
+        this.isInitialized = false;
+        
+        if (this.logoContainer && this.logoImage) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.setupLogoLoading();
+        this.setupLogoInteractions();
+        this.isInitialized = true;
+        
+        console.log('Hero logo controller initialized');
+    }
+    
+    setupLogoLoading() {
+        console.log('Loading hero logo...');
+        
+        const handleLogoSuccess = () => {
+            console.log('Hero logo loaded successfully');
+            this.logoImage.style.opacity = '1';
+            
+            if (!STATE.isReducedMotion) {
+                this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
+            }
+        };
+        
+        const handleLogoError = () => {
+            console.warn('Hero logo failed to load, showing fallback');
+            this.createFallbackLogo();
+        };
+        
+        if (this.logoImage.complete) {
+            if (this.logoImage.naturalHeight !== 0) {
+                handleLogoSuccess();
+            } else {
+                handleLogoError();
+            }
+        } else {
+            this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
+            this.logoImage.addEventListener('error', handleLogoError, { once: true });
+            
+            setTimeout(() => {
+                if (this.logoImage.naturalHeight === 0) {
+                    handleLogoError();
+                }
+            }, 3000);
+        }
+    }
+    
+    createFallbackLogo() {
+        const fallback = document.createElement('div');
+        fallback.className = 'logo-fallback';
+        fallback.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+            flex-direction: column;
+        `;
+        
+        fallback.innerHTML = `
+            <div>Holistic</div>
+            <div style="font-size: 0.8em; margin: -0.2em 0;">Psychological</div>
+            <div>Services</div>
+        `;
+        
+        this.logoImage.style.display = 'none';
+        this.logoContainer.appendChild(fallback);
+    }
+    
+    setupLogoInteractions() {
+        if (STATE.isReducedMotion) return;
+        
+        let isHovered = false;
+        
+        const handleMouseEnter = () => {
+            if (!isHovered) {
+                isHovered = true;
+                this.logoContainer.style.transform = 'scale(1.05) rotate(3deg)';
+                this.logoContainer.style.filter = 'brightness(1.1)';
+            }
+        };
+        
+        const handleMouseLeave = () => {
+            if (isHovered) {
+                isHovered = false;
+                this.logoContainer.style.transform = '';
+                this.logoContainer.style.filter = '';
+            }
+        };
+        
+        const handleClick = () => {
+            this.logoContainer.style.animation = 'none';
+            this.logoContainer.offsetHeight;
+            this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
+            
+            Utils.announceToScreenReader('Logo animation restarted');
+        };
+        
+        this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
+        this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
+        this.logoContainer.addEventListener('click', handleClick);
+        
+        this.logoContainer.addEventListener('touchstart', handleMouseEnter, { passive: true });
+        this.logoContainer.addEventListener('touchend', handleMouseLeave, { passive: true });
+    }
+
+    destroy() {
+        this.isInitialized = false;
+    }
+}
+
+// Scroll Indicator Controller
+class HeroScrollIndicatorController {
+    constructor() {
+        this.scrollIndicator = document.querySelector('.scroll-indicator');
+        
+        if (this.scrollIndicator) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.scrollIndicator.addEventListener('click', this.handleScrollClick.bind(this));
+        this.setupScrollListening();
+        
+        console.log('Hero scroll indicator initialized');
+    }
+    
+    handleScrollClick() {
+        const nextSection = document.querySelector('#about-preview') || 
+                           document.querySelector('#about') || 
+                           document.querySelector('section:not(.hero)') ||
+                           document.querySelector('main > *:not(.hero)');
+        
+        if (nextSection) {
+            Utils.smoothScrollTo(nextSection);
+            Utils.announceToScreenReader('Scrolled to next section');
+        }
+    }
+    
+    setupScrollListening() {
+        const handleScroll = Utils.throttle(() => {
+            const scrolled = window.pageYOffset > 100;
+            
+            if (this.scrollIndicator) {
+                this.scrollIndicator.style.opacity = scrolled ? '0' : '1';
+                this.scrollIndicator.style.visibility = scrolled ? 'hidden' : 'visible';
+            }
+        }, 16);
+        
+        window.addEventListener('scroll', handleScroll);
+    }
+
+    destroy() {
+        // Clean up if needed
+    }
+}
+
 // Main Hero Controller
 class HeroController {
     constructor() {
@@ -776,12 +950,13 @@ class HeroController {
         
         try {
             this.controllers.background = new HeroBackgroundController();
+            this.controllers.logo = new HeroLogoController();
+            this.controllers.scrollIndicator = new HeroScrollIndicatorController();
             
             await this.initializeTypewriter();
             
             this.setupVisibilityHandling();
             this.setupMotionPreferences();
-            this.setupScrollIndicator();
             
             this.isInitialized = true;
             STATE.hero.isInitialized = true;
@@ -804,30 +979,6 @@ class HeroController {
                 resolve();
             }, 1500);
         });
-    }
-    
-    setupScrollIndicator() {
-        const scrollIndicator = document.querySelector('.scroll-indicator');
-        if (scrollIndicator) {
-            scrollIndicator.addEventListener('click', () => {
-                const nextSection = document.querySelector('#about') || 
-                                   document.querySelector('section:not(.hero)');
-                
-                if (nextSection) {
-                    Utils.smoothScrollTo(nextSection);
-                    Utils.announceToScreenReader('Scrolled to next section');
-                }
-            });
-            
-            // Hide scroll indicator on scroll
-            const handleScroll = Utils.throttle(() => {
-                const scrolled = window.pageYOffset > 100;
-                scrollIndicator.style.opacity = scrolled ? '0' : '1';
-                scrollIndicator.style.visibility = scrolled ? 'hidden' : 'visible';
-            }, 16);
-            
-            window.addEventListener('scroll', handleScroll);
-        }
     }
     
     setupVisibilityHandling() {
@@ -878,6 +1029,13 @@ class HeroController {
         const typewriterElement = document.getElementById('typewriterText');
         if (typewriterElement) {
             typewriterElement.textContent = 'Professional Mental Health Care in Manhattan';
+        }
+        
+        const glassPanel = document.querySelector('.glass-panel');
+        if (glassPanel) {
+            glassPanel.style.animation = 'none';
+            glassPanel.style.opacity = '1';
+            glassPanel.style.transform = 'none';
         }
         
         console.warn('Hero section loaded with reduced functionality due to error');
@@ -935,7 +1093,7 @@ class HeroController {
 }
 
 /* ========================================
-   ABOUT SECTION - NEW STUNNING FUNCTIONALITY
+   ABOUT SECTION - NEW ENHANCED CONTROLLER
    ======================================== */
 
 class AboutSectionController {
@@ -952,70 +1110,37 @@ class AboutSectionController {
     init() {
         this.initializeAnimations();
         this.initializeInteractions();
-        this.initializeCounterAnimations();
-        this.ensureImagesVisible(); // Add this to ensure images stay visible
         this.isInitialized = true;
         
         console.log('About section controller initialized');
     }
     
-    ensureImagesVisible() {
-        // Ensure all images in about section are visible
-        const aboutImages = this.aboutSection.querySelectorAll('img');
-        aboutImages.forEach(img => {
-            img.style.opacity = '1';
-            img.style.visibility = 'visible';
-            
-            // If image is already loaded, ensure it stays visible
-            if (img.complete) {
-                img.style.opacity = '1';
-                img.style.visibility = 'visible';
-            }
-            
-            // Handle load event
-            img.addEventListener('load', () => {
-                img.style.opacity = '1';
-                img.style.visibility = 'visible';
-            });
-        });
-    }
-    
     initializeAnimations() {
-        // Welcome Card Animation
-        this.observeElement('.welcome-card', (element) => {
-            this.animateElement(element, 'fade-in', 0);
+        // Welcome Content Animation
+        this.observeElement('.welcome-content', (element) => {
+            this.animateElement(element, 'slide-left', 0);
         });
         
         // Philosophy Items Animation
-        this.observeElement('.philosophy-highlights', (element) => {
+        this.observeElement('.philosophy-compact', (element) => {
             const philosophyItems = element.querySelectorAll('.philosophy-item');
-            this.staggerAnimations(philosophyItems, 'fade-in', 150);
+            this.staggerAnimations(philosophyItems, 'fade-in', 200);
         });
         
         // Leadership Section Animation
         this.observeElement('.leadership-section', (element) => {
+            const header = element.querySelector('.leadership-header');
             const leaderCards = element.querySelectorAll('.leader-card');
             
             // Animate header first
-            const header = element.querySelector('.leadership-header');
             if (header) {
                 this.animateElement(header, 'fade-in', 0);
             }
             
             // Then animate leader cards
             setTimeout(() => {
-                this.staggerAnimations(leaderCards, 'fade-in', 300);
-            }, 300);
-        });
-        
-        // Practice Stats Animation
-        this.observeElement('.practice-stats', (element) => {
-            this.animateElement(element, 'fade-in', 0);
-            
-            // Trigger counter animations after stats are visible
-            setTimeout(() => {
-                this.animateCounters(element);
-            }, 500);
+                this.staggerAnimations(leaderCards, 'slide-right', 300);
+            }, 400);
         });
         
         // CTA Animation
@@ -1049,34 +1174,29 @@ class AboutSectionController {
             });
         });
         
-        // Stat Items Interactions
-        const statItems = this.aboutSection.querySelectorAll('.practice-stats .stat-item');
-        statItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                this.handleStatItemHover(item, true);
+        // Specialty Tags Interactions
+        const specialtyTags = this.aboutSection.querySelectorAll('.specialty-tag');
+        specialtyTags.forEach(tag => {
+            tag.addEventListener('mouseenter', () => {
+                this.handleSpecialtyTagHover(tag, true);
             });
             
-            item.addEventListener('mouseleave', () => {
-                this.handleStatItemHover(item, false);
+            tag.addEventListener('mouseleave', () => {
+                this.handleSpecialtyTagHover(tag, false);
             });
         });
         
-        // Specialty Items Interactions
-        const specialtyItems = this.aboutSection.querySelectorAll('.specialty-item');
-        specialtyItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                this.handleSpecialtyItemHover(item, true);
+        // CTA Button Interaction
+        const ctaButton = this.aboutSection.querySelector('.btn-about-full');
+        if (ctaButton) {
+            ctaButton.addEventListener('mouseenter', () => {
+                this.handleCTAButtonHover(ctaButton, true);
             });
             
-            item.addEventListener('mouseleave', () => {
-                this.handleSpecialtyItemHover(item, false);
+            ctaButton.addEventListener('mouseleave', () => {
+                this.handleCTAButtonHover(ctaButton, false);
             });
-        });
-    }
-    
-    initializeCounterAnimations() {
-        // This will be triggered when stats section becomes visible
-        // Implementation is in animateCounters method
+        }
     }
     
     observeElement(selector, callback, options = {}) {
@@ -1106,15 +1226,7 @@ class AboutSectionController {
     animateElement(element, className = 'fade-in', delay = 0) {
         if (!element) return;
         
-        // Check if reduced motion is preferred
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        // Ensure images in this element stay visible
-        const images = element.querySelectorAll('img');
-        images.forEach(img => {
-            img.style.opacity = '1';
-            img.style.visibility = 'visible';
-        });
         
         if (prefersReducedMotion) {
             element.classList.add('visible');
@@ -1124,16 +1236,10 @@ class AboutSectionController {
         setTimeout(() => {
             element.classList.add(className);
             element.classList.add('visible');
-            
-            // Double-check images after animation
-            images.forEach(img => {
-                img.style.opacity = '1';
-                img.style.visibility = 'visible';
-            });
         }, delay);
     }
     
-    staggerAnimations(elements, className = 'fade-in', staggerDelay = 150) {
+    staggerAnimations(elements, className = 'fade-in', staggerDelay = 200) {
         if (!elements || elements.length === 0) return;
         
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1151,23 +1257,19 @@ class AboutSectionController {
         const icon = item.querySelector('i');
         
         if (isHovering) {
-            // Add micro-interactions
             if (icon) {
-                icon.style.transform = 'scale(1.2) rotate(5deg)';
-                icon.style.color = 'var(--primary-blue)';
+                icon.style.transform = 'scale(1.15) rotate(5deg)';
             }
             
-            // Add visual feedback
-            item.style.borderColor = 'rgba(0, 216, 132, 0.3)';
+            // Add subtle glow effect
+            item.style.boxShadow = '0 25px 50px rgba(0, 216, 132, 0.18)';
             
         } else {
-            // Reset animations
             if (icon) {
                 icon.style.transform = '';
-                icon.style.color = '';
             }
             
-            item.style.borderColor = '';
+            item.style.boxShadow = '';
         }
     }
     
@@ -1175,150 +1277,94 @@ class AboutSectionController {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const image = card.querySelector('.image-wrapper img');
+        const image = card.querySelector('.leader-image-large img');
         const badge = card.querySelector('.experience-badge');
-        const specialtyItems = card.querySelectorAll('.specialty-item');
+        const specialtyTags = card.querySelectorAll('.specialty-tag');
         
         if (isHovering) {
-            // Image zoom effect
+            // Image enhancement
             if (image) {
-                image.style.transform = 'scale(1.1)';
+                image.style.transform = 'scale(1.05)';
+                image.style.filter = 'grayscale(0%) contrast(1.2)';
             }
             
             // Badge animation
             if (badge) {
-                badge.style.transform = 'scale(1.1) rotate(-5deg)';
+                badge.style.transform = 'scale(1.15) rotate(-3deg)';
             }
             
-            // Animate specialty items
-            specialtyItems.forEach((item, index) => {
+            // Animate specialty tags
+            specialtyTags.forEach((tag, index) => {
                 setTimeout(() => {
-                    item.style.transform = 'translateY(-2px)';
-                    item.style.background = 'rgba(0, 216, 132, 0.12)';
-                }, index * 50);
+                    tag.style.transform = 'translateY(-2px)';
+                    tag.style.background = 'rgba(0, 216, 132, 0.12)';
+                }, index * 100);
             });
             
         } else {
             // Reset all animations
             if (image) {
                 image.style.transform = '';
+                image.style.filter = '';
             }
             
             if (badge) {
                 badge.style.transform = '';
             }
             
-            specialtyItems.forEach(item => {
-                item.style.transform = '';
-                item.style.background = '';
+            specialtyTags.forEach(tag => {
+                tag.style.transform = '';
+                tag.style.background = '';
             });
         }
     }
     
-    handleStatItemHover(item, isHovering) {
+    handleSpecialtyTagHover(tag, isHovering) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const icon = item.querySelector('.stat-icon');
-        const number = item.querySelector('.stat-number');
-        
-        if (isHovering) {
-            if (icon) {
-                icon.style.transform = 'scale(1.1) rotate(5deg)';
-            }
-            
-            if (number) {
-                number.style.transform = 'scale(1.05)';
-                number.style.color = 'var(--primary-green)';
-            }
-            
-        } else {
-            if (icon) {
-                icon.style.transform = '';
-            }
-            
-            if (number) {
-                number.style.transform = '';
-                number.style.color = '';
-            }
-        }
-    }
-    
-    handleSpecialtyItemHover(item, isHovering) {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-        
-        const icon = item.querySelector('i');
+        const icon = tag.querySelector('i');
         
         if (isHovering) {
             if (icon) {
                 icon.style.transform = 'scale(1.1)';
-                icon.style.color = 'var(--primary-blue)';
+                icon.style.color = 'var(--primary-green)';
             }
-            
-            item.style.background = 'rgba(0, 216, 132, 0.12)';
-            item.style.borderColor = 'var(--primary-green)';
             
         } else {
             if (icon) {
                 icon.style.transform = '';
                 icon.style.color = '';
             }
-            
-            item.style.background = '';
-            item.style.borderColor = '';
         }
     }
     
-    animateCounters(statsContainer) {
+    handleCTAButtonHover(button, isHovering) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const statNumbers = statsContainer.querySelectorAll('.stat-number');
+        const icon = button.querySelector('i');
         
-        statNumbers.forEach(numberElement => {
-            const finalText = numberElement.textContent.trim();
-            const numericValue = parseFloat(finalText.replace(/[^\d.]/g, ''));
+        if (isHovering) {
+            if (icon) {
+                icon.style.transform = 'translateX(5px)';
+            }
             
-            // Skip animation if no numeric value found
-            if (isNaN(numericValue)) return;
-            
-            // Extract suffix (like + or Years)
-            const suffix = finalText.replace(numericValue.toString(), '');
-            
-            let currentValue = 0;
-            const increment = numericValue / 60; // Animate over 60 frames for smoother animation
-            const duration = 2000; // 2 seconds
-            const frameRate = duration / 60;
-            
-            const updateCounter = () => {
-                currentValue += increment;
-                
-                if (currentValue >= numericValue) {
-                    numberElement.textContent = finalText;
-                    return;
-                }
-                
-                const displayValue = Math.floor(currentValue);
-                numberElement.textContent = displayValue + suffix;
-                
-                setTimeout(updateCounter, frameRate);
-            };
-            
-            // Start with 0
-            numberElement.textContent = '0' + suffix;
-            
-            // Begin animation after a short delay
-            setTimeout(updateCounter, 200);
-        });
+        } else {
+            if (icon) {
+                icon.style.transform = '';
+            }
+        }
     }
     
     // Public method to restart animations
     restartAnimations() {
-        const animatedElements = this.aboutSection.querySelectorAll('.fade-in');
+        const animatedElements = this.aboutSection.querySelectorAll('.fade-in, .slide-left, .slide-right');
         animatedElements.forEach(element => {
             element.classList.remove('visible');
             element.classList.remove('fade-in');
+            element.classList.remove('slide-left');
+            element.classList.remove('slide-right');
         });
         
         setTimeout(() => {
@@ -1898,10 +1944,6 @@ class ContactSectionController {
                 @keyframes fadeOut {
                     to { opacity: 0; transform: translateY(-10px); }
                 }
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
             `;
             document.head.appendChild(style);
         }
@@ -2183,14 +2225,6 @@ class PerformanceController {
                     if (entry.isIntersecting) {
                         const img = entry.target;
                         
-                        // Skip animation for about section images
-                        if (img.closest('.about-preview')) {
-                            img.style.opacity = '1';
-                            img.style.visibility = 'visible';
-                            imageObserver.unobserve(img);
-                            return;
-                        }
-                        
                         img.style.opacity = '0';
                         img.style.transition = 'opacity 0.3s ease';
                         
@@ -2394,7 +2428,9 @@ class HolisticPsychServicesApp {
 
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
-                console.log('Orientation changed, refreshing layout');
+                if (typeof AOS !== 'undefined') {
+                    AOS.refresh();
+                }
             }, 500);
         });
     }
@@ -2407,13 +2443,7 @@ class HolisticPsychServicesApp {
         
         const floatingActions = this.components.get('floatingActions');
         if (floatingActions && floatingActions.isContactFabOpen) {
-            floatingActions.isContactFabOpen = false;
-            if (floatingActions.contactFab) {
-                floatingActions.contactFab.classList.remove('active');
-            }
-            if (floatingActions.contactOptions) {
-                floatingActions.contactOptions.classList.remove('active');
-            }
+            floatingActions.closeContactOptions();
         }
     }
     
@@ -2487,6 +2517,13 @@ class HolisticPsychServicesApp {
         return this.components.get(name);
     }
 
+    setHeroOverlayOpacity(opacity) {
+        const hero = this.components.get('hero');
+        if (hero && hero.setOverlayOpacity) {
+            hero.setOverlayOpacity(opacity);
+        }
+    }
+    
     toggleHeroBackgroundRotation() {
         const hero = this.components.get('hero');
         if (hero && hero.toggleBackgroundRotation) {
@@ -2567,6 +2604,15 @@ window.HolisticPsychServices = {
                 hero.setBackground(index);
             }
         }
+    },
+    
+    aboutAPI: {
+        restartAnimations: () => {
+            const about = window.holisticApp?.getComponent('about');
+            if (about && about.restartAnimations) {
+                about.restartAnimations();
+            }
+        }
     }
 };
 
@@ -2645,6 +2691,16 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
                 if (hero && hero.restartTypewriter) {
                     hero.restartTypewriter();
                     console.log('Typewriter restarted');
+                }
+            }
+        },
+        
+        about: {
+            restartAnimations: () => {
+                const about = window.holisticApp?.getComponent('about');
+                if (about && about.restartAnimations) {
+                    about.restartAnimations();
+                    console.log('About animations restarted');
                 }
             }
         },
