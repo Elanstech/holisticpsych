@@ -1095,684 +1095,352 @@ class HeroController {
    ABOUT SECTION
    ======================================== */
 
-const ABOUT_CONFIG = {
-    animations: {
-        duration: 600,
-        stagger: 150,
-        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-    },
-    scroll: {
-        threshold: 0.15,
-        rootMargin: '0px 0px -50px 0px'
-    },
-    stats: {
-        animationSpeed: 50,
-        duration: 2000
-    }
-};
-
 class AboutSectionController {
     constructor() {
-        // State management
-        this.state = {
-            isInitialized: false,
-            isReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-            observers: new Map(),
-            animatedElements: new Set(),
-            currentBreakpoint: this.getCurrentBreakpoint()
-        };
+        this.aboutSection = document.querySelector('.about');
+        this.observers = new Map();
+        this.isInitialized = false;
         
-        this.init();
+        if (this.aboutSection) {
+            this.init();
+        }
     }
-   
+    
     init() {
-        if (this.state.isInitialized) return;
+        this.initializeAnimations();
+        this.initializeInteractions();
+        this.initializeCounterAnimations();
+        this.isInitialized = true;
         
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeComponents());
-        } else {
-            this.initializeComponents();
-        }
-        
-        this.setupGlobalEvents();
+        console.log('About section controller initialized');
     }
-
-    initializeComponents() {
-        try {
-            console.log('Initializing About section...');
+    
+    initializeAnimations() {
+        // Mission Card Animation
+        this.observeElement('.mission-card', (element) => {
+            this.animateElement(element, 'fade-in', 0);
+        });
+        
+        // Values Grid Animation
+        this.observeElement('.values-grid', (element) => {
+            const valueItems = element.querySelectorAll('.value-item');
+            this.staggerAnimations(valueItems, 'fade-in', 150);
+        });
+        
+        // Leadership Section Animation
+        this.observeElement('.leadership-card', (element) => {
+            const leaderProfiles = element.querySelectorAll('.leader-profile');
             
-            // Initialize all functionality
-            this.setupImageLoading();
-            this.setupScrollAnimations();
-            this.setupInteractions();
-            this.setupResponsiveBehavior();
-            this.setupAccessibility();
-            
-            // Mark as initialized
-            this.state.isInitialized = true;
-            
-            // Add initialized class to section
-            const aboutSection = document.querySelector('.about-preview');
-            if (aboutSection) {
-                aboutSection.classList.add('initialized');
+            // Animate header first
+            const header = element.querySelector('.leadership-header');
+            if (header) {
+                this.animateElement(header, 'fade-in', 0);
             }
             
-            console.log('About section initialized successfully!');
+            // Then animate leader profiles
+            setTimeout(() => {
+                this.staggerAnimations(leaderProfiles, 'fade-in', 200);
+            }, 300);
+        });
+        
+        // Team Stats Animation
+        this.observeElement('.team-stats-card', (element) => {
+            this.animateElement(element, 'fade-in', 0);
             
-        } catch (error) {
-            console.error('About section initialization failed:', error);
-            this.handleInitializationError(error);
-        }
+            // Trigger counter animations after card is visible
+            setTimeout(() => {
+                this.animateCounters(element);
+            }, 500);
+        });
     }
-
-    throttle(func, limit) {
-        let inThrottle;
-        return function executedFunction(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
+    
+    initializeInteractions() {
+        // Value Items Hover Effects
+        const valueItems = this.aboutSection.querySelectorAll('.value-item');
+        valueItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                this.handleValueItemHover(item, true);
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                this.handleValueItemHover(item, false);
+            });
+        });
+        
+        // Leader Profile Interactions
+        const leaderProfiles = this.aboutSection.querySelectorAll('.leader-profile');
+        leaderProfiles.forEach(profile => {
+            profile.addEventListener('mouseenter', () => {
+                this.handleLeaderProfileHover(profile, true);
+            });
+            
+            profile.addEventListener('mouseleave', () => {
+                this.handleLeaderProfileHover(profile, false);
+            });
+        });
+        
+        // Stat Items Interactions
+        const statItems = this.aboutSection.querySelectorAll('.stat-item');
+        statItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                this.handleStatItemHover(item, true);
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                this.handleStatItemHover(item, false);
+            });
+        });
+    }
+    
+    initializeCounterAnimations() {
+        // This will be triggered when stats card becomes visible
+        // Implementation is in animateCounters method
+    }
+    
+    observeElement(selector, callback, options = {}) {
+        const element = this.aboutSection.querySelector(selector);
+        if (!element) return;
+        
+        const defaultOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
         };
+        
+        const observerOptions = { ...defaultOptions, ...options };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    callback(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        observer.observe(element);
+        this.observers.set(selector, observer);
     }
-
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    animateElement(element, animationClass = 'fade-in', delay = 0) {
-        if (this.state.isReducedMotion) {
+    
+    animateElement(element, className = 'fade-in', delay = 0) {
+        if (!element) return;
+        
+        // Check if reduced motion is preferred
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (prefersReducedMotion) {
             element.classList.add('visible');
             return;
         }
         
         setTimeout(() => {
-            element.classList.add(animationClass, 'visible');
+            element.classList.add(className);
+            element.classList.add('visible');
         }, delay);
     }
-
-    staggerAnimations(elements, animationClass = 'fade-in', staggerDelay = ABOUT_CONFIG.animations.stagger) {
+    
+    staggerAnimations(elements, className = 'fade-in', staggerDelay = 150) {
+        if (!elements || elements.length === 0) return;
+        
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
         elements.forEach((element, index) => {
-            const delay = this.state.isReducedMotion ? 0 : index * staggerDelay;
-            this.animateElement(element, animationClass, delay);
+            const delay = prefersReducedMotion ? 0 : index * staggerDelay;
+            this.animateElement(element, className, delay);
         });
     }
-
-    announceToScreenReader(message) {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
+    
+    handleValueItemHover(item, isHovering) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
         
-        announcement.style.cssText = `
-            position: absolute;
-            left: -10000px;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        `;
+        const icon = item.querySelector('.value-icon');
+        const content = item.querySelector('.value-content');
         
-        document.body.appendChild(announcement);
-        
-        setTimeout(() => {
-            if (announcement.parentNode) {
-                document.body.removeChild(announcement);
+        if (isHovering) {
+            // Add micro-interactions
+            if (icon) {
+                icon.style.transform = 'scale(1.1) rotate(5deg)';
             }
-        }, 1000);
-    }
-
-    getCurrentBreakpoint() {
-        const width = window.innerWidth;
-        if (width < 480) return 'xs';
-        if (width < 768) return 'sm';
-        if (width < 992) return 'md';
-        if (width < 1200) return 'lg';
-        return 'xl';
-    }
-
-    setupImageLoading() {
-        const images = document.querySelectorAll('.about-preview img');
-        
-        images.forEach(img => {
-            this.loadImage(img);
-        });
-        
-        console.log('Image loading setup completed');
-    }
-
-    loadImage(img) {
-        // Handle if image is already loaded
-        if (img.complete && img.naturalHeight !== 0) {
-            this.onImageLoad(img);
-            return;
-        }
-
-        // Set initial state
-        img.style.opacity = '0';
-        img.style.transition = 'opacity 0.5s ease';
-
-        // Create a new image to preload
-        const imageLoader = new Image();
-        
-        imageLoader.onload = () => {
-            this.onImageLoad(img);
-        };
-        
-        imageLoader.onerror = () => {
-            this.onImageError(img);
-        };
-
-        // Start loading
-        imageLoader.src = img.src;
-        
-        // Fallback timeout
-        setTimeout(() => {
-            if (img.style.opacity === '0') {
-                this.onImageError(img);
+            
+            // Subtle content animation
+            if (content) {
+                content.style.transform = 'translateX(5px)';
             }
-        }, 5000);
-    }
-
-    onImageLoad(img) {
-        img.style.opacity = '1';
-        img.classList.add('loaded');
-        
-        // Add subtle animation
-        if (!this.state.isReducedMotion) {
-            img.style.transform = 'scale(1.02)';
-            setTimeout(() => {
-                img.style.transform = 'scale(1)';
-            }, 300);
-        }
-    }
-
-    onImageError(img) {
-        console.warn('Failed to load image:', img.src);
-        
-        // Create fallback
-        const container = img.closest('.image-container');
-        if (container) {
-            this.createImageFallback(container, img.alt);
-        }
-    }
-
-    createImageFallback(container, altText) {
-        const fallback = document.createElement('div');
-        fallback.className = 'image-fallback';
-        fallback.style.cssText = `
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: var(--font-heading);
-            font-weight: 700;
-            text-align: center;
-            padding: var(--space-lg);
-        `;
-        
-        const icon = document.createElement('i');
-        icon.className = 'ri-user-line';
-        icon.style.cssText = `
-            font-size: 3rem;
-            margin-bottom: var(--space-md);
-            opacity: 0.8;
-        `;
-        
-        const text = document.createElement('div');
-        text.textContent = altText || 'Professional Photo';
-        text.style.fontSize = '0.875rem';
-        
-        fallback.appendChild(icon);
-        fallback.appendChild(text);
-        
-        // Hide original image and show fallback
-        const img = container.querySelector('img');
-        if (img) {
-            img.style.display = 'none';
-        }
-        
-        container.appendChild(fallback);
-        
-        // Animate in
-        fallback.style.opacity = '0';
-        setTimeout(() => {
-            fallback.style.opacity = '1';
-        }, 100);
-    }
-
-    setupScrollAnimations() {
-        const options = {
-            threshold: ABOUT_CONFIG.scroll.threshold,
-            rootMargin: ABOUT_CONFIG.scroll.rootMargin
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.handleElementInView(entry.target);
-                }
-            });
-        }, options);
-
-        // Observe main containers
-        const aboutSection = document.querySelector('.about-preview');
-        if (aboutSection) {
-            observer.observe(aboutSection);
-            this.state.observers.set('aboutSection', observer);
-        }
-        
-        console.log('Scroll animations setup completed');
-    }
-
-    handleElementInView(element) {
-        if (element.classList.contains('about-preview')) {
-            this.animateAboutSection(element);
-        }
-    }
-
-    animateAboutSection(section) {
-        if (this.state.animatedElements.has('aboutSection')) return;
-        this.state.animatedElements.add('aboutSection');
-
-        // 1. Animate welcome section first
-        const welcomeSection = section.querySelector('.welcome-team-section');
-        if (welcomeSection) {
-            this.animateElement(welcomeSection, 'fade-in', 0);
-        }
-
-        // 2. Animate leader cards with stagger
-        const leaderCards = section.querySelectorAll('.leader-card');
-        setTimeout(() => {
-            this.staggerAnimations(leaderCards, 'slide-left', 200);
-        }, 300);
-
-        // 3. Animate CTA section last
-        const ctaSection = section.querySelector('.about-cta');
-        if (ctaSection) {
-            setTimeout(() => {
-                this.animateElement(ctaSection, 'fade-in', 0);
-            }, 800);
-        }
-
-        this.announceToScreenReader('About section content loaded');
-    }
-   
-    setupInteractions() {
-        this.setupCardInteractions();
-        this.setupButtonInteractions();
-        
-        console.log('Interactions setup completed');
-    }
-
-    setupCardInteractions() {
-        // Leader card hover effects
-        const leaderCards = document.querySelectorAll('.leader-card');
-        leaderCards.forEach(card => {
-            let isHovered = false;
             
-            const handleMouseEnter = () => {
-                if (!isHovered && !this.state.isReducedMotion) {
-                    isHovered = true;
-                    this.animateLeaderCardHover(card, true);
-                }
-            };
+            // Add visual feedback
+            item.style.borderColor = 'rgba(0, 216, 132, 0.3)';
             
-            const handleMouseLeave = () => {
-                if (isHovered) {
-                    isHovered = false;
-                    this.animateLeaderCardHover(card, false);
-                }
-            };
+        } else {
+            // Reset animations
+            if (icon) {
+                icon.style.transform = '';
+            }
             
-            card.addEventListener('mouseenter', handleMouseEnter);
-            card.addEventListener('mouseleave', handleMouseLeave);
+            if (content) {
+                content.style.transform = '';
+            }
             
-            // Touch support
-            card.addEventListener('touchstart', handleMouseEnter, { passive: true });
-            card.addEventListener('touchend', handleMouseLeave, { passive: true });
-        });
-
-        // Philosophy item hover effects
-        const philosophyItems = document.querySelectorAll('.philosophy-item');
-        philosophyItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                if (!this.state.isReducedMotion) {
-                    const icon = item.querySelector('i');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.2) rotate(10deg)';
-                    }
-                }
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                const icon = item.querySelector('i');
-                if (icon) {
-                    icon.style.transform = '';
-                }
-            });
-        });
-
-        // Specialty tag hover effects
-        const specialtyTags = document.querySelectorAll('.specialty-tag');
-        specialtyTags.forEach(tag => {
-            tag.addEventListener('mouseenter', () => {
-                if (!this.state.isReducedMotion) {
-                    const icon = tag.querySelector('i');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1)';
-                    }
-                }
-            });
-            
-            tag.addEventListener('mouseleave', () => {
-                const icon = tag.querySelector('i');
-                if (icon) {
-                    icon.style.transform = '';
-                }
-            });
-        });
+            item.style.borderColor = '';
+        }
     }
-
-    animateLeaderCardHover(card, isEntering) {
-        const image = card.querySelector('.image-container img');
-        const experienceBadge = card.querySelector('.experience-badge');
-        const specialtyTags = card.querySelectorAll('.specialty-tag');
+    
+    handleLeaderProfileHover(profile, isHovering) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
         
-        if (isEntering) {
+        const image = profile.querySelector('.leader-image img');
+        const badge = profile.querySelector('.leader-badge');
+        const specialtyTags = profile.querySelectorAll('.specialty-tag');
+        
+        if (isHovering) {
+            // Image zoom effect
             if (image) {
-                image.style.transform = 'scale(1.05)';
-            }
-            if (experienceBadge) {
-                experienceBadge.style.transform = 'scale(1.1) rotate(-5deg)';
+                image.style.transform = 'scale(1.1)';
             }
             
+            // Badge rotation
+            if (badge) {
+                badge.style.transform = 'scale(1.2) rotate(15deg)';
+            }
+            
+            // Animate specialty tags
             specialtyTags.forEach((tag, index) => {
                 setTimeout(() => {
                     tag.style.transform = 'translateY(-2px)';
-                }, index * 50);
+                    tag.style.background = 'rgba(0, 216, 132, 0.15)';
+                }, index * 100);
             });
+            
         } else {
+            // Reset all animations
             if (image) {
                 image.style.transform = '';
             }
-            if (experienceBadge) {
-                experienceBadge.style.transform = '';
+            
+            if (badge) {
+                badge.style.transform = '';
             }
             
             specialtyTags.forEach(tag => {
                 tag.style.transform = '';
+                tag.style.background = '';
             });
         }
     }
-
-    setupButtonInteractions() {
-        const aboutButton = document.querySelector('.btn-about-full');
-        if (!aboutButton) return;
-
-        // Ripple effect
-        aboutButton.addEventListener('click', (e) => {
-            if (this.state.isReducedMotion) return;
-            
-            this.createRippleEffect(e, aboutButton);
-        });
-
-        // Icon animation
-        aboutButton.addEventListener('mouseenter', () => {
-            if (!this.state.isReducedMotion) {
-                const icon = aboutButton.querySelector('i');
-                if (icon) {
-                    icon.style.transform = 'translateX(5px)';
-                }
+    
+    handleStatItemHover(item, isHovering) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+        
+        const icon = item.querySelector('.stat-icon');
+        const number = item.querySelector('.stat-number');
+        
+        if (isHovering) {
+            if (icon) {
+                icon.style.transform = 'scale(1.1) rotate(5deg)';
             }
-        });
-
-        aboutButton.addEventListener('mouseleave', () => {
-            const icon = aboutButton.querySelector('i');
+            
+            if (number) {
+                number.style.transform = 'scale(1.05)';
+                number.style.color = 'var(--primary-green)';
+            }
+            
+        } else {
             if (icon) {
                 icon.style.transform = '';
             }
+            
+            if (number) {
+                number.style.transform = '';
+                number.style.color = '';
+            }
+        }
+    }
+    
+    animateCounters(statsCard) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+        
+        const statNumbers = statsCard.querySelectorAll('.stat-number');
+        
+        statNumbers.forEach(numberElement => {
+            const finalText = numberElement.textContent.trim();
+            const numericValue = parseFloat(finalText.replace(/[^\d.]/g, ''));
+            
+            // Skip animation if no numeric value found
+            if (isNaN(numericValue)) return;
+            
+            // Extract suffix (like + or Years)
+            const suffix = finalText.replace(numericValue.toString(), '');
+            
+            let currentValue = 0;
+            const increment = numericValue / 30; // Animate over 30 frames
+            const duration = 1500; // 1.5 seconds
+            const frameRate = duration / 30;
+            
+            const updateCounter = () => {
+                currentValue += increment;
+                
+                if (currentValue >= numericValue) {
+                    numberElement.textContent = finalText;
+                    return;
+                }
+                
+                const displayValue = Math.floor(currentValue);
+                numberElement.textContent = displayValue + suffix;
+                
+                setTimeout(updateCounter, frameRate);
+            };
+            
+            // Start with 0
+            numberElement.textContent = '0' + suffix;
+            
+            // Begin animation after a short delay
+            setTimeout(updateCounter, 200);
         });
     }
-
-    createRippleEffect(event, button) {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 1.5;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            width: 0;
-            height: 0;
-            left: ${event.clientX - rect.left}px;
-            top: ${event.clientY - rect.top}px;
-            transform: translate(-50%, -50%);
-            animation: aboutRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1000;
-        `;
-        
-        button.style.position = 'relative';
-        button.style.overflow = 'hidden';
-        button.appendChild(ripple);
-        
-        // Add ripple animation if not exists
-        if (!document.querySelector('#about-ripple-animation')) {
-            const style = document.createElement('style');
-            style.id = 'about-ripple-animation';
-            style.textContent = `
-                @keyframes aboutRipple {
-                    to {
-                        width: ${size}px;
-                        height: ${size}px;
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
+    
+    // Public method to restart animations
+    restartAnimations() {
+        const animatedElements = this.aboutSection.querySelectorAll('.fade-in');
+        animatedElements.forEach(element => {
+            element.classList.remove('visible');
+            element.classList.remove('fade-in');
+        });
         
         setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.remove();
-            }
-        }, 600);
+            this.initializeAnimations();
+        }, 100);
     }
-   
-    setupAccessibility() {
-        // Add keyboard navigation for interactive elements
-        const interactiveElements = document.querySelectorAll(
-            '.leader-card, .philosophy-item, .specialty-tag, .btn-about-full'
-        );
-        
-        interactiveElements.forEach(element => {
-            // Add tabindex for keyboard navigation
-            if (!element.hasAttribute('tabindex') && !element.matches('a, button')) {
-                element.setAttribute('tabindex', '0');
-            }
-            
-            // Add keyboard event listeners
-            element.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    if (element.classList.contains('btn-about-full')) {
-                        e.preventDefault();
-                        element.click();
-                    } else {
-                        // Trigger hover effect for other elements
-                        element.dispatchEvent(new Event('mouseenter'));
-                        setTimeout(() => {
-                            element.dispatchEvent(new Event('mouseleave'));
-                        }, 2000);
-                    }
-                }
-            });
-        });
-
-        // Add ARIA labels where needed
-        const leaderCards = document.querySelectorAll('.leader-card');
-        leaderCards.forEach((card, index) => {
-            const doctorName = card.querySelector('h4')?.textContent;
-            if (doctorName && !card.hasAttribute('aria-label')) {
-                card.setAttribute('aria-label', `Learn more about ${doctorName}`);
-            }
-        });
-        
-        console.log('Accessibility setup completed');
-    }
-   
-    setupResponsiveBehavior() {
-        const handleResize = this.debounce(() => {
-            const newBreakpoint = this.getCurrentBreakpoint();
-            if (newBreakpoint !== this.state.currentBreakpoint) {
-                this.state.currentBreakpoint = newBreakpoint;
-                this.handleBreakpointChange();
-            }
-        }, 250);
-
-        window.addEventListener('resize', handleResize);
-        this.handleBreakpointChange();
-        
-        console.log('Responsive behavior setup completed');
-    }
-
-    handleBreakpointChange() {
-        // Adjust animations based on screen size
-        if (['xs', 'sm'].includes(this.state.currentBreakpoint)) {
-            this.simplifyAnimations();
-        } else {
-            this.enableFullAnimations();
-        }
-    }
-
-    simplifyAnimations() {
-        const leaderCards = document.querySelectorAll('.leader-card');
-        leaderCards.forEach(card => {
-            card.style.transform = '';
-            card.style.transition = 'box-shadow 0.3s ease';
-        });
-    }
-
-    enableFullAnimations() {
-        const leaderCards = document.querySelectorAll('.leader-card');
-        leaderCards.forEach(card => {
-            card.style.transition = '';
-        });
-    }
-   
-    setupGlobalEvents() {
-        // Handle motion preference changes
-        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-        mediaQuery.addEventListener('change', (e) => {
-            this.state.isReducedMotion = e.matches;
-            console.log(`About section motion preference: ${this.state.isReducedMotion ? 'reduced' : 'normal'}`);
-        });
-
-        // Handle visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pause();
-            } else {
-                this.resume();
-            }
-        });
-
-        // Error handling
-        window.addEventListener('error', (event) => {
-            if (event.filename?.includes('about-section.js')) {
-                console.error('About section error:', event.error);
-            }
-        });
-    }
-
-    handleInitializationError(error) {
-        // Fallback: show content without animations
-        const aboutSection = document.querySelector('.about-preview');
-        if (aboutSection) {
-            aboutSection.classList.add('fallback-mode');
-            
-            // Make all elements visible immediately
-            const animatedElements = aboutSection.querySelectorAll('[class*="fade"], [class*="slide"]');
-            animatedElements.forEach(el => {
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
-
-            // Handle images
-            const images = aboutSection.querySelectorAll('img');
-            images.forEach(img => {
-                img.style.opacity = '1';
-            });
-        }
-        
-        console.warn('About section loaded with reduced functionality due to error');
-    }
-   
-    pause() {
-        console.log('About section paused (page hidden)');
-    }
-
-    resume() {
-        console.log('About section resumed (page visible)');
-    }
-
-    getState() {
-        return { ...this.state };
-    }
-
+    
+    // Clean up observers
     destroy() {
-        // Cleanup observers
-        this.state.observers.forEach(observer => {
+        this.observers.forEach(observer => {
             observer.disconnect();
         });
-        this.state.observers.clear();
+        this.observers.clear();
         
-        console.log('About section cleanup completed');
+        console.log('About section controller destroyed');
     }
 }
 
-let aboutController;
-
-function initializeAboutSection() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            aboutController = new AboutSectionController();
-        });
-    } else {
-        aboutController = new AboutSectionController();
-    }
-}
-
-// Start initialization
-initializeAboutSection();
-
-// Expose to global scope for debugging
-window.AboutSection = {
-    controller: aboutController,
-    config: ABOUT_CONFIG
-};
-
-// Handle cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (aboutController) {
-        aboutController.destroy();
-    }
+// Auto-initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.aboutController = new AboutSectionController();
 });
 
-console.log('About section JavaScript loaded and ready');
+// Also initialize if script loads after DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!window.aboutController) {
+            window.aboutController = new AboutSectionController();
+        }
+    });
+} else {
+    if (!window.aboutController) {
+        window.aboutController = new AboutSectionController();
+    }
+}
 
 /* ========================================
    SERVICES SECTION
