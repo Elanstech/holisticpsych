@@ -2994,151 +2994,762 @@ button {
 /* ==========================================================================
    7. Team Section - Professional Layout
    ========================================================================== */
-.team {
+
+.team-carousel-section {
     padding: var(--space-4xl) 0;
-    background: var(--white);
+    background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 50%, var(--white) 100%);
     position: relative;
     overflow: hidden;
     isolation: isolate;
 }
 
-.team::before {
+.team-carousel-section::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background: var(--gradient-light);
-    clip-path: polygon(0 0, 80% 0, 60% 100%, 0% 100%);
+    top: -15%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 216, 132, 0.04) 0%, transparent 70%);
+    border-radius: 50%;
     z-index: 1;
+    animation: floatBackground 25s ease-in-out infinite;
 }
 
-.team .container {
+.team-carousel-section::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    left: -15%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: floatBackground 20s ease-in-out infinite reverse;
+}
+
+.team-carousel-section .container {
     position: relative;
     z-index: 2;
 }
 
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: var(--space-2xl);
+/* Section Header */
+.team-carousel-section .section-header {
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.team-card {
-    background: var(--gray-50);
-    border-radius: var(--radius-2xl);
-    overflow: hidden;
+.team-carousel-section .section-tag {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-lg);
     box-shadow: var(--shadow-md);
-    border: 1px solid rgba(0, 216, 132, 0.1);
     transition: var(--transition-medium);
+}
+
+.team-carousel-section .section-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.team-carousel-section .section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--space-lg);
+    line-height: 1.2;
+}
+
+.team-carousel-section .section-subtitle {
+    font-size: 1.125rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Carousel Container */
+.team-carousel-container {
+    position: relative;
+    margin-bottom: var(--space-3xl);
+    max-width: 100%;
+}
+
+.team-carousel-track-container {
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    background: var(--white);
+    border: 1px solid rgba(0, 216, 132, 0.08);
     position: relative;
 }
 
-.team-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-xl);
-    background: var(--white);
+.team-carousel-track {
+    display: flex;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    width: 600%; /* 6 slides */
 }
 
-.team-image-container {
+/* Team Carousel Cards */
+.team-carousel-card {
+    min-width: 16.666667%; /* 100% / 6 slides */
+    width: 16.666667%;
+    flex-shrink: 0;
+    display: flex;
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.team-card-inner {
+    width: 100%;
+    background: var(--white);
+    border-radius: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+.team-carousel-card:hover .team-card-inner {
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* Team Member Image */
+.team-member-image {
     position: relative;
     width: 100%;
-    padding-top: 120%;
+    height: 320px;
     overflow: hidden;
     background: var(--gray-100);
 }
 
-.team-image {
+.team-member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    transition: transform 0.6s ease;
+    display: block;
+}
+
+.team-carousel-card:hover .team-member-image img {
+    transform: scale(1.05);
+}
+
+.image-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center 15%;
-    transition: var(--transition-slow);
+    background: linear-gradient(135deg, 
+        rgba(0, 216, 132, 0.1) 0%, 
+        rgba(14, 165, 233, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
-.team-card:hover .team-image {
-    transform: scale(1.05);
+.team-carousel-card:hover .image-overlay {
+    opacity: 1;
 }
 
-.team .experience-badge {
+/* Badges */
+.owner-badge,
+.therapist-badge {
     position: absolute;
-    bottom: var(--space-md);
+    top: var(--space-md);
     right: var(--space-md);
     background: var(--gradient-primary);
     color: white;
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-full);
-    font-weight: bold;
-    box-shadow: var(--shadow-md);
+    font-size: 0.8125rem;
+    font-weight: 600;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    transition: var(--transition-medium);
+    gap: var(--space-xs);
+    box-shadow: 0 4px 12px rgba(0, 216, 132, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
     z-index: 5;
 }
 
-.team .experience-badge .years {
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: var(--space-xs);
+.therapist-badge {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
 
-.team .experience-badge .text {
-    font-size: 0.8125rem;
-    font-weight: 500;
+.team-carousel-card:hover .owner-badge,
+.team-carousel-card:hover .therapist-badge {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 216, 132, 0.4);
+}
+
+.owner-badge i,
+.therapist-badge i {
+    font-size: 0.875rem;
+}
+
+/* Team Member Content */
+.team-member-content {
+    padding: var(--space-2xl);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    background: var(--white);
+    position: relative;
+}
+
+.team-member-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.team-carousel-card:hover .team-member-content::before {
+    opacity: 1;
+}
+
+/* Member Header */
+.member-header {
     text-align: center;
-    white-space: nowrap;
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(0, 216, 132, 0.1);
 }
 
-.team-card:hover .experience-badge {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-lg);
-}
-
-.team-info {
-    padding: var(--space-xl);
-}
-
-.team-info h3 {
+.member-name {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--gray-800);
     margin-bottom: var(--space-sm);
+    line-height: 1.2;
 }
 
-.position {
+.member-title {
     font-size: 1rem;
     color: var(--primary-green);
     font-weight: 600;
     margin-bottom: var(--space-xs);
 }
 
-.specialty {
-    font-size: 0.9375rem;
+.member-credentials {
+    font-size: 0.875rem;
     color: var(--gray-600);
-    margin-bottom: var(--space-lg);
     font-style: italic;
 }
 
-.credentials {
+/* Member Bio */
+.member-bio p {
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+    text-align: center;
+    margin: 0;
+}
+
+/* Member Specialties */
+.member-specialties {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
+    justify-content: center;
 }
 
-.credential {
-    font-size: 0.75rem;
-    background: rgba(0, 216, 132, 0.1);
+.specialty-tag {
+    display: inline-block;
+    background: rgba(0, 216, 132, 0.08);
     color: var(--primary-green);
     padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
+    font-size: 0.8125rem;
     font-weight: 500;
+    border: 1px solid rgba(0, 216, 132, 0.15);
+    transition: all 0.3s ease;
+}
+
+.team-carousel-card:hover .specialty-tag {
+    background: rgba(0, 216, 132, 0.12);
+    border-color: var(--primary-green);
+    transform: translateY(-1px);
+}
+
+/* Member Experience */
+.member-experience {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: auto;
+}
+
+.member-experience i {
+    color: var(--primary-green);
+    font-size: 1rem;
+}
+
+/* Coming Soon Card */
+.team-carousel-card.coming-soon .team-card-inner {
+    background: linear-gradient(135deg, 
+        rgba(0, 216, 132, 0.02) 0%, 
+        rgba(14, 165, 233, 0.02) 100%);
+    border: 2px dashed rgba(0, 216, 132, 0.2);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-2xl);
+    min-height: 600px;
+}
+
+.coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    max-width: 300px;
+}
+
+.coming-soon-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-lg);
+    animation: pulse 2s infinite;
+}
+
+.coming-soon-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.coming-soon-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+
+.coming-soon-text {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+}
+
+.coming-soon-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--gray-700);
+}
+
+.feature-item i {
+    color: var(--primary-green);
+    font-size: 1rem;
+}
+
+.notify-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.notify-text {
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+    text-align: center;
+    margin: 0;
+}
+
+.notify-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: rgba(0, 216, 132, 0.1);
+    color: var(--primary-green);
+    border: 2px solid rgba(0, 216, 132, 0.2);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.notify-btn:hover {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Navigation Buttons */
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background: var(--white);
+    border: 2px solid rgba(0, 216, 132, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+}
+
+.carousel-nav-btn:hover {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--shadow-xl);
+}
+
+.carousel-nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.prev-btn {
+    left: -28px;
+}
+
+.next-btn {
+    right: -28px;
+}
+
+/* Carousel Indicators */
+.team-carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.team-carousel-indicators .indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 216, 132, 0.3);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.team-carousel-indicators .indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.team-carousel-indicators .indicator.active {
+    border-color: var(--primary-green);
+    transform: scale(1.3);
+}
+
+.team-carousel-indicators .indicator.active::before {
+    width: 100%;
+    height: 100%;
+}
+
+.team-carousel-indicators .indicator:hover {
+    border-color: var(--primary-green);
+    transform: scale(1.2);
+}
+
+/* Team CTA Section */
+.team-cta-section {
+    background: var(--white);
+    border: 1px solid rgba(0, 216, 132, 0.1);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-3xl);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.team-cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.team-cta-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3xl);
+}
+
+.cta-text {
+    flex: 1;
+}
+
+.cta-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.cta-description {
+    font-size: 1rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+.cta-actions {
+    display: flex;
+    gap: var(--space-lg);
+    flex-shrink: 0;
+}
+
+.btn-team-full,
+.btn-team-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-team-full {
+    background: var(--gradient-primary);
+    color: white;
+    border: 2px solid transparent;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-team-full:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-team-contact {
+    background: transparent;
+    color: var(--primary-green);
+    border: 2px solid rgba(0, 216, 132, 0.3);
+}
+
+.btn-team-contact:hover {
+    background: rgba(0, 216, 132, 0.05);
+    border-color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 216, 132, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(0, 216, 132, 0);
+    }
+}
+
+@keyframes floatBackground {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate(30px, -30px) rotate(120deg);
+    }
+    66% {
+        transform: translate(-20px, 20px) rotate(240deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .carousel-nav-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+    
+    .prev-btn {
+        left: -24px;
+    }
+    
+    .next-btn {
+        right: -24px;
+    }
+}
+
+@media (max-width: 991px) {
+    .team-carousel-section {
+        padding: var(--space-3xl) 0;
+    }
+    
+    .team-carousel-track-container {
+        border-radius: var(--radius-xl);
+    }
+    
+    .carousel-nav-btn {
+        display: none;
+    }
+    
+    .team-cta-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-2xl);
+    }
+    
+    .cta-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .team-carousel-section .section-header {
+        margin-bottom: var(--space-2xl);
+    }
+    
+    .team-member-content {
+        padding: var(--space-xl);
+        gap: var(--space-md);
+    }
+    
+    .member-name {
+        font-size: 1.375rem;
+    }
+    
+    .member-specialties {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .specialty-tag {
+        text-align: center;
+        min-width: 120px;
+    }
+    
+    .team-cta-section {
+        padding: var(--space-2xl);
+    }
+    
+    .cta-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-team-full,
+    .btn-team-contact {
+        justify-content: center;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .coming-soon-content {
+        gap: var(--space-md);
+    }
+    
+    .coming-soon-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .coming-soon-icon i {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .team-member-content {
+        padding: var(--space-lg);
+    }
+    
+    .team-cta-section {
+        padding: var(--space-lg);
+    }
+    
+    .team-carousel-indicators .indicator {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .owner-badge,
+    .therapist-badge {
+        top: var(--space-sm);
+        right: var(--space-sm);
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+    }
 }
 
 /* ==========================================================================
