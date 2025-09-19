@@ -1399,40 +1399,99 @@ class ServicesCarouselController {
         this.totalSlides = this.cards.length;
         this.isAnimating = false;
         this.autoPlayInterval = null;
-        this.autoPlayDelay = 6000;
+        this.autoPlayDelay = 8000;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isInitialized = false;
         
-        if (this.carousel && this.track) {
+        if (this.carousel && this.track && this.cards.length > 0) {
             this.init();
         }
     }
     
     init() {
+        console.log('Initializing Services Carousel...');
+        
+        this.setupImages();
         this.bindEvents();
         this.setupIntersectionObserver();
-        this.showSlide(0);
-        this.startAutoPlay();
+        this.showSlide(0, false);
+        this.updateNavigationButtons();
         
-        // Show first card immediately
-        if (this.cards[0]) {
-            this.cards[0].classList.add('visible');
-        }
+        // Initialize first slide as active
+        this.cards[0]?.classList.add('active');
         
-        console.log('Services carousel controller initialized');
+        this.isInitialized = true;
+        console.log('Services carousel controller initialized successfully');
+    }
+    
+    setupImages() {
+        // Setup image loading with proper error handling
+        this.cards.forEach((card, index) => {
+            const img = card.querySelector('img');
+            const placeholder = card.querySelector('.loading-placeholder');
+            
+            if (img && placeholder) {
+                // Show placeholder initially
+                placeholder.classList.add('show');
+                
+                const handleImageLoad = () => {
+                    img.style.opacity = '1';
+                    img.style.visibility = 'visible';
+                    placeholder.classList.remove('show');
+                    
+                    // Remove any transforms that might be hiding the image
+                    img.style.transform = 'none';
+                    
+                    console.log(`Image ${index + 1} loaded successfully`);
+                };
+                
+                const handleImageError = () => {
+                    console.warn(`Image ${index + 1} failed to load`);
+                    placeholder.classList.remove('show');
+                    // Set a fallback background color
+                    card.querySelector('.service-image').style.background = 'var(--gray-200)';
+                };
+                
+                if (img.complete && img.naturalHeight !== 0) {
+                    handleImageLoad();
+                } else {
+                    img.addEventListener('load', handleImageLoad, { once: true });
+                    img.addEventListener('error', handleImageError, { once: true });
+                    
+                    // Timeout fallback
+                    setTimeout(() => {
+                        if (img.naturalHeight === 0) {
+                            handleImageError();
+                        }
+                    }, 5000);
+                }
+            }
+        });
     }
     
     bindEvents() {
         // Navigation buttons
         if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => this.previousSlide());
+            this.prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.previousSlide();
+            });
         }
         
         if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.nextSlide());
+            this.nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.nextSlide();
+            });
         }
         
         // Indicators
         this.indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => this.goToSlide(index));
+            indicator.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.goToSlide(index);
+            });
         });
         
         // Touch/swipe support
@@ -1447,8 +1506,14 @@ class ServicesCarouselController {
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (this.isInViewport() && !this.isAnimating) {
-                if (e.key === 'ArrowLeft') this.previousSlide();
-                if (e.key === 'ArrowRight') this.nextSlide();
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.previousSlide();
+                }
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.nextSlide();
+                }
             }
         });
         
@@ -1460,43 +1525,43 @@ class ServicesCarouselController {
                 this.resumeAutoPlay();
             }
         });
+        
+        // Handle resize
+        window.addEventListener('resize', Utils.debounce(() => {
+            this.showSlide(this.currentSlide, false);
+        }, 250));
     }
     
     setupTouchEvents() {
         if (!this.track) return;
         
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
-        
         this.track.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
+            this.touchStartX = e.changedTouches[0].screenX;
             this.pauseAutoPlay();
         }, { passive: true });
         
-        this.track.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            currentX = e.touches[0].clientX;
+        this.track.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe();
+            
+            // Resume autoplay after touch interaction
+            setTimeout(() => {
+                this.resumeAutoPlay();
+            }, 1000);
         }, { passive: true });
+    }
+    
+    handleSwipe() {
+        const diffX = this.touchStartX - this.touchEndX;
+        const threshold = 50;
         
-        this.track.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            
-            const diffX = startX - currentX;
-            const threshold = 50;
-            
-            if (Math.abs(diffX) > threshold) {
-                if (diffX > 0) {
-                    this.nextSlide();
-                } else {
-                    this.previousSlide();
-                }
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0) {
+                this.nextSlide();
+            } else {
+                this.previousSlide();
             }
-            
-            isDragging = false;
-            this.resumeAutoPlay();
-        }, { passive: true });
+        }
     }
     
     setupIntersectionObserver() {
@@ -1508,8 +1573,8 @@ class ServicesCarouselController {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    this.animateCardsIn();
                     this.startAutoPlay();
+                    console.log('Services carousel entered viewport, starting autoplay');
                 } else {
                     this.pauseAutoPlay();
                 }
@@ -1519,38 +1584,48 @@ class ServicesCarouselController {
         if (this.carousel) {
             observer.observe(this.carousel);
         }
-    }
-    
-    animateCardsIn() {
-        this.cards.forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('visible');
-            }, index * 200);
-        });
-    }
-    
-    showSlide(slideIndex) {
-        if (this.isAnimating || !this.track) return;
         
-        this.isAnimating = true;
+        STATE.observers.set('servicesCarousel', observer);
+    }
+    
+    showSlide(slideIndex, animate = true) {
+        if (this.isAnimating || !this.track || slideIndex < 0 || slideIndex >= this.totalSlides) {
+            return;
+        }
+        
+        if (animate) {
+            this.isAnimating = true;
+        }
+        
         this.currentSlide = slideIndex;
         
-        // Update track position
-        const translateX = -slideIndex * 100;
+        // Calculate transform - Fixed calculation
+        const translateX = -slideIndex * 25; // 25% per slide (100% ÷ 4 slides)
+        
+        // Apply transform with proper transition
         this.track.style.transform = `translateX(${translateX}%)`;
         
-        // Update indicators
+        // Update active states
+        this.updateActiveStates();
         this.updateIndicators();
-        
-        // Update navigation buttons
         this.updateNavigationButtons();
         
         // Announce to screen readers
         Utils.announceToScreenReader(`Showing service ${slideIndex + 1} of ${this.totalSlides}`);
         
-        setTimeout(() => {
-            this.isAnimating = false;
-        }, 600);
+        if (animate) {
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 700);
+        }
+        
+        console.log(`Showing slide ${slideIndex + 1}, transform: ${translateX}%`);
+    }
+    
+    updateActiveStates() {
+        this.cards.forEach((card, index) => {
+            card.classList.toggle('active', index === this.currentSlide);
+        });
     }
     
     nextSlide() {
@@ -1559,6 +1634,8 @@ class ServicesCarouselController {
         const nextIndex = (this.currentSlide + 1) % this.totalSlides;
         this.showSlide(nextIndex);
         this.resetAutoPlay();
+        
+        console.log(`Next slide: ${nextIndex + 1}`);
     }
     
     previousSlide() {
@@ -1567,6 +1644,8 @@ class ServicesCarouselController {
         const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
         this.showSlide(prevIndex);
         this.resetAutoPlay();
+        
+        console.log(`Previous slide: ${prevIndex + 1}`);
     }
     
     goToSlide(slideIndex) {
@@ -1574,53 +1653,63 @@ class ServicesCarouselController {
         
         this.showSlide(slideIndex);
         this.resetAutoPlay();
+        
+        console.log(`Go to slide: ${slideIndex + 1}`);
     }
     
     updateIndicators() {
         this.indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === this.currentSlide);
-            indicator.setAttribute('aria-pressed', index === this.currentSlide ? 'true' : 'false');
+            const isActive = index === this.currentSlide;
+            indicator.classList.toggle('active', isActive);
+            indicator.setAttribute('aria-pressed', isActive ? 'true' : 'false');
         });
     }
     
     updateNavigationButtons() {
         if (this.prevBtn) {
-            this.prevBtn.disabled = this.currentSlide === 0;
-            this.prevBtn.setAttribute('aria-disabled', this.currentSlide === 0 ? 'true' : 'false');
+            this.prevBtn.style.opacity = this.currentSlide === 0 ? '0.5' : '1';
+            this.prevBtn.style.pointerEvents = this.currentSlide === 0 ? 'none' : 'auto';
         }
         
         if (this.nextBtn) {
-            this.nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
-            this.nextBtn.setAttribute('aria-disabled', this.currentSlide === this.totalSlides - 1 ? 'true' : 'false');
+            this.nextBtn.style.opacity = this.currentSlide === this.totalSlides - 1 ? '0.5' : '1';
+            this.nextBtn.style.pointerEvents = this.currentSlide === this.totalSlides - 1 ? 'none' : 'auto';
         }
     }
     
     startAutoPlay() {
-        if (STATE.isReducedMotion || this.autoPlayInterval) return;
+        if (STATE.isReducedMotion || this.autoPlayInterval || !this.isInitialized) return;
         
         this.autoPlayInterval = setInterval(() => {
-            if (this.isInViewport() && !this.isAnimating) {
+            if (this.isInViewport() && !this.isAnimating && !document.hidden) {
                 this.nextSlide();
             }
         }, this.autoPlayDelay);
+        
+        console.log('Autoplay started');
     }
     
     pauseAutoPlay() {
         if (this.autoPlayInterval) {
             clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = null;
+            console.log('Autoplay paused');
         }
     }
     
     resumeAutoPlay() {
-        if (!this.autoPlayInterval && this.isInViewport()) {
-            this.startAutoPlay();
+        if (!this.autoPlayInterval && this.isInViewport() && this.isInitialized) {
+            setTimeout(() => {
+                this.startAutoPlay();
+            }, 1000);
         }
     }
     
     resetAutoPlay() {
         this.pauseAutoPlay();
-        this.startAutoPlay();
+        setTimeout(() => {
+            this.startAutoPlay();
+        }, 1000);
     }
     
     isInViewport() {
@@ -1632,17 +1721,28 @@ class ServicesCarouselController {
     
     destroy() {
         this.pauseAutoPlay();
+        
+        const observer = STATE.observers.get('servicesCarousel');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('servicesCarousel');
+        }
+        
         console.log('Services carousel controller destroyed');
     }
 }
 
-// Add to the main app initialization
+// Initialize the carousel
 document.addEventListener('DOMContentLoaded', () => {
-    // Add this line to the existing initialization
     if (!window.servicesCarouselController) {
         window.servicesCarouselController = new ServicesCarouselController();
     }
 });
+
+// Add to existing app if needed
+if (window.holisticApp && window.holisticApp.components) {
+    window.holisticApp.components.set('servicesCarousel', window.servicesCarouselController);
+}
 
 /* ========================================
    TEAM SECTION
