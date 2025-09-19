@@ -1831,6 +1831,8 @@ button {
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
+    opacity: 1 !important; /* Ensure images stay visible */
+    visibility: visible !important; /* Ensure images stay visible */
 }
 
 .leader-card:hover .image-wrapper img {
@@ -3630,6 +3632,20 @@ button {
 .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Ensure images in about section always stay visible */
+.about-preview img {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Override any fade-in effects on about section images */
+.about-preview .fade-in img,
+.about-preview .fade-in.visible img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
 }
 
 .slide-left {
