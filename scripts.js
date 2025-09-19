@@ -1386,97 +1386,263 @@ class AboutSectionController {
 /* ========================================
    SERVICES SECTION
    ======================================== */
-class ServicesSectionController {
+class ServicesCarouselController {
     constructor() {
-        this.servicesSection = document.querySelector('.services');
+        this.carousel = document.querySelector('.services-carousel');
+        this.track = document.getElementById('carouselTrack');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.indicators = document.querySelectorAll('.indicator');
+        this.cards = document.querySelectorAll('.service-carousel-card');
         
-        if (this.servicesSection) {
+        this.currentSlide = 0;
+        this.totalSlides = this.cards.length;
+        this.isAnimating = false;
+        this.autoPlayInterval = null;
+        this.autoPlayDelay = 6000;
+        
+        if (this.carousel && this.track) {
             this.init();
         }
     }
     
     init() {
-        this.initializeAnimations();
-        this.initializeInteractions();
-        console.log('Services section initialized');
+        this.bindEvents();
+        this.setupIntersectionObserver();
+        this.showSlide(0);
+        this.startAutoPlay();
+        
+        // Show first card immediately
+        if (this.cards[0]) {
+            this.cards[0].classList.add('visible');
+        }
+        
+        console.log('Services carousel controller initialized');
     }
     
-    initializeAnimations() {
+    bindEvents() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => this.previousSlide());
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => this.nextSlide());
+        }
+        
+        // Indicators
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => this.goToSlide(index));
+        });
+        
+        // Touch/swipe support
+        this.setupTouchEvents();
+        
+        // Pause auto-play on hover
+        if (this.carousel) {
+            this.carousel.addEventListener('mouseenter', () => this.pauseAutoPlay());
+            this.carousel.addEventListener('mouseleave', () => this.resumeAutoPlay());
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (this.isInViewport() && !this.isAnimating) {
+                if (e.key === 'ArrowLeft') this.previousSlide();
+                if (e.key === 'ArrowRight') this.nextSlide();
+            }
+        });
+        
+        // Pause on tab visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAutoPlay();
+            } else if (this.isInViewport()) {
+                this.resumeAutoPlay();
+            }
+        });
+    }
+    
+    setupTouchEvents() {
+        if (!this.track) return;
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        
+        this.track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            this.pauseAutoPlay();
+        }, { passive: true });
+        
+        this.track.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        this.track.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            
+            const diffX = startX - currentX;
+            const threshold = 50;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    this.nextSlide();
+                } else {
+                    this.previousSlide();
+                }
+            }
+            
+            isDragging = false;
+            this.resumeAutoPlay();
+        }, { passive: true });
+    }
+    
+    setupIntersectionObserver() {
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const serviceCards = entry.target.querySelectorAll('.service-card');
-                    const ctaSection = entry.target.querySelector('.services-cta');
-                    
-                    Utils.staggerAnimations(serviceCards, 'fade-in', 200);
-                    
-                    if (ctaSection) {
-                        setTimeout(() => {
-                            Utils.animateElement(ctaSection, 'fade-in', 0);
-                        }, serviceCards.length * 200 + 400);
-                    }
-                    
-                    observer.unobserve(entry.target);
+                    this.animateCardsIn();
+                    this.startAutoPlay();
+                } else {
+                    this.pauseAutoPlay();
                 }
             });
-        }, { threshold: 0.1 });
+        }, observerOptions);
         
-        observer.observe(this.servicesSection);
-        STATE.observers.set('services', observer);
+        if (this.carousel) {
+            observer.observe(this.carousel);
+        }
     }
     
-    initializeInteractions() {
-        const serviceCards = document.querySelectorAll('.service-card');
-        
-        serviceCards.forEach(card => {
-            let isHovered = false;
-            
-            const handleMouseEnter = () => {
-                if (!isHovered && !STATE.isReducedMotion) {
-                    isHovered = true;
-                    const icon = card.querySelector('.service-icon');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.1) rotate(5deg)';
-                    }
-                    
-                    const features = card.querySelectorAll('.service-features li');
-                    features.forEach((feature, index) => {
-                        setTimeout(() => {
-                            feature.style.transform = 'translateX(5px)';
-                        }, index * 50);
-                    });
-                }
-            };
-            
-            const handleMouseLeave = () => {
-                if (isHovered) {
-                    isHovered = false;
-                    const icon = card.querySelector('.service-icon');
-                    if (icon) {
-                        icon.style.transform = '';
-                    }
-                    
-                    const features = card.querySelectorAll('.service-features li');
-                    features.forEach(feature => {
-                        feature.style.transform = '';
-                    });
-                }
-            };
-            
-            card.addEventListener('mouseenter', handleMouseEnter);
-            card.addEventListener('mouseleave', handleMouseLeave);
+    animateCardsIn() {
+        this.cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, index * 200);
         });
     }
-
-    destroy() {
-        const observer = STATE.observers.get('services');
-        if (observer) {
-            observer.disconnect();
-            STATE.observers.delete('services');
+    
+    showSlide(slideIndex) {
+        if (this.isAnimating || !this.track) return;
+        
+        this.isAnimating = true;
+        this.currentSlide = slideIndex;
+        
+        // Update track position
+        const translateX = -slideIndex * 100;
+        this.track.style.transform = `translateX(${translateX}%)`;
+        
+        // Update indicators
+        this.updateIndicators();
+        
+        // Update navigation buttons
+        this.updateNavigationButtons();
+        
+        // Announce to screen readers
+        Utils.announceToScreenReader(`Showing service ${slideIndex + 1} of ${this.totalSlides}`);
+        
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 600);
+    }
+    
+    nextSlide() {
+        if (this.isAnimating) return;
+        
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        this.showSlide(nextIndex);
+        this.resetAutoPlay();
+    }
+    
+    previousSlide() {
+        if (this.isAnimating) return;
+        
+        const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+        this.showSlide(prevIndex);
+        this.resetAutoPlay();
+    }
+    
+    goToSlide(slideIndex) {
+        if (this.isAnimating || slideIndex === this.currentSlide) return;
+        
+        this.showSlide(slideIndex);
+        this.resetAutoPlay();
+    }
+    
+    updateIndicators() {
+        this.indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === this.currentSlide);
+            indicator.setAttribute('aria-pressed', index === this.currentSlide ? 'true' : 'false');
+        });
+    }
+    
+    updateNavigationButtons() {
+        if (this.prevBtn) {
+            this.prevBtn.disabled = this.currentSlide === 0;
+            this.prevBtn.setAttribute('aria-disabled', this.currentSlide === 0 ? 'true' : 'false');
         }
-        console.log('Services section destroyed');
+        
+        if (this.nextBtn) {
+            this.nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
+            this.nextBtn.setAttribute('aria-disabled', this.currentSlide === this.totalSlides - 1 ? 'true' : 'false');
+        }
+    }
+    
+    startAutoPlay() {
+        if (STATE.isReducedMotion || this.autoPlayInterval) return;
+        
+        this.autoPlayInterval = setInterval(() => {
+            if (this.isInViewport() && !this.isAnimating) {
+                this.nextSlide();
+            }
+        }, this.autoPlayDelay);
+    }
+    
+    pauseAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+    
+    resumeAutoPlay() {
+        if (!this.autoPlayInterval && this.isInViewport()) {
+            this.startAutoPlay();
+        }
+    }
+    
+    resetAutoPlay() {
+        this.pauseAutoPlay();
+        this.startAutoPlay();
+    }
+    
+    isInViewport() {
+        if (!this.carousel) return false;
+        
+        const rect = this.carousel.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+    
+    destroy() {
+        this.pauseAutoPlay();
+        console.log('Services carousel controller destroyed');
     }
 }
+
+// Add to the main app initialization
+document.addEventListener('DOMContentLoaded', () => {
+    // Add this line to the existing initialization
+    if (!window.servicesCarouselController) {
+        window.servicesCarouselController = new ServicesCarouselController();
+    }
+});
 
 /* ========================================
    TEAM SECTION
