@@ -1,5 +1,5 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - REORGANIZED BY SECTION
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE JAVASCRIPT
    Manhattan Mental Health - Professional Experience
    Organized by Website Sections for Easy Maintenance
    ======================================== */
@@ -757,179 +757,6 @@ class HeroBackgroundController {
     }
 }
 
-// Logo Controller
-class HeroLogoController {
-    constructor() {
-        this.logoContainer = document.querySelector('.hero-logo-container');
-        this.logoImage = document.querySelector('.hero-logo');
-        this.isInitialized = false;
-        
-        if (this.logoContainer && this.logoImage) {
-            this.init();
-        }
-    }
-    
-    init() {
-        this.setupLogoLoading();
-        this.setupLogoInteractions();
-        this.isInitialized = true;
-        
-        console.log('Hero logo controller initialized');
-    }
-    
-    setupLogoLoading() {
-        console.log('Loading hero logo...');
-        
-        const handleLogoSuccess = () => {
-            console.log('Hero logo loaded successfully');
-            this.logoImage.style.opacity = '1';
-            
-            if (!STATE.isReducedMotion) {
-                this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
-            }
-        };
-        
-        const handleLogoError = () => {
-            console.warn('Hero logo failed to load, showing fallback');
-            this.createFallbackLogo();
-        };
-        
-        if (this.logoImage.complete) {
-            if (this.logoImage.naturalHeight !== 0) {
-                handleLogoSuccess();
-            } else {
-                handleLogoError();
-            }
-        } else {
-            this.logoImage.addEventListener('load', handleLogoSuccess, { once: true });
-            this.logoImage.addEventListener('error', handleLogoError, { once: true });
-            
-            setTimeout(() => {
-                if (this.logoImage.naturalHeight === 0) {
-                    handleLogoError();
-                }
-            }, 3000);
-        }
-    }
-    
-    createFallbackLogo() {
-        const fallback = document.createElement('div');
-        fallback.className = 'logo-fallback';
-        fallback.style.cssText = `
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: var(--font-heading);
-            font-size: clamp(1.5rem, 3vw, 2.5rem);
-            font-weight: 700;
-            text-align: center;
-            line-height: 1.2;
-            flex-direction: column;
-        `;
-        
-        fallback.innerHTML = `
-            <div>Holistic</div>
-            <div style="font-size: 0.8em; margin: -0.2em 0;">Psychological</div>
-            <div>Services</div>
-        `;
-        
-        this.logoImage.style.display = 'none';
-        this.logoContainer.appendChild(fallback);
-    }
-    
-    setupLogoInteractions() {
-        if (STATE.isReducedMotion) return;
-        
-        let isHovered = false;
-        
-        const handleMouseEnter = () => {
-            if (!isHovered) {
-                isHovered = true;
-                this.logoContainer.style.transform = 'scale(1.05) rotate(3deg)';
-                this.logoContainer.style.filter = 'brightness(1.1)';
-            }
-        };
-        
-        const handleMouseLeave = () => {
-            if (isHovered) {
-                isHovered = false;
-                this.logoContainer.style.transform = '';
-                this.logoContainer.style.filter = '';
-            }
-        };
-        
-        const handleClick = () => {
-            this.logoContainer.style.animation = 'none';
-            this.logoContainer.offsetHeight;
-            this.logoContainer.style.animation = 'logoFloat 6s ease-in-out infinite';
-            
-            Utils.announceToScreenReader('Logo animation restarted');
-        };
-        
-        this.logoContainer.addEventListener('mouseenter', handleMouseEnter);
-        this.logoContainer.addEventListener('mouseleave', handleMouseLeave);
-        this.logoContainer.addEventListener('click', handleClick);
-        
-        this.logoContainer.addEventListener('touchstart', handleMouseEnter, { passive: true });
-        this.logoContainer.addEventListener('touchend', handleMouseLeave, { passive: true });
-    }
-
-    destroy() {
-        this.isInitialized = false;
-    }
-}
-
-// Scroll Indicator Controller
-class HeroScrollIndicatorController {
-    constructor() {
-        this.scrollIndicator = document.querySelector('.scroll-indicator');
-        
-        if (this.scrollIndicator) {
-            this.init();
-        }
-    }
-    
-    init() {
-        this.scrollIndicator.addEventListener('click', this.handleScrollClick.bind(this));
-        this.setupScrollListening();
-        
-        console.log('Hero scroll indicator initialized');
-    }
-    
-    handleScrollClick() {
-        const nextSection = document.querySelector('#about') || 
-                           document.querySelector('section:not(.hero)') ||
-                           document.querySelector('main > *:not(.hero)');
-        
-        if (nextSection) {
-            Utils.smoothScrollTo(nextSection);
-            Utils.announceToScreenReader('Scrolled to next section');
-        }
-    }
-    
-    setupScrollListening() {
-        const handleScroll = Utils.throttle(() => {
-            const scrolled = window.pageYOffset > 100;
-            
-            if (this.scrollIndicator) {
-                this.scrollIndicator.style.opacity = scrolled ? '0' : '1';
-                this.scrollIndicator.style.visibility = scrolled ? 'hidden' : 'visible';
-            }
-        }, 16);
-        
-        window.addEventListener('scroll', handleScroll);
-    }
-
-    destroy() {
-        // Clean up if needed
-    }
-}
-
 // Main Hero Controller
 class HeroController {
     constructor() {
@@ -949,13 +776,12 @@ class HeroController {
         
         try {
             this.controllers.background = new HeroBackgroundController();
-            this.controllers.logo = new HeroLogoController();
-            this.controllers.scrollIndicator = new HeroScrollIndicatorController();
             
             await this.initializeTypewriter();
             
             this.setupVisibilityHandling();
             this.setupMotionPreferences();
+            this.setupScrollIndicator();
             
             this.isInitialized = true;
             STATE.hero.isInitialized = true;
@@ -978,6 +804,30 @@ class HeroController {
                 resolve();
             }, 1500);
         });
+    }
+    
+    setupScrollIndicator() {
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                const nextSection = document.querySelector('#about') || 
+                                   document.querySelector('section:not(.hero)');
+                
+                if (nextSection) {
+                    Utils.smoothScrollTo(nextSection);
+                    Utils.announceToScreenReader('Scrolled to next section');
+                }
+            });
+            
+            // Hide scroll indicator on scroll
+            const handleScroll = Utils.throttle(() => {
+                const scrolled = window.pageYOffset > 100;
+                scrollIndicator.style.opacity = scrolled ? '0' : '1';
+                scrollIndicator.style.visibility = scrolled ? 'hidden' : 'visible';
+            }, 16);
+            
+            window.addEventListener('scroll', handleScroll);
+        }
     }
     
     setupVisibilityHandling() {
@@ -1028,13 +878,6 @@ class HeroController {
         const typewriterElement = document.getElementById('typewriterText');
         if (typewriterElement) {
             typewriterElement.textContent = 'Professional Mental Health Care in Manhattan';
-        }
-        
-        const glassPanel = document.querySelector('.glass-panel');
-        if (glassPanel) {
-            glassPanel.style.animation = 'none';
-            glassPanel.style.opacity = '1';
-            glassPanel.style.transform = 'none';
         }
         
         console.warn('Hero section loaded with reduced functionality due to error');
@@ -1092,12 +935,12 @@ class HeroController {
 }
 
 /* ========================================
-   ABOUT SECTION
+   ABOUT SECTION - NEW STUNNING FUNCTIONALITY
    ======================================== */
 
 class AboutSectionController {
     constructor() {
-        this.aboutSection = document.querySelector('.about');
+        this.aboutSection = document.querySelector('.about-preview');
         this.observers = new Map();
         this.isInitialized = false;
         
@@ -1116,20 +959,20 @@ class AboutSectionController {
     }
     
     initializeAnimations() {
-        // Mission Card Animation
-        this.observeElement('.mission-card', (element) => {
+        // Welcome Card Animation
+        this.observeElement('.welcome-card', (element) => {
             this.animateElement(element, 'fade-in', 0);
         });
         
-        // Values Grid Animation
-        this.observeElement('.values-grid', (element) => {
-            const valueItems = element.querySelectorAll('.value-item');
-            this.staggerAnimations(valueItems, 'fade-in', 150);
+        // Philosophy Items Animation
+        this.observeElement('.philosophy-highlights', (element) => {
+            const philosophyItems = element.querySelectorAll('.philosophy-item');
+            this.staggerAnimations(philosophyItems, 'fade-in', 150);
         });
         
         // Leadership Section Animation
-        this.observeElement('.leadership-card', (element) => {
-            const leaderProfiles = element.querySelectorAll('.leader-profile');
+        this.observeElement('.leadership-section', (element) => {
+            const leaderCards = element.querySelectorAll('.leader-card');
             
             // Animate header first
             const header = element.querySelector('.leadership-header');
@@ -1137,50 +980,55 @@ class AboutSectionController {
                 this.animateElement(header, 'fade-in', 0);
             }
             
-            // Then animate leader profiles
+            // Then animate leader cards
             setTimeout(() => {
-                this.staggerAnimations(leaderProfiles, 'fade-in', 200);
+                this.staggerAnimations(leaderCards, 'fade-in', 300);
             }, 300);
         });
         
-        // Team Stats Animation
-        this.observeElement('.team-stats-card', (element) => {
+        // Practice Stats Animation
+        this.observeElement('.practice-stats', (element) => {
             this.animateElement(element, 'fade-in', 0);
             
-            // Trigger counter animations after card is visible
+            // Trigger counter animations after stats are visible
             setTimeout(() => {
                 this.animateCounters(element);
             }, 500);
         });
+        
+        // CTA Animation
+        this.observeElement('.about-cta', (element) => {
+            this.animateElement(element, 'fade-in', 0);
+        });
     }
     
     initializeInteractions() {
-        // Value Items Hover Effects
-        const valueItems = this.aboutSection.querySelectorAll('.value-item');
-        valueItems.forEach(item => {
+        // Philosophy Items Hover Effects
+        const philosophyItems = this.aboutSection.querySelectorAll('.philosophy-item');
+        philosophyItems.forEach(item => {
             item.addEventListener('mouseenter', () => {
-                this.handleValueItemHover(item, true);
+                this.handlePhilosophyItemHover(item, true);
             });
             
             item.addEventListener('mouseleave', () => {
-                this.handleValueItemHover(item, false);
+                this.handlePhilosophyItemHover(item, false);
             });
         });
         
-        // Leader Profile Interactions
-        const leaderProfiles = this.aboutSection.querySelectorAll('.leader-profile');
-        leaderProfiles.forEach(profile => {
-            profile.addEventListener('mouseenter', () => {
-                this.handleLeaderProfileHover(profile, true);
+        // Leader Card Interactions
+        const leaderCards = this.aboutSection.querySelectorAll('.leader-card');
+        leaderCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                this.handleLeaderCardHover(card, true);
             });
             
-            profile.addEventListener('mouseleave', () => {
-                this.handleLeaderProfileHover(profile, false);
+            card.addEventListener('mouseleave', () => {
+                this.handleLeaderCardHover(card, false);
             });
         });
         
         // Stat Items Interactions
-        const statItems = this.aboutSection.querySelectorAll('.stat-item');
+        const statItems = this.aboutSection.querySelectorAll('.practice-stats .stat-item');
         statItems.forEach(item => {
             item.addEventListener('mouseenter', () => {
                 this.handleStatItemHover(item, true);
@@ -1190,10 +1038,22 @@ class AboutSectionController {
                 this.handleStatItemHover(item, false);
             });
         });
+        
+        // Specialty Items Interactions
+        const specialtyItems = this.aboutSection.querySelectorAll('.specialty-item');
+        specialtyItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                this.handleSpecialtyItemHover(item, true);
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                this.handleSpecialtyItemHover(item, false);
+            });
+        });
     }
     
     initializeCounterAnimations() {
-        // This will be triggered when stats card becomes visible
+        // This will be triggered when stats section becomes visible
         // Implementation is in animateCounters method
     }
     
@@ -1249,22 +1109,17 @@ class AboutSectionController {
         });
     }
     
-    handleValueItemHover(item, isHovering) {
+    handlePhilosophyItemHover(item, isHovering) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const icon = item.querySelector('.value-icon');
-        const content = item.querySelector('.value-content');
+        const icon = item.querySelector('i');
         
         if (isHovering) {
             // Add micro-interactions
             if (icon) {
-                icon.style.transform = 'scale(1.1) rotate(5deg)';
-            }
-            
-            // Subtle content animation
-            if (content) {
-                content.style.transform = 'translateX(5px)';
+                icon.style.transform = 'scale(1.2) rotate(5deg)';
+                icon.style.color = 'var(--primary-blue)';
             }
             
             // Add visual feedback
@@ -1274,23 +1129,20 @@ class AboutSectionController {
             // Reset animations
             if (icon) {
                 icon.style.transform = '';
-            }
-            
-            if (content) {
-                content.style.transform = '';
+                icon.style.color = '';
             }
             
             item.style.borderColor = '';
         }
     }
     
-    handleLeaderProfileHover(profile, isHovering) {
+    handleLeaderCardHover(card, isHovering) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const image = profile.querySelector('.leader-image img');
-        const badge = profile.querySelector('.leader-badge');
-        const specialtyTags = profile.querySelectorAll('.specialty-tag');
+        const image = card.querySelector('.image-wrapper img');
+        const badge = card.querySelector('.experience-badge');
+        const specialtyItems = card.querySelectorAll('.specialty-item');
         
         if (isHovering) {
             // Image zoom effect
@@ -1298,17 +1150,17 @@ class AboutSectionController {
                 image.style.transform = 'scale(1.1)';
             }
             
-            // Badge rotation
+            // Badge animation
             if (badge) {
-                badge.style.transform = 'scale(1.2) rotate(15deg)';
+                badge.style.transform = 'scale(1.1) rotate(-5deg)';
             }
             
-            // Animate specialty tags
-            specialtyTags.forEach((tag, index) => {
+            // Animate specialty items
+            specialtyItems.forEach((item, index) => {
                 setTimeout(() => {
-                    tag.style.transform = 'translateY(-2px)';
-                    tag.style.background = 'rgba(0, 216, 132, 0.15)';
-                }, index * 100);
+                    item.style.transform = 'translateY(-2px)';
+                    item.style.background = 'rgba(0, 216, 132, 0.12)';
+                }, index * 50);
             });
             
         } else {
@@ -1321,9 +1173,9 @@ class AboutSectionController {
                 badge.style.transform = '';
             }
             
-            specialtyTags.forEach(tag => {
-                tag.style.transform = '';
-                tag.style.background = '';
+            specialtyItems.forEach(item => {
+                item.style.transform = '';
+                item.style.background = '';
             });
         }
     }
@@ -1357,11 +1209,37 @@ class AboutSectionController {
         }
     }
     
-    animateCounters(statsCard) {
+    handleSpecialtyItemHover(item, isHovering) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const statNumbers = statsCard.querySelectorAll('.stat-number');
+        const icon = item.querySelector('i');
+        
+        if (isHovering) {
+            if (icon) {
+                icon.style.transform = 'scale(1.1)';
+                icon.style.color = 'var(--primary-blue)';
+            }
+            
+            item.style.background = 'rgba(0, 216, 132, 0.12)';
+            item.style.borderColor = 'var(--primary-green)';
+            
+        } else {
+            if (icon) {
+                icon.style.transform = '';
+                icon.style.color = '';
+            }
+            
+            item.style.background = '';
+            item.style.borderColor = '';
+        }
+    }
+    
+    animateCounters(statsContainer) {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+        
+        const statNumbers = statsContainer.querySelectorAll('.stat-number');
         
         statNumbers.forEach(numberElement => {
             const finalText = numberElement.textContent.trim();
@@ -1374,9 +1252,9 @@ class AboutSectionController {
             const suffix = finalText.replace(numericValue.toString(), '');
             
             let currentValue = 0;
-            const increment = numericValue / 30; // Animate over 30 frames
-            const duration = 1500; // 1.5 seconds
-            const frameRate = duration / 30;
+            const increment = numericValue / 60; // Animate over 60 frames for smoother animation
+            const duration = 2000; // 2 seconds
+            const frameRate = duration / 60;
             
             const updateCounter = () => {
                 currentValue += increment;
@@ -1421,24 +1299,6 @@ class AboutSectionController {
         this.observers.clear();
         
         console.log('About section controller destroyed');
-    }
-}
-
-// Auto-initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.aboutController = new AboutSectionController();
-});
-
-// Also initialize if script loads after DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        if (!window.aboutController) {
-            window.aboutController = new AboutSectionController();
-        }
-    });
-} else {
-    if (!window.aboutController) {
-        window.aboutController = new AboutSectionController();
     }
 }
 
@@ -2003,6 +1863,10 @@ class ContactSectionController {
                 @keyframes fadeOut {
                     to { opacity: 0; transform: translateY(-10px); }
                 }
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
             `;
             document.head.appendChild(style);
         }
@@ -2201,7 +2065,7 @@ class InteractiveElementsController {
     }
     
     initializeButtonRippleEffects() {
-        const buttons = document.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary');
+        const buttons = document.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary, .btn-about-full');
         
         buttons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -2487,9 +2351,7 @@ class HolisticPsychServicesApp {
 
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
-                if (typeof AOS !== 'undefined') {
-                    AOS.refresh();
-                }
+                console.log('Orientation changed, refreshing layout');
             }, 500);
         });
     }
@@ -2502,7 +2364,13 @@ class HolisticPsychServicesApp {
         
         const floatingActions = this.components.get('floatingActions');
         if (floatingActions && floatingActions.isContactFabOpen) {
-            floatingActions.closeContactOptions();
+            floatingActions.isContactFabOpen = false;
+            if (floatingActions.contactFab) {
+                floatingActions.contactFab.classList.remove('active');
+            }
+            if (floatingActions.contactOptions) {
+                floatingActions.contactOptions.classList.remove('active');
+            }
         }
     }
     
@@ -2576,13 +2444,6 @@ class HolisticPsychServicesApp {
         return this.components.get(name);
     }
 
-    setHeroOverlayOpacity(opacity) {
-        const hero = this.components.get('hero');
-        if (hero && hero.setOverlayOpacity) {
-            hero.setOverlayOpacity(opacity);
-        }
-    }
-    
     toggleHeroBackgroundRotation() {
         const hero = this.components.get('hero');
         if (hero && hero.toggleBackgroundRotation) {
