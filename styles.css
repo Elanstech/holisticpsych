@@ -1888,22 +1888,25 @@ button {
     filter: grayscale(0%) contrast(1.2) !important;
 }
 
-/* Doug's Image - Zoom Out */
 .leader-card[data-leader="doug"] .leader-image-large img {
-    transform: scale(0.5) !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: scale(1) !important;
 }
 
 .leader-card[data-leader="doug"]:hover .leader-image-large img {
-    transform: scale(0.5) !important;
+    transform: scale(1.02) !important;
 }
 
-/* Kristie's Image - Zoom Out */
+/* Kristie's Image - Fit to show full face */
 .leader-card[data-leader="kristie"] .leader-image-large img {
-    transform: scale(0.5) !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: scale(1) !important;
 }
 
 .leader-card[data-leader="kristie"]:hover .leader-image-large img {
-    transform: scale(0.5) !important;
+    transform: scale(1.02) !important;
 }
 
 .experience-badge {
