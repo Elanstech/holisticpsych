@@ -1890,22 +1890,20 @@ button {
 
 /* Doug's Image - Zoom Out */
 .leader-card[data-leader="doug"] .leader-image-large img {
-    transform: scale(0.85) !important;
-    object-position: center 25% !important;
+    transform: scale(0.5) !important;
 }
 
 .leader-card[data-leader="doug"]:hover .leader-image-large img {
-    transform: scale(0.9) !important;
+    transform: scale(0.5) !important;
 }
 
-/* Kristie's Image - Zoom Out and Move Up */
+/* Kristie's Image - Zoom Out */
 .leader-card[data-leader="kristie"] .leader-image-large img {
-    transform: scale(0.8) !important;
-    object-position: center 10% !important;
+    transform: scale(0.5) !important;
 }
 
 .leader-card[data-leader="kristie"]:hover .leader-image-large img {
-    transform: scale(0.85) !important;
+    transform: scale(0.5) !important;
 }
 
 .experience-badge {
