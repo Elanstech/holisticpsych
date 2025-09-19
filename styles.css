@@ -1872,13 +1872,13 @@ button {
 }
 
 .leader-card[data-leader="kristie"] .leader-image-large img {
-    object-fit: cover;
-    object-position: center 30%;
+    object-fit: contain;
+    object-position: center center;
     transform: scale(1);
 }
 
 .leader-card[data-leader="kristie"]:hover .leader-image-large img {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .experience-badge {
