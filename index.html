@@ -433,17 +433,27 @@
         <div class="section-header">
             <div class="section-tag">Our Services</div>
             <h2 class="section-title">Comprehensive Mental Health Care</h2>
-            <p class="section-subtitle">Professional therapeutic services designed to support your unique journey toward mental wellness and personal growth</p>
+            <p class="section-subtitle">Professional therapeutic services designed to support your unique journey toward mental wellness</p>
         </div>
 
         <div class="carousel-container">
-            <!-- Navigation Arrows -->
-            <button class="carousel-nav prev-btn" id="prevBtn" aria-label="Previous service">
+            <!-- Desktop Navigation Arrows -->
+            <button class="carousel-nav prev-btn desktop-only" id="prevBtn" aria-label="Previous service">
                 <i class="ri-arrow-left-line"></i>
             </button>
-            <button class="carousel-nav next-btn" id="nextBtn" aria-label="Next service">
+            <button class="carousel-nav next-btn desktop-only" id="nextBtn" aria-label="Next service">
                 <i class="ri-arrow-right-line"></i>
             </button>
+
+            <!-- Mobile Navigation Buttons -->
+            <div class="mobile-nav-buttons">
+                <button class="mobile-nav-btn prev-mobile" id="prevMobile" aria-label="Previous service">
+                    <i class="ri-arrow-left-s-line"></i>
+                </button>
+                <button class="mobile-nav-btn next-mobile" id="nextMobile" aria-label="Next service">
+                    <i class="ri-arrow-right-s-line"></i>
+                </button>
+            </div>
 
             <!-- Carousel Track -->
             <div class="carousel-track-container">
@@ -565,19 +575,19 @@
             </div>
         </div>
 
-        <!-- CTA Section -->
-        <div class="services-cta-section">
+        <!-- Compact CTA Section -->
+        <div class="services-cta-compact">
             <div class="cta-content">
                 <h3>Ready to Begin Your Wellness Journey?</h3>
-                <p>Schedule a consultation to learn more about how our comprehensive services can support your mental health goals.</p>
+                <p>Schedule a consultation to discover how our services can support your mental health goals.</p>
                 <div class="cta-buttons">
                     <a href="#contact" class="btn-cta-primary">
                         <i class="ri-calendar-check-line"></i>
                         <span>Schedule Consultation</span>
                     </a>
-                    <a href="services.html" class="btn-cta-secondary">
-                        <i class="ri-file-list-3-line"></i>
+                    <a href="services.html" class="btn-cta-outline">
                         <span>View All Services</span>
+                        <i class="ri-arrow-right-line"></i>
                     </a>
                 </div>
             </div>
