@@ -1833,9 +1833,559 @@ class ServicesSectionController {
 /* ========================================
    TEAM SECTION
    ======================================== */
-class TeamSectionController {
+
+class EnhancedTeamCarouselController {
     constructor() {
-        this.teamSection = document.querySelector('.team');
+        this.carousel = document.querySelector('.team-carousel-section');
+        this.track = document.getElementById('teamCarouselTrack');
+        this.prevBtn = document.getElementById('teamPrevBtn');
+        this.nextBtn = document.getElementById('teamNextBtn');
+        this.indicators = document.querySelectorAll('.team-carousel-indicators .indicator');
+        this.cards = document.querySelectorAll('.team-carousel-card');
+        
+        this.currentSlide = 0;
+        this.totalSlides = this.cards.length;
+        this.isAnimating = false;
+        this.autoPlayInterval = null;
+        this.autoPlayDelay = 7000;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isInitialized = false;
+        this.isMobile = window.innerWidth <= 991;
+        this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (this.carousel && this.track && this.cards.length > 0) {
+            this.init();
+        }
+    }
+    
+    init() {
+        console.log('Initializing Enhanced Team Carousel...');
+        
+        this.setupImages();
+        this.bindEvents();
+        this.setupIntersectionObserver();
+        this.setupAccessibility();
+        this.showSlide(0, false);
+        this.updateNavigationButtons();
+        this.setupMobileFeatures();
+        
+        // Initialize first slide as active
+        this.cards[0]?.classList.add('active');
+        
+        this.isInitialized = true;
+        console.log('Enhanced team carousel initialized successfully');
+    }
+    
+    setupImages() {
+        this.cards.forEach((card, index) => {
+            const img = card.querySelector('img');
+            if (!img) return;
+            
+            const handleImageLoad = () => {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+                console.log(`Team member image ${index + 1} loaded successfully`);
+            };
+            
+            const handleImageError = () => {
+                console.warn(`Team member image ${index + 1} failed to load`);
+                const imageContainer = card.querySelector('.team-member-image');
+                if (imageContainer) {
+                    imageContainer.style.background = 'var(--gray-200)';
+                    imageContainer.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; color: var(--gray-500);">
+                            <i class="ri-user-line" style="font-size: 3rem; margin-bottom: 0.5rem;"></i>
+                            <span style="font-size: 0.875rem;">Photo Coming Soon</span>
+                        </div>
+                    `;
+                }
+            };
+            
+            if (img.complete && img.naturalHeight !== 0) {
+                handleImageLoad();
+            } else {
+                img.addEventListener('load', handleImageLoad, { once: true });
+                img.addEventListener('error', handleImageError, { once: true });
+                
+                setTimeout(() => {
+                    if (img.naturalHeight === 0) {
+                        handleImageError();
+                    }
+                }, 5000);
+            }
+        });
+    }
+    
+    bindEvents() {
+        // Desktop navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.previousSlide();
+            });
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.nextSlide();
+            });
+        }
+        
+        // Indicators
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.goToSlide(index);
+            });
+        });
+        
+        // Touch/swipe support
+        this.setupTouchEvents();
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (this.isInViewport() && !this.isAnimating) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    this.previousSlide();
+                }
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    this.nextSlide();
+                }
+            }
+        });
+        
+        // Pause on hover/focus
+        if (this.carousel) {
+            this.carousel.addEventListener('mouseenter', () => this.pauseAutoPlay());
+            this.carousel.addEventListener('mouseleave', () => this.resumeAutoPlay());
+            this.carousel.addEventListener('focusin', () => this.pauseAutoPlay());
+            this.carousel.addEventListener('focusout', () => this.resumeAutoPlay());
+        }
+        
+        // Pause on tab visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseAutoPlay();
+            } else if (this.isInViewport()) {
+                this.resumeAutoPlay();
+            }
+        });
+        
+        // Handle resize
+        window.addEventListener('resize', this.debounce(() => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 991;
+            
+            if (wasMobile !== this.isMobile) {
+                this.setupMobileFeatures();
+            }
+            
+            this.showSlide(this.currentSlide, false);
+        }, 250));
+        
+        // Motion preference changes
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        mediaQuery.addEventListener('change', (e) => {
+            this.isReducedMotion = e.matches;
+            if (this.isReducedMotion) {
+                this.pauseAutoPlay();
+            }
+        });
+    }
+    
+    setupTouchEvents() {
+        if (!this.track) return;
+        
+        this.track.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.changedTouches[0].screenX;
+            this.pauseAutoPlay();
+        }, { passive: true });
+        
+        this.track.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe();
+            
+            setTimeout(() => {
+                this.resumeAutoPlay();
+            }, 1000);
+        }, { passive: true });
+    }
+    
+    handleSwipe() {
+        const diffX = this.touchStartX - this.touchEndX;
+        const threshold = 75;
+        
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0) {
+                this.nextSlide();
+            } else {
+                this.previousSlide();
+            }
+        }
+    }
+    
+    setupMobileFeatures() {
+        // Additional mobile-specific features can be added here
+        if (this.isMobile) {
+            console.log('Mobile features activated for team carousel');
+        }
+    }
+    
+    setupAccessibility() {
+        // Set up ARIA attributes
+        if (this.carousel) {
+            this.carousel.setAttribute('role', 'region');
+            this.carousel.setAttribute('aria-label', 'Team members carousel');
+        }
+        
+        if (this.track) {
+            this.track.setAttribute('role', 'listbox');
+            this.track.setAttribute('aria-live', 'polite');
+        }
+        
+        this.cards.forEach((card, index) => {
+            card.setAttribute('role', 'option');
+            card.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+            card.setAttribute('aria-label', `Team member ${index + 1} of ${this.totalSlides}`);
+        });
+        
+        this.indicators.forEach((indicator, index) => {
+            indicator.setAttribute('role', 'button');
+            indicator.setAttribute('aria-label', `Go to team member ${index + 1}`);
+            indicator.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+        });
+        
+        if (this.prevBtn) {
+            this.prevBtn.setAttribute('aria-label', 'Previous team member');
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.setAttribute('aria-label', 'Next team member');
+        }
+    }
+    
+    setupIntersectionObserver() {
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!this.isReducedMotion) {
+                        this.startAutoPlay();
+                    }
+                    this.animateCardsOnEntry();
+                    console.log('Team carousel entered viewport');
+                } else {
+                    this.pauseAutoPlay();
+                }
+            });
+        }, observerOptions);
+        
+        if (this.carousel) {
+            observer.observe(this.carousel);
+        }
+    }
+    
+    animateCardsOnEntry() {
+        // Animate cards when carousel comes into view
+        if (this.isReducedMotion) return;
+        
+        this.cards.forEach((card, index) => {
+            const delay = index * 150;
+            setTimeout(() => {
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            }, delay);
+        });
+        
+        // Add CSS animation if not exists
+        if (!document.querySelector('#team-carousel-animations')) {
+            const style = document.createElement('style');
+            style.id = 'team-carousel-animations';
+            style.textContent = `
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    showSlide(slideIndex, animate = true) {
+        if (this.isAnimating || !this.track || slideIndex < 0 || slideIndex >= this.totalSlides) {
+            return;
+        }
+        
+        if (animate && !this.isReducedMotion) {
+            this.isAnimating = true;
+        }
+        
+        this.currentSlide = slideIndex;
+        
+        // Calculate transform (each slide is 16.666667% wide)
+        const translateX = -slideIndex * 16.666667;
+        
+        // Apply transform
+        if (this.isReducedMotion) {
+            this.track.style.transition = 'none';
+            this.track.style.transform = `translateX(${translateX}%)`;
+            setTimeout(() => {
+                this.track.style.transition = '';
+            }, 0);
+        } else {
+            this.track.style.transform = `translateX(${translateX}%)`;
+        }
+        
+        // Update states
+        this.updateActiveStates();
+        this.updateIndicators();
+        this.updateNavigationButtons();
+        this.updateAccessibility();
+        
+        // Announce to screen readers
+        this.announceToScreenReader(`Showing team member ${slideIndex + 1} of ${this.totalSlides}`);
+        
+        if (animate && !this.isReducedMotion) {
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 700);
+        }
+        
+        console.log(`Showing team member ${slideIndex + 1}`);
+    }
+    
+    updateActiveStates() {
+        this.cards.forEach((card, index) => {
+            const isActive = index === this.currentSlide;
+            card.classList.toggle('active', isActive);
+            card.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+    }
+    
+    nextSlide() {
+        if (this.isAnimating) return;
+        
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        this.showSlide(nextIndex);
+        this.resetAutoPlay();
+        
+        // Add micro-interaction feedback
+        this.addButtonFeedback(this.nextBtn);
+    }
+    
+    previousSlide() {
+        if (this.isAnimating) return;
+        
+        const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+        this.showSlide(prevIndex);
+        this.resetAutoPlay();
+        
+        // Add micro-interaction feedback
+        this.addButtonFeedback(this.prevBtn);
+    }
+    
+    goToSlide(slideIndex) {
+        if (this.isAnimating || slideIndex === this.currentSlide) return;
+        
+        this.showSlide(slideIndex);
+        this.resetAutoPlay();
+        
+        // Add indicator feedback
+        this.addIndicatorFeedback(this.indicators[slideIndex]);
+    }
+    
+    addButtonFeedback(button) {
+        if (!button || this.isReducedMotion) return;
+        
+        button.style.transform = 'translateY(-50%) scale(0.95)';
+        setTimeout(() => {
+            button.style.transform = '';
+        }, 150);
+    }
+    
+    addIndicatorFeedback(indicator) {
+        if (!indicator || this.isReducedMotion) return;
+        
+        indicator.style.transform = 'scale(1.5)';
+        setTimeout(() => {
+            indicator.style.transform = '';
+        }, 200);
+    }
+    
+    updateIndicators() {
+        this.indicators.forEach((indicator, index) => {
+            const isActive = index === this.currentSlide;
+            indicator.classList.toggle('active', isActive);
+            indicator.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+    }
+    
+    updateNavigationButtons() {
+        if (this.prevBtn) {
+            this.prevBtn.style.opacity = this.currentSlide === 0 ? '0.5' : '1';
+            this.prevBtn.style.pointerEvents = this.currentSlide === 0 ? 'none' : 'auto';
+            this.prevBtn.setAttribute('aria-disabled', this.currentSlide === 0 ? 'true' : 'false');
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.style.opacity = this.currentSlide === this.totalSlides - 1 ? '0.5' : '1';
+            this.nextBtn.style.pointerEvents = this.currentSlide === this.totalSlides - 1 ? 'none' : 'auto';
+            this.nextBtn.setAttribute('aria-disabled', this.currentSlide === this.totalSlides - 1 ? 'true' : 'false');
+        }
+    }
+    
+    updateAccessibility() {
+        // Update aria-live region
+        if (this.track) {
+            const currentCard = this.cards[this.currentSlide];
+            const memberName = currentCard?.querySelector('.member-name')?.textContent || '';
+            const memberTitle = currentCard?.querySelector('.member-title')?.textContent || '';
+            
+            this.track.setAttribute('aria-label', `Currently showing: ${memberName}, ${memberTitle}`);
+        }
+    }
+    
+    startAutoPlay() {
+        if (this.isReducedMotion || this.autoPlayInterval || !this.isInitialized) return;
+        
+        this.autoPlayInterval = setInterval(() => {
+            if (this.isInViewport() && !this.isAnimating && !document.hidden) {
+                this.nextSlide();
+            }
+        }, this.autoPlayDelay);
+        
+        console.log('Team carousel autoplay started');
+    }
+    
+    pauseAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+    
+    resumeAutoPlay() {
+        if (!this.autoPlayInterval && this.isInViewport() && this.isInitialized && !this.isReducedMotion) {
+            setTimeout(() => {
+                this.startAutoPlay();
+            }, 1000);
+        }
+    }
+    
+    resetAutoPlay() {
+        this.pauseAutoPlay();
+        if (!this.isReducedMotion) {
+            setTimeout(() => {
+                this.startAutoPlay();
+            }, 2000);
+        }
+    }
+    
+    isInViewport() {
+        if (!this.carousel) return false;
+        
+        const rect = this.carousel.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+    
+    announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+        
+        announcement.style.cssText = `
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        `;
+        
+        document.body.appendChild(announcement);
+        
+        setTimeout(() => {
+            if (announcement.parentNode) {
+                document.body.removeChild(announcement);
+            }
+        }, 1000);
+    }
+    
+    // Utility function
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+    
+    // Public API methods
+    getCurrentSlide() {
+        return this.currentSlide;
+    }
+    
+    getTotalSlides() {
+        return this.totalSlides;
+    }
+    
+    setAutoPlayDelay(delay) {
+        this.autoPlayDelay = delay;
+        if (this.autoPlayInterval) {
+            this.resetAutoPlay();
+        }
+    }
+    
+    toggleAutoPlay() {
+        if (this.autoPlayInterval) {
+            this.pauseAutoPlay();
+        } else {
+            this.startAutoPlay();
+        }
+    }
+    
+    destroy() {
+        this.pauseAutoPlay();
+        
+        // Remove event listeners
+        if (this.prevBtn) {
+            this.prevBtn.removeEventListener('click', this.previousSlide);
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.removeEventListener('click', this.nextSlide);
+        }
+        
+        this.indicators.forEach((indicator, index) => {
+            indicator.removeEventListener('click', () => this.goToSlide(index));
+        });
+        
+        console.log('Enhanced team carousel destroyed');
+    }
+}
+
+class TeamSectionAnimations {
+    constructor() {
+        this.teamSection = document.querySelector('.team-carousel-section');
+        this.isInitialized = false;
         
         if (this.teamSection) {
             this.init();
@@ -1843,81 +2393,184 @@ class TeamSectionController {
     }
     
     init() {
-        this.initializeAnimations();
-        this.initializeInteractions();
-        console.log('Team section initialized');
+        this.setupScrollAnimations();
+        this.setupHoverEffects();
+        this.isInitialized = true;
+        
+        console.log('Team section animations initialized');
     }
     
-    initializeAnimations() {
+    setupScrollAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const teamCards = entry.target.querySelectorAll('.team-card');
-                    Utils.staggerAnimations(teamCards, 'fade-in', 250);
+                    this.animateSection(entry.target);
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.2 });
         
         if (this.teamSection) {
             observer.observe(this.teamSection);
-            STATE.observers.set('team', observer);
         }
     }
     
-    initializeInteractions() {
-        const teamCards = document.querySelectorAll('.team-card');
+    animateSection(section) {
+        const header = section.querySelector('.section-header');
+        const carouselContainer = section.querySelector('.team-carousel-container');
+        const ctaSection = section.querySelector('.team-cta-section');
+        
+        if (header) {
+            header.style.animation = 'fadeInUp 0.8s ease forwards';
+        }
+        
+        if (carouselContainer) {
+            setTimeout(() => {
+                carouselContainer.style.animation = 'fadeInUp 0.8s ease forwards';
+            }, 200);
+        }
+        
+        if (ctaSection) {
+            setTimeout(() => {
+                ctaSection.style.animation = 'fadeInUp 0.8s ease forwards';
+            }, 600);
+        }
+    }
+    
+    setupHoverEffects() {
+        const teamCards = document.querySelectorAll('.team-carousel-card:not(.coming-soon)');
         
         teamCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                if (!STATE.isReducedMotion) {
-                    const badge = card.querySelector('.experience-badge');
-                    const image = card.querySelector('.team-image');
-                    const credentials = card.querySelectorAll('.credential');
-                    
-                    if (badge) {
-                        badge.style.transform = 'scale(1.1) rotate(-5deg)';
-                    }
-                    if (image) {
-                        image.style.transform = 'scale(1.05)';
-                    }
-                    
-                    credentials.forEach((cred, index) => {
-                        setTimeout(() => {
-                            cred.style.transform = 'translateY(-2px)';
-                        }, index * 100);
-                    });
-                }
-            });
+            let isHovered = false;
             
-            card.addEventListener('mouseleave', () => {
-                const badge = card.querySelector('.experience-badge');
-                const image = card.querySelector('.team-image');
-                const credentials = card.querySelectorAll('.credential');
-                
-                if (badge) {
-                    badge.style.transform = '';
+            const handleMouseEnter = () => {
+                if (!isHovered && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    isHovered = true;
+                    this.animateCardHover(card, true);
                 }
-                if (image) {
-                    image.style.transform = '';
+            };
+            
+            const handleMouseLeave = () => {
+                if (isHovered) {
+                    isHovered = false;
+                    this.animateCardHover(card, false);
                 }
-                
-                credentials.forEach(cred => {
-                    cred.style.transform = '';
-                });
-            });
+            };
+            
+            card.addEventListener('mouseenter', handleMouseEnter);
+            card.addEventListener('mouseleave', handleMouseLeave);
         });
     }
-
-    destroy() {
-        const observer = STATE.observers.get('team');
-        if (observer) {
-            observer.disconnect();
-            STATE.observers.delete('team');
+    
+    animateCardHover(card, isEntering) {
+        const specialtyTags = card.querySelectorAll('.specialty-tag');
+        const badge = card.querySelector('.owner-badge, .therapist-badge');
+        const memberExperience = card.querySelector('.member-experience');
+        
+        if (isEntering) {
+            specialtyTags.forEach((tag, index) => {
+                setTimeout(() => {
+                    tag.style.transform = 'translateY(-2px) scale(1.05)';
+                    tag.style.background = 'rgba(0, 216, 132, 0.15)';
+                }, index * 50);
+            });
+            
+            if (badge) {
+                badge.style.transform = 'scale(1.1) rotate(5deg)';
+            }
+            
+            if (memberExperience) {
+                memberExperience.style.transform = 'translateY(-2px)';
+                memberExperience.style.color = 'var(--primary-green)';
+            }
+        } else {
+            specialtyTags.forEach(tag => {
+                tag.style.transform = '';
+                tag.style.background = '';
+            });
+            
+            if (badge) {
+                badge.style.transform = '';
+            }
+            
+            if (memberExperience) {
+                memberExperience.style.transform = '';
+                memberExperience.style.color = '';
+            }
         }
-        console.log('Team section destroyed');
+    }
+    
+    destroy() {
+        console.log('Team section animations destroyed');
     }
 }
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize team carousel
+    window.teamCarousel = new EnhancedTeamCarouselController();
+    
+    // Initialize team animations
+    window.teamAnimations = new TeamSectionAnimations();
+    
+    console.log('Team carousel system initialized');
+});
+
+// Add to global scope for debugging
+if (typeof window !== 'undefined') {
+    window.TeamCarousel = {
+        controller: null,
+        animations: null,
+        
+        init: () => {
+            window.TeamCarousel.controller = new EnhancedTeamCarouselController();
+            window.TeamCarousel.animations = new TeamSectionAnimations();
+        },
+        
+        destroy: () => {
+            if (window.TeamCarousel.controller) {
+                window.TeamCarousel.controller.destroy();
+            }
+            if (window.TeamCarousel.animations) {
+                window.TeamCarousel.animations.destroy();
+            }
+        },
+        
+        nextSlide: () => {
+            if (window.TeamCarousel.controller) {
+                window.TeamCarousel.controller.nextSlide();
+            }
+        },
+        
+        previousSlide: () => {
+            if (window.TeamCarousel.controller) {
+                window.TeamCarousel.controller.previousSlide();
+            }
+        },
+        
+        goToSlide: (index) => {
+            if (window.TeamCarousel.controller) {
+                window.TeamCarousel.controller.goToSlide(index);
+            }
+        },
+        
+        toggleAutoPlay: () => {
+            if (window.TeamCarousel.controller) {
+                window.TeamCarousel.controller.toggleAutoPlay();
+            }
+        }
+    };
+}
+
+// Development helpers
+if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' || 
+    window.location.hostname === 'localhost') {
+    
+    console.log('Team Carousel Development Mode Active');
+    console.log('Available commands: window.TeamCarousel.nextSlide(), window.TeamCarousel.previousSlide(), etc.');
+}
+
+console.log('Enhanced Team Carousel JavaScript loaded successfully');
 
 /* ========================================
    REVIEWS SECTION
@@ -2736,7 +3389,7 @@ class HolisticPsychServicesApp {
             this.components.set('about', new AboutSectionController());
             this.components.set('servicesCarousel', new ServicesCarouselController());
             this.components.set('services', new ServicesSectionController());
-            this.components.set('team', new TeamSectionController());
+            this.components.set('team', new EnhancedTeamCarouselController());
             this.components.set('reviews', new ReviewsSectionController());
             this.components.set('contact', new ContactSectionController());
             this.components.set('floatingActions', new FloatingActionsController());
