@@ -953,9 +953,31 @@ class AboutSectionController {
         this.initializeAnimations();
         this.initializeInteractions();
         this.initializeCounterAnimations();
+        this.ensureImagesVisible(); // Add this to ensure images stay visible
         this.isInitialized = true;
         
         console.log('About section controller initialized');
+    }
+    
+    ensureImagesVisible() {
+        // Ensure all images in about section are visible
+        const aboutImages = this.aboutSection.querySelectorAll('img');
+        aboutImages.forEach(img => {
+            img.style.opacity = '1';
+            img.style.visibility = 'visible';
+            
+            // If image is already loaded, ensure it stays visible
+            if (img.complete) {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+            }
+            
+            // Handle load event
+            img.addEventListener('load', () => {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+            });
+        });
     }
     
     initializeAnimations() {
@@ -1087,6 +1109,13 @@ class AboutSectionController {
         // Check if reduced motion is preferred
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         
+        // Ensure images in this element stay visible
+        const images = element.querySelectorAll('img');
+        images.forEach(img => {
+            img.style.opacity = '1';
+            img.style.visibility = 'visible';
+        });
+        
         if (prefersReducedMotion) {
             element.classList.add('visible');
             return;
@@ -1095,6 +1124,12 @@ class AboutSectionController {
         setTimeout(() => {
             element.classList.add(className);
             element.classList.add('visible');
+            
+            // Double-check images after animation
+            images.forEach(img => {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+            });
         }, delay);
     }
     
@@ -2147,6 +2182,14 @@ class PerformanceController {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target;
+                        
+                        // Skip animation for about section images
+                        if (img.closest('.about-preview')) {
+                            img.style.opacity = '1';
+                            img.style.visibility = 'visible';
+                            imageObserver.unobserve(img);
+                            return;
+                        }
                         
                         img.style.opacity = '0';
                         img.style.transition = 'opacity 0.3s ease';
