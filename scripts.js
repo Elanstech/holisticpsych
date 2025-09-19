@@ -1,5 +1,5 @@
 /* ========================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - COMPLETE WEBSITE JS
+   HOLISTIC PSYCHOLOGICAL SERVICES - REORGANIZED BY SECTION
    Manhattan Mental Health - Professional Experience
    Organized by Website Sections for Easy Maintenance
    ======================================== */
@@ -903,7 +903,6 @@ class HeroScrollIndicatorController {
     
     handleScrollClick() {
         const nextSection = document.querySelector('#about-preview') || 
-                           document.querySelector('#about') || 
                            document.querySelector('section:not(.hero)') ||
                            document.querySelector('main > *:not(.hero)');
         
@@ -1093,7 +1092,7 @@ class HeroController {
 }
 
 /* ========================================
-   ABOUT SECTION - NEW ENHANCED CONTROLLER
+   ABOUT SECTION
    ======================================== */
 
 class AboutSectionController {
@@ -1110,47 +1109,52 @@ class AboutSectionController {
     init() {
         this.initializeAnimations();
         this.initializeInteractions();
+        this.initializeCounterAnimations();
         this.isInitialized = true;
         
         console.log('About section controller initialized');
     }
     
     initializeAnimations() {
-        // Welcome Content Animation
-        this.observeElement('.welcome-content', (element) => {
-            this.animateElement(element, 'slide-left', 0);
+        // Welcome section animation
+        this.observeElement('.welcome-team-section', (element) => {
+            const welcomeContent = element.querySelector('.welcome-content');
+            const philosophyCompact = element.querySelector('.philosophy-compact');
+            
+            if (welcomeContent) {
+                this.animateElement(welcomeContent, 'fade-in', 0);
+            }
+            
+            if (philosophyCompact) {
+                const items = philosophyCompact.querySelectorAll('.philosophy-item');
+                setTimeout(() => {
+                    this.staggerAnimations(items, 'fade-in', 100);
+                }, 200);
+            }
         });
         
-        // Philosophy Items Animation
-        this.observeElement('.philosophy-compact', (element) => {
-            const philosophyItems = element.querySelectorAll('.philosophy-item');
-            this.staggerAnimations(philosophyItems, 'fade-in', 200);
-        });
-        
-        // Leadership Section Animation
+        // Leadership section animation
         this.observeElement('.leadership-section', (element) => {
             const header = element.querySelector('.leadership-header');
             const leaderCards = element.querySelectorAll('.leader-card');
             
-            // Animate header first
             if (header) {
                 this.animateElement(header, 'fade-in', 0);
             }
             
-            // Then animate leader cards
             setTimeout(() => {
-                this.staggerAnimations(leaderCards, 'slide-right', 300);
+                this.staggerAnimations(leaderCards, 'fade-in', 300);
             }, 400);
         });
         
-        // CTA Animation
+        // CTA section animation
         this.observeElement('.about-cta', (element) => {
             this.animateElement(element, 'fade-in', 0);
         });
     }
     
     initializeInteractions() {
-        // Philosophy Items Hover Effects
+        // Philosophy items hover effects
         const philosophyItems = this.aboutSection.querySelectorAll('.philosophy-item');
         philosophyItems.forEach(item => {
             item.addEventListener('mouseenter', () => {
@@ -1162,7 +1166,7 @@ class AboutSectionController {
             });
         });
         
-        // Leader Card Interactions
+        // Leader card interactions
         const leaderCards = this.aboutSection.querySelectorAll('.leader-card');
         leaderCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
@@ -1173,30 +1177,10 @@ class AboutSectionController {
                 this.handleLeaderCardHover(card, false);
             });
         });
-        
-        // Specialty Tags Interactions
-        const specialtyTags = this.aboutSection.querySelectorAll('.specialty-tag');
-        specialtyTags.forEach(tag => {
-            tag.addEventListener('mouseenter', () => {
-                this.handleSpecialtyTagHover(tag, true);
-            });
-            
-            tag.addEventListener('mouseleave', () => {
-                this.handleSpecialtyTagHover(tag, false);
-            });
-        });
-        
-        // CTA Button Interaction
-        const ctaButton = this.aboutSection.querySelector('.btn-about-full');
-        if (ctaButton) {
-            ctaButton.addEventListener('mouseenter', () => {
-                this.handleCTAButtonHover(ctaButton, true);
-            });
-            
-            ctaButton.addEventListener('mouseleave', () => {
-                this.handleCTAButtonHover(ctaButton, false);
-            });
-        }
+    }
+    
+    initializeCounterAnimations() {
+        // This will be triggered when elements become visible
     }
     
     observeElement(selector, callback, options = {}) {
@@ -1239,7 +1223,7 @@ class AboutSectionController {
         }, delay);
     }
     
-    staggerAnimations(elements, className = 'fade-in', staggerDelay = 200) {
+    staggerAnimations(elements, className = 'fade-in', staggerDelay = 150) {
         if (!elements || elements.length === 0) return;
         
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1258,18 +1242,16 @@ class AboutSectionController {
         
         if (isHovering) {
             if (icon) {
-                icon.style.transform = 'scale(1.15) rotate(5deg)';
+                icon.style.transform = 'scale(1.2) rotate(5deg)';
             }
-            
-            // Add subtle glow effect
-            item.style.boxShadow = '0 25px 50px rgba(0, 216, 132, 0.18)';
-            
+            item.style.transform = 'translateY(-3px)';
+            item.style.background = 'rgba(0, 216, 132, 0.08)';
         } else {
             if (icon) {
                 icon.style.transform = '';
             }
-            
-            item.style.boxShadow = '';
+            item.style.transform = '';
+            item.style.background = '';
         }
     }
     
@@ -1277,35 +1259,29 @@ class AboutSectionController {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
         
-        const image = card.querySelector('.leader-image-large img');
+        const image = card.querySelector('.image-container img');
         const badge = card.querySelector('.experience-badge');
         const specialtyTags = card.querySelectorAll('.specialty-tag');
         
         if (isHovering) {
-            // Image enhancement
             if (image) {
-                image.style.transform = 'scale(1.05)';
-                image.style.filter = 'grayscale(0%) contrast(1.2)';
+                image.style.transform = 'scale(1.1)';
             }
             
-            // Badge animation
             if (badge) {
-                badge.style.transform = 'scale(1.15) rotate(-3deg)';
+                badge.style.transform = 'scale(1.2) rotate(15deg)';
             }
             
-            // Animate specialty tags
             specialtyTags.forEach((tag, index) => {
                 setTimeout(() => {
                     tag.style.transform = 'translateY(-2px)';
-                    tag.style.background = 'rgba(0, 216, 132, 0.12)';
-                }, index * 100);
+                    tag.style.background = 'rgba(0, 216, 132, 0.15)';
+                }, index * 50);
             });
             
         } else {
-            // Reset all animations
             if (image) {
                 image.style.transform = '';
-                image.style.filter = '';
             }
             
             if (badge) {
@@ -1319,52 +1295,12 @@ class AboutSectionController {
         }
     }
     
-    handleSpecialtyTagHover(tag, isHovering) {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-        
-        const icon = tag.querySelector('i');
-        
-        if (isHovering) {
-            if (icon) {
-                icon.style.transform = 'scale(1.1)';
-                icon.style.color = 'var(--primary-green)';
-            }
-            
-        } else {
-            if (icon) {
-                icon.style.transform = '';
-                icon.style.color = '';
-            }
-        }
-    }
-    
-    handleCTAButtonHover(button, isHovering) {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) return;
-        
-        const icon = button.querySelector('i');
-        
-        if (isHovering) {
-            if (icon) {
-                icon.style.transform = 'translateX(5px)';
-            }
-            
-        } else {
-            if (icon) {
-                icon.style.transform = '';
-            }
-        }
-    }
-    
     // Public method to restart animations
     restartAnimations() {
-        const animatedElements = this.aboutSection.querySelectorAll('.fade-in, .slide-left, .slide-right');
+        const animatedElements = this.aboutSection.querySelectorAll('.fade-in');
         animatedElements.forEach(element => {
             element.classList.remove('visible');
             element.classList.remove('fade-in');
-            element.classList.remove('slide-left');
-            element.classList.remove('slide-right');
         });
         
         setTimeout(() => {
@@ -1384,7 +1320,7 @@ class AboutSectionController {
 }
 
 /* ========================================
-   SERVICES SECTION
+   SERVICES CAROUSEL CONTROLLER - ENHANCED & FIXED
    ======================================== */
 class ServicesCarouselController {
     constructor() {
@@ -1443,11 +1379,11 @@ class ServicesCarouselController {
                     // Remove any transforms that might be hiding the image
                     img.style.transform = 'none';
                     
-                    console.log(`Image ${index + 1} loaded successfully`);
+                    console.log(`Service image ${index + 1} loaded successfully`);
                 };
                 
                 const handleImageError = () => {
-                    console.warn(`Image ${index + 1} failed to load`);
+                    console.warn(`Service image ${index + 1} failed to load`);
                     placeholder.classList.remove('show');
                     // Set a fallback background color
                     card.querySelector('.service-image').style.background = 'var(--gray-200)';
@@ -1686,14 +1622,14 @@ class ServicesCarouselController {
             }
         }, this.autoPlayDelay);
         
-        console.log('Autoplay started');
+        console.log('Services carousel autoplay started');
     }
     
     pauseAutoPlay() {
         if (this.autoPlayInterval) {
             clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = null;
-            console.log('Autoplay paused');
+            console.log('Services carousel autoplay paused');
         }
     }
     
@@ -1732,16 +1668,101 @@ class ServicesCarouselController {
     }
 }
 
-// Initialize the carousel
-document.addEventListener('DOMContentLoaded', () => {
-    if (!window.servicesCarouselController) {
-        window.servicesCarouselController = new ServicesCarouselController();
+/* ========================================
+   SERVICES SECTION
+   ======================================== */
+class ServicesSectionController {
+    constructor() {
+        this.servicesSection = document.querySelector('.services');
+        
+        if (this.servicesSection) {
+            this.init();
+        }
     }
-});
+    
+    init() {
+        this.initializeAnimations();
+        this.initializeInteractions();
+        console.log('Services section initialized');
+    }
+    
+    initializeAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const serviceCards = entry.target.querySelectorAll('.service-card');
+                    const ctaSection = entry.target.querySelector('.services-cta');
+                    
+                    Utils.staggerAnimations(serviceCards, 'fade-in', 200);
+                    
+                    if (ctaSection) {
+                        setTimeout(() => {
+                            Utils.animateElement(ctaSection, 'fade-in', 0);
+                        }, serviceCards.length * 200 + 400);
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        if (this.servicesSection) {
+            observer.observe(this.servicesSection);
+            STATE.observers.set('services', observer);
+        }
+    }
+    
+    initializeInteractions() {
+        const serviceCards = document.querySelectorAll('.service-card');
+        
+        serviceCards.forEach(card => {
+            let isHovered = false;
+            
+            const handleMouseEnter = () => {
+                if (!isHovered && !STATE.isReducedMotion) {
+                    isHovered = true;
+                    const icon = card.querySelector('.service-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(5deg)';
+                    }
+                    
+                    const features = card.querySelectorAll('.service-features li');
+                    features.forEach((feature, index) => {
+                        setTimeout(() => {
+                            feature.style.transform = 'translateX(5px)';
+                        }, index * 50);
+                    });
+                }
+            };
+            
+            const handleMouseLeave = () => {
+                if (isHovered) {
+                    isHovered = false;
+                    const icon = card.querySelector('.service-icon');
+                    if (icon) {
+                        icon.style.transform = '';
+                    }
+                    
+                    const features = card.querySelectorAll('.service-features li');
+                    features.forEach(feature => {
+                        feature.style.transform = '';
+                    });
+                }
+            };
+            
+            card.addEventListener('mouseenter', handleMouseEnter);
+            card.addEventListener('mouseleave', handleMouseLeave);
+        });
+    }
 
-// Add to existing app if needed
-if (window.holisticApp && window.holisticApp.components) {
-    window.holisticApp.components.set('servicesCarousel', window.servicesCarouselController);
+    destroy() {
+        const observer = STATE.observers.get('services');
+        if (observer) {
+            observer.disconnect();
+            STATE.observers.delete('services');
+        }
+        console.log('Services section destroyed');
+    }
 }
 
 /* ========================================
@@ -1773,8 +1794,10 @@ class TeamSectionController {
             });
         }, { threshold: 0.1 });
         
-        observer.observe(this.teamSection);
-        STATE.observers.set('team', observer);
+        if (this.teamSection) {
+            observer.observe(this.teamSection);
+            STATE.observers.set('team', observer);
+        }
     }
     
     initializeInteractions() {
@@ -1877,8 +1900,10 @@ class ReviewsSectionController {
             });
         }, { threshold: 0.1 });
         
-        observer.observe(this.reviewsSection);
-        STATE.observers.set('reviews', observer);
+        if (this.reviewsSection) {
+            observer.observe(this.reviewsSection);
+            STATE.observers.set('reviews', observer);
+        }
     }
     
     initializeInteractions() {
@@ -2008,8 +2033,10 @@ class ContactSectionController {
             });
         }, { threshold: 0.2 });
         
-        observer.observe(this.contactSection);
-        STATE.observers.set('contact', observer);
+        if (this.contactSection) {
+            observer.observe(this.contactSection);
+            STATE.observers.set('contact', observer);
+        }
     }
     
     initializeInteractions() {
@@ -2408,7 +2435,7 @@ class InteractiveElementsController {
     }
     
     initializeButtonRippleEffects() {
-        const buttons = document.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary, .btn-about-full');
+        const buttons = document.querySelectorAll('.service-btn, .btn-cta-primary, .btn-cta-secondary');
         
         buttons.forEach(button => {
             button.addEventListener('click', function(e) {
@@ -2642,6 +2669,7 @@ class HolisticPsychServicesApp {
             this.components.set('mobileMenu', new MobileMenuController());
             this.components.set('hero', new HeroController());
             this.components.set('about', new AboutSectionController());
+            this.components.set('servicesCarousel', new ServicesCarouselController());
             this.components.set('services', new ServicesSectionController());
             this.components.set('team', new TeamSectionController());
             this.components.set('reviews', new ReviewsSectionController());
@@ -2870,15 +2898,6 @@ window.HolisticPsychServices = {
                 hero.setBackground(index);
             }
         }
-    },
-    
-    aboutAPI: {
-        restartAnimations: () => {
-            const about = window.holisticApp?.getComponent('about');
-            if (about && about.restartAnimations) {
-                about.restartAnimations();
-            }
-        }
     }
 };
 
@@ -2957,16 +2976,6 @@ if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'development' |
                 if (hero && hero.restartTypewriter) {
                     hero.restartTypewriter();
                     console.log('Typewriter restarted');
-                }
-            }
-        },
-        
-        about: {
-            restartAnimations: () => {
-                const about = window.holisticApp?.getComponent('about');
-                if (about && about.restartAnimations) {
-                    about.restartAnimations();
-                    console.log('About animations restarted');
                 }
             }
         },
