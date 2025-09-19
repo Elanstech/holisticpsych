@@ -1328,6 +1328,8 @@ class ServicesCarouselController {
         this.track = document.getElementById('carouselTrack');
         this.prevBtn = document.getElementById('prevBtn');
         this.nextBtn = document.getElementById('nextBtn');
+        this.prevMobile = document.getElementById('prevMobile');
+        this.nextMobile = document.getElementById('nextMobile');
         this.indicators = document.querySelectorAll('.indicator');
         this.cards = document.querySelectorAll('.service-carousel-card');
         
@@ -1335,10 +1337,11 @@ class ServicesCarouselController {
         this.totalSlides = this.cards.length;
         this.isAnimating = false;
         this.autoPlayInterval = null;
-        this.autoPlayDelay = 8000;
+        this.autoPlayDelay = 6000;
         this.touchStartX = 0;
         this.touchEndX = 0;
         this.isInitialized = false;
+        this.isMobile = window.innerWidth <= 991;
         
         if (this.carousel && this.track && this.cards.length > 0) {
             this.init();
@@ -1346,46 +1349,40 @@ class ServicesCarouselController {
     }
     
     init() {
-        console.log('Initializing Services Carousel...');
+        console.log('Initializing Enhanced Services Carousel...');
         
         this.setupImages();
         this.bindEvents();
         this.setupIntersectionObserver();
         this.showSlide(0, false);
         this.updateNavigationButtons();
+        this.setupMobileFeatures();
         
         // Initialize first slide as active
         this.cards[0]?.classList.add('active');
         
         this.isInitialized = true;
-        console.log('Services carousel controller initialized successfully');
+        console.log('Enhanced services carousel initialized successfully');
     }
     
     setupImages() {
-        // Setup image loading with proper error handling
         this.cards.forEach((card, index) => {
             const img = card.querySelector('img');
             const placeholder = card.querySelector('.loading-placeholder');
             
             if (img && placeholder) {
-                // Show placeholder initially
                 placeholder.classList.add('show');
                 
                 const handleImageLoad = () => {
                     img.style.opacity = '1';
                     img.style.visibility = 'visible';
                     placeholder.classList.remove('show');
-                    
-                    // Remove any transforms that might be hiding the image
-                    img.style.transform = 'none';
-                    
                     console.log(`Service image ${index + 1} loaded successfully`);
                 };
                 
                 const handleImageError = () => {
                     console.warn(`Service image ${index + 1} failed to load`);
                     placeholder.classList.remove('show');
-                    // Set a fallback background color
                     card.querySelector('.service-image').style.background = 'var(--gray-200)';
                 };
                 
@@ -1395,7 +1392,6 @@ class ServicesCarouselController {
                     img.addEventListener('load', handleImageLoad, { once: true });
                     img.addEventListener('error', handleImageError, { once: true });
                     
-                    // Timeout fallback
                     setTimeout(() => {
                         if (img.naturalHeight === 0) {
                             handleImageError();
@@ -1407,7 +1403,7 @@ class ServicesCarouselController {
     }
     
     bindEvents() {
-        // Navigation buttons
+        // Desktop navigation buttons
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1419,6 +1415,23 @@ class ServicesCarouselController {
             this.nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.nextSlide();
+            });
+        }
+        
+        // Mobile navigation buttons
+        if (this.prevMobile) {
+            this.prevMobile.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.previousSlide();
+                this.pausePulseAnimation();
+            });
+        }
+        
+        if (this.nextMobile) {
+            this.nextMobile.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.nextSlide();
+                this.pausePulseAnimation();
             });
         }
         
@@ -1464,6 +1477,13 @@ class ServicesCarouselController {
         
         // Handle resize
         window.addEventListener('resize', Utils.debounce(() => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 991;
+            
+            if (wasMobile !== this.isMobile) {
+                this.setupMobileFeatures();
+            }
+            
             this.showSlide(this.currentSlide, false);
         }, 250));
     }
@@ -1480,7 +1500,6 @@ class ServicesCarouselController {
             this.touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe();
             
-            // Resume autoplay after touch interaction
             setTimeout(() => {
                 this.resumeAutoPlay();
             }, 1000);
@@ -1497,6 +1516,42 @@ class ServicesCarouselController {
             } else {
                 this.previousSlide();
             }
+            
+            if (this.isMobile) {
+                this.pausePulseAnimation();
+            }
+        }
+    }
+    
+    setupMobileFeatures() {
+        const mobileButtons = document.querySelector('.mobile-nav-buttons');
+        
+        if (this.isMobile && mobileButtons) {
+            // Start pulse animation for mobile buttons
+            this.startPulseAnimation();
+            
+            // Auto-hide pulse after user interaction
+            setTimeout(() => {
+                this.pausePulseAnimation();
+            }, 10000); // Stop pulsing after 10 seconds
+        }
+    }
+    
+    startPulseAnimation() {
+        if (this.prevMobile) {
+            this.prevMobile.style.animation = 'pulse 2s infinite';
+        }
+        if (this.nextMobile) {
+            this.nextMobile.style.animation = 'pulse 2s infinite';
+        }
+    }
+    
+    pausePulseAnimation() {
+        if (this.prevMobile) {
+            this.prevMobile.style.animation = 'none';
+        }
+        if (this.nextMobile) {
+            this.nextMobile.style.animation = 'none';
         }
     }
     
@@ -1510,9 +1565,15 @@ class ServicesCarouselController {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     this.startAutoPlay();
-                    console.log('Services carousel entered viewport, starting autoplay');
+                    if (this.isMobile) {
+                        setTimeout(() => {
+                            this.startPulseAnimation();
+                        }, 1000);
+                    }
+                    console.log('Services carousel entered viewport');
                 } else {
                     this.pauseAutoPlay();
+                    this.pausePulseAnimation();
                 }
             });
         }, observerOptions);
@@ -1535,13 +1596,13 @@ class ServicesCarouselController {
         
         this.currentSlide = slideIndex;
         
-        // Calculate transform - Fixed calculation
-        const translateX = -slideIndex * 25; // 25% per slide (100% ÷ 4 slides)
+        // Calculate transform
+        const translateX = -slideIndex * 25; // 25% per slide
         
-        // Apply transform with proper transition
+        // Apply transform
         this.track.style.transform = `translateX(${translateX}%)`;
         
-        // Update active states
+        // Update states
         this.updateActiveStates();
         this.updateIndicators();
         this.updateNavigationButtons();
@@ -1552,10 +1613,10 @@ class ServicesCarouselController {
         if (animate) {
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 700);
+            }, 600);
         }
         
-        console.log(`Showing slide ${slideIndex + 1}, transform: ${translateX}%`);
+        console.log(`Showing slide ${slideIndex + 1}`);
     }
     
     updateActiveStates() {
@@ -1570,8 +1631,6 @@ class ServicesCarouselController {
         const nextIndex = (this.currentSlide + 1) % this.totalSlides;
         this.showSlide(nextIndex);
         this.resetAutoPlay();
-        
-        console.log(`Next slide: ${nextIndex + 1}`);
     }
     
     previousSlide() {
@@ -1580,8 +1639,6 @@ class ServicesCarouselController {
         const prevIndex = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
         this.showSlide(prevIndex);
         this.resetAutoPlay();
-        
-        console.log(`Previous slide: ${prevIndex + 1}`);
     }
     
     goToSlide(slideIndex) {
@@ -1589,8 +1646,6 @@ class ServicesCarouselController {
         
         this.showSlide(slideIndex);
         this.resetAutoPlay();
-        
-        console.log(`Go to slide: ${slideIndex + 1}`);
     }
     
     updateIndicators() {
@@ -1602,6 +1657,7 @@ class ServicesCarouselController {
     }
     
     updateNavigationButtons() {
+        // Desktop buttons
         if (this.prevBtn) {
             this.prevBtn.style.opacity = this.currentSlide === 0 ? '0.5' : '1';
             this.prevBtn.style.pointerEvents = this.currentSlide === 0 ? 'none' : 'auto';
@@ -1610,6 +1666,15 @@ class ServicesCarouselController {
         if (this.nextBtn) {
             this.nextBtn.style.opacity = this.currentSlide === this.totalSlides - 1 ? '0.5' : '1';
             this.nextBtn.style.pointerEvents = this.currentSlide === this.totalSlides - 1 ? 'none' : 'auto';
+        }
+        
+        // Mobile buttons
+        if (this.prevMobile) {
+            this.prevMobile.style.opacity = this.currentSlide === 0 ? '0.6' : '1';
+        }
+        
+        if (this.nextMobile) {
+            this.nextMobile.style.opacity = this.currentSlide === this.totalSlides - 1 ? '0.6' : '1';
         }
     }
     
@@ -1629,7 +1694,6 @@ class ServicesCarouselController {
         if (this.autoPlayInterval) {
             clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = null;
-            console.log('Services carousel autoplay paused');
         }
     }
     
@@ -1657,6 +1721,7 @@ class ServicesCarouselController {
     
     destroy() {
         this.pauseAutoPlay();
+        this.pausePulseAnimation();
         
         const observer = STATE.observers.get('servicesCarousel');
         if (observer) {
