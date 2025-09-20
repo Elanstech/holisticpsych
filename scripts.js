@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - JAVASCRIPT
+   HOLISTIC PSYCHOLOGICAL SERVICES - OPTIMIZED JAVASCRIPT
    Professional Mental Health Services - Manhattan, NY
    ========================================================================== */
 
@@ -13,7 +13,6 @@ const config = {
     typewriterDelay: 2000,
     heroBackgroundInterval: 8000,
     carouselAutoplayInterval: 6000,
-    teamCarouselInterval: 8000,
     scrollThreshold: 100,
     animationDelay: 100,
     transitionDuration: 300
@@ -21,10 +20,8 @@ const config = {
 
 let isPageLoaded = false;
 let servicesCarouselActive = true;
-let teamCarouselActive = true;
 let heroBackgroundIndex = 0;
 let servicesCurrentSlide = 0;
-let teamCurrentSlide = 0;
 
 /* ==========================================================================
    UTILITY FUNCTIONS
@@ -90,6 +87,16 @@ const utils = {
     toggleClass: function(element, className) {
         if (!element) return;
         element.classList.toggle(className);
+    },
+
+    // Check if device is mobile
+    isMobile: function() {
+        return window.innerWidth <= 767;
+    },
+
+    // Check if device is tablet
+    isTablet: function() {
+        return window.innerWidth <= 991 && window.innerWidth > 767;
     }
 };
 
@@ -118,7 +125,7 @@ const pageInit = {
         headerNav.init();
         heroSection.init();
         servicesCarousel.init();
-        teamCarousel.init();
+        teamSection.init();
         contactForm.init();
         floatingElements.init();
         scrollAnimations.init();
@@ -139,7 +146,7 @@ const pageInit = {
     handleResize: function() {
         mobileOptimizations.handleResize();
         servicesCarousel.handleResize();
-        teamCarousel.handleResize();
+        teamSection.handleResize();
         headerNav.handleResize();
     },
 
@@ -644,193 +651,154 @@ const servicesCarousel = {
 };
 
 /* ==========================================================================
-   TEAM CAROUSEL
+   TEAM SECTION (NEW REDESIGNED VERSION)
    ========================================================================== */
-const teamCarousel = {
+const teamSection = {
     elements: {},
-    totalSlides: 6,
-    autoplayTimer: null,
 
     init: function() {
         this.cacheElements();
         this.setupEventListeners();
-        this.setupIndicators();
-        this.startAutoplay();
-        this.updateCarousel();
-        this.updateProgressBar();
+        this.initializeAnimations();
     },
 
     cacheElements: function() {
         this.elements = {
-            track: document.getElementById('teamCarouselTrack'),
-            prevBtn: document.getElementById('teamPrevBtn'),
-            nextBtn: document.getElementById('teamNextBtn'),
-            indicators: document.querySelectorAll('.slide-indicators .indicator'),
-            slides: document.querySelectorAll('.team-slide'),
-            progressBar: document.getElementById('progressBar')
+            teamCards: document.querySelectorAll('.team-member-card'),
+            growingCard: document.querySelector('.team-member-card.growing-card'),
+            ctaButtons: document.querySelectorAll('.team-cta .btn-primary, .team-cta .btn-secondary')
         };
     },
 
     setupEventListeners: function() {
-        // Navigation buttons
-        if (this.elements.prevBtn) {
-            this.elements.prevBtn.addEventListener('click', this.previousSlide.bind(this));
+        // Add hover effects for team cards
+        this.elements.teamCards.forEach(card => {
+            card.addEventListener('mouseenter', this.handleCardHover.bind(this));
+            card.addEventListener('mouseleave', this.handleCardLeave.bind(this));
+        });
+
+        // CTA button interactions
+        this.elements.ctaButtons.forEach(button => {
+            button.addEventListener('click', this.handleCTAClick.bind(this));
+        });
+
+        // Growing card special effects
+        if (this.elements.growingCard) {
+            this.setupGrowingCardEffects();
+        }
+    },
+
+    setupGrowingCardEffects: function() {
+        const growingBtn = this.elements.growingCard.querySelector('.growing-btn');
+        if (growingBtn) {
+            growingBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.animateGrowingCardClick();
+                // Scroll to contact section
+                setTimeout(() => {
+                    const contactSection = document.getElementById('contact');
+                    if (contactSection) {
+                        utils.scrollToElement(contactSection, 120);
+                    }
+                }, 300);
+            });
+        }
+    },
+
+    handleCardHover: function(e) {
+        const card = e.currentTarget;
+        const photo = card.querySelector('.photo-container img');
+        const statusBadge = card.querySelector('.status-badge');
+        
+        if (photo) {
+            utils.addClass(photo, 'hovered');
         }
         
-        if (this.elements.nextBtn) {
-            this.elements.nextBtn.addEventListener('click', this.nextSlide.bind(this));
-        }
-
-        // Indicators
-        this.elements.indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => this.goToSlide(index));
-        });
-
-        // Touch/swipe support
-        if (this.elements.track) {
-            this.setupTouchEvents();
-        }
-
-        // Pause autoplay on hover
-        const teamCarouselMain = document.getElementById('teamCarousel');
-        if (teamCarouselMain) {
-            teamCarouselMain.addEventListener('mouseenter', this.pauseAutoplay.bind(this));
-            teamCarouselMain.addEventListener('mouseleave', this.resumeAutoplay.bind(this));
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', this.handleKeyboard.bind(this));
-    },
-
-    setupTouchEvents: function() {
-        let startX = 0;
-        let startY = 0;
-        let distX = 0;
-        let distY = 0;
-        let threshold = 100;
-        let restraint = 100;
-
-        this.elements.track.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].pageX;
-            startY = e.touches[0].pageY;
-        });
-
-        this.elements.track.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        });
-
-        this.elements.track.addEventListener('touchend', (e) => {
-            distX = e.changedTouches[0].pageX - startX;
-            distY = e.changedTouches[0].pageY - startY;
-
-            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
-                if (distX > 0) {
-                    this.previousSlide();
-                } else {
-                    this.nextSlide();
-                }
-            }
-        });
-    },
-
-    setupIndicators: function() {
-        this.updateIndicators();
-    },
-
-    handleKeyboard: function(e) {
-        const teamSection = document.getElementById('team');
-        if (!utils.isInViewport(teamSection, 0.3)) return;
-
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            this.previousSlide();
-        } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            this.nextSlide();
+        if (statusBadge) {
+            utils.addClass(statusBadge, 'hovered');
         }
     },
 
-    previousSlide: function() {
-        teamCurrentSlide = teamCurrentSlide > 0 ? teamCurrentSlide - 1 : this.totalSlides - 1;
-        this.updateCarousel();
-        this.resetAutoplay();
-    },
-
-    nextSlide: function() {
-        teamCurrentSlide = (teamCurrentSlide + 1) % this.totalSlides;
-        this.updateCarousel();
-        this.resetAutoplay();
-    },
-
-    goToSlide: function(index) {
-        teamCurrentSlide = index;
-        this.updateCarousel();
-        this.resetAutoplay();
-    },
-
-    updateCarousel: function() {
-        if (!this.elements.track) return;
-
-        const translateX = -teamCurrentSlide * 100;
-        this.elements.track.style.transform = `translateX(${translateX}%)`;
+    handleCardLeave: function(e) {
+        const card = e.currentTarget;
+        const photo = card.querySelector('.photo-container img');
+        const statusBadge = card.querySelector('.status-badge');
         
-        this.updateSlideStates();
-        this.updateIndicators();
-        this.updateProgressBar();
-    },
-
-    updateSlideStates: function() {
-        this.elements.slides.forEach((slide, index) => {
-            if (index === teamCurrentSlide) {
-                utils.addClass(slide, 'active');
-            } else {
-                utils.removeClass(slide, 'active');
-            }
-        });
-    },
-
-    updateIndicators: function() {
-        this.elements.indicators.forEach((indicator, index) => {
-            if (index === teamCurrentSlide) {
-                utils.addClass(indicator, 'active');
-            } else {
-                utils.removeClass(indicator, 'active');
-            }
-        });
-    },
-
-    updateProgressBar: function() {
-        if (!this.elements.progressBar) return;
+        if (photo) {
+            utils.removeClass(photo, 'hovered');
+        }
         
-        const progressPercentage = ((teamCurrentSlide + 1) / this.totalSlides) * 100;
-        this.elements.progressBar.style.width = `${progressPercentage}%`;
-    },
-
-    startAutoplay: function() {
-        if (!teamCarouselActive) return;
-        
-        this.autoplayTimer = setInterval(() => {
-            this.nextSlide();
-        }, config.teamCarouselInterval);
-    },
-
-    pauseAutoplay: function() {
-        if (this.autoplayTimer) {
-            clearInterval(this.autoplayTimer);
+        if (statusBadge) {
+            utils.removeClass(statusBadge, 'hovered');
         }
     },
 
-    resumeAutoplay: function() {
-        this.startAutoplay();
+    handleCTAClick: function(e) {
+        const button = e.currentTarget;
+        
+        // Add click animation
+        utils.addClass(button, 'clicked');
+        setTimeout(() => {
+            utils.removeClass(button, 'clicked');
+        }, 300);
     },
 
-    resetAutoplay: function() {
-        this.pauseAutoplay();
-        this.startAutoplay();
+    animateGrowingCardClick: function() {
+        const growingIcon = this.elements.growingCard.querySelector('.icon-circle');
+        if (growingIcon) {
+            utils.addClass(growingIcon, 'clicked');
+            setTimeout(() => {
+                utils.removeClass(growingIcon, 'clicked');
+            }, 600);
+        }
+    },
+
+    initializeAnimations: function() {
+        // Intersection Observer for team cards
+        if ('IntersectionObserver' in window) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.2
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            utils.addClass(entry.target, 'animate-in');
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            this.elements.teamCards.forEach(card => {
+                observer.observe(card);
+            });
+        }
     },
 
     handleResize: function() {
-        this.updateCarousel();
+        // Handle any resize-specific logic for team section
+        if (utils.isMobile()) {
+            this.optimizeForMobile();
+        } else {
+            this.optimizeForDesktop();
+        }
+    },
+
+    optimizeForMobile: function() {
+        // Mobile-specific optimizations
+        this.elements.teamCards.forEach(card => {
+            utils.addClass(card, 'mobile-optimized');
+        });
+    },
+
+    optimizeForDesktop: function() {
+        // Desktop-specific optimizations
+        this.elements.teamCards.forEach(card => {
+            utils.removeClass(card, 'mobile-optimized');
+        });
     }
 };
 
@@ -1423,22 +1391,16 @@ const mobileOptimizations = {
         if (this.isMobile) {
             // Disable autoplay on mobile for better performance
             servicesCarouselActive = false;
-            teamCarouselActive = false;
             
             // Clear any existing timers
             if (servicesCarousel.autoplayTimer) {
                 clearInterval(servicesCarousel.autoplayTimer);
             }
-            if (teamCarousel.autoplayTimer) {
-                clearInterval(teamCarousel.autoplayTimer);
-            }
         } else {
             // Re-enable autoplay on larger screens
             servicesCarouselActive = true;
-            teamCarouselActive = true;
             
             servicesCarousel.startAutoplay();
-            teamCarousel.startAutoplay();
         }
     },
 
@@ -1577,11 +1539,6 @@ const accessibilityEnhancements = {
         serviceSlides.forEach((slide, index) => {
             slide.setAttribute('aria-hidden', index !== servicesCurrentSlide ? 'true' : 'false');
         });
-
-        const teamSlides = document.querySelectorAll('.team-slide');
-        teamSlides.forEach((slide, index) => {
-            slide.setAttribute('aria-hidden', index !== teamCurrentSlide ? 'true' : 'false');
-        });
     },
 
     updateMenuARIA: function() {
@@ -1602,7 +1559,6 @@ const accessibilityEnhancements = {
             
             // Disable autoplay for reduced motion
             servicesCarouselActive = false;
-            teamCarouselActive = false;
         }
     }
 };
@@ -1663,6 +1619,40 @@ document.addEventListener('DOMContentLoaded', function() {
         img {
             transition: opacity 0.3s ease, filter 0.3s ease;
         }
+        
+        .team-member-card.animate-in {
+            animation: cardSlideIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes cardSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .icon-circle.clicked {
+            animation: iconBounce 0.6s ease;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(5deg); }
+        }
+        
+        .btn-primary.clicked,
+        .btn-secondary.clicked {
+            animation: buttonPulse 0.3s ease;
+        }
+        
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+        }
     `;
     document.head.appendChild(additionalStyles);
     
@@ -1676,7 +1666,7 @@ if (typeof module !== 'undefined' && module.exports) {
         headerNav,
         heroSection,
         servicesCarousel,
-        teamCarousel,
+        teamSection,
         contactForm,
         floatingElements,
         scrollAnimations,
