@@ -15,7 +15,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.about = new ModernAboutSection();
+        this.about = new CompactAboutSection();
         this.team = new Team();
         this.reviews = new Reviews();
         this.contact = new Contact();
@@ -820,15 +820,15 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ==========================================================================
    ABOUT SECTION
    ========================================================================== */
-class ModernAboutSection {
+
+class CompactAboutSection {
     constructor() {
         // DOM Elements
-        this.section = document.querySelector('.about-modern');
+        this.section = document.querySelector('.about-modern-compact');
         this.header = document.querySelector('.about-header');
         this.welcomeCard = document.querySelector('.welcome-card');
-        this.leaderCards = document.querySelectorAll('.leader-card');
+        this.leaderCards = document.querySelectorAll('.leader-card-compact');
         this.valueCards = document.querySelectorAll('.value-card');
-        this.galleryImages = document.querySelectorAll('.gallery-grid img, .gallery-main img');
         this.ctaSection = document.querySelector('.about-cta');
         
         // Animation State
@@ -837,7 +837,6 @@ class ModernAboutSection {
             welcome: false,
             leaders: false,
             values: false,
-            office: false,
             cta: false
         };
         
@@ -854,14 +853,8 @@ class ModernAboutSection {
         // Setup interactive elements
         this.setupInteractions();
         
-        // Setup parallax effects
-        this.setupParallaxEffects();
-        
         // Setup counter animations
         this.setupCounterAnimations();
-        
-        // Setup image lazy loading
-        this.setupImageLazyLoading();
         
         // Setup responsive behaviors
         this.setupResponsive();
@@ -888,7 +881,6 @@ class ModernAboutSection {
             this.welcomeCard,
             ...this.leaderCards,
             ...this.valueCards,
-            document.querySelector('.office-preview'),
             this.ctaSection
         ];
         
@@ -913,19 +905,13 @@ class ModernAboutSection {
         }
         
         // Leader cards animation
-        if (element.classList.contains('leader-card')) {
+        if (element.classList.contains('leader-card-compact')) {
             this.animateLeaderCard(element);
         }
         
         // Value cards animation
         if (element.classList.contains('value-card')) {
             this.animateValueCard(element);
-        }
-        
-        // Office preview animation
-        if (element.classList.contains('office-preview') && !this.isAnimated.office) {
-            this.animateOfficePreview();
-            this.isAnimated.office = true;
         }
         
         // CTA section animation
@@ -952,12 +938,12 @@ class ModernAboutSection {
                 const words = title.querySelectorAll('.title-line, .title-highlight');
                 words.forEach((word, index) => {
                     word.style.opacity = '0';
-                    word.style.transform = 'translateY(30px)';
+                    word.style.transform = 'translateY(20px)';
                     setTimeout(() => {
-                        word.style.transition = 'all 0.8s ease';
+                        word.style.transition = 'all 0.6s ease';
                         word.style.opacity = '1';
                         word.style.transform = 'translateY(0)';
-                    }, index * 200);
+                    }, index * 150);
                 });
             }
         }, 300);
@@ -966,7 +952,7 @@ class ModernAboutSection {
             if (subtitle) {
                 subtitle.style.animation = 'fadeInUp 0.8s ease forwards';
             }
-        }, 600);
+        }, 500);
     }
     
     animateWelcomeCard() {
@@ -975,48 +961,48 @@ class ModernAboutSection {
         const features = this.welcomeCard.querySelectorAll('.feature-item');
         
         // Animate main card
-        this.welcomeCard.style.animation = 'fadeInUp 1s ease forwards';
+        this.welcomeCard.style.animation = 'slideInUp 0.8s ease forwards';
         
         // Animate content
         setTimeout(() => {
             if (content) {
-                content.style.animation = 'fadeIn 0.8s ease forwards';
+                content.style.animation = 'fadeIn 0.6s ease forwards';
             }
-        }, 300);
+        }, 200);
         
         // Animate visual
         setTimeout(() => {
             if (visual) {
-                visual.style.animation = 'slideInRight 0.8s ease forwards';
+                visual.style.animation = 'slideInRight 0.6s ease forwards';
             }
-        }, 500);
+        }, 400);
         
         // Animate features with stagger
         features.forEach((feature, index) => {
             setTimeout(() => {
                 feature.style.opacity = '0';
-                feature.style.transform = 'translateX(-20px)';
+                feature.style.transform = 'translateX(-15px)';
                 setTimeout(() => {
-                    feature.style.transition = 'all 0.5s ease';
+                    feature.style.transition = 'all 0.4s ease';
                     feature.style.opacity = '1';
                     feature.style.transform = 'translateX(0)';
-                }, 100);
-            }, 700 + (index * 100));
+                }, 50);
+            }, 600 + (index * 80));
         });
     }
     
     animateLeaderCard(card) {
         const image = card.querySelector('.leader-image-wrapper');
-        const content = card.querySelector('.leader-content');
+        const content = card.querySelector('.leader-content-compact');
         const stats = card.querySelectorAll('.stat-item');
         const tags = card.querySelectorAll('.specialty-tag');
         
         // Main card fade in
         card.style.opacity = '0';
-        card.style.transform = 'translateY(40px)';
+        card.style.transform = 'translateY(30px)';
         
         setTimeout(() => {
-            card.style.transition = 'all 0.8s ease';
+            card.style.transition = 'all 0.6s ease';
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
         }, 100);
@@ -1024,16 +1010,16 @@ class ModernAboutSection {
         // Animate image
         setTimeout(() => {
             if (image) {
-                image.style.animation = 'fadeIn 0.8s ease forwards';
+                image.style.animation = 'fadeIn 0.6s ease forwards';
             }
-        }, 300);
+        }, 200);
         
         // Animate content
         setTimeout(() => {
             if (content) {
-                content.style.animation = 'fadeIn 0.8s ease forwards';
+                content.style.animation = 'fadeIn 0.6s ease forwards';
             }
-        }, 500);
+        }, 400);
         
         // Animate stats with counter
         stats.forEach((stat, index) => {
@@ -1042,8 +1028,8 @@ class ModernAboutSection {
                 if (number) {
                     this.animateCounter(number);
                 }
-                stat.style.animation = 'scaleIn 0.5s ease forwards';
-            }, 700 + (index * 100));
+                stat.style.animation = 'scaleIn 0.4s ease forwards';
+            }, 600 + (index * 80));
         });
         
         // Animate specialty tags
@@ -1052,52 +1038,31 @@ class ModernAboutSection {
                 tag.style.opacity = '0';
                 tag.style.transform = 'scale(0.8)';
                 setTimeout(() => {
-                    tag.style.transition = 'all 0.3s ease';
+                    tag.style.transition = 'all 0.25s ease';
                     tag.style.opacity = '1';
                     tag.style.transform = 'scale(1)';
-                }, 50);
-            }, 900 + (index * 50));
+                }, 30);
+            }, 800 + (index * 40));
         });
     }
     
     animateValueCard(card) {
         card.style.opacity = '0';
-        card.style.transform = 'translateY(30px) scale(0.9)';
+        card.style.transform = 'translateY(20px) scale(0.95)';
         
         setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
+            card.style.transition = 'all 0.5s ease';
             card.style.opacity = '1';
             card.style.transform = 'translateY(0) scale(1)';
-        }, Math.random() * 300);
+        }, Math.random() * 200);
         
         // Animate icon
         const icon = card.querySelector('.value-icon');
         if (icon) {
             setTimeout(() => {
-                icon.style.animation = 'bounceIn 0.8s ease';
-            }, 300);
+                icon.style.animation = 'bounceIn 0.6s ease';
+            }, 200);
         }
-    }
-    
-    animateOfficePreview() {
-        const preview = document.querySelector('.office-preview');
-        const images = preview.querySelectorAll('img');
-        
-        // Animate container
-        preview.style.animation = 'fadeIn 1s ease forwards';
-        
-        // Animate images with stagger
-        images.forEach((img, index) => {
-            setTimeout(() => {
-                img.style.opacity = '0';
-                img.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    img.style.transition = 'all 0.6s ease';
-                    img.style.opacity = '1';
-                    img.style.transform = 'scale(1)';
-                }, 100);
-            }, 300 + (index * 150));
-        });
     }
     
     animateCTA() {
@@ -1107,29 +1072,29 @@ class ModernAboutSection {
         const stats = this.ctaSection.querySelectorAll('.cta-stat');
         
         // Animate background
-        this.ctaSection.style.animation = 'slideInUp 1s ease forwards';
+        this.ctaSection.style.animation = 'slideInUp 0.8s ease forwards';
         
         // Animate text
         setTimeout(() => {
             if (title) {
-                title.style.animation = 'fadeIn 0.8s ease forwards';
+                title.style.animation = 'fadeIn 0.6s ease forwards';
             }
             if (subtitle) {
-                subtitle.style.animation = 'fadeIn 0.8s ease 0.2s forwards';
+                subtitle.style.animation = 'fadeIn 0.6s ease 0.2s forwards';
             }
-        }, 300);
+        }, 200);
         
         // Animate buttons
         buttons.forEach((button, index) => {
             setTimeout(() => {
                 button.style.opacity = '0';
-                button.style.transform = 'translateY(20px)';
+                button.style.transform = 'translateY(15px)';
                 setTimeout(() => {
-                    button.style.transition = 'all 0.5s ease';
+                    button.style.transition = 'all 0.4s ease';
                     button.style.opacity = '1';
                     button.style.transform = 'translateY(0)';
-                }, 100);
-            }, 600 + (index * 100));
+                }, 50);
+            }, 500 + (index * 80));
         });
         
         // Animate stats with counter
@@ -1139,8 +1104,8 @@ class ModernAboutSection {
                 if (value) {
                     this.animateCounter(value);
                 }
-                stat.style.animation = 'fadeInUp 0.6s ease forwards';
-            }, 800 + (index * 100));
+                stat.style.animation = 'fadeInUp 0.5s ease forwards';
+            }, 700 + (index * 80));
         });
     }
     
@@ -1148,8 +1113,8 @@ class ModernAboutSection {
         const text = element.textContent;
         const value = parseInt(text.replace(/[^0-9]/g, ''));
         const suffix = text.replace(/[0-9]/g, '');
-        const duration = 2000;
-        const steps = 60;
+        const duration = 1500;
+        const steps = 50;
         const increment = value / steps;
         let current = 0;
         let step = 0;
@@ -1192,8 +1157,8 @@ class ModernAboutSection {
             // Specialty tag hover effects
             specialtyTags.forEach(tag => {
                 tag.addEventListener('mouseenter', () => {
-                    tag.style.transform = 'translateY(-3px) scale(1.05)';
-                    tag.style.boxShadow = '0 5px 15px rgba(0, 216, 132, 0.2)';
+                    tag.style.transform = 'translateY(-2px) scale(1.03)';
+                    tag.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.15)';
                 });
                 
                 tag.addEventListener('mouseleave', () => {
@@ -1209,21 +1174,12 @@ class ModernAboutSection {
             feature.addEventListener('mouseenter', () => {
                 const icon = feature.querySelector('i');
                 if (icon) {
-                    icon.style.animation = 'bounce 0.5s ease';
+                    icon.style.animation = 'bounce 0.4s ease';
                     setTimeout(() => {
                         icon.style.animation = '';
-                    }, 500);
+                    }, 400);
                 }
             });
-        });
-        
-        // Gallery image interactions
-        this.galleryImages.forEach(img => {
-            img.addEventListener('click', () => {
-                this.openImageModal(img.src, img.alt);
-            });
-            
-            img.style.cursor = 'pointer';
         });
         
         // CTA button ripple effect
@@ -1246,169 +1202,27 @@ class ModernAboutSection {
                 
                 setTimeout(() => {
                     ripple.remove();
-                }, 600);
+                }, 500);
             });
         });
     }
     
-    openImageModal(src, alt) {
-        // Create modal
-        const modal = document.createElement('div');
-        modal.className = 'image-modal';
-        modal.innerHTML = `
-            <div class="modal-overlay"></div>
-            <div class="modal-content">
-                <button class="modal-close"><i class="ri-close-line"></i></button>
-                <img src="${src}" alt="${alt}">
-            </div>
-        `;
+    setupCounterAnimations() {
+        // Find all elements with numbers that should animate
+        const numberElements = this.section.querySelectorAll('.stat-number, .stat-value');
         
-        // Add styles
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s ease;
-        `;
-        
-        const overlay = modal.querySelector('.modal-overlay');
-        overlay.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-        `;
-        
-        const content = modal.querySelector('.modal-content');
-        content.style.cssText = `
-            position: relative;
-            max-width: 90vw;
-            max-height: 90vh;
-            animation: zoomIn 0.3s ease;
-        `;
-        
-        const img = modal.querySelector('img');
-        img.style.cssText = `
-            width: 100%;
-            height: auto;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        `;
-        
-        const closeBtn = modal.querySelector('.modal-close');
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 44px;
-            height: 44px;
-            background: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            color: #1f2937;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 1;
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Close modal
-        const closeModal = () => {
-            modal.style.animation = 'fadeOut 0.3s ease';
-            setTimeout(() => {
-                modal.remove();
-            }, 300);
-        };
-        
-        closeBtn.addEventListener('click', closeModal);
-        overlay.addEventListener('click', closeModal);
-        
-        // ESC key to close
-        const escHandler = (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-                document.removeEventListener('keydown', escHandler);
-            }
-        };
-        document.addEventListener('keydown', escHandler);
-    }
-    
-    setupParallaxEffects() {
-        if (window.innerWidth > 1024) {
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const sectionTop = this.section.offsetTop;
-                const sectionHeight = this.section.offsetHeight;
-                
-                // Only apply parallax when section is in viewport
-                if (scrolled > sectionTop - window.innerHeight && 
-                    scrolled < sectionTop + sectionHeight) {
-                    
-                    // Parallax for decoration elements
-                    const decorations = document.querySelectorAll('.decoration-circle, .visual-pattern');
-                    decorations.forEach(decoration => {
-                        const speed = 0.5;
-                        const yPos = -(scrolled * speed);
-                        decoration.style.transform = `translateY(${yPos}px)`;
-                    });
-                    
-                    // Parallax for CTA particles
-                    const particles = document.querySelectorAll('.cta-particle');
-                    particles.forEach((particle, index) => {
-                        const speed = 0.3 * (index + 1);
-                        const yPos = -(scrolled * speed * 0.3);
-                        particle.style.transform = `translate(${yPos}px, ${yPos}px)`;
-                    });
+        const numberObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    this.animateCounter(entry.target);
+                    entry.target.dataset.animated = 'true';
                 }
             });
-        }
-    }
-    
-    setupImageLazyLoading() {
-        const images = this.section.querySelectorAll('img[data-src]');
+        }, { threshold: 0.5 });
         
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                        imageObserver.unobserve(img);
-                        
-                        // Add fade in animation
-                        img.addEventListener('load', () => {
-                            img.style.animation = 'fadeIn 0.5s ease';
-                        });
-                    }
-                });
-            });
-            
-            images.forEach(img => imageObserver.observe(img));
-        } else {
-            // Fallback for older browsers
-            images.forEach(img => {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-            });
-        }
+        numberElements.forEach(element => {
+            numberObserver.observe(element);
+        });
     }
     
     setupResponsive() {
@@ -1417,10 +1231,9 @@ class ModernAboutSection {
             
             if (isMobile) {
                 // Simplify animations on mobile
-                this.section.style.animation = 'none';
-                
-                // Remove parallax on mobile
-                window.removeEventListener('scroll', this.setupParallaxEffects);
+                this.section.classList.add('mobile-view');
+            } else {
+                this.section.classList.remove('mobile-view');
             }
         };
         
@@ -1430,7 +1243,7 @@ class ModernAboutSection {
 }
 
 // CSS Animation Keyframes
-const animationStyles = `
+const compactAnimationStyles = `
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -1439,7 +1252,7 @@ const animationStyles = `
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
         to {
             opacity: 1;
@@ -1450,7 +1263,7 @@ const animationStyles = `
     @keyframes slideInRight {
         from {
             opacity: 0;
-            transform: translateX(30px);
+            transform: translateX(20px);
         }
         to {
             opacity: 1;
@@ -1461,7 +1274,7 @@ const animationStyles = `
     @keyframes slideInUp {
         from {
             opacity: 0;
-            transform: translateY(60px);
+            transform: translateY(40px);
         }
         to {
             opacity: 1;
@@ -1487,7 +1300,7 @@ const animationStyles = `
         }
         50% {
             opacity: 1;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         100% {
             transform: scale(1);
@@ -1496,58 +1309,57 @@ const animationStyles = `
     
     @keyframes bounce {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    @keyframes zoomIn {
-        from {
-            opacity: 0;
-            transform: scale(0.5);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-    
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
+        50% { transform: translateY(-8px); }
     }
     
     .ripple {
         position: absolute;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.4);
         transform: scale(0);
-        animation: rippleEffect 0.6s ease-out;
+        animation: rippleEffect 0.5s ease-out;
+        pointer-events: none;
     }
     
     @keyframes rippleEffect {
         to {
-            transform: scale(4);
+            transform: scale(3);
             opacity: 0;
         }
+    }
+    
+    /* Mobile optimizations */
+    .about-modern-compact.mobile-view .leader-card-compact {
+        animation: none !important;
+    }
+    
+    .about-modern-compact.mobile-view .value-card {
+        animation: none !important;
     }
 `;
 
 // Add animation styles to document
-if (!document.getElementById('about-animations')) {
+if (!document.getElementById('compact-about-animations')) {
     const styleSheet = document.createElement('style');
-    styleSheet.id = 'about-animations';
-    styleSheet.textContent = animationStyles;
+    styleSheet.id = 'compact-about-animations';
+    styleSheet.textContent = compactAnimationStyles;
     document.head.appendChild(styleSheet);
 }
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const modernAbout = new ModernAboutSection();
+    const compactAbout = new CompactAboutSection();
     
     // Store instance for debugging
-    window.modernAbout = modernAbout;
+    window.compactAbout = compactAbout;
     
-    console.log('Modern About Section initialized');
+    console.log('Compact About Section initialized');
 });
+
+// Export for module use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CompactAboutSection;
+}
 
 /* ==========================================================================
    TEAM SECTION
