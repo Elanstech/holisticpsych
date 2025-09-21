@@ -2033,7 +2033,7 @@ section {
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
 }
 
-/* Leader Image */
+/* Leader Image - FIXED TO SHOW FULL HEAD */
 .leader-image-wrapper {
     position: relative;
     flex-shrink: 0;
@@ -2042,13 +2042,22 @@ section {
 .image-container {
     position: relative;
     overflow: hidden;
+    border-radius: 20px;
 }
 
 .leader-image {
     width: 100%;
-    height: 280px;
+    height: 320px; /* Increased height to show full head */
     object-fit: cover;
+    object-position: center top; /* Focus on top of image to show forehead */
     transition: transform 0.6s ease;
+}
+
+/* Alternative option - Show entire image with no cropping */
+.leader-image.show-full {
+    object-fit: contain; /* Shows entire image */
+    object-position: center center;
+    background: linear-gradient(135deg, #f8fffe, #f0fdf9);
 }
 
 .leader-card-compact:hover .leader-image {
@@ -2387,6 +2396,8 @@ section {
     font-size: 0.9375rem;
     transition: all 0.3s ease;
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .cta-button i {
@@ -2440,6 +2451,14 @@ section {
     color: rgba(255, 255, 255, 0.9);
 }
 
+/* Ripple Effect for Buttons */
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .leaders-grid-compact {
@@ -2447,7 +2466,7 @@ section {
     }
     
     .leader-image {
-        height: 250px;
+        height: 300px; /* Adjusted for tablet but still shows full head */
     }
 }
 
@@ -2546,7 +2565,11 @@ section {
     }
     
     .leader-image {
-        height: 220px;
+        height: 260px; /* Adjusted for mobile but still shows full head */
+    }
+    
+    .image-container {
+        border-radius: 16px;
     }
     
     .leader-stats {
@@ -2603,6 +2626,14 @@ section {
     .leader-content-compact {
         padding: 16px;
         gap: 12px;
+    }
+    
+    .leader-image {
+        height: 240px;
+    }
+    
+    .image-container {
+        border-radius: 12px;
     }
     
     .specialty-tags {
