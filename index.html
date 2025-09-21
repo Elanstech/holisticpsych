@@ -255,429 +255,248 @@
             </div>
         </section>
 
-<!-- Modern Services Carousel Section -->
-<section class="modern-services-carousel" id="services">
+<!-- Clean Services Carousel Section -->
+<section class="services-carousel-section" id="services">
     <div class="container">
-        <!-- Section Header with Corporate Design -->
+        <!-- Section Header -->
         <div class="section-header">
-            <div class="section-tag">
-                <i class="ri-heart-pulse-line"></i>
-                <span>Our Services</span>
-            </div>
-            <h2 class="section-title">
-                <span class="title-main">Comprehensive Mental Health</span>
-                <span class="title-accent">Solutions</span>
-            </h2>
-            <p class="section-subtitle">Professional therapeutic services delivered with expertise and compassion in Manhattan's premier psychological practice</p>
-            <div class="title-decoration">
-                <div class="decoration-line"></div>
-                <div class="decoration-diamond"></div>
-                <div class="decoration-line"></div>
-            </div>
+            <div class="section-tag">Our Services</div>
+            <h2 class="section-title">Comprehensive Mental Health Care</h2>
+            <p class="section-subtitle">Professional therapeutic services designed to support your unique journey toward mental wellness in Manhattan</p>
         </div>
 
         <!-- Carousel Container -->
-        <div class="carousel-wrapper">
+        <div class="carousel-container">
             <!-- Navigation Arrows -->
-            <button class="carousel-nav carousel-prev" id="servicesPrev" aria-label="Previous services">
+            <button class="carousel-nav prev-btn" id="prevBtn" aria-label="Previous services">
                 <i class="ri-arrow-left-line"></i>
-                <span class="nav-ripple"></span>
             </button>
-            <button class="carousel-nav carousel-next" id="servicesNext" aria-label="Next services">
+            <button class="carousel-nav next-btn" id="nextBtn" aria-label="Next services">
                 <i class="ri-arrow-right-line"></i>
-                <span class="nav-ripple"></span>
             </button>
 
-            <!-- Carousel Track Container -->
-            <div class="carousel-container">
-                <div class="carousel-track" id="servicesTrack">
+            <!-- Carousel Track -->
+            <div class="carousel-track-container">
+                <div class="carousel-track" id="carouselTrack">
                     
                     <!-- Service Card 1: Individual Therapy -->
-                    <div class="service-card" data-service="individual">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="0">
                         <div class="service-image">
-                            <img src="https://i0.wp.com/davenportpsychology.com/wp-content/uploads/2021/10/individual-therapy.jpeg" alt="Individual Therapy" loading="lazy">
-                            <div class="image-overlay"></div>
-                            <div class="service-badge featured">
-                                <i class="ri-star-line"></i>
-                                <span>Most Popular</span>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                                <i class="ri-user-heart-line"></i>
                             </div>
+                            <div class="service-overlay"></div>
+                            <div class="service-badge">Most Popular</div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Therapy</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-user-heart-line"></i>
                             </div>
-                            <h3 class="service-title">Individual Therapy</h3>
-                            <p class="service-description">Personalized one-on-one sessions addressing anxiety, depression, trauma, and personal growth with evidence-based approaches.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Anxiety Treatment
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Depression Support
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Trauma Recovery
-                                </span>
+                            <h3>Individual Therapy</h3>
+                            <p>Personalized one-on-one sessions addressing anxiety, depression, trauma, and personal growth with evidence-based approaches.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">Anxiety Treatment</span>
+                                <span class="highlight-item">Depression Support</span>
+                                <span class="highlight-item">Trauma Recovery</span>
+                                <span class="highlight-item">Personal Growth</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.9/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 2: Couples Counseling -->
-                    <div class="service-card" data-service="couples">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="1">
                         <div class="service-image">
-                            <img src="https://www.capitalpsychologyclinic.com/images/family-counselling.jpg" alt="Couples Counseling" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);">
+                                <i class="ri-heart-2-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Relationships</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-heart-2-line"></i>
                             </div>
-                            <h3 class="service-title">Couples Counseling</h3>
-                            <p class="service-description">Strengthen relationships through improved communication, conflict resolution, and rebuilding trust with expert guidance.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Communication Skills
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Conflict Resolution
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Trust Building
-                                </span>
+                            <h3>Couples Counseling</h3>
+                            <p>Strengthen relationships through improved communication, conflict resolution, and rebuilding trust with expert guidance.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">Communication Skills</span>
+                                <span class="highlight-item">Conflict Resolution</span>
+                                <span class="highlight-item">Trust Building</span>
+                                <span class="highlight-item">Relationship Repair</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.8/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 3: Family Therapy -->
-                    <div class="service-card" data-service="family">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="2">
                         <div class="service-image">
-                            <img src="https://southeastbehavioral.com/wp-content/uploads/2023/03/Adolescents-1.jpg" alt="Family Therapy" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);">
+                                <i class="ri-team-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Family</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-team-line"></i>
                             </div>
-                            <h3 class="service-title">Family Therapy</h3>
-                            <p class="service-description">Comprehensive family support addressing dynamics, communication patterns, and behavioral challenges.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Family Dynamics
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Behavioral Support
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Parent Guidance
-                                </span>
+                            <h3>Family Therapy</h3>
+                            <p>Comprehensive family support addressing dynamics, communication patterns, and behavioral challenges affecting the entire family unit.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">Family Dynamics</span>
+                                <span class="highlight-item">Behavioral Issues</span>
+                                <span class="highlight-item">Parent Support</span>
+                                <span class="highlight-item">Communication</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.9/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 4: Child & Adolescent -->
-                    <div class="service-card" data-service="youth">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="3">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=2786&auto=format&fit=crop" alt="Child and Adolescent Services" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%);">
+                                <i class="ri-parent-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Youth</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-parent-line"></i>
                             </div>
-                            <h3 class="service-title">Child & Adolescent</h3>
-                            <p class="service-description">Specialized care for young minds dealing with developmental challenges and emotional growth.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    ADHD Support
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Autism Spectrum
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    School Issues
-                                </span>
+                            <h3>Child & Adolescent Services</h3>
+                            <p>Specialized therapeutic support for children and teens facing behavioral, emotional, and developmental challenges.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">ADHD Support</span>
+                                <span class="highlight-item">Autism Spectrum</span>
+                                <span class="highlight-item">School Issues</span>
+                                <span class="highlight-item">Behavioral Problems</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.8/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 5: Psychological Evaluations -->
-                    <div class="service-card" data-service="assessment">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="4">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=2831&auto=format&fit=crop" alt="Psychological Evaluations" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
+                                <i class="ri-file-search-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Assessment</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-file-search-line"></i>
                             </div>
-                            <h3 class="service-title">Psychological Evaluations</h3>
-                            <p class="service-description">Comprehensive assessments for ADHD, learning disabilities, and cognitive functioning evaluation.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    ADHD Testing
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Cognitive Assessment
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Learning Disabilities
-                                </span>
+                            <h3>Psychological Evaluations</h3>
+                            <p>Comprehensive assessments for ADHD, learning disabilities, cognitive functioning, and personality evaluation.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">ADHD Testing</span>
+                                <span class="highlight-item">Cognitive Assessment</span>
+                                <span class="highlight-item">Learning Disabilities</span>
+                                <span class="highlight-item">Personality Testing</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.9/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 6: Group Therapy -->
-                    <div class="service-card" data-service="group">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="5">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2888&auto=format&fit=crop" alt="Group Therapy" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);">
+                                <i class="ri-group-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Group</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-group-line"></i>
                             </div>
-                            <h3 class="service-title">Group Therapy</h3>
-                            <p class="service-description">Therapeutic group sessions focusing on shared experiences and peer support in a safe environment.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Peer Support
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Social Skills
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Shared Healing
-                                </span>
+                            <h3>Group Therapy</h3>
+                            <p>Therapeutic group sessions focusing on shared experiences, peer support, and collective healing in a safe environment.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">Peer Support</span>
+                                <span class="highlight-item">Social Skills</span>
+                                <span class="highlight-item">Shared Healing</span>
+                                <span class="highlight-item">Community</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.7/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 7: Trauma & PTSD -->
-                    <div class="service-card" data-service="trauma">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="6">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?q=80&w=2969&auto=format&fit=crop" alt="Trauma and PTSD Treatment" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);">
+                                <i class="ri-shield-heart-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Specialized</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-shield-heart-line"></i>
                             </div>
-                            <h3 class="service-title">Trauma & PTSD</h3>
-                            <p class="service-description">Specialized treatment for trauma survivors using evidence-based approaches for healing and recovery.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    EMDR Therapy
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    CBT Treatment
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Recovery Support
-                                </span>
+                            <h3>Trauma & PTSD Treatment</h3>
+                            <p>Specialized treatment for trauma survivors using evidence-based approaches to promote healing and recovery.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">EMDR Therapy</span>
+                                <span class="highlight-item">CBT Treatment</span>
+                                <span class="highlight-item">Recovery Support</span>
+                                <span class="highlight-item">Healing Journey</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.9/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Service Card 8: Legal & Custody -->
-                    <div class="service-card" data-service="legal">
-                        <div class="card-glow"></div>
+                    <div class="service-card" data-slide="7">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?q=80&w=2970&auto=format&fit=crop" alt="Legal and Custody Services" loading="lazy">
-                            <div class="image-overlay"></div>
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #fafafa 0%, #e0e0e0 100%);">
+                                <i class="ri-scales-line"></i>
+                            </div>
+                            <div class="service-overlay"></div>
                         </div>
-                        <div class="card-content">
-                            <div class="service-category">Legal</div>
+                        <div class="service-content">
                             <div class="service-icon">
                                 <i class="ri-scales-line"></i>
                             </div>
-                            <h3 class="service-title">Legal & Custody</h3>
-                            <p class="service-description">Professional psychological evaluations and expert testimony for custody cases and legal proceedings.</p>
-                            <div class="service-features">
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Custody Evaluations
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Expert Testimony
-                                </span>
-                                <span class="feature-tag">
-                                    <i class="ri-check-line"></i>
-                                    Court Reports
-                                </span>
+                            <h3>Legal & Custody Services</h3>
+                            <p>Professional psychological evaluations and expert testimony for custody cases, disability claims, and legal proceedings.</p>
+                            <div class="service-highlights">
+                                <span class="highlight-item">Custody Evaluations</span>
+                                <span class="highlight-item">Expert Testimony</span>
+                                <span class="highlight-item">Court Reports</span>
+                                <span class="highlight-item">Legal Support</span>
                             </div>
-                            <div class="service-footer">
-                                <div class="service-rating">
-                                    <div class="stars">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="rating-text">4.8/5</span>
-                                </div>
-                                <a href="services.html" class="learn-more-btn">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                            <a href="services.html" class="service-learn-more">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
                 </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="carousel-progress">
-                <div class="progress-bar" id="progressBar"></div>
             </div>
 
             <!-- Carousel Indicators -->
@@ -688,56 +507,19 @@
             </div>
         </div>
 
-        <!-- Services Statistics -->
-        <div class="services-stats">
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="ri-user-heart-line"></i>
-                </div>
-                <div class="stat-number" data-count="500">0</div>
-                <div class="stat-label">Happy Clients</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="ri-award-line"></i>
-                </div>
-                <div class="stat-number" data-count="15">0</div>
-                <div class="stat-label">Years Experience</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="ri-star-line"></i>
-                </div>
-                <div class="stat-number" data-count="4.9">0</div>
-                <div class="stat-label">Average Rating</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <i class="ri-heart-pulse-line"></i>
-                </div>
-                <div class="stat-number" data-count="8">0</div>
-                <div class="stat-label">Service Areas</div>
-            </div>
-        </div>
-
-        <!-- Call to Action -->
-        <div class="services-cta">
-            <div class="cta-background"></div>
+        <!-- Services CTA -->
+        <div class="services-cta-compact">
             <div class="cta-content">
-                <div class="cta-text">
-                    <h3 class="cta-title">Ready to Begin Your Wellness Journey?</h3>
-                    <p class="cta-description">Schedule a consultation to discover how our comprehensive services can support your mental health goals in Manhattan's premier psychological practice.</p>
-                </div>
-                <div class="cta-actions">
-                    <a href="#contact" class="btn-primary">
+                <h3>Ready to Begin Your Wellness Journey?</h3>
+                <p>Schedule a consultation to discover how our comprehensive services can support your mental health goals.</p>
+                <div class="cta-buttons">
+                    <a href="#contact" class="btn-cta-primary">
                         <i class="ri-calendar-check-line"></i>
                         <span>Schedule Consultation</span>
-                        <div class="btn-ripple"></div>
                     </a>
-                    <a href="services.html" class="btn-secondary">
-                        <span>Explore All Services</span>
+                    <a href="services.html" class="btn-cta-outline">
+                        <span>View All Services</span>
                         <i class="ri-arrow-right-line"></i>
-                        <div class="btn-ripple"></div>
                     </a>
                 </div>
             </div>
