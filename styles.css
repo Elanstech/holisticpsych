@@ -1737,6 +1737,10 @@ section {
    MODERN ABOUT US SECTION STYLES
    ========================================================================== */
 
+/* ==========================================================================
+   COMPACT ABOUT US SECTION STYLES - WITH FIXED LEADER IMAGES
+   ========================================================================== */
+
 .about-modern-compact {
     position: relative;
     padding: 60px 0;
@@ -2047,21 +2051,16 @@ section {
 
 .leader-image {
     width: 100%;
-    height: 320px; /* Increased height to show full head */
-    object-fit: cover;
-    object-position: center top; /* Focus on top of image to show forehead */
+    height: 320px;
+    object-fit: contain; /* Shows entire image without cropping */
+    object-position: center center; /* Centers the image properly */
+    background: linear-gradient(135deg, #f8fffe, #f0fdf9); /* Subtle background */
+    transform: scale(1);
     transition: transform 0.6s ease;
 }
 
-/* Alternative option - Show entire image with no cropping */
-.leader-image.show-full {
-    object-fit: contain; /* Shows entire image */
-    object-position: center center;
-    background: linear-gradient(135deg, #f8fffe, #f0fdf9);
-}
-
 .leader-card-compact:hover .leader-image {
-    transform: scale(1.05);
+    transform: scale(1.02); /* Very subtle zoom on hover */
 }
 
 .image-overlay {
@@ -2466,7 +2465,9 @@ section {
     }
     
     .leader-image {
-        height: 300px; /* Adjusted for tablet but still shows full head */
+        height: 300px;
+        object-fit: contain;
+        object-position: center center;
     }
 }
 
@@ -2565,7 +2566,9 @@ section {
     }
     
     .leader-image {
-        height: 260px; /* Adjusted for mobile but still shows full head */
+        height: 260px;
+        object-fit: contain;
+        object-position: center center;
     }
     
     .image-container {
@@ -2630,6 +2633,8 @@ section {
     
     .leader-image {
         height: 240px;
+        object-fit: contain;
+        object-position: center center;
     }
     
     .image-container {
