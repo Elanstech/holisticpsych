@@ -3588,6 +3588,7 @@ section {
 /* Testimonials Carousel Side */
 .testimonials-carousel-side {
     position: relative;
+    height: 100%;
 }
 
 .testimonials-carousel-wrapper {
@@ -3597,6 +3598,10 @@ section {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
+    height: 100%;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
 }
 
 .testimonials-carousel-wrapper::before {
@@ -3700,11 +3705,15 @@ section {
     margin: 0 0 30px;
     position: relative;
     z-index: 2;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
 }
 
 .testimonials-track {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
 }
 
 /* Testimonial Cards */
@@ -3914,6 +3923,7 @@ section {
 /* Instagram Feed Side */
 .instagram-feed-side {
     position: relative;
+    height: 100%;
 }
 
 .instagram-wrapper {
@@ -3921,9 +3931,12 @@ section {
     border-radius: 24px;
     padding: 30px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-    height: fit-content;
+    height: 100%;
+    min-height: 700px;
     position: sticky;
     top: 100px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Instagram Header */
@@ -3995,6 +4008,9 @@ section {
     background: #f9fafb;
     min-height: 400px;
     position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .instagram-feed-container::before {
@@ -4015,6 +4031,10 @@ section {
     position: relative;
     z-index: 2;
     background: white !important;
+    height: 100% !important;
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 /* CTA Section */
@@ -4137,6 +4157,11 @@ section {
     
     .instagram-wrapper {
         position: static;
+        min-height: 600px;
+    }
+    
+    .testimonials-carousel-wrapper {
+        min-height: 600px;
     }
     
     .testimonials-nav-btn {
@@ -4174,6 +4199,7 @@ section {
     .testimonials-carousel-wrapper {
         padding: 30px 20px;
         border-radius: 16px;
+        min-height: 500px;
     }
     
     .testimonials-carousel-header {
@@ -4211,6 +4237,7 @@ section {
     .instagram-wrapper {
         padding: 24px;
         border-radius: 16px;
+        min-height: 500px;
     }
     
     .instagram-header {
@@ -4251,6 +4278,7 @@ section {
     
     .testimonials-carousel-wrapper {
         padding: 24px 16px;
+        min-height: 450px;
     }
     
     .testimonial-content {
@@ -4271,6 +4299,7 @@ section {
     
     .instagram-wrapper {
         padding: 20px;
+        min-height: 450px;
     }
     
     .instagram-title-wrapper {
