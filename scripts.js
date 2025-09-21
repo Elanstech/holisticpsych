@@ -823,308 +823,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class CompactAboutSection {
     constructor() {
-        // DOM Elements
         this.section = document.querySelector('.about-modern-compact');
-        this.header = document.querySelector('.about-header');
-        this.welcomeCard = document.querySelector('.welcome-card');
-        this.leaderCards = document.querySelectorAll('.leader-card-compact');
-        this.valueCards = document.querySelectorAll('.value-card');
-        this.ctaSection = document.querySelector('.about-cta');
+        this.isInitialized = false;
+        this.animatedElements = new Set();
         
-        // Animation State
-        this.isAnimated = {
-            header: false,
-            welcome: false,
-            leaders: false,
-            values: false,
-            cta: false
-        };
-        
-        // Initialize
         this.init();
     }
     
     init() {
-        if (!this.section) return;
+        if (!this.section || this.isInitialized) return;
         
-        // Setup intersection observers for scroll animations
-        this.setupIntersectionObservers();
-        
-        // Setup interactive elements
-        this.setupInteractions();
-        
-        // Setup counter animations
-        this.setupCounterAnimations();
-        
-        // Setup responsive behaviors
-        this.setupResponsive();
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            this.setup();
+        }
     }
     
-    setupIntersectionObservers() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateElement(entry.target);
+    setup() {
+        // Ensure images are loaded first
+        this.preloadImages().then(() => {
+            this.setupIntersectionObserver();
+            this.setupInteractions();
+            this.setupCounters();
+            this.isInitialized = true;
+            console.log('Compact About Section initialized successfully');
+        });
+    }
+    
+    preloadImages() {
+        const images = this.section.querySelectorAll('img');
+        const imagePromises = Array.from(images).map(img => {
+            return new Promise((resolve) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.addEventListener('load', resolve);
+                    img.addEventListener('error', resolve); // Resolve even on error
                 }
             });
-        }, observerOptions);
+        });
         
-        // Observe main sections
+        return Promise.all(imagePromises);
+    }
+    
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElement(entry.target);
+                    this.animatedElements.add(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+        
+        // Observe elements
         const elementsToObserve = [
-            this.header,
-            this.welcomeCard,
-            ...this.leaderCards,
-            ...this.valueCards,
-            this.ctaSection
+            '.about-header',
+            '.welcome-card',
+            '.leader-card-compact',
+            '.value-card',
+            '.about-cta'
         ];
         
-        elementsToObserve.forEach(element => {
-            if (element) {
-                observer.observe(element);
-            }
+        elementsToObserve.forEach(selector => {
+            const elements = this.section.querySelectorAll(selector);
+            elements.forEach(element => observer.observe(element));
         });
     }
     
     animateElement(element) {
-        // Header animation
-        if (element === this.header && !this.isAnimated.header) {
-            this.animateHeader();
-            this.isAnimated.header = true;
-        }
+        // Simple fade in animation
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         
-        // Welcome card animation
-        if (element === this.welcomeCard && !this.isAnimated.welcome) {
-            this.animateWelcomeCard();
-            this.isAnimated.welcome = true;
-        }
-        
-        // Leader cards animation
-        if (element.classList.contains('leader-card-compact')) {
-            this.animateLeaderCard(element);
-        }
-        
-        // Value cards animation
-        if (element.classList.contains('value-card')) {
-            this.animateValueCard(element);
-        }
-        
-        // CTA section animation
-        if (element === this.ctaSection && !this.isAnimated.cta) {
-            this.animateCTA();
-            this.isAnimated.cta = true;
-        }
-    }
-    
-    animateHeader() {
-        const badge = this.header.querySelector('.header-badge');
-        const title = this.header.querySelector('.about-title');
-        const subtitle = this.header.querySelector('.about-subtitle');
-        
-        // Stagger animations
-        setTimeout(() => {
-            if (badge) {
-                badge.style.animation = 'fadeInUp 0.8s ease forwards, float 6s ease-in-out infinite 0.8s';
-            }
-        }, 100);
-        
-        setTimeout(() => {
-            if (title) {
-                const words = title.querySelectorAll('.title-line, .title-highlight');
-                words.forEach((word, index) => {
-                    word.style.opacity = '0';
-                    word.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        word.style.transition = 'all 0.6s ease';
-                        word.style.opacity = '1';
-                        word.style.transform = 'translateY(0)';
-                    }, index * 150);
-                });
-            }
-        }, 300);
-        
-        setTimeout(() => {
-            if (subtitle) {
-                subtitle.style.animation = 'fadeInUp 0.8s ease forwards';
-            }
-        }, 500);
-    }
-    
-    animateWelcomeCard() {
-        const content = this.welcomeCard.querySelector('.welcome-content');
-        const visual = this.welcomeCard.querySelector('.welcome-visual');
-        const features = this.welcomeCard.querySelectorAll('.feature-item');
-        
-        // Animate main card
-        this.welcomeCard.style.animation = 'slideInUp 0.8s ease forwards';
-        
-        // Animate content
-        setTimeout(() => {
-            if (content) {
-                content.style.animation = 'fadeIn 0.6s ease forwards';
-            }
-        }, 200);
-        
-        // Animate visual
-        setTimeout(() => {
-            if (visual) {
-                visual.style.animation = 'slideInRight 0.6s ease forwards';
-            }
-        }, 400);
-        
-        // Animate features with stagger
-        features.forEach((feature, index) => {
-            setTimeout(() => {
-                feature.style.opacity = '0';
-                feature.style.transform = 'translateX(-15px)';
-                setTimeout(() => {
-                    feature.style.transition = 'all 0.4s ease';
-                    feature.style.opacity = '1';
-                    feature.style.transform = 'translateX(0)';
-                }, 50);
-            }, 600 + (index * 80));
-        });
-    }
-    
-    animateLeaderCard(card) {
-        const image = card.querySelector('.leader-image-wrapper');
-        const content = card.querySelector('.leader-content-compact');
-        const stats = card.querySelectorAll('.stat-item');
-        const tags = card.querySelectorAll('.specialty-tag');
-        
-        // Main card fade in
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100);
-        
-        // Animate image
-        setTimeout(() => {
-            if (image) {
-                image.style.animation = 'fadeIn 0.6s ease forwards';
-            }
-        }, 200);
-        
-        // Animate content
-        setTimeout(() => {
-            if (content) {
-                content.style.animation = 'fadeIn 0.6s ease forwards';
-            }
-        }, 400);
-        
-        // Animate stats with counter
-        stats.forEach((stat, index) => {
-            setTimeout(() => {
-                const number = stat.querySelector('.stat-number');
-                if (number) {
-                    this.animateCounter(number);
-                }
-                stat.style.animation = 'scaleIn 0.4s ease forwards';
-            }, 600 + (index * 80));
+        // Trigger animation
+        requestAnimationFrame(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
         });
         
-        // Animate specialty tags
-        tags.forEach((tag, index) => {
-            setTimeout(() => {
-                tag.style.opacity = '0';
-                tag.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    tag.style.transition = 'all 0.25s ease';
-                    tag.style.opacity = '1';
-                    tag.style.transform = 'scale(1)';
-                }, 30);
-            }, 800 + (index * 40));
-        });
-    }
-    
-    animateValueCard(card) {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px) scale(0.95)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0) scale(1)';
-        }, Math.random() * 200);
-        
-        // Animate icon
-        const icon = card.querySelector('.value-icon');
-        if (icon) {
-            setTimeout(() => {
-                icon.style.animation = 'bounceIn 0.6s ease';
-            }, 200);
-        }
-    }
-    
-    animateCTA() {
-        const title = this.ctaSection.querySelector('.cta-title');
-        const subtitle = this.ctaSection.querySelector('.cta-subtitle');
-        const buttons = this.ctaSection.querySelectorAll('.cta-button');
-        const stats = this.ctaSection.querySelectorAll('.cta-stat');
-        
-        // Animate background
-        this.ctaSection.style.animation = 'slideInUp 0.8s ease forwards';
-        
-        // Animate text
-        setTimeout(() => {
-            if (title) {
-                title.style.animation = 'fadeIn 0.6s ease forwards';
-            }
-            if (subtitle) {
-                subtitle.style.animation = 'fadeIn 0.6s ease 0.2s forwards';
-            }
-        }, 200);
-        
-        // Animate buttons
-        buttons.forEach((button, index) => {
-            setTimeout(() => {
-                button.style.opacity = '0';
-                button.style.transform = 'translateY(15px)';
-                setTimeout(() => {
-                    button.style.transition = 'all 0.4s ease';
-                    button.style.opacity = '1';
-                    button.style.transform = 'translateY(0)';
-                }, 50);
-            }, 500 + (index * 80));
-        });
-        
-        // Animate stats with counter
-        stats.forEach((stat, index) => {
-            setTimeout(() => {
-                const value = stat.querySelector('.stat-value');
-                if (value) {
-                    this.animateCounter(value);
-                }
-                stat.style.animation = 'fadeInUp 0.5s ease forwards';
-            }, 700 + (index * 80));
+        // Handle counters
+        const counters = element.querySelectorAll('.stat-number, .stat-value');
+        counters.forEach(counter => {
+            setTimeout(() => this.animateCounter(counter), 300);
         });
     }
     
     animateCounter(element) {
+        if (element.dataset.animated) return;
+        
         const text = element.textContent;
-        const value = parseInt(text.replace(/[^0-9]/g, ''));
-        const suffix = text.replace(/[0-9]/g, '');
+        const numbers = text.match(/\d+/);
+        if (!numbers) return;
+        
+        const finalValue = parseInt(numbers[0]);
+        const suffix = text.replace(/\d+/, '');
         const duration = 1500;
-        const steps = 50;
-        const increment = value / steps;
+        const steps = 60;
+        const increment = finalValue / steps;
+        
         let current = 0;
         let step = 0;
+        
+        element.dataset.animated = 'true';
         
         const timer = setInterval(() => {
             current += increment;
             step++;
             
             if (step >= steps) {
-                element.textContent = value + suffix;
+                element.textContent = finalValue + suffix;
                 clearInterval(timer);
             } else {
                 element.textContent = Math.floor(current) + suffix;
@@ -1133,230 +947,192 @@ class CompactAboutSection {
     }
     
     setupInteractions() {
-        // Leader card interactions
-        this.leaderCards.forEach(card => {
-            const imageContainer = card.querySelector('.image-container');
+        // Leader card hover effects
+        const leaderCards = this.section.querySelectorAll('.leader-card-compact');
+        leaderCards.forEach(card => {
+            const image = card.querySelector('.leader-image');
             const overlay = card.querySelector('.image-overlay');
-            const specialtyTags = card.querySelectorAll('.specialty-tag');
             
-            // Image hover effect
-            if (imageContainer) {
-                imageContainer.addEventListener('mouseenter', () => {
-                    if (overlay) {
-                        overlay.style.opacity = '1';
-                    }
+            if (image && overlay) {
+                card.addEventListener('mouseenter', () => {
+                    overlay.style.opacity = '1';
                 });
                 
-                imageContainer.addEventListener('mouseleave', () => {
-                    if (overlay) {
-                        overlay.style.opacity = '0';
-                    }
+                card.addEventListener('mouseleave', () => {
+                    overlay.style.opacity = '0';
                 });
             }
-            
-            // Specialty tag hover effects
-            specialtyTags.forEach(tag => {
-                tag.addEventListener('mouseenter', () => {
-                    tag.style.transform = 'translateY(-2px) scale(1.03)';
-                    tag.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.15)';
-                });
-                
-                tag.addEventListener('mouseleave', () => {
-                    tag.style.transform = '';
-                    tag.style.boxShadow = '';
-                });
-            });
         });
         
-        // Welcome features hover
-        const features = document.querySelectorAll('.feature-item');
+        // Feature item hover effects
+        const features = this.section.querySelectorAll('.feature-item');
         features.forEach(feature => {
             feature.addEventListener('mouseenter', () => {
                 const icon = feature.querySelector('i');
                 if (icon) {
-                    icon.style.animation = 'bounce 0.4s ease';
-                    setTimeout(() => {
-                        icon.style.animation = '';
-                    }, 400);
+                    icon.style.transform = 'scale(1.1)';
+                    icon.style.transition = 'transform 0.3s ease';
+                }
+            });
+            
+            feature.addEventListener('mouseleave', () => {
+                const icon = feature.querySelector('i');
+                if (icon) {
+                    icon.style.transform = '';
                 }
             });
         });
         
-        // CTA button ripple effect
-        const ctaButtons = document.querySelectorAll('.cta-button');
+        // Specialty tag hover effects
+        const tags = this.section.querySelectorAll('.specialty-tag');
+        tags.forEach(tag => {
+            tag.addEventListener('mouseenter', () => {
+                tag.style.transform = 'translateY(-2px)';
+                tag.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
+            });
+            
+            tag.addEventListener('mouseleave', () => {
+                tag.style.transform = '';
+                tag.style.boxShadow = '';
+            });
+        });
+        
+        // CTA button effects
+        const ctaButtons = this.section.querySelectorAll('.cta-button');
         ctaButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
-                
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 500);
+            button.addEventListener('click', (e) => {
+                this.createRipple(e, button);
             });
         });
     }
     
-    setupCounterAnimations() {
-        // Find all elements with numbers that should animate
-        const numberElements = this.section.querySelectorAll('.stat-number, .stat-value');
+    createRipple(event, button) {
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
         
-        const numberObserver = new IntersectionObserver((entries) => {
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        `;
+        
+        button.style.position = 'relative';
+        button.style.overflow = 'hidden';
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
+    }
+    
+    setupCounters() {
+        // Backup counter setup for any missed elements
+        const allCounters = this.section.querySelectorAll('.stat-number, .stat-value');
+        
+        const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.dataset.animated) {
-                    this.animateCounter(entry.target);
-                    entry.target.dataset.animated = 'true';
+                    setTimeout(() => this.animateCounter(entry.target), 500);
                 }
             });
         }, { threshold: 0.5 });
         
-        numberElements.forEach(element => {
-            numberObserver.observe(element);
+        allCounters.forEach(counter => {
+            counterObserver.observe(counter);
         });
-    }
-    
-    setupResponsive() {
-        const checkMobile = () => {
-            const isMobile = window.innerWidth <= 767;
-            
-            if (isMobile) {
-                // Simplify animations on mobile
-                this.section.classList.add('mobile-view');
-            } else {
-                this.section.classList.remove('mobile-view');
-            }
-        };
-        
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
     }
 }
 
-// CSS Animation Keyframes
-const compactAnimationStyles = `
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+// Add required CSS animations
+const requiredStyles = `
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
     }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-    
-    @keyframes bounceIn {
-        0% {
-            opacity: 0;
-            transform: scale(0.3);
-        }
-        50% {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
-    }
-    
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        transform: scale(0);
-        animation: rippleEffect 0.5s ease-out;
-        pointer-events: none;
-    }
-    
-    @keyframes rippleEffect {
-        to {
-            transform: scale(3);
-            opacity: 0;
-        }
-    }
-    
-    /* Mobile optimizations */
-    .about-modern-compact.mobile-view .leader-card-compact {
-        animation: none !important;
-    }
-    
-    .about-modern-compact.mobile-view .value-card {
-        animation: none !important;
-    }
+}
+
+.leader-image {
+    transition: transform 0.5s ease !important;
+}
+
+.image-overlay {
+    transition: opacity 0.3s ease !important;
+}
+
+.feature-item i {
+    transition: transform 0.3s ease !important;
+}
+
+.specialty-tag {
+    transition: all 0.3s ease !important;
+}
+
+.value-icon {
+    transition: all 0.3s ease !important;
+}
+
+.value-card:hover .value-icon {
+    transform: scale(1.1) !important;
+}
+
+.visual-container {
+    transition: transform 0.5s ease !important;
+}
+
+.welcome-card:hover .visual-container {
+    transform: perspective(1000px) rotateY(0deg) !important;
+}
 `;
 
-// Add animation styles to document
-if (!document.getElementById('compact-about-animations')) {
+// Add styles if not already present
+if (!document.getElementById('compact-about-styles')) {
     const styleSheet = document.createElement('style');
-    styleSheet.id = 'compact-about-animations';
-    styleSheet.textContent = compactAnimationStyles;
+    styleSheet.id = 'compact-about-styles';
+    styleSheet.textContent = requiredStyles;
     document.head.appendChild(styleSheet);
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const compactAbout = new CompactAboutSection();
-    
-    // Store instance for debugging
-    window.compactAbout = compactAbout;
-    
-    console.log('Compact About Section initialized');
+// Initialize when ready
+let aboutInstance = null;
+
+function initCompactAbout() {
+    if (!aboutInstance && document.querySelector('.about-modern-compact')) {
+        aboutInstance = new CompactAboutSection();
+        window.compactAbout = aboutInstance; // For debugging
+    }
+}
+
+// Multiple initialization methods to ensure it works
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCompactAbout);
+} else {
+    initCompactAbout();
+}
+
+// Backup initialization
+setTimeout(initCompactAbout, 100);
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !aboutInstance) {
+        initCompactAbout();
+    }
 });
 
-// Export for module use
+// Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CompactAboutSection;
 }
