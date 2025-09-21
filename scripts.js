@@ -14,7 +14,7 @@ class App {
         // Initialize all sections
         this.header = new Header();
         this.hero = new Hero();
-        this.services = new Services();
+        this.services = new ServicesCarousel();
         this.about = new About();
         this.team = new Team();
         this.reviews = new Reviews();
@@ -313,74 +313,509 @@ class Hero {
 /* ==========================================================================
    SERVICES SECTION
    ========================================================================== */
-class Services {
+class ServicesCarousel {
     constructor() {
-        this.section = document.querySelector('.services');
-        this.cards = document.querySelectorAll('.service-card');
+        // DOM Elements
+        this.section = document.querySelector('.services-carousel-section');
+        this.track = document.querySelector('.carousel-track');
+        this.cards = document.querySelectorAll('.service-carousel-card');
+        this.prevBtn = document.querySelector('.carousel-nav-prev');
+        this.nextBtn = document.querySelector('.carousel-nav-next');
+        this.categoryTabs = document.querySelectorAll('.category-tab');
+        this.progressBar = document.querySelector('.progress-bar');
+        this.paginationContainer = document.querySelector('.carousel-pagination');
         
+        // Carousel State
+        this.currentIndex = 0;
+        this.cardsPerView = this.getCardsPerView();
+        this.totalCards = this.cards.length;
+        this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+        this.autoScrollInterval = null;
+        this.autoScrollDelay = 4000;
+        this.isHovering = false;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.dragStartX = 0;
+        this.currentTranslateX = 0;
+        
+        // Initialize
         this.init();
     }
     
     init() {
         if (!this.section) return;
         
-        // Animate on scroll
-        this.initScrollAnimation();
+        // Setup event listeners
+        this.setupEventListeners();
         
-        // Card hover effects
-        this.initCardEffects();
+        // Setup pagination
+        this.createPaginationDots();
+        
+        // Setup auto scroll
+        this.startAutoScroll();
+        
+        // Setup intersection observer for animations
+        this.setupIntersectionObserver();
+        
+        // Initialize progress bar
+        this.updateProgressBar();
+        
+        // Setup category filtering
+        this.setupCategoryFilters();
+        
+        // Setup responsive behavior
+        this.setupResponsive();
     }
     
-    initScrollAnimation() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    
-                    // Animate cards
-                    this.cards.forEach((card, index) => {
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, index * 100);
-                    });
-                }
-            });
-        }, { threshold: 0.1 });
+    setupEventListeners() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => this.slidePrev());
+        }
         
-        // Setup initial state
-        this.section.style.opacity = '0';
-        this.section.style.transform = 'translateY(30px)';
-        this.section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => this.slideNext());
+        }
         
-        this.cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
+        // Track hover for auto-scroll pause
+        if (this.track) {
+            this.track.addEventListener('mouseenter', () => this.handleMouseEnter());
+            this.track.addEventListener('mouseleave', () => this.handleMouseLeave());
+            
+            // Touch events for mobile swipe
+            this.track.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+            this.track.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: true });
+            this.track.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+            
+            // Mouse drag events for desktop
+            this.track.addEventListener('mousedown', (e) => this.handleDragStart(e));
+            this.track.addEventListener('mousemove', (e) => this.handleDragMove(e));
+            this.track.addEventListener('mouseup', (e) => this.handleDragEnd(e));
+            this.track.addEventListener('mouseleave', (e) => this.handleDragEnd(e));
+        }
         
-        observer.observe(this.section);
-    }
-    
-    initCardEffects() {
-        this.cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                const icon = card.querySelector('.service-icon');
-                if (icon) {
-                    icon.style.transform = 'scale(1.1) rotate(-5deg)';
+        // Card interactions
+        this.cards.forEach((card, index) => {
+            card.addEventListener('click', (e) => {
+                // Prevent link click if dragging
+                if (Math.abs(this.dragStartX - e.clientX) > 5) {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
             });
             
-            card.addEventListener('mouseleave', () => {
-                const icon = card.querySelector('.service-icon');
-                if (icon) {
-                    icon.style.transform = '';
-                }
+            // Animate cards on hover
+            card.addEventListener('mouseenter', () => this.animateCardHover(card));
+            card.addEventListener('mouseleave', () => this.resetCardHover(card));
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!this.isElementInViewport()) return;
+            
+            if (e.key === 'ArrowLeft') {
+                this.slidePrev();
+            } else if (e.key === 'ArrowRight') {
+                this.slideNext();
+            }
+        });
+        
+        // Window resize
+        window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    setupCategoryFilters() {
+        this.categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+                
+                // Update active tab
+                this.categoryTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Filter cards with animation
+                this.filterByCategory(category);
             });
         });
     }
+    
+    filterByCategory(category) {
+        // Reset to first slide
+        this.currentIndex = 0;
+        
+        // Show/hide cards with animation
+        this.cards.forEach((card, index) => {
+            const cardCategory = card.dataset.category;
+            const shouldShow = category === 'all' || cardCategory === category;
+            
+            if (shouldShow) {
+                card.style.display = '';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, index * 50);
+            } else {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    card.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Update visible cards count and reset carousel
+        setTimeout(() => {
+            this.updateCarousel();
+        }, 350);
+    }
+    
+    createPaginationDots() {
+        if (!this.paginationContainer) return;
+        
+        this.paginationContainer.innerHTML = '';
+        const totalPages = Math.ceil(this.totalCards / this.cardsPerView);
+        
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'pagination-dot';
+            if (i === 0) dot.classList.add('active');
+            
+            dot.addEventListener('click', () => {
+                this.currentIndex = i * this.cardsPerView;
+                this.updateCarousel();
+            });
+            
+            this.paginationContainer.appendChild(dot);
+        }
+    }
+    
+    updatePagination() {
+        const dots = this.paginationContainer.querySelectorAll('.pagination-dot');
+        const currentPage = Math.floor(this.currentIndex / this.cardsPerView);
+        
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentPage);
+        });
+    }
+    
+    slidePrev() {
+        if (this.currentIndex > 0) {
+            this.currentIndex = Math.max(0, this.currentIndex - this.cardsPerView);
+            this.updateCarousel();
+        } else {
+            // Loop to end
+            this.currentIndex = this.maxIndex;
+            this.updateCarousel();
+        }
+        
+        // Reset auto-scroll timer
+        this.resetAutoScroll();
+    }
+    
+    slideNext() {
+        if (this.currentIndex < this.maxIndex) {
+            this.currentIndex = Math.min(this.maxIndex, this.currentIndex + this.cardsPerView);
+            this.updateCarousel();
+        } else {
+            // Loop to beginning
+            this.currentIndex = 0;
+            this.updateCarousel();
+        }
+        
+        // Reset auto-scroll timer
+        this.resetAutoScroll();
+    }
+    
+    updateCarousel() {
+        if (!this.track) return;
+        
+        // Calculate visible cards after filtering
+        const visibleCards = Array.from(this.cards).filter(card => 
+            card.style.display !== 'none'
+        );
+        
+        // Update max index based on visible cards
+        this.totalCards = visibleCards.length;
+        this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+        
+        // Ensure current index is valid
+        this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+        
+        // Calculate translation
+        const cardWidth = this.cards[0]?.offsetWidth || 0;
+        const gap = 30; // Gap between cards
+        const translateX = -(this.currentIndex * (cardWidth + gap));
+        
+        // Apply smooth translation
+        this.track.style.transform = `translateX(${translateX}px)`;
+        
+        // Update navigation buttons
+        this.updateNavigationButtons();
+        
+        // Update pagination
+        this.updatePagination();
+        
+        // Update progress bar
+        this.updateProgressBar();
+        
+        // Add entrance animation to visible cards
+        this.animateVisibleCards();
+    }
+    
+    animateVisibleCards() {
+        const visibleStart = this.currentIndex;
+        const visibleEnd = Math.min(visibleStart + this.cardsPerView, this.totalCards);
+        
+        this.cards.forEach((card, index) => {
+            if (index >= visibleStart && index < visibleEnd) {
+                card.classList.add('in-view');
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, (index - visibleStart) * 100);
+            } else {
+                card.classList.remove('in-view');
+            }
+        });
+    }
+    
+    updateNavigationButtons() {
+        if (this.prevBtn) {
+            this.prevBtn.disabled = false; // Always enabled for infinite scroll
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.disabled = false; // Always enabled for infinite scroll
+        }
+    }
+    
+    updateProgressBar() {
+        if (!this.progressBar) return;
+        
+        const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
+        this.progressBar.style.width = `${Math.min(100, Math.max(10, progress))}%`;
+    }
+    
+    startAutoScroll() {
+        if (this.autoScrollInterval) {
+            clearInterval(this.autoScrollInterval);
+        }
+        
+        this.autoScrollInterval = setInterval(() => {
+            if (!this.isHovering && !this.isDragging) {
+                this.slideNext();
+            }
+        }, this.autoScrollDelay);
+    }
+    
+    resetAutoScroll() {
+        this.startAutoScroll();
+    }
+    
+    handleMouseEnter() {
+        this.isHovering = true;
+    }
+    
+    handleMouseLeave() {
+        this.isHovering = false;
+    }
+    
+    // Touch handlers for mobile swipe
+    handleTouchStart(e) {
+        this.touchStartX = e.changedTouches[0].screenX;
+    }
+    
+    handleTouchMove(e) {
+        // Optional: Add drag visual feedback
+    }
+    
+    handleTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe();
+    }
+    
+    handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = this.touchStartX - this.touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe left - next
+                this.slideNext();
+            } else {
+                // Swipe right - prev
+                this.slidePrev();
+            }
+        }
+    }
+    
+    // Mouse drag handlers for desktop
+    handleDragStart(e) {
+        this.isDragging = true;
+        this.dragStartX = e.clientX;
+        this.track.style.cursor = 'grabbing';
+        this.track.style.transition = 'none';
+    }
+    
+    handleDragMove(e) {
+        if (!this.isDragging) return;
+        
+        const dragDistance = e.clientX - this.dragStartX;
+        const cardWidth = this.cards[0]?.offsetWidth || 0;
+        const currentTranslate = -(this.currentIndex * (cardWidth + 30));
+        
+        this.track.style.transform = `translateX(${currentTranslate + dragDistance}px)`;
+    }
+    
+    handleDragEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.track.style.cursor = '';
+        this.track.style.transition = '';
+        
+        const dragDistance = e.clientX - this.dragStartX;
+        const threshold = 100;
+        
+        if (Math.abs(dragDistance) > threshold) {
+            if (dragDistance > 0) {
+                this.slidePrev();
+            } else {
+                this.slideNext();
+            }
+        } else {
+            this.updateCarousel();
+        }
+    }
+    
+    animateCardHover(card) {
+        // Add hover class for additional animations if needed
+        card.classList.add('hovering');
+    }
+    
+    resetCardHover(card) {
+        card.classList.remove('hovering');
+    }
+    
+    getCardsPerView() {
+        const width = window.innerWidth;
+        
+        if (width > 1200) {
+            return 3;
+        } else if (width > 767) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+    
+    handleResize() {
+        const newCardsPerView = this.getCardsPerView();
+        
+        if (newCardsPerView !== this.cardsPerView) {
+            this.cardsPerView = newCardsPerView;
+            this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+            this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+            
+            // Recreate pagination
+            this.createPaginationDots();
+            
+            // Update carousel
+            this.updateCarousel();
+        }
+    }
+    
+    setupIntersectionObserver() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Animate section elements
+                    this.animateSectionEntrance();
+                    
+                    // Start auto-scroll when visible
+                    this.startAutoScroll();
+                } else {
+                    // Pause auto-scroll when not visible
+                    if (this.autoScrollInterval) {
+                        clearInterval(this.autoScrollInterval);
+                    }
+                }
+            });
+        }, options);
+        
+        if (this.section) {
+            observer.observe(this.section);
+        }
+    }
+    
+    animateSectionEntrance() {
+        // Animate header elements
+        const header = this.section.querySelector('.carousel-section-header');
+        if (header) {
+            header.style.animation = 'fadeInUp 0.8s ease';
+        }
+        
+        // Animate category tabs
+        this.categoryTabs.forEach((tab, index) => {
+            setTimeout(() => {
+                tab.style.animation = 'fadeInUp 0.5s ease backwards';
+            }, index * 50);
+        });
+        
+        // Animate visible cards
+        this.animateVisibleCards();
+    }
+    
+    isElementInViewport() {
+        if (!this.section) return false;
+        
+        const rect = this.section.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    
+    setupResponsive() {
+        // Add responsive class to section based on viewport
+        const updateResponsiveClass = () => {
+            const width = window.innerWidth;
+            
+            if (width <= 767) {
+                this.section.classList.add('mobile-view');
+                this.section.classList.remove('tablet-view', 'desktop-view');
+            } else if (width <= 1200) {
+                this.section.classList.add('tablet-view');
+                this.section.classList.remove('mobile-view', 'desktop-view');
+            } else {
+                this.section.classList.add('desktop-view');
+                this.section.classList.remove('mobile-view', 'tablet-view');
+            }
+        };
+        
+        updateResponsiveClass();
+        window.addEventListener('resize', updateResponsiveClass);
+    }
 }
+
+// Initialize carousel when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const servicesCarousel = new ServicesCarousel();
+    
+    // Store instance globally for debugging
+    window.servicesCarousel = servicesCarousel;
+    
+    console.log('Services Carousel initialized');
+});
 
 /* ==========================================================================
    ABOUT SECTION
