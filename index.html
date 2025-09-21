@@ -238,40 +238,348 @@
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section class="services" id="services">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-tag">Our Services</div>
-                    <h2 class="section-title">Comprehensive Mental Health Care</h2>
-                    <p class="section-subtitle">Professional therapeutic services designed to support your unique journey</p>
-                </div>
-                
-                <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="ri-user-heart-line"></i>
+<!-- Services Carousel Section -->
+<section class="services-carousel-section" id="servicesCarousel">
+    <div class="services-carousel-container">
+        <!-- Section Header -->
+        <div class="carousel-section-header">
+            <div class="carousel-badge">
+                <span class="badge-text">Comprehensive Care</span>
+                <div class="badge-pulse"></div>
+            </div>
+            <h2 class="carousel-title">
+                <span class="title-accent">Expert</span> Mental Health Services
+            </h2>
+            <p class="carousel-subtitle">
+                Personalized treatment approaches for children, adolescents, and adults
+            </p>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="service-categories">
+            <button class="category-tab active" data-category="all">
+                <span class="tab-icon"><i class="ri-apps-2-line"></i></span>
+                <span class="tab-text">All Services</span>
+            </button>
+            <button class="category-tab" data-category="mood">
+                <span class="tab-icon"><i class="ri-emotion-line"></i></span>
+                <span class="tab-text">Mood & Anxiety</span>
+            </button>
+            <button class="category-tab" data-category="behavioral">
+                <span class="tab-icon"><i class="ri-user-heart-line"></i></span>
+                <span class="tab-text">Behavioral Health</span>
+            </button>
+            <button class="category-tab" data-category="family">
+                <span class="tab-icon"><i class="ri-group-line"></i></span>
+                <span class="tab-text">Family & Relationships</span>
+            </button>
+            <button class="category-tab" data-category="specialized">
+                <span class="tab-icon"><i class="ri-stethoscope-line"></i></span>
+                <span class="tab-text">Specialized Care</span>
+            </button>
+        </div>
+
+        <!-- Carousel Wrapper -->
+        <div class="carousel-wrapper">
+            <!-- Progress Bar -->
+            <div class="carousel-progress">
+                <div class="progress-bar"></div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button class="carousel-nav carousel-nav-prev" aria-label="Previous">
+                <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button class="carousel-nav carousel-nav-next" aria-label="Next">
+                <i class="ri-arrow-right-s-line"></i>
+            </button>
+
+            <!-- Carousel Track -->
+            <div class="carousel-track-container">
+                <div class="carousel-track">
+                    
+                    <!-- Service Card 1 - Depression -->
+                    <div class="service-carousel-card" data-category="mood">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=90" alt="Depression & Mood Disorders">
+                            <div class="card-image-overlay"></div>
+                            <div class="card-badge">Most Requested</div>
                         </div>
-                        <h3>Individual Therapy</h3>
-                        <p>Personalized one-on-one sessions addressing anxiety, depression, and personal growth.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="ri-heart-2-line"></i>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-mental-health-line"></i>
+                            </div>
+                            <h3 class="card-title">Depression & Mood Disorders</h3>
+                            <p class="card-description">Evidence-based treatment for depression, bipolar disorder, and other mood-related challenges.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">CBT</span>
+                                <span class="feature-tag">DBT</span>
+                                <span class="feature-tag">Medication Management</span>
+                            </div>
+                            <a href="services.html#depression" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
-                        <h3>Couples Counseling</h3>
-                        <p>Strengthen relationships through improved communication and conflict resolution.</p>
                     </div>
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <i class="ri-team-line"></i>
+
+                    <!-- Service Card 2 - Anxiety -->
+                    <div class="service-carousel-card" data-category="mood">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&q=90" alt="Anxiety Disorders">
+                            <div class="card-image-overlay"></div>
                         </div>
-                        <h3>Family Therapy</h3>
-                        <p>Comprehensive family support addressing dynamics and communication patterns.</p>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-mind-map"></i>
+                            </div>
+                            <h3 class="card-title">Anxiety Disorders</h3>
+                            <p class="card-description">Comprehensive treatment for generalized anxiety, panic disorders, and social anxiety.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Exposure Therapy</span>
+                                <span class="feature-tag">Mindfulness</span>
+                            </div>
+                            <a href="services.html#anxiety" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
                     </div>
+
+                    <!-- Service Card 3 - PTSD -->
+                    <div class="service-carousel-card" data-category="specialized">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1617450365226-9bf28c04e130?w=800&q=90" alt="PTSD & Trauma Recovery">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-shield-star-line"></i>
+                            </div>
+                            <h3 class="card-title">PTSD & Trauma Recovery</h3>
+                            <p class="card-description">Specialized trauma-informed care for injury, illness, abuse, and loss-related trauma.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">EMDR</span>
+                                <span class="feature-tag">Trauma-Focused CBT</span>
+                            </div>
+                            <a href="services.html#trauma" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 4 - Behavioral Problems -->
+                    <div class="service-carousel-card" data-category="behavioral">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=800&q=90" alt="Behavioral Health">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-user-settings-line"></i>
+                            </div>
+                            <h3 class="card-title">Behavioral Health</h3>
+                            <p class="card-description">Expert care for ODD, conduct disorders, and challenging behavioral patterns.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Behavior Therapy</span>
+                                <span class="feature-tag">Parent Training</span>
+                            </div>
+                            <a href="services.html#behavioral" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 5 - ADHD -->
+                    <div class="service-carousel-card" data-category="behavioral">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=90" alt="ADHD & Focus">
+                            <div class="card-image-overlay"></div>
+                            <div class="card-badge">Popular</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-focus-2-line"></i>
+                            </div>
+                            <h3 class="card-title">ADHD & Attention Disorders</h3>
+                            <p class="card-description">Comprehensive assessment and treatment for attention deficit disorders in all ages.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Assessment</span>
+                                <span class="feature-tag">Skills Training</span>
+                            </div>
+                            <a href="services.html#adhd" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 6 - Family Therapy -->
+                    <div class="service-carousel-card" data-category="family">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1609220807107-e35ec2120f71?w=800&q=90" alt="Family Therapy">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-home-heart-line"></i>
+                            </div>
+                            <h3 class="card-title">Family Crisis Support</h3>
+                            <p class="card-description">Supporting families through separation, divorce, and relationship challenges.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Family Systems</span>
+                                <span class="feature-tag">Mediation</span>
+                            </div>
+                            <a href="services.html#family" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 7 - School Problems -->
+                    <div class="service-carousel-card" data-category="behavioral">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=90" alt="School Support">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-graduation-cap-line"></i>
+                            </div>
+                            <h3 class="card-title">School & Learning Support</h3>
+                            <p class="card-description">Helping students overcome academic challenges and school-related anxiety.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Academic Coaching</span>
+                                <span class="feature-tag">IEP Support</span>
+                            </div>
+                            <a href="services.html#school" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 8 - Sleep & Eating -->
+                    <div class="service-carousel-card" data-category="specialized">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=90" alt="Sleep & Eating Wellness">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-moon-line"></i>
+                            </div>
+                            <h3 class="card-title">Sleep & Eating Wellness</h3>
+                            <p class="card-description">Specialized treatment for sleep disorders and eating-related challenges.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Sleep Hygiene</span>
+                                <span class="feature-tag">Nutritional Therapy</span>
+                            </div>
+                            <a href="services.html#wellness" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 9 - Grief -->
+                    <div class="service-carousel-card" data-category="family">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=800&q=90" alt="Grief Counseling">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-heart-3-line"></i>
+                            </div>
+                            <h3 class="card-title">Grief & Loss Counseling</h3>
+                            <p class="card-description">Compassionate support for bereavement and all forms of loss.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Grief Processing</span>
+                                <span class="feature-tag">Support Groups</span>
+                            </div>
+                            <a href="services.html#grief" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 10 - Attachment -->
+                    <div class="service-carousel-card" data-category="family">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=800&q=90" alt="Attachment Therapy">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-parent-line"></i>
+                            </div>
+                            <h3 class="card-title">Adoption & Attachment</h3>
+                            <p class="card-description">Specialized care for adopted children and foster care attachment challenges.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">Attachment Therapy</span>
+                                <span class="feature-tag">Family Integration</span>
+                            </div>
+                            <a href="services.html#attachment" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Service Card 11 - Mindfulness -->
+                    <div class="service-carousel-card" data-category="specialized">
+                        <div class="card-image-wrapper">
+                            <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&q=90" alt="Mindfulness & Meditation">
+                            <div class="card-image-overlay"></div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="ri-leaf-line"></i>
+                            </div>
+                            <h3 class="card-title">Mindfulness & Meditation</h3>
+                            <p class="card-description">Learn powerful mindfulness techniques for stress reduction and emotional regulation.</p>
+                            <div class="card-features">
+                                <span class="feature-tag">MBSR</span>
+                                <span class="feature-tag">Meditation Training</span>
+                            </div>
+                            <a href="services.html#mindfulness" class="card-link">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </section>
+
+            <!-- Pagination Dots -->
+            <div class="carousel-pagination"></div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="services-cta">
+            <div class="cta-content">
+                <h3 class="cta-title">Ready to Begin Your Wellness Journey?</h3>
+                <p class="cta-subtitle">Browse all our services or schedule a consultation</p>
+                <div class="cta-buttons">
+                    <a href="services.html" class="cta-btn cta-btn-primary">
+                        <i class="ri-compass-discover-line"></i>
+                        <span>Explore All Services</span>
+                    </a>
+                    <a href="#contact" class="cta-btn cta-btn-secondary">
+                        <i class="ri-calendar-line"></i>
+                        <span>Schedule Consultation</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- About Section -->
         <section class="about" id="about">
