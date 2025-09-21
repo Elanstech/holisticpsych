@@ -16,7 +16,7 @@ class App {
         this.hero = new Hero();
         this.services = new ServicesCarousel();
         this.about = new CompactAboutSection();
-        this.team = new TeamCarousel();
+        this.team = new ModernTeamCarousel();
         this.reviews = new TestimonialsCarousel();
         this.contact = new Contact();
         this.footer = new Footer();
@@ -1140,16 +1140,17 @@ if (typeof module !== 'undefined' && module.exports) {
 /* ==========================================================================
    TEAM SECTION
    ========================================================================== */
-class TeamCarousel {
+class ModernTeamCarousel {
     constructor() {
         // DOM Elements
-        this.section = document.querySelector('.team-carousel-section');
-        this.track = document.querySelector('.team-carousel-track');
-        this.cards = document.querySelectorAll('.team-member-card');
-        this.prevBtn = document.querySelector('.team-nav-prev');
-        this.nextBtn = document.querySelector('.team-nav-next');
+        this.section = document.querySelector('.modern-team-section');
+        this.slider = document.querySelector('.team-carousel-slider');
+        this.cards = document.querySelectorAll('.modern-team-card');
+        this.prevBtn = document.querySelector('.team-prev-btn');
+        this.nextBtn = document.querySelector('.team-next-btn');
         this.dots = document.querySelectorAll('.team-dot');
-        this.progressFill = document.querySelector('.team-progress-fill');
+        this.progressIndicator = document.querySelector('.team-progress-indicator');
+        this.viewport = document.querySelector('.team-carousel-viewport');
         
         // Carousel State
         this.currentIndex = 0;
@@ -1157,7 +1158,7 @@ class TeamCarousel {
         this.totalCards = this.cards.length;
         this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
         this.autoPlayInterval = null;
-        this.autoPlayDelay = 4500;
+        this.autoPlayDelay = 4000;
         this.isPlaying = true;
         this.isHovering = false;
         
@@ -1165,15 +1166,15 @@ class TeamCarousel {
         this.isDragging = false;
         this.startX = 0;
         this.currentX = 0;
+        this.threshold = 50;
         this.initialTranslate = 0;
-        this.animationId = null;
         
         // Initialize
         this.init();
     }
     
     init() {
-        if (!this.section) return;
+        if (!this.section || !this.slider || this.totalCards === 0) return;
         
         // Setup event listeners
         this.setupEventListeners();
@@ -1187,7 +1188,10 @@ class TeamCarousel {
         // Start auto-play
         this.startAutoPlay();
         
-        console.log('Team Carousel initialized successfully');
+        // Setup card interactions
+        this.setupCardInteractions();
+        
+        console.log('Modern Team Carousel initialized successfully');
     }
     
     setupEventListeners() {
@@ -1206,12 +1210,12 @@ class TeamCarousel {
         });
         
         // Hover pause
-        if (this.track) {
-            this.track.addEventListener('mouseenter', () => this.handleMouseEnter());
-            this.track.addEventListener('mouseleave', () => this.handleMouseLeave());
+        if (this.viewport) {
+            this.viewport.addEventListener('mouseenter', () => this.handleMouseEnter());
+            this.viewport.addEventListener('mouseleave', () => this.handleMouseLeave());
         }
         
-        // Touch/Mouse events
+        // Touch/Swipe events
         this.setupTouchEvents();
         
         // Keyboard navigation
@@ -1219,27 +1223,24 @@ class TeamCarousel {
         
         // Window resize
         window.addEventListener('resize', () => this.handleResize());
-        
-        // Card interactions
-        this.setupCardInteractions();
     }
     
     setupTouchEvents() {
-        if (!this.track) return;
-        
-        // Mouse events
-        this.track.addEventListener('mousedown', (e) => this.handleStart(e));
-        this.track.addEventListener('mousemove', (e) => this.handleMove(e));
-        this.track.addEventListener('mouseup', () => this.handleEnd());
-        this.track.addEventListener('mouseleave', () => this.handleEnd());
+        if (!this.viewport) return;
         
         // Touch events
-        this.track.addEventListener('touchstart', (e) => this.handleStart(e), { passive: true });
-        this.track.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
-        this.track.addEventListener('touchend', () => this.handleEnd());
+        this.viewport.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.viewport.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.viewport.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        
+        // Mouse events for desktop dragging
+        this.viewport.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+        this.viewport.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.viewport.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+        this.viewport.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
         
         // Prevent context menu on long press
-        this.track.addEventListener('contextmenu', (e) => {
+        this.viewport.addEventListener('contextmenu', (e) => {
             if (this.isDragging) {
                 e.preventDefault();
             }
@@ -1269,27 +1270,46 @@ class TeamCarousel {
     
     setupCardInteractions() {
         this.cards.forEach((card, index) => {
-            // Prevent drag on images
+            // Prevent image dragging
             const images = card.querySelectorAll('img');
             images.forEach(img => {
                 img.addEventListener('dragstart', (e) => e.preventDefault());
             });
             
-            // Card click animation
+            // Card click handling
             card.addEventListener('click', (e) => {
                 // Don't trigger if dragging
                 if (Math.abs(this.startX - this.currentX) > 5) {
                     e.preventDefault();
                     return;
                 }
-                
-                // Add click animation
-                this.animateCardClick(card);
             });
             
             // Enhanced hover effects
             card.addEventListener('mouseenter', () => this.enhanceCardHover(card));
             card.addEventListener('mouseleave', () => this.resetCardHover(card));
+            
+            // Specialty item interactions
+            const specialties = card.querySelectorAll('.specialty-item');
+            specialties.forEach(specialty => {
+                specialty.addEventListener('mouseenter', () => {
+                    specialty.style.transform = 'translateY(-2px) scale(1.05)';
+                    specialty.style.boxShadow = '0 6px 15px rgba(0, 216, 132, 0.2)';
+                });
+                
+                specialty.addEventListener('mouseleave', () => {
+                    specialty.style.transform = '';
+                    specialty.style.boxShadow = '';
+                });
+            });
+            
+            // Profile button interactions
+            const profileBtn = card.querySelector('.member-profile-btn, .join-team-btn');
+            if (profileBtn) {
+                profileBtn.addEventListener('click', (e) => {
+                    this.createRipple(e, profileBtn);
+                });
+            }
         });
     }
     
@@ -1316,67 +1336,95 @@ class TeamCarousel {
         }
     }
     
-    // Touch/Drag Handlers
-    handleStart(e) {
-        this.isDragging = true;
-        this.startX = this.getClientX(e);
-        this.currentX = this.startX;
-        this.initialTranslate = this.getCurrentTranslate();
-        
-        this.track.style.cursor = 'grabbing';
-        this.track.style.transition = 'none';
-        
+    // Touch Handlers
+    handleTouchStart(e) {
+        this.startX = e.touches[0].clientX;
         this.pauseAutoPlay();
+    }
+    
+    handleTouchMove(e) {
+        if (!this.startX) return;
         
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
+        this.currentX = e.touches[0].clientX;
+        const diff = this.startX - this.currentX;
+        
+        // Prevent default if swiping horizontally
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
         }
     }
     
-    handleMove(e) {
-        if (!this.isDragging) return;
+    handleTouchEnd(e) {
+        if (!this.startX) return;
         
-        e.preventDefault();
-        this.currentX = this.getClientX(e);
-        const deltaX = this.currentX - this.startX;
-        const newTranslate = this.initialTranslate + deltaX;
+        const diff = this.startX - this.currentX;
         
-        this.track.style.transform = `translateX(${newTranslate}px)`;
-    }
-    
-    handleEnd() {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.track.style.cursor = '';
-        this.track.style.transition = '';
-        
-        const deltaX = this.currentX - this.startX;
-        const threshold = 80;
-        
-        if (Math.abs(deltaX) > threshold) {
-            if (deltaX > 0 && this.currentIndex > 0) {
-                this.slidePrev();
-            } else if (deltaX < 0 && this.currentIndex < this.maxIndex) {
+        if (Math.abs(diff) > this.threshold) {
+            if (diff > 0) {
                 this.slideNext();
             } else {
-                this.updateCarousel();
+                this.slidePrev();
             }
-        } else {
-            this.updateCarousel();
         }
+        
+        this.startX = 0;
+        this.currentX = 0;
         
         if (!this.isHovering) {
             this.startAutoPlay();
         }
     }
     
-    getClientX(e) {
-        return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    // Mouse Drag Handlers
+    handleMouseDown(e) {
+        this.isDragging = true;
+        this.startX = e.clientX;
+        this.initialTranslate = this.getCurrentTranslate();
+        this.viewport.style.cursor = 'grabbing';
+        this.slider.style.transition = 'none';
+        this.pauseAutoPlay();
+    }
+    
+    handleMouseMove(e) {
+        if (!this.isDragging) return;
+        
+        e.preventDefault();
+        this.currentX = e.clientX;
+        const deltaX = this.currentX - this.startX;
+        const newTranslate = this.initialTranslate + deltaX;
+        
+        this.slider.style.transform = `translateX(${newTranslate}px)`;
+    }
+    
+    handleMouseUp(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.viewport.style.cursor = '';
+        this.slider.style.transition = '';
+        
+        const diff = this.startX - this.currentX;
+        
+        if (Math.abs(diff) > this.threshold) {
+            if (diff > 0) {
+                this.slideNext();
+            } else {
+                this.slidePrev();
+            }
+        } else {
+            this.updateCarousel();
+        }
+        
+        this.startX = 0;
+        this.currentX = 0;
+        
+        if (!this.isHovering) {
+            this.startAutoPlay();
+        }
     }
     
     getCurrentTranslate() {
-        const style = window.getComputedStyle(this.track);
+        const style = window.getComputedStyle(this.slider);
         const matrix = style.transform;
         
         if (matrix === 'none') return 0;
@@ -1413,7 +1461,7 @@ class TeamCarousel {
     }
     
     updateCarousel() {
-        if (!this.track) return;
+        if (!this.slider) return;
         
         // Calculate translation
         const cardWidth = this.cards[0]?.offsetWidth || 0;
@@ -1421,7 +1469,7 @@ class TeamCarousel {
         const translateX = -(this.currentIndex * (cardWidth + gap));
         
         // Apply translation
-        this.track.style.transform = `translateX(${translateX}px)`;
+        this.slider.style.transform = `translateX(${translateX}px)`;
         
         // Update pagination
         this.updatePagination();
@@ -1443,10 +1491,10 @@ class TeamCarousel {
     }
     
     updateProgressBar() {
-        if (!this.progressFill) return;
+        if (!this.progressIndicator) return;
         
         const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
-        this.progressFill.style.width = `${Math.min(100, Math.max(20, progress))}%`;
+        this.progressIndicator.style.width = `${Math.min(100, Math.max(20, progress))}%`;
     }
     
     updateNavigationButtons() {
@@ -1521,36 +1569,91 @@ class TeamCarousel {
     // Animation Methods
     animateEntrance() {
         // Animate header
-        const header = this.section.querySelector('.team-section-header');
+        const header = this.section.querySelector('.modern-team-header');
         if (header) {
-            header.style.animation = 'teamFadeInUp 0.8s ease';
+            header.style.animation = 'teamHeaderFadeIn 0.8s ease';
+        }
+        
+        // Animate controls
+        const controls = this.section.querySelector('.team-carousel-controls');
+        if (controls) {
+            setTimeout(() => {
+                controls.style.animation = 'teamHeaderFadeIn 0.8s ease';
+            }, 200);
         }
         
         // Animate visible cards with stagger
         this.animateVisibleCards();
     }
     
-    animateCardClick(card) {
-        card.style.transform = 'scale(0.98)';
-        setTimeout(() => {
-            card.style.transform = '';
-        }, 150);
-    }
-    
     enhanceCardHover(card) {
-        const specialty = card.querySelectorAll('.team-specialty');
-        specialty.forEach((tag, index) => {
+        const photo = card.querySelector('.team-member-photo');
+        if (photo) {
+            photo.style.transform = 'scale(1.05)';
+        }
+        
+        const status = card.querySelector('.team-member-status');
+        if (status) {
+            status.style.transform = 'scale(1.05)';
+            status.style.background = 'rgba(0, 216, 132, 0.15)';
+        }
+        
+        const badges = card.querySelectorAll('.title-badge');
+        badges.forEach((badge, index) => {
             setTimeout(() => {
-                tag.style.transform = 'translateY(-2px)';
+                badge.style.transform = 'translateY(-2px) scale(1.05)';
             }, index * 50);
         });
     }
     
     resetCardHover(card) {
-        const specialty = card.querySelectorAll('.team-specialty');
-        specialty.forEach(tag => {
-            tag.style.transform = '';
+        const photo = card.querySelector('.team-member-photo');
+        if (photo) {
+            photo.style.transform = '';
+        }
+        
+        const status = card.querySelector('.team-member-status');
+        if (status) {
+            status.style.transform = '';
+            status.style.background = '';
+        }
+        
+        const badges = card.querySelectorAll('.title-badge');
+        badges.forEach(badge => {
+            badge.style.transform = '';
         });
+    }
+    
+    createRipple(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: teamRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
     }
     
     // Responsive Methods
@@ -1594,61 +1697,47 @@ class TeamCarousel {
     destroy() {
         this.pauseAutoPlay();
         
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-        }
-        
         // Remove event listeners
         window.removeEventListener('resize', this.handleResize);
         document.removeEventListener('keydown', this.setupKeyboardNavigation);
         
-        console.log('Team Carousel destroyed');
+        console.log('Modern Team Carousel destroyed');
     }
 }
 
-// Enhanced Card Interactions
-class TeamCardEnhancer {
+// CTA Button Enhancer
+class TeamCTAEnhancer {
     constructor() {
-        this.cards = document.querySelectorAll('.team-member-card');
+        this.ctaButton = document.querySelector('.team-cta-button');
         this.init();
     }
     
     init() {
-        this.setupAdvancedInteractions();
+        this.setupCTAInteractions();
     }
     
-    setupAdvancedInteractions() {
-        this.cards.forEach(card => {
-            // Add ripple effect to learn more buttons
-            const learnMoreBtn = card.querySelector('.team-learn-more');
-            if (learnMoreBtn) {
-                learnMoreBtn.addEventListener('click', (e) => {
-                    this.createRipple(e, learnMoreBtn);
-                });
-            }
+    setupCTAInteractions() {
+        if (this.ctaButton) {
+            this.ctaButton.addEventListener('click', (e) => {
+                this.createRipple(e, this.ctaButton);
+            });
             
-            // Add profile link interactions
-            const profileLink = card.querySelector('.team-profile-link');
-            if (profileLink) {
-                profileLink.addEventListener('click', (e) => {
-                    this.createRipple(e, profileLink);
-                });
-            }
-            
-            // Enhanced specialty tag interactions
-            const specialties = card.querySelectorAll('.team-specialty');
-            specialties.forEach(specialty => {
-                specialty.addEventListener('mouseenter', () => {
-                    specialty.style.transform = 'translateY(-3px) scale(1.05)';
-                    specialty.style.boxShadow = '0 8px 20px rgba(0, 216, 132, 0.2)';
-                });
-                
-                specialty.addEventListener('mouseleave', () => {
-                    specialty.style.transform = '';
-                    specialty.style.boxShadow = '';
+            this.ctaButton.addEventListener('mouseenter', () => {
+                const icons = this.ctaButton.querySelectorAll('i');
+                icons.forEach((icon, index) => {
+                    setTimeout(() => {
+                        icon.style.animation = 'teamIconBounce 0.5s ease';
+                    }, index * 100);
                 });
             });
-        });
+            
+            this.ctaButton.addEventListener('mouseleave', () => {
+                const icons = this.ctaButton.querySelectorAll('i');
+                icons.forEach(icon => {
+                    icon.style.animation = '';
+                });
+            });
+        }
     }
     
     createRipple(event, element) {
@@ -1685,7 +1774,7 @@ class TeamCardEnhancer {
 }
 
 // Add required CSS animations
-const teamCarouselStyles = `
+const modernTeamStyles = `
 @keyframes teamRipple {
     to {
         transform: scale(4);
@@ -1693,35 +1782,40 @@ const teamCarouselStyles = `
     }
 }
 
-.team-carousel-track {
+@keyframes teamIconBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.1); }
+}
+
+.team-carousel-slider {
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.team-member-card {
+.modern-team-card {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.team-photo {
-    transition: transform 0.6s ease !important;
-}
-
-.team-image-overlay {
-    transition: opacity 0.3s ease !important;
-}
-
-.team-overlay-content {
+.team-member-photo {
     transition: transform 0.3s ease !important;
 }
 
-.team-specialty {
+.team-member-status {
     transition: all 0.3s ease !important;
 }
 
-.team-learn-more {
+.title-badge {
     transition: all 0.3s ease !important;
 }
 
-.team-nav-btn {
+.specialty-item {
+    transition: all 0.3s ease !important;
+}
+
+.member-profile-btn {
+    transition: all 0.3s ease !important;
+}
+
+.team-control-btn {
     transition: all 0.3s ease !important;
 }
 
@@ -1729,63 +1823,71 @@ const teamCarouselStyles = `
     transition: all 0.3s ease !important;
 }
 
-.team-progress-fill {
-    transition: width 0.5s ease !important;
+.team-progress-indicator {
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.team-cta-button {
+    transition: all 0.3s ease !important;
+}
+
+.join-team-btn {
+    transition: all 0.3s ease !important;
 }
 `;
 
 // Add styles if not already present
-if (!document.getElementById('team-carousel-styles')) {
+if (!document.getElementById('modern-team-styles')) {
     const styleSheet = document.createElement('style');
-    styleSheet.id = 'team-carousel-styles';
-    styleSheet.textContent = teamCarouselStyles;
+    styleSheet.id = 'modern-team-styles';
+    styleSheet.textContent = modernTeamStyles;
     document.head.appendChild(styleSheet);
 }
 
 // Initialize when ready
-let teamCarouselInstance = null;
-let teamCardEnhancer = null;
+let modernTeamCarouselInstance = null;
+let teamCTAEnhancerInstance = null;
 
-function initTeamCarousel() {
-    if (!teamCarouselInstance && document.querySelector('.team-carousel-section')) {
-        teamCarouselInstance = new TeamCarousel();
-        teamCardEnhancer = new TeamCardEnhancer();
+function initModernTeamCarousel() {
+    if (!modernTeamCarouselInstance && document.querySelector('.modern-team-section')) {
+        modernTeamCarouselInstance = new ModernTeamCarousel();
+        teamCTAEnhancerInstance = new TeamCTAEnhancer();
         
         // Store instances for debugging
-        window.teamCarousel = teamCarouselInstance;
-        window.teamCardEnhancer = teamCardEnhancer;
+        window.modernTeamCarousel = modernTeamCarouselInstance;
+        window.teamCTAEnhancer = teamCTAEnhancerInstance;
     }
 }
 
 // Multiple initialization methods
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTeamCarousel);
+    document.addEventListener('DOMContentLoaded', initModernTeamCarousel);
 } else {
-    initTeamCarousel();
+    initModernTeamCarousel();
 }
 
 // Backup initialization
-setTimeout(initTeamCarousel, 100);
+setTimeout(initModernTeamCarousel, 100);
 
 // Handle page visibility changes
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden && teamCarouselInstance) {
-        teamCarouselInstance.pauseAutoPlay();
-    } else if (!document.hidden && teamCarouselInstance) {
-        teamCarouselInstance.startAutoPlay();
+    if (document.hidden && modernTeamCarouselInstance) {
+        modernTeamCarouselInstance.pauseAutoPlay();
+    } else if (!document.hidden && modernTeamCarouselInstance) {
+        modernTeamCarouselInstance.startAutoPlay();
     }
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (teamCarouselInstance) {
-        teamCarouselInstance.destroy();
+    if (modernTeamCarouselInstance) {
+        modernTeamCarouselInstance.destroy();
     }
 });
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TeamCarousel, TeamCardEnhancer };
+    module.exports = { ModernTeamCarousel, TeamCTAEnhancer };
 }
 
 /* ==========================================================================
