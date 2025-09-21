@@ -15,7 +15,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.about = new About();
+        this.about = new ModernAboutSection();
         this.team = new Team();
         this.reviews = new Reviews();
         this.contact = new Contact();
@@ -820,75 +820,734 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ==========================================================================
    ABOUT SECTION
    ========================================================================== */
-class About {
+class ModernAboutSection {
     constructor() {
-        this.section = document.querySelector('.about');
-        this.philosophyItems = document.querySelectorAll('.philosophy-item');
+        // DOM Elements
+        this.section = document.querySelector('.about-modern');
+        this.header = document.querySelector('.about-header');
+        this.welcomeCard = document.querySelector('.welcome-card');
+        this.leaderCards = document.querySelectorAll('.leader-card');
+        this.valueCards = document.querySelectorAll('.value-card');
+        this.galleryImages = document.querySelectorAll('.gallery-grid img, .gallery-main img');
+        this.ctaSection = document.querySelector('.about-cta');
         
+        // Animation State
+        this.isAnimated = {
+            header: false,
+            welcome: false,
+            leaders: false,
+            values: false,
+            office: false,
+            cta: false
+        };
+        
+        // Initialize
         this.init();
     }
     
     init() {
         if (!this.section) return;
         
-        // Animate on scroll
-        this.initScrollAnimation();
+        // Setup intersection observers for scroll animations
+        this.setupIntersectionObservers();
         
-        // Philosophy items effects
-        this.initPhilosophyEffects();
+        // Setup interactive elements
+        this.setupInteractions();
+        
+        // Setup parallax effects
+        this.setupParallaxEffects();
+        
+        // Setup counter animations
+        this.setupCounterAnimations();
+        
+        // Setup image lazy loading
+        this.setupImageLazyLoading();
+        
+        // Setup responsive behaviors
+        this.setupResponsive();
     }
     
-    initScrollAnimation() {
+    setupIntersectionObservers() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    this.animateElement(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe main sections
+        const elementsToObserve = [
+            this.header,
+            this.welcomeCard,
+            ...this.leaderCards,
+            ...this.valueCards,
+            document.querySelector('.office-preview'),
+            this.ctaSection
+        ];
+        
+        elementsToObserve.forEach(element => {
+            if (element) {
+                observer.observe(element);
+            }
+        });
+    }
+    
+    animateElement(element) {
+        // Header animation
+        if (element === this.header && !this.isAnimated.header) {
+            this.animateHeader();
+            this.isAnimated.header = true;
+        }
+        
+        // Welcome card animation
+        if (element === this.welcomeCard && !this.isAnimated.welcome) {
+            this.animateWelcomeCard();
+            this.isAnimated.welcome = true;
+        }
+        
+        // Leader cards animation
+        if (element.classList.contains('leader-card')) {
+            this.animateLeaderCard(element);
+        }
+        
+        // Value cards animation
+        if (element.classList.contains('value-card')) {
+            this.animateValueCard(element);
+        }
+        
+        // Office preview animation
+        if (element.classList.contains('office-preview') && !this.isAnimated.office) {
+            this.animateOfficePreview();
+            this.isAnimated.office = true;
+        }
+        
+        // CTA section animation
+        if (element === this.ctaSection && !this.isAnimated.cta) {
+            this.animateCTA();
+            this.isAnimated.cta = true;
+        }
+    }
+    
+    animateHeader() {
+        const badge = this.header.querySelector('.header-badge');
+        const title = this.header.querySelector('.about-title');
+        const subtitle = this.header.querySelector('.about-subtitle');
+        
+        // Stagger animations
+        setTimeout(() => {
+            if (badge) {
+                badge.style.animation = 'fadeInUp 0.8s ease forwards, float 6s ease-in-out infinite 0.8s';
+            }
+        }, 100);
+        
+        setTimeout(() => {
+            if (title) {
+                const words = title.querySelectorAll('.title-line, .title-highlight');
+                words.forEach((word, index) => {
+                    word.style.opacity = '0';
+                    word.style.transform = 'translateY(30px)';
+                    setTimeout(() => {
+                        word.style.transition = 'all 0.8s ease';
+                        word.style.opacity = '1';
+                        word.style.transform = 'translateY(0)';
+                    }, index * 200);
+                });
+            }
+        }, 300);
+        
+        setTimeout(() => {
+            if (subtitle) {
+                subtitle.style.animation = 'fadeInUp 0.8s ease forwards';
+            }
+        }, 600);
+    }
+    
+    animateWelcomeCard() {
+        const content = this.welcomeCard.querySelector('.welcome-content');
+        const visual = this.welcomeCard.querySelector('.welcome-visual');
+        const features = this.welcomeCard.querySelectorAll('.feature-item');
+        
+        // Animate main card
+        this.welcomeCard.style.animation = 'fadeInUp 1s ease forwards';
+        
+        // Animate content
+        setTimeout(() => {
+            if (content) {
+                content.style.animation = 'fadeIn 0.8s ease forwards';
+            }
+        }, 300);
+        
+        // Animate visual
+        setTimeout(() => {
+            if (visual) {
+                visual.style.animation = 'slideInRight 0.8s ease forwards';
+            }
+        }, 500);
+        
+        // Animate features with stagger
+        features.forEach((feature, index) => {
+            setTimeout(() => {
+                feature.style.opacity = '0';
+                feature.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    feature.style.transition = 'all 0.5s ease';
+                    feature.style.opacity = '1';
+                    feature.style.transform = 'translateX(0)';
+                }, 100);
+            }, 700 + (index * 100));
+        });
+    }
+    
+    animateLeaderCard(card) {
+        const image = card.querySelector('.leader-image-wrapper');
+        const content = card.querySelector('.leader-content');
+        const stats = card.querySelectorAll('.stat-item');
+        const tags = card.querySelectorAll('.specialty-tag');
+        
+        // Main card fade in
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(40px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.8s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100);
+        
+        // Animate image
+        setTimeout(() => {
+            if (image) {
+                image.style.animation = 'fadeIn 0.8s ease forwards';
+            }
+        }, 300);
+        
+        // Animate content
+        setTimeout(() => {
+            if (content) {
+                content.style.animation = 'fadeIn 0.8s ease forwards';
+            }
+        }, 500);
+        
+        // Animate stats with counter
+        stats.forEach((stat, index) => {
+            setTimeout(() => {
+                const number = stat.querySelector('.stat-number');
+                if (number) {
+                    this.animateCounter(number);
+                }
+                stat.style.animation = 'scaleIn 0.5s ease forwards';
+            }, 700 + (index * 100));
+        });
+        
+        // Animate specialty tags
+        tags.forEach((tag, index) => {
+            setTimeout(() => {
+                tag.style.opacity = '0';
+                tag.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    tag.style.transition = 'all 0.3s ease';
+                    tag.style.opacity = '1';
+                    tag.style.transform = 'scale(1)';
+                }, 50);
+            }, 900 + (index * 50));
+        });
+    }
+    
+    animateValueCard(card) {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px) scale(0.9)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
+        }, Math.random() * 300);
+        
+        // Animate icon
+        const icon = card.querySelector('.value-icon');
+        if (icon) {
+            setTimeout(() => {
+                icon.style.animation = 'bounceIn 0.8s ease';
+            }, 300);
+        }
+    }
+    
+    animateOfficePreview() {
+        const preview = document.querySelector('.office-preview');
+        const images = preview.querySelectorAll('img');
+        
+        // Animate container
+        preview.style.animation = 'fadeIn 1s ease forwards';
+        
+        // Animate images with stagger
+        images.forEach((img, index) => {
+            setTimeout(() => {
+                img.style.opacity = '0';
+                img.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    img.style.transition = 'all 0.6s ease';
+                    img.style.opacity = '1';
+                    img.style.transform = 'scale(1)';
+                }, 100);
+            }, 300 + (index * 150));
+        });
+    }
+    
+    animateCTA() {
+        const title = this.ctaSection.querySelector('.cta-title');
+        const subtitle = this.ctaSection.querySelector('.cta-subtitle');
+        const buttons = this.ctaSection.querySelectorAll('.cta-button');
+        const stats = this.ctaSection.querySelectorAll('.cta-stat');
+        
+        // Animate background
+        this.ctaSection.style.animation = 'slideInUp 1s ease forwards';
+        
+        // Animate text
+        setTimeout(() => {
+            if (title) {
+                title.style.animation = 'fadeIn 0.8s ease forwards';
+            }
+            if (subtitle) {
+                subtitle.style.animation = 'fadeIn 0.8s ease 0.2s forwards';
+            }
+        }, 300);
+        
+        // Animate buttons
+        buttons.forEach((button, index) => {
+            setTimeout(() => {
+                button.style.opacity = '0';
+                button.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    button.style.transition = 'all 0.5s ease';
+                    button.style.opacity = '1';
+                    button.style.transform = 'translateY(0)';
+                }, 100);
+            }, 600 + (index * 100));
+        });
+        
+        // Animate stats with counter
+        stats.forEach((stat, index) => {
+            setTimeout(() => {
+                const value = stat.querySelector('.stat-value');
+                if (value) {
+                    this.animateCounter(value);
+                }
+                stat.style.animation = 'fadeInUp 0.6s ease forwards';
+            }, 800 + (index * 100));
+        });
+    }
+    
+    animateCounter(element) {
+        const text = element.textContent;
+        const value = parseInt(text.replace(/[^0-9]/g, ''));
+        const suffix = text.replace(/[0-9]/g, '');
+        const duration = 2000;
+        const steps = 60;
+        const increment = value / steps;
+        let current = 0;
+        let step = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            step++;
+            
+            if (step >= steps) {
+                element.textContent = value + suffix;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current) + suffix;
+            }
+        }, duration / steps);
+    }
+    
+    setupInteractions() {
+        // Leader card interactions
+        this.leaderCards.forEach(card => {
+            const imageContainer = card.querySelector('.image-container');
+            const overlay = card.querySelector('.image-overlay');
+            const specialtyTags = card.querySelectorAll('.specialty-tag');
+            
+            // Image hover effect
+            if (imageContainer) {
+                imageContainer.addEventListener('mouseenter', () => {
+                    if (overlay) {
+                        overlay.style.opacity = '1';
+                    }
+                });
+                
+                imageContainer.addEventListener('mouseleave', () => {
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                    }
+                });
+            }
+            
+            // Specialty tag hover effects
+            specialtyTags.forEach(tag => {
+                tag.addEventListener('mouseenter', () => {
+                    tag.style.transform = 'translateY(-3px) scale(1.05)';
+                    tag.style.boxShadow = '0 5px 15px rgba(0, 216, 132, 0.2)';
+                });
+                
+                tag.addEventListener('mouseleave', () => {
+                    tag.style.transform = '';
+                    tag.style.boxShadow = '';
+                });
+            });
+        });
+        
+        // Welcome features hover
+        const features = document.querySelectorAll('.feature-item');
+        features.forEach(feature => {
+            feature.addEventListener('mouseenter', () => {
+                const icon = feature.querySelector('i');
+                if (icon) {
+                    icon.style.animation = 'bounce 0.5s ease';
+                    setTimeout(() => {
+                        icon.style.animation = '';
+                    }, 500);
+                }
+            });
+        });
+        
+        // Gallery image interactions
+        this.galleryImages.forEach(img => {
+            img.addEventListener('click', () => {
+                this.openImageModal(img.src, img.alt);
+            });
+            
+            img.style.cursor = 'pointer';
+        });
+        
+        // CTA button ripple effect
+        const ctaButtons = document.querySelectorAll('.cta-button');
+        ctaButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    }
+    
+    openImageModal(src, alt) {
+        // Create modal
+        const modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.innerHTML = `
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <button class="modal-close"><i class="ri-close-line"></i></button>
+                <img src="${src}" alt="${alt}">
+            </div>
+        `;
+        
+        // Add styles
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        const overlay = modal.querySelector('.modal-overlay');
+        overlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        `;
+        
+        const content = modal.querySelector('.modal-content');
+        content.style.cssText = `
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            animation: zoomIn 0.3s ease;
+        `;
+        
+        const img = modal.querySelector('img');
+        img.style.cssText = `
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        `;
+        
+        const closeBtn = modal.querySelector('.modal-close');
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: #1f2937;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1;
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Close modal
+        const closeModal = () => {
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        };
+        
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+        
+        // ESC key to close
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+    
+    setupParallaxEffects() {
+        if (window.innerWidth > 1024) {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const sectionTop = this.section.offsetTop;
+                const sectionHeight = this.section.offsetHeight;
+                
+                // Only apply parallax when section is in viewport
+                if (scrolled > sectionTop - window.innerHeight && 
+                    scrolled < sectionTop + sectionHeight) {
                     
-                    // Animate philosophy items
-                    this.philosophyItems.forEach((item, index) => {
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'translateY(0)';
-                        }, index * 150);
+                    // Parallax for decoration elements
+                    const decorations = document.querySelectorAll('.decoration-circle, .visual-pattern');
+                    decorations.forEach(decoration => {
+                        const speed = 0.5;
+                        const yPos = -(scrolled * speed);
+                        decoration.style.transform = `translateY(${yPos}px)`;
+                    });
+                    
+                    // Parallax for CTA particles
+                    const particles = document.querySelectorAll('.cta-particle');
+                    particles.forEach((particle, index) => {
+                        const speed = 0.3 * (index + 1);
+                        const yPos = -(scrolled * speed * 0.3);
+                        particle.style.transform = `translate(${yPos}px, ${yPos}px)`;
                     });
                 }
             });
-        }, { threshold: 0.2 });
-        
-        // Setup initial state
-        this.section.style.opacity = '0';
-        this.section.style.transform = 'translateY(30px)';
-        this.section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        
-        this.philosophyItems.forEach(item => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
-        
-        observer.observe(this.section);
+        }
     }
     
-    initPhilosophyEffects() {
-        this.philosophyItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                const icon = item.querySelector('i');
-                if (icon) {
-                    icon.style.transform = 'scale(1.2) rotate(10deg)';
-                    icon.style.transition = 'transform 0.3s ease';
-                }
+    setupImageLazyLoading() {
+        const images = this.section.querySelectorAll('img[data-src]');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        imageObserver.unobserve(img);
+                        
+                        // Add fade in animation
+                        img.addEventListener('load', () => {
+                            img.style.animation = 'fadeIn 0.5s ease';
+                        });
+                    }
+                });
             });
             
-            item.addEventListener('mouseleave', () => {
-                const icon = item.querySelector('i');
-                if (icon) {
-                    icon.style.transform = '';
-                }
+            images.forEach(img => imageObserver.observe(img));
+        } else {
+            // Fallback for older browsers
+            images.forEach(img => {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
             });
-        });
+        }
+    }
+    
+    setupResponsive() {
+        const checkMobile = () => {
+            const isMobile = window.innerWidth <= 767;
+            
+            if (isMobile) {
+                // Simplify animations on mobile
+                this.section.style.animation = 'none';
+                
+                // Remove parallax on mobile
+                window.removeEventListener('scroll', this.setupParallaxEffects);
+            }
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
     }
 }
+
+// CSS Animation Keyframes
+const animationStyles = `
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(60px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        transform: scale(0);
+        animation: rippleEffect 0.6s ease-out;
+    }
+    
+    @keyframes rippleEffect {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+
+// Add animation styles to document
+if (!document.getElementById('about-animations')) {
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'about-animations';
+    styleSheet.textContent = animationStyles;
+    document.head.appendChild(styleSheet);
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const modernAbout = new ModernAboutSection();
+    
+    // Store instance for debugging
+    window.modernAbout = modernAbout;
+    
+    console.log('Modern About Section initialized');
+});
 
 /* ==========================================================================
    TEAM SECTION
