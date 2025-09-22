@@ -3502,7 +3502,6 @@ section {
 /* ==========================================================================
    TESTIMONIALS & INSTAGRAM SECTION STYLES
    ========================================================================== */
-
 /* ==========================================================================
    ELEGANT REVIEWS & INSTAGRAM SECTION STYLES
    ========================================================================== */
@@ -3512,6 +3511,7 @@ section {
     padding: 100px 0;
     background: linear-gradient(135deg, #f8fffe 0%, #ffffff 50%, #f0fdf9 100%);
     overflow: hidden;
+    width: 100%;
 }
 
 .elegant-reviews-instagram-section::before {
@@ -3555,6 +3555,8 @@ section {
     padding: 0 20px;
     position: relative;
     z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Section Header */
@@ -3659,12 +3661,16 @@ section {
     gap: 30px;
     align-items: start;
     margin-bottom: 60px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Tile Styling */
 .elegant-testimonials-tile,
 .elegant-instagram-tile {
     width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Common Wrapper Styling */
@@ -3684,6 +3690,8 @@ section {
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .elegant-testimonials-wrapper:hover,
@@ -4397,10 +4405,20 @@ section {
 @media (max-width: 767px) {
     .elegant-reviews-instagram-section {
         padding: 50px 0;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    .elegant-reviews-container {
+        padding: 0 16px;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     
     .elegant-section-header {
         margin-bottom: 40px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-section-title {
@@ -4416,15 +4434,25 @@ section {
         grid-template-columns: 1fr !important;
         gap: 25px;
         margin-bottom: 40px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
     }
     
     /* Ensure proper order: Reviews first, Instagram second */
     .elegant-testimonials-tile {
         order: 1;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-instagram-tile {
         order: 2;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-testimonials-wrapper,
@@ -4433,7 +4461,10 @@ section {
         border-radius: 16px;
         min-height: 350px;
         width: 100%;
+        max-width: 100%;
         display: block;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
     .elegant-testimonials-title,
@@ -4445,14 +4476,22 @@ section {
     .elegant-instagram-header {
         margin-bottom: 20px;
         padding-bottom: 12px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-testimonial-content {
         padding: 16px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
     }
     
     .elegant-testimonial-text {
         font-size: 0.875rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     .elegant-testimonials-stats {
@@ -4469,22 +4508,40 @@ section {
     .elegant-instagram-highlights {
         flex-direction: column;
         gap: 6px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-highlight-item {
         flex-direction: row;
         justify-content: center;
         padding: 6px 10px;
+        word-wrap: break-word;
     }
     
-    .elegant-instagram-feed-container,
+    .elegant-instagram-feed-container {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        min-height: 220px !important;
+    }
+    
     .elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278 {
         min-height: 220px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
     }
     
     .elegant-bottom-cta {
         padding: 32px 20px;
         border-radius: 16px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
     .elegant-cta-title {
@@ -4498,24 +4555,39 @@ section {
     .elegant-cta-actions {
         flex-direction: column;
         align-items: center;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-cta-btn {
         width: 100%;
         max-width: 280px;
         justify-content: center;
+        box-sizing: border-box;
     }
 }
 
 @media (max-width: 480px) {
     .elegant-reviews-container {
-        padding: 0 16px;
+        padding: 0 12px;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     
     /* Ensure mobile stacking with proper spacing */
     .elegant-content-grid {
         grid-template-columns: 1fr !important;
         gap: 20px;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .elegant-testimonials-tile,
+    .elegant-instagram-tile {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
     }
     
     .elegant-testimonials-wrapper,
@@ -4523,10 +4595,16 @@ section {
         padding: 16px;
         min-height: 320px;
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
     .elegant-testimonial-content {
         padding: 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .elegant-testimonials-controls {
@@ -4537,6 +4615,7 @@ section {
         width: 32px;
         height: 32px;
         font-size: 1rem;
+        flex-shrink: 0;
     }
     
     .elegant-testimonials-stats {
@@ -4549,15 +4628,32 @@ section {
     
     .elegant-instagram-highlights {
         gap: 4px;
+        width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .elegant-highlight-item {
+        min-width: 0;
+        flex: 1;
     }
     
     .elegant-highlight-item span {
         font-size: 0.625rem;
+        word-wrap: break-word;
     }
     
-    .elegant-instagram-feed-container,
+    .elegant-instagram-feed-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        min-height: 180px !important;
+    }
+    
     .elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278 {
         min-height: 180px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
     }
 }
 
