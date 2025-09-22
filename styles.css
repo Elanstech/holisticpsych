@@ -4375,14 +4375,14 @@ section {
 /* ==========================================================================
    CONTACT SECTION
    ========================================================================== */
-.modern-contact-section {
+.holistic-contact-section {
     position: relative;
     padding: 80px 0;
     background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #f8fffe 100%);
     overflow: hidden;
 }
 
-.modern-contact-section::before {
+.holistic-contact-section::before {
     content: '';
     position: absolute;
     top: -30%;
@@ -4391,10 +4391,10 @@ section {
     height: 600px;
     background: radial-gradient(circle, rgba(0, 216, 132, 0.03) 0%, transparent 70%);
     border-radius: 50%;
-    animation: contactFloatBackground 40s ease-in-out infinite;
+    animation: holisticContactFloat 40s ease-in-out infinite;
 }
 
-.modern-contact-section::after {
+.holistic-contact-section::after {
     content: '';
     position: absolute;
     bottom: -30%;
@@ -4403,15 +4403,15 @@ section {
     height: 500px;
     background: radial-gradient(circle, rgba(14, 165, 233, 0.03) 0%, transparent 70%);
     border-radius: 50%;
-    animation: contactFloatBackground 35s ease-in-out infinite reverse;
+    animation: holisticContactFloat 35s ease-in-out infinite reverse;
 }
 
-@keyframes contactFloatBackground {
+@keyframes holisticContactFloat {
     0%, 100% { transform: translate(0, 0) scale(1); }
     50% { transform: translate(25px, -15px) scale(1.05); }
 }
 
-.contact-section-container {
+.holistic-contact-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
@@ -4420,13 +4420,13 @@ section {
 }
 
 /* Section Header */
-.contact-section-header {
+.holistic-contact-header {
     text-align: center;
     margin-bottom: 60px;
-    animation: contactHeaderFadeIn 0.8s ease;
+    animation: holisticContactFadeIn 0.8s ease;
 }
 
-@keyframes contactHeaderFadeIn {
+@keyframes holisticContactFadeIn {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -4437,7 +4437,7 @@ section {
     }
 }
 
-.contact-header-badge {
+.holistic-contact-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4445,7 +4445,7 @@ section {
     margin-bottom: 24px;
 }
 
-.contact-badge-text {
+.holistic-badge-text {
     padding: 10px 28px;
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.1));
     border: 1px solid rgba(0, 216, 132, 0.3);
@@ -4458,7 +4458,7 @@ section {
     backdrop-filter: blur(10px);
 }
 
-.contact-badge-glow {
+.holistic-badge-glow {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -4467,10 +4467,10 @@ section {
     border: 1px solid rgba(0, 216, 132, 0.2);
     border-radius: 50px;
     transform: translate(-50%, -50%);
-    animation: contactBadgePulse 3s ease-in-out infinite;
+    animation: holisticBadgePulse 3s ease-in-out infinite;
 }
 
-@keyframes contactBadgePulse {
+@keyframes holisticBadgePulse {
     0% {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
@@ -4481,7 +4481,7 @@ section {
     }
 }
 
-.contact-section-title {
+.holistic-contact-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.25rem, 5vw, 3.5rem);
     font-weight: 700;
@@ -4490,11 +4490,11 @@ section {
     line-height: 1.2;
 }
 
-.contact-title-main {
+.holistic-title-main {
     display: block;
 }
 
-.contact-title-accent {
+.holistic-title-accent {
     display: block;
     background: linear-gradient(135deg, #00d884, #0ea5e9);
     -webkit-background-clip: text;
@@ -4502,7 +4502,7 @@ section {
     background-clip: text;
 }
 
-.contact-section-subtitle {
+.holistic-contact-subtitle {
     font-size: 1.125rem;
     color: #6b7280;
     max-width: 600px;
@@ -4511,7 +4511,7 @@ section {
 }
 
 /* Contact Content Grid */
-.contact-content-grid {
+.holistic-contact-grid {
     display: grid;
     grid-template-columns: 40% 60%;
     gap: 60px;
@@ -4520,11 +4520,11 @@ section {
 }
 
 /* Contact Information Side */
-.contact-info-side {
+.holistic-info-side {
     position: relative;
 }
 
-.contact-info-wrapper {
+.holistic-info-wrapper {
     background: white;
     border-radius: 24px;
     padding: 40px;
@@ -4535,7 +4535,7 @@ section {
 }
 
 /* Contact Info Header */
-.contact-info-header {
+.holistic-info-header {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -4544,7 +4544,7 @@ section {
     border-bottom: 1px solid rgba(0, 216, 132, 0.1);
 }
 
-.contact-info-icon {
+.holistic-info-icon {
     width: 56px;
     height: 56px;
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.1));
@@ -4557,7 +4557,7 @@ section {
     flex-shrink: 0;
 }
 
-.contact-info-title {
+.holistic-info-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: 700;
@@ -4565,21 +4565,21 @@ section {
     margin: 0 0 4px 0;
 }
 
-.contact-info-subtitle {
+.holistic-info-desc {
     font-size: 0.875rem;
     color: #6b7280;
     margin: 0;
 }
 
 /* Contact Methods */
-.contact-methods {
+.holistic-contact-methods {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin-bottom: 30px;
 }
 
-.contact-method-card {
+.holistic-method-card {
     display: flex;
     align-items: flex-start;
     gap: 16px;
@@ -4591,14 +4591,14 @@ section {
     cursor: pointer;
 }
 
-.contact-method-card:hover {
+.holistic-method-card:hover {
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.05), rgba(14, 165, 233, 0.05));
     border-color: rgba(0, 216, 132, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 216, 132, 0.1);
 }
 
-.contact-method-icon {
+.holistic-method-icon {
     width: 44px;
     height: 44px;
     background: rgba(0, 216, 132, 0.1);
@@ -4612,30 +4612,30 @@ section {
     transition: all 0.3s ease;
 }
 
-.contact-method-card:hover .contact-method-icon {
+.holistic-method-card:hover .holistic-method-icon {
     background: #00d884;
     color: white;
     transform: scale(1.1);
 }
 
-.contact-method-content {
+.holistic-method-content {
     flex-grow: 1;
 }
 
-.contact-method-title {
+.holistic-method-title {
     font-size: 1rem;
     font-weight: 600;
     color: #1f2937;
     margin: 0 0 4px 0;
 }
 
-.contact-method-description {
+.holistic-method-desc {
     font-size: 0.875rem;
     color: #6b7280;
     margin: 0 0 8px 0;
 }
 
-.contact-method-link {
+.holistic-method-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -4646,20 +4646,20 @@ section {
     transition: all 0.3s ease;
 }
 
-.contact-method-link:hover {
+.holistic-method-link:hover {
     color: #0ea5e9;
     gap: 8px;
 }
 
 /* Office Hours */
-.office-hours-section {
+.holistic-office-hours {
     margin-bottom: 30px;
     padding: 24px;
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.02), rgba(14, 165, 233, 0.02));
     border-radius: 16px;
 }
 
-.office-hours-title {
+.holistic-hours-title {
     font-size: 1rem;
     font-weight: 600;
     color: #1f2937;
@@ -4669,7 +4669,7 @@ section {
     gap: 8px;
 }
 
-.office-hours-title::before {
+.holistic-hours-title::before {
     content: '';
     width: 4px;
     height: 16px;
@@ -4677,66 +4677,66 @@ section {
     border-radius: 2px;
 }
 
-.office-hours-grid {
+.holistic-hours-grid {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.office-hours-item {
+.holistic-hours-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
 }
 
-.hours-day {
+.holistic-hours-day {
     font-size: 0.875rem;
     color: #4b5563;
     font-weight: 500;
 }
 
-.hours-time {
+.holistic-hours-time {
     font-size: 0.875rem;
     color: #00d884;
     font-weight: 600;
 }
 
 /* Emergency Contact */
-.emergency-contact {
+.holistic-emergency-contact {
     padding: 20px;
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(220, 38, 38, 0.05));
     border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 16px;
 }
 
-.emergency-header {
+.holistic-emergency-header {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
 }
 
-.emergency-header i {
+.holistic-emergency-header i {
     font-size: 1.25rem;
     color: #ef4444;
 }
 
-.emergency-title {
+.holistic-emergency-title {
     font-size: 1rem;
     font-weight: 600;
     color: #dc2626;
     margin: 0;
 }
 
-.emergency-description {
+.holistic-emergency-desc {
     font-size: 0.875rem;
     color: #4b5563;
     line-height: 1.5;
     margin: 0 0 16px 0;
 }
 
-.emergency-button {
+.holistic-emergency-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -4750,18 +4750,18 @@ section {
     transition: all 0.3s ease;
 }
 
-.emergency-button:hover {
+.holistic-emergency-button:hover {
     background: #dc2626;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
 }
 
 /* Contact Form Side */
-.contact-form-side {
+.holistic-form-side {
     position: relative;
 }
 
-.contact-form-wrapper {
+.holistic-form-wrapper {
     background: white;
     border-radius: 24px;
     padding: 40px;
@@ -4770,7 +4770,7 @@ section {
 }
 
 /* Contact Form Header */
-.contact-form-header {
+.holistic-form-header {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -4779,7 +4779,7 @@ section {
     border-bottom: 1px solid rgba(0, 216, 132, 0.1);
 }
 
-.form-header-icon {
+.holistic-form-icon {
     width: 56px;
     height: 56px;
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.1));
@@ -4792,7 +4792,7 @@ section {
     flex-shrink: 0;
 }
 
-.form-header-title {
+.holistic-form-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: 700;
@@ -4800,14 +4800,14 @@ section {
     margin: 0 0 4px 0;
 }
 
-.form-header-subtitle {
+.holistic-form-desc {
     font-size: 0.875rem;
     color: #6b7280;
     margin: 0;
 }
 
 /* Elfsight Form Container */
-.elfsight-form-container {
+.holistic-elfsight-container {
     margin-bottom: 24px;
     border-radius: 16px;
     overflow: hidden;
@@ -4816,7 +4816,7 @@ section {
     position: relative;
 }
 
-.elfsight-form-container::before {
+.holistic-elfsight-container::before {
     content: 'Loading contact form...';
     position: absolute;
     top: 50%;
@@ -4828,7 +4828,7 @@ section {
 }
 
 /* Elfsight Widget Styling */
-.elfsight-app-b3fedd1c-0470-46b1-b970-3fcc261b0bbb {
+.holistic-elfsight-container .elfsight-app-b3fedd1c-0470-46b1-b970-3fcc261b0bbb {
     border-radius: 16px !important;
     overflow: hidden !important;
     position: relative;
@@ -4838,7 +4838,7 @@ section {
 }
 
 /* Contact Form Footer */
-.contact-form-footer {
+.holistic-form-footer {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -4846,8 +4846,8 @@ section {
     border-top: 1px solid rgba(0, 216, 132, 0.1);
 }
 
-.form-security-notice,
-.form-response-time {
+.holistic-form-security,
+.holistic-form-response {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -4855,23 +4855,23 @@ section {
     color: #6b7280;
 }
 
-.form-security-notice i,
-.form-response-time i {
+.holistic-form-security i,
+.holistic-form-response i {
     font-size: 1rem;
     color: #00d884;
 }
 
 /* Additional Contact Options */
-.additional-contact-options {
+.holistic-contact-options {
     margin-bottom: 60px;
 }
 
-.contact-options-header {
+.holistic-options-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.options-title {
+.holistic-options-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.875rem;
     font-weight: 700;
@@ -4879,19 +4879,19 @@ section {
     margin: 0 0 12px 0;
 }
 
-.options-subtitle {
+.holistic-options-subtitle {
     font-size: 1rem;
     color: #6b7280;
     margin: 0;
 }
 
-.contact-options-grid {
+.holistic-options-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
 }
 
-.contact-option-card {
+.holistic-option-card {
     background: white;
     padding: 30px;
     border-radius: 20px;
@@ -4901,12 +4901,12 @@ section {
     cursor: pointer;
 }
 
-.contact-option-card:hover {
+.holistic-option-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
-.option-icon {
+.holistic-option-icon {
     width: 64px;
     height: 64px;
     margin: 0 auto 20px;
@@ -4920,27 +4920,27 @@ section {
     transition: all 0.3s ease;
 }
 
-.contact-option-card:hover .option-icon {
+.holistic-option-card:hover .holistic-option-icon {
     background: linear-gradient(135deg, #00d884, #0ea5e9);
     color: white;
     transform: scale(1.1);
 }
 
-.option-title {
+.holistic-option-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1f2937;
     margin: 0 0 12px 0;
 }
 
-.option-description {
+.holistic-option-desc {
     font-size: 0.9375rem;
     color: #6b7280;
     line-height: 1.5;
     margin: 0 0 20px 0;
 }
 
-.option-button {
+.holistic-option-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -4955,7 +4955,7 @@ section {
     transition: all 0.3s ease;
 }
 
-.option-button:hover {
+.holistic-option-button:hover {
     background: linear-gradient(135deg, #00d884, #0ea5e9);
     border-color: transparent;
     color: white;
@@ -4965,7 +4965,7 @@ section {
 }
 
 /* Bottom CTA */
-.contact-bottom-cta {
+.holistic-bottom-cta {
     text-align: center;
     padding: 50px 40px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 255, 254, 0.9));
@@ -4977,7 +4977,7 @@ section {
     overflow: hidden;
 }
 
-.contact-bottom-cta::before {
+.holistic-bottom-cta::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -4989,7 +4989,7 @@ section {
     transform: translateX(-50%);
 }
 
-.contact-cta-content {
+.holistic-cta-content {
     position: relative;
     z-index: 2;
     display: flex;
@@ -4998,12 +4998,12 @@ section {
     gap: 40px;
 }
 
-.cta-text-section {
+.holistic-cta-text {
     text-align: left;
     flex-grow: 1;
 }
 
-.cta-title {
+.holistic-cta-title {
     font-family: 'Playfair Display', serif;
     font-size: 1.875rem;
     font-weight: 700;
@@ -5011,20 +5011,20 @@ section {
     margin: 0 0 12px 0;
 }
 
-.cta-subtitle {
+.holistic-cta-subtitle {
     font-size: 1rem;
     color: #6b7280;
     margin: 0;
     max-width: 500px;
 }
 
-.cta-actions {
+.holistic-cta-actions {
     display: flex;
     gap: 16px;
     flex-shrink: 0;
 }
 
-.contact-cta-button {
+.holistic-cta-button {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -5037,131 +5037,139 @@ section {
     white-space: nowrap;
 }
 
-.contact-cta-button.primary {
+.holistic-cta-button.primary {
     background: linear-gradient(135deg, #00d884, #0ea5e9);
     color: white;
     box-shadow: 0 10px 30px rgba(0, 216, 132, 0.3);
 }
 
-.contact-cta-button.primary:hover {
+.holistic-cta-button.primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 15px 40px rgba(0, 216, 132, 0.4);
 }
 
-.contact-cta-button.secondary {
+.holistic-cta-button.secondary {
     background: white;
     color: #00d884;
     border: 2px solid rgba(0, 216, 132, 0.3);
 }
 
-.contact-cta-button.secondary:hover {
+.holistic-cta-button.secondary:hover {
     background: rgba(0, 216, 132, 0.05);
     border-color: #00d884;
     transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(0, 216, 132, 0.15);
 }
 
+/* Ripple Effect */
+@keyframes holisticRipple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .contact-content-grid {
+    .holistic-contact-grid {
         grid-template-columns: 45% 55%;
         gap: 40px;
     }
 }
 
 @media (max-width: 991px) {
-    .modern-contact-section {
+    .holistic-contact-section {
         padding: 60px 0;
     }
     
-    .contact-content-grid {
+    .holistic-contact-grid {
         grid-template-columns: 1fr;
         gap: 40px;
         margin-bottom: 60px;
     }
     
-    .contact-info-wrapper {
+    .holistic-info-wrapper {
         position: static;
     }
     
-    .contact-options-grid {
+    .holistic-options-grid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
     
-    .contact-cta-content {
+    .holistic-cta-content {
         flex-direction: column;
         text-align: center;
         gap: 30px;
     }
     
-    .cta-text-section {
+    .holistic-cta-text {
         text-align: center;
     }
     
-    .cta-actions {
+    .holistic-cta-actions {
         justify-content: center;
     }
 }
 
 @media (max-width: 767px) {
-    .modern-contact-section {
+    .holistic-contact-section {
         padding: 50px 0;
     }
     
-    .contact-section-title {
+    .holistic-contact-title {
         font-size: 2rem;
     }
     
-    .contact-section-subtitle {
+    .holistic-contact-subtitle {
         font-size: 1rem;
     }
     
-    .contact-info-wrapper,
-    .contact-form-wrapper {
+    .holistic-info-wrapper,
+    .holistic-form-wrapper {
         padding: 30px 24px;
         border-radius: 16px;
     }
     
-    .contact-info-header,
-    .contact-form-header {
+    .holistic-info-header,
+    .holistic-form-header {
         flex-direction: column;
         text-align: center;
         gap: 12px;
     }
     
-    .contact-info-title,
-    .form-header-title {
+    .holistic-info-title,
+    .holistic-form-title {
         font-size: 1.25rem;
     }
     
-    .contact-method-card {
+    .holistic-method-card {
         flex-direction: column;
         text-align: center;
         gap: 12px;
     }
     
-    .office-hours-item {
+    .holistic-hours-item {
         flex-direction: column;
         gap: 4px;
         align-items: flex-start;
     }
     
-    .contact-bottom-cta {
+    .holistic-bottom-cta {
         padding: 40px 24px;
         border-radius: 16px;
     }
     
-    .cta-title {
+    .holistic-cta-title {
         font-size: 1.5rem;
     }
     
-    .cta-actions {
+    .holistic-cta-actions {
         flex-direction: column;
         align-items: center;
     }
     
-    .contact-cta-button {
+    .holistic-cta-button {
         width: 100%;
         max-width: 280px;
         justify-content: center;
@@ -5169,32 +5177,32 @@ section {
 }
 
 @media (max-width: 480px) {
-    .contact-section-container {
+    .holistic-contact-container {
         padding: 0 16px;
     }
     
-    .contact-info-wrapper,
-    .contact-form-wrapper {
+    .holistic-info-wrapper,
+    .holistic-form-wrapper {
         padding: 24px 20px;
     }
     
-    .contact-method-card {
+    .holistic-method-card {
         padding: 16px;
     }
     
-    .office-hours-section {
+    .holistic-office-hours {
         padding: 20px;
     }
     
-    .emergency-contact {
+    .holistic-emergency-contact {
         padding: 16px;
     }
     
-    .contact-option-card {
+    .holistic-option-card {
         padding: 24px;
     }
     
-    .contact-bottom-cta {
+    .holistic-bottom-cta {
         padding: 30px 20px;
     }
 }
