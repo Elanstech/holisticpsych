@@ -18,7 +18,7 @@ class App {
         this.about = new CompactAboutSection();
         this.team = new ModernTeamCarousel();
         this.reviews = new TestimonialsCarousel();
-        this.contact = new Contact();
+        this.contact = new HolisticContactSection();
         this.footer = new Footer();
         
         // Global scroll handler
@@ -2617,157 +2617,495 @@ if (typeof module !== 'undefined' && module.exports) {
 /* ==========================================================================
    CONTACT SECTION
    ========================================================================== */
-class Contact {
+class HolisticContactSection {
     constructor() {
-        this.section = document.querySelector('.contact');
-        this.form = document.getElementById('contactForm');
-        this.cards = document.querySelectorAll('.contact-card');
+        // DOM Elements
+        this.section = document.querySelector('.holistic-contact-section');
+        this.methodCards = document.querySelectorAll('.holistic-method-card');
+        this.optionCards = document.querySelectorAll('.holistic-option-card');
+        this.ctaButtons = document.querySelectorAll('.holistic-cta-button');
+        this.optionButtons = document.querySelectorAll('.holistic-option-button');
+        this.emergencyButton = document.querySelector('.holistic-emergency-button');
+        
+        // Animation state
+        this.animatedElements = new Set();
+        this.isInitialized = false;
         
         this.init();
     }
     
     init() {
-        if (!this.section) return;
+        if (!this.section || this.isInitialized) return;
         
-        // Animate on scroll
-        this.initScrollAnimation();
-        
-        // Form handling
-        this.initForm();
-        
-        // Card effects
-        this.initCardEffects();
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            this.setup();
+        }
     }
     
-    initScrollAnimation() {
+    setup() {
+        this.setupIntersectionObserver();
+        this.setupCardInteractions();
+        this.setupButtonEffects();
+        this.setupElfsightMonitoring();
+        this.setupAccessibility();
+        this.isInitialized = true;
+        
+        console.log('Holistic Contact Section initialized successfully');
+    }
+    
+    setupIntersectionObserver() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    
-                    // Animate cards
-                    this.cards.forEach((card, index) => {
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateX(0)';
-                        }, index * 100);
-                    });
-                    
-                    // Animate form
-                    if (this.form) {
-                        setTimeout(() => {
-                            this.form.style.opacity = '1';
-                            this.form.style.transform = 'translateX(0)';
-                        }, 300);
-                    }
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElement(entry.target);
+                    this.animatedElements.add(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
-        
-        // Setup initial state
-        this.section.style.opacity = '0';
-        this.section.style.transform = 'translateY(30px)';
-        this.section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        
-        this.cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateX(-20px)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
         });
         
-        if (this.form) {
-            this.form.style.opacity = '0';
-            this.form.style.transform = 'translateX(20px)';
-            this.form.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        }
+        // Observe elements for animation
+        const elementsToObserve = [
+            '.holistic-contact-header',
+            '.holistic-info-wrapper',
+            '.holistic-form-wrapper',
+            '.holistic-contact-options',
+            '.holistic-bottom-cta'
+        ];
         
-        observer.observe(this.section);
-    }
-    
-    initForm() {
-        if (!this.form) return;
-        
-        this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this.form);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-            
-            console.log('Form submitted:', data);
-            
-            // Show success message
-            this.showMessage('Thank you for your message! We will contact you within 24 hours.');
-            
-            // Reset form
-            this.form.reset();
-        });
-        
-        // Form field animations
-        const inputs = this.form.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                input.style.transform = 'translateY(-2px)';
-                input.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
-            });
-            
-            input.addEventListener('blur', () => {
-                input.style.transform = '';
-                input.style.boxShadow = '';
-            });
+        elementsToObserve.forEach(selector => {
+            const elements = this.section.querySelectorAll(selector);
+            elements.forEach(element => observer.observe(element));
         });
     }
     
-    initCardEffects() {
-        this.cards.forEach(card => {
+    animateElement(element) {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        requestAnimationFrame(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        });
+        
+        // Animate child elements with stagger
+        const childElements = element.querySelectorAll('.holistic-method-card, .holistic-option-card');
+        childElements.forEach((child, index) => {
+            setTimeout(() => {
+                child.style.opacity = '0';
+                child.style.transform = 'translateX(-20px)';
+                child.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                requestAnimationFrame(() => {
+                    child.style.opacity = '1';
+                    child.style.transform = 'translateX(0)';
+                });
+            }, index * 100);
+        });
+    }
+    
+    setupCardInteractions() {
+        // Method cards hover effects
+        this.methodCards.forEach(card => {
+            const icon = card.querySelector('.holistic-method-icon');
+            const link = card.querySelector('.holistic-method-link');
+            
             card.addEventListener('mouseenter', () => {
-                const icon = card.querySelector('i');
                 if (icon) {
-                    icon.style.transform = 'scale(1.2) rotate(10deg)';
-                    icon.style.transition = 'transform 0.3s ease';
+                    icon.style.transform = 'scale(1.1) rotate(5deg)';
+                    icon.style.background = '#00d884';
+                    icon.style.color = 'white';
+                }
+                
+                if (link) {
+                    link.style.gap = '10px';
                 }
             });
             
             card.addEventListener('mouseleave', () => {
-                const icon = card.querySelector('i');
                 if (icon) {
                     icon.style.transform = '';
+                    icon.style.background = '';
+                    icon.style.color = '';
+                }
+                
+                if (link) {
+                    link.style.gap = '';
+                }
+            });
+            
+            // Click handler for entire card
+            card.addEventListener('click', (e) => {
+                if (link && !e.target.closest('a')) {
+                    link.click();
+                }
+            });
+        });
+        
+        // Option cards interactions
+        this.optionCards.forEach(card => {
+            const icon = card.querySelector('.holistic-option-icon');
+            const button = card.querySelector('.holistic-option-button');
+            
+            card.addEventListener('mouseenter', () => {
+                if (icon) {
+                    icon.style.transform = 'scale(1.1) rotate(-5deg)';
+                }
+                
+                this.animateCardElements(card);
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (icon) {
+                    icon.style.transform = '';
+                }
+                
+                this.resetCardElements(card);
+            });
+            
+            // Click handler for entire card
+            card.addEventListener('click', (e) => {
+                if (button && !e.target.closest('a')) {
+                    button.click();
                 }
             });
         });
     }
     
-    showMessage(message) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'form-message';
-        messageDiv.textContent = message;
-        messageDiv.style.cssText = `
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gradient-primary);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
-            animation: slideDown 0.3s ease;
+    animateCardElements(card) {
+        const title = card.querySelector('.holistic-option-title');
+        const desc = card.querySelector('.holistic-option-desc');
+        
+        if (title) {
+            title.style.transform = 'translateY(-2px)';
+            title.style.color = '#00d884';
+        }
+        
+        if (desc) {
+            desc.style.transform = 'translateY(-1px)';
+        }
+    }
+    
+    resetCardElements(card) {
+        const title = card.querySelector('.holistic-option-title');
+        const desc = card.querySelector('.holistic-option-desc');
+        
+        if (title) {
+            title.style.transform = '';
+            title.style.color = '';
+        }
+        
+        if (desc) {
+            desc.style.transform = '';
+        }
+    }
+    
+    setupButtonEffects() {
+        // CTA buttons
+        this.ctaButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.createRippleEffect(e, button);
+            });
+            
+            button.addEventListener('mouseenter', () => {
+                const icon = button.querySelector('i');
+                if (icon) {
+                    icon.style.animation = 'holisticIconBounce 0.6s ease';
+                }
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                const icon = button.querySelector('i');
+                if (icon) {
+                    icon.style.animation = '';
+                }
+            });
+        });
+        
+        // Option buttons
+        this.optionButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.createRippleEffect(e, button);
+            });
+            
+            button.addEventListener('mouseenter', () => {
+                const arrows = button.querySelectorAll('i[class*="arrow"]');
+                arrows.forEach(arrow => {
+                    arrow.style.transform = 'translateX(3px)';
+                });
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                const arrows = button.querySelectorAll('i[class*="arrow"]');
+                arrows.forEach(arrow => {
+                    arrow.style.transform = '';
+                });
+            });
+        });
+        
+        // Emergency button special effects
+        if (this.emergencyButton) {
+            this.emergencyButton.addEventListener('mouseenter', () => {
+                this.emergencyButton.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
+            });
+            
+            this.emergencyButton.addEventListener('mouseleave', () => {
+                this.emergencyButton.style.boxShadow = '';
+            });
+        }
+    }
+    
+    createRippleEffect(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: holisticRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
         `;
         
-        document.body.appendChild(messageDiv);
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
         
         setTimeout(() => {
-            messageDiv.style.animation = 'slideUp 0.3s ease';
-            setTimeout(() => {
-                document.body.removeChild(messageDiv);
-            }, 300);
-        }, 3000);
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
     }
+    
+    setupElfsightMonitoring() {
+        // Monitor Elfsight widget loading
+        const checkElfsightLoad = () => {
+            const elfsightWidget = this.section.querySelector('.elfsight-app-b3fedd1c-0470-46b1-b970-3fcc261b0bbb');
+            const container = this.section.querySelector('.holistic-elfsight-container');
+            
+            if (elfsightWidget && elfsightWidget.children.length > 0) {
+                // Widget has loaded
+                if (container) {
+                    container.style.background = 'transparent';
+                    container.style.minHeight = 'auto';
+                }
+                
+                // Add loaded class for additional styling
+                elfsightWidget.classList.add('holistic-elfsight-loaded');
+                
+                // Animate the loaded form
+                setTimeout(() => {
+                    elfsightWidget.style.opacity = '0';
+                    elfsightWidget.style.transform = 'translateY(20px)';
+                    elfsightWidget.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    
+                    requestAnimationFrame(() => {
+                        elfsightWidget.style.opacity = '1';
+                        elfsightWidget.style.transform = 'translateY(0)';
+                    });
+                }, 100);
+                
+                console.log('Contact form loaded successfully');
+            } else {
+                // Check again in 500ms
+                setTimeout(checkElfsightLoad, 500);
+            }
+        };
+        
+        // Start monitoring after a delay
+        setTimeout(checkElfsightLoad, 1000);
+    }
+    
+    setupAccessibility() {
+        // Add keyboard navigation for cards
+        [...this.methodCards, ...this.optionCards].forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+            
+            // Focus styles
+            card.addEventListener('focus', () => {
+                card.style.outline = '2px solid #00d884';
+                card.style.outlineOffset = '2px';
+            });
+            
+            card.addEventListener('blur', () => {
+                card.style.outline = '';
+                card.style.outlineOffset = '';
+            });
+        });
+        
+        // Enhanced focus states for buttons
+        [...this.ctaButtons, ...this.optionButtons].forEach(button => {
+            button.addEventListener('focus', () => {
+                button.style.boxShadow = '0 0 0 3px rgba(0, 216, 132, 0.3)';
+            });
+            
+            button.addEventListener('blur', () => {
+                button.style.boxShadow = '';
+            });
+        });
+    }
+    
+    // Public methods for external control
+    animateSection() {
+        if (this.section && !this.animatedElements.has(this.section)) {
+            this.animateElement(this.section);
+            this.animatedElements.add(this.section);
+        }
+    }
+    
+    resetAnimations() {
+        this.animatedElements.clear();
+        
+        // Reset all animated elements
+        const elements = this.section.querySelectorAll('[style*="opacity"], [style*="transform"]');
+        elements.forEach(element => {
+            element.style.opacity = '';
+            element.style.transform = '';
+            element.style.transition = '';
+        });
+    }
+    
+    // Cleanup method
+    destroy() {
+        // Remove event listeners and cleanup
+        this.animatedElements.clear();
+        this.isInitialized = false;
+        
+        console.log('Holistic Contact Section destroyed');
+    }
+}
+
+// Add required CSS animations
+const holisticContactStyles = `
+@keyframes holisticIconBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-3px) scale(1.1); }
+}
+
+.holistic-method-card {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-method-icon {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-method-link {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-option-card {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-option-icon {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-option-button {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-cta-button {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-emergency-button {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-option-title,
+.holistic-option-desc {
+    transition: all 0.3s ease !important;
+}
+
+.holistic-elfsight-loaded {
+    animation: holisticFormFadeIn 0.8s ease !important;
+}
+
+@keyframes holisticFormFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+`;
+
+// Add styles if not already present
+if (!document.getElementById('holistic-contact-styles')) {
+    const styleSheet = document.createElement('style');
+    styleSheet.id = 'holistic-contact-styles';
+    styleSheet.textContent = holisticContactStyles;
+    document.head.appendChild(styleSheet);
+}
+
+// Initialize when ready
+let holisticContactInstance = null;
+
+function initHolisticContact() {
+    if (!holisticContactInstance && document.querySelector('.holistic-contact-section')) {
+        holisticContactInstance = new HolisticContactSection();
+        
+        // Store instance for debugging
+        window.holisticContact = holisticContactInstance;
+    }
+}
+
+// Multiple initialization methods
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHolisticContact);
+} else {
+    initHolisticContact();
+}
+
+// Backup initialization
+setTimeout(initHolisticContact, 100);
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !holisticContactInstance) {
+        initHolisticContact();
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (holisticContactInstance) {
+        holisticContactInstance.destroy();
+    }
+});
+
+// Export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = HolisticContactSection;
 }
 
 /* ==========================================================================
