@@ -3503,6 +3503,10 @@ section {
    TESTIMONIALS & INSTAGRAM SECTION STYLES
    ========================================================================== */
 
+/* ==========================================================================
+   ELEGANT REVIEWS & INSTAGRAM SECTION STYLES
+   ========================================================================== */
+
 .elegant-reviews-instagram-section {
     position: relative;
     padding: 100px 0;
@@ -4354,10 +4358,18 @@ section {
         padding: 70px 0;
     }
     
+    /* IMPORTANT: Stack vertically on mobile/tablet */
     .elegant-content-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         gap: 30px;
         margin-bottom: 50px;
+    }
+    
+    /* Ensure both sections are visible */
+    .elegant-testimonials-tile,
+    .elegant-instagram-tile {
+        width: 100%;
+        display: block;
     }
     
     .elegant-testimonials-wrapper,
@@ -4399,11 +4411,29 @@ section {
         font-size: 1rem;
     }
     
+    /* Mobile: Stack reviews on top, Instagram on bottom */
+    .elegant-content-grid {
+        grid-template-columns: 1fr !important;
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    
+    /* Ensure proper order: Reviews first, Instagram second */
+    .elegant-testimonials-tile {
+        order: 1;
+    }
+    
+    .elegant-instagram-tile {
+        order: 2;
+    }
+    
     .elegant-testimonials-wrapper,
     .elegant-instagram-wrapper {
         padding: 20px;
         border-radius: 16px;
         min-height: 350px;
+        width: 100%;
+        display: block;
     }
     
     .elegant-testimonials-title,
@@ -4482,10 +4512,17 @@ section {
         padding: 0 16px;
     }
     
+    /* Ensure mobile stacking with proper spacing */
+    .elegant-content-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    
     .elegant-testimonials-wrapper,
     .elegant-instagram-wrapper {
         padding: 16px;
         min-height: 320px;
+        width: 100%;
     }
     
     .elegant-testimonial-content {
