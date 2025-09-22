@@ -17,7 +17,7 @@ class App {
         this.services = new ServicesCarousel();
         this.about = new CompactAboutSection();
         this.team = new ModernTeamCarousel();
-        this.reviews = new TestimonialsCarousel();
+        this.reviews = new ElegantReviewsInstagramSection();
         this.contact = new HolisticContactSection();
         this.footer = new Footer();
         
@@ -1893,20 +1893,25 @@ if (typeof module !== 'undefined' && module.exports) {
 /* ==========================================================================
    REVIEWS SECTION
    ========================================================================== */
-class TestimonialsCarousel {
+
+class ElegantReviewsInstagramSection {
     constructor() {
         // DOM Elements
-        this.section = document.querySelector('.testimonials-instagram-section');
-        this.track = document.querySelector('.testimonials-track');
-        this.cards = document.querySelectorAll('.testimonial-card');
-        this.prevBtn = document.querySelector('.testimonials-nav-prev');
-        this.nextBtn = document.querySelector('.testimonials-nav-next');
-        this.dots = document.querySelectorAll('.testimonials-dot');
-        this.trackContainer = document.querySelector('.testimonials-track-container');
+        this.section = document.querySelector('.elegant-reviews-instagram-section');
+        this.testimonialTrack = document.querySelector('.elegant-testimonials-track');
+        this.testimonialCards = document.querySelectorAll('.elegant-testimonial-card');
+        this.prevBtn = document.querySelector('.elegant-nav-prev');
+        this.nextBtn = document.querySelector('.elegant-nav-next');
+        this.indicators = document.querySelectorAll('.elegant-indicator');
+        this.ctaButtons = document.querySelectorAll('.elegant-cta-btn');
+        this.googleReviewsLink = document.querySelector('.elegant-google-reviews-link');
+        this.instagramFollowBtn = document.querySelector('.elegant-instagram-follow-btn');
+        this.instagramFeedContainer = document.querySelector('.elegant-instagram-feed-container');
+        this.instagramLoading = document.querySelector('.elegant-instagram-loading');
         
-        // Carousel State
+        // Testimonials State
         this.currentIndex = 0;
-        this.totalCards = this.cards.length;
+        this.totalTestimonials = this.testimonialCards.length;
         this.autoPlayInterval = null;
         this.autoPlayDelay = 5000;
         this.isPlaying = true;
@@ -1918,32 +1923,113 @@ class TestimonialsCarousel {
         this.currentX = 0;
         this.threshold = 50;
         
-        // Initialize
+        // Animation State
+        this.animatedElements = new Set();
+        this.isInitialized = false;
+        
         this.init();
     }
     
     init() {
-        if (!this.section || !this.track || this.totalCards === 0) return;
+        if (!this.section || this.isInitialized) return;
+        
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            this.setup();
+        }
+    }
+    
+    setup() {
+        this.setupIntersectionObserver();
+        this.setupTestimonialsCarousel();
+        this.setupInstagramFeed();
+        this.setupButtonInteractions();
+        this.setupAccessibility();
+        this.setupStarAnimations();
+        this.isInitialized = true;
+        
+        console.log('Elegant Reviews & Instagram Section initialized successfully');
+    }
+    
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElement(entry.target);
+                    this.animatedElements.add(entry.target);
+                    
+                    // Start auto-play when section is visible
+                    if (entry.target === this.section) {
+                        this.startAutoPlay();
+                    }
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '50px'
+        });
+        
+        // Observe elements for animation
+        const elementsToObserve = [
+            '.elegant-section-header',
+            '.elegant-testimonials-wrapper',
+            '.elegant-instagram-wrapper',
+            '.elegant-bottom-cta'
+        ];
+        
+        elementsToObserve.forEach(selector => {
+            const elements = this.section.querySelectorAll(selector);
+            elements.forEach(element => observer.observe(element));
+        });
+        
+        // Observe the main section
+        if (this.section) {
+            observer.observe(this.section);
+        }
+    }
+    
+    animateElement(element) {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        
+        requestAnimationFrame(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        });
+        
+        // Animate child elements with stagger
+        const childElements = element.querySelectorAll('.elegant-testimonial-card, .elegant-highlight-item');
+        childElements.forEach((child, index) => {
+            setTimeout(() => {
+                child.style.opacity = '0';
+                child.style.transform = 'translateX(-20px)';
+                child.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                requestAnimationFrame(() => {
+                    child.style.opacity = '1';
+                    child.style.transform = 'translateX(0)';
+                });
+            }, index * 100);
+        });
+    }
+    
+    setupTestimonialsCarousel() {
+        if (!this.testimonialTrack || this.totalTestimonials === 0) return;
         
         // Setup event listeners
-        this.setupEventListeners();
-        
-        // Setup intersection observer
-        this.setupIntersectionObserver();
+        this.setupCarouselControls();
+        this.setupTouchEvents();
+        this.setupHoverPause();
         
         // Initialize carousel
         this.updateCarousel();
-        
-        // Start auto-play
-        this.startAutoPlay();
-        
-        // Setup star animations
-        this.setupStarAnimations();
-        
-        console.log('Testimonials Carousel initialized successfully');
+        this.updateIndicators();
     }
     
-    setupEventListeners() {
+    setupCarouselControls() {
         // Navigation buttons
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', () => this.slidePrev());
@@ -1953,50 +2039,12 @@ class TestimonialsCarousel {
             this.nextBtn.addEventListener('click', () => this.slideNext());
         }
         
-        // Pagination dots
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.goToSlide(index));
+        // Indicators
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => this.goToSlide(index));
         });
-        
-        // Hover pause
-        if (this.trackContainer) {
-            this.trackContainer.addEventListener('mouseenter', () => this.handleMouseEnter());
-            this.trackContainer.addEventListener('mouseleave', () => this.handleMouseLeave());
-        }
-        
-        // Touch/Swipe events
-        this.setupTouchEvents();
         
         // Keyboard navigation
-        this.setupKeyboardNavigation();
-        
-        // Card interactions
-        this.setupCardInteractions();
-    }
-    
-    setupTouchEvents() {
-        if (!this.trackContainer) return;
-        
-        // Touch events
-        this.trackContainer.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        this.trackContainer.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
-        this.trackContainer.addEventListener('touchend', (e) => this.handleTouchEnd(e));
-        
-        // Mouse events for desktop dragging
-        this.trackContainer.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-        this.trackContainer.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-        this.trackContainer.addEventListener('mouseup', (e) => this.handleMouseUp(e));
-        this.trackContainer.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
-        
-        // Prevent context menu on long press
-        this.trackContainer.addEventListener('contextmenu', (e) => {
-            if (this.isDragging) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    setupKeyboardNavigation() {
         document.addEventListener('keydown', (e) => {
             if (!this.isElementInViewport()) return;
             
@@ -2017,53 +2065,46 @@ class TestimonialsCarousel {
         });
     }
     
-    setupCardInteractions() {
-        this.cards.forEach((card, index) => {
-            // Prevent image dragging
-            const images = card.querySelectorAll('img');
-            images.forEach(img => {
-                img.addEventListener('dragstart', (e) => e.preventDefault());
-            });
-            
-            // Enhanced hover effects
-            card.addEventListener('mouseenter', () => this.enhanceCardHover(card));
-            card.addEventListener('mouseleave', () => this.resetCardHover(card));
+    setupTouchEvents() {
+        if (!this.testimonialTrack) return;
+        
+        // Touch events for mobile swipe
+        this.testimonialTrack.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.testimonialTrack.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.testimonialTrack.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        
+        // Mouse drag events for desktop
+        this.testimonialTrack.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+        this.testimonialTrack.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.testimonialTrack.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+        this.testimonialTrack.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
+        
+        // Prevent context menu
+        this.testimonialTrack.addEventListener('contextmenu', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+            }
         });
     }
     
-    setupIntersectionObserver() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2
-        };
+    setupHoverPause() {
+        const testimonialsWrapper = document.querySelector('.elegant-testimonials-wrapper');
+        if (!testimonialsWrapper) return;
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateEntrance();
-                    this.startAutoPlay();
-                } else {
-                    this.pauseAutoPlay();
-                }
-            });
-        }, observerOptions);
+        testimonialsWrapper.addEventListener('mouseenter', () => {
+            this.isHovering = true;
+            this.pauseAutoPlay();
+        });
         
-        if (this.section) {
-            observer.observe(this.section);
-        }
-    }
-    
-    setupStarAnimations() {
-        this.cards.forEach(card => {
-            const stars = card.querySelectorAll('.testimonial-stars i');
-            stars.forEach((star, index) => {
-                star.style.setProperty('--star-index', index);
-            });
+        testimonialsWrapper.addEventListener('mouseleave', () => {
+            this.isHovering = false;
+            if (this.isPlaying) {
+                this.startAutoPlay();
+            }
         });
     }
     
-    // Touch Handlers
+    // Touch/Mouse Event Handlers
     handleTouchStart(e) {
         this.startX = e.touches[0].clientX;
         this.pauseAutoPlay();
@@ -2094,19 +2135,13 @@ class TestimonialsCarousel {
             }
         }
         
-        this.startX = 0;
-        this.currentX = 0;
-        
-        if (!this.isHovering) {
-            this.startAutoPlay();
-        }
+        this.resetTouch();
     }
     
-    // Mouse Drag Handlers
     handleMouseDown(e) {
         this.isDragging = true;
         this.startX = e.clientX;
-        this.trackContainer.style.cursor = 'grabbing';
+        this.testimonialTrack.style.cursor = 'grabbing';
         this.pauseAutoPlay();
     }
     
@@ -2121,7 +2156,7 @@ class TestimonialsCarousel {
         if (!this.isDragging) return;
         
         this.isDragging = false;
-        this.trackContainer.style.cursor = '';
+        this.testimonialTrack.style.cursor = '';
         
         const diff = this.startX - this.currentX;
         
@@ -2133,23 +2168,27 @@ class TestimonialsCarousel {
             }
         }
         
+        this.resetTouch();
+    }
+    
+    resetTouch() {
         this.startX = 0;
         this.currentX = 0;
         
-        if (!this.isHovering) {
+        if (!this.isHovering && this.isPlaying) {
             this.startAutoPlay();
         }
     }
     
     // Navigation Methods
     slidePrev() {
-        this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.totalCards - 1;
+        this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.totalTestimonials - 1;
         this.updateCarousel();
         this.resetAutoPlay();
     }
     
     slideNext() {
-        this.currentIndex = this.currentIndex < this.totalCards - 1 ? this.currentIndex + 1 : 0;
+        this.currentIndex = this.currentIndex < this.totalTestimonials - 1 ? this.currentIndex + 1 : 0;
         this.updateCarousel();
         this.resetAutoPlay();
     }
@@ -2161,27 +2200,27 @@ class TestimonialsCarousel {
     }
     
     updateCarousel() {
-        if (!this.track) return;
+        if (!this.testimonialTrack) return;
         
         // Calculate translation
         const translateX = -(this.currentIndex * 100);
         
-        // Apply translation
-        this.track.style.transform = `translateX(${translateX}%)`;
+        // Apply translation with smooth transition
+        this.testimonialTrack.style.transform = `translateX(${translateX}%)`;
         
-        // Update pagination
-        this.updatePagination();
+        // Update indicators
+        this.updateIndicators();
         
         // Update navigation buttons
         this.updateNavigationButtons();
         
-        // Animate current card
-        this.animateCurrentCard();
+        // Animate current testimonial
+        this.animateCurrentTestimonial();
     }
     
-    updatePagination() {
-        this.dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
+    updateIndicators() {
+        this.indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === this.currentIndex);
         });
     }
     
@@ -2191,27 +2230,25 @@ class TestimonialsCarousel {
         if (this.nextBtn) this.nextBtn.disabled = false;
     }
     
-    animateCurrentCard() {
-        this.cards.forEach((card, index) => {
+    animateCurrentTestimonial() {
+        this.testimonialCards.forEach((card, index) => {
+            const content = card.querySelector('.elegant-testimonial-content');
+            const stars = card.querySelectorAll('.elegant-rating-stars i');
+            
             if (index === this.currentIndex) {
-                card.classList.add('active');
-                
-                // Animate stars in current card
-                const stars = card.querySelectorAll('.testimonial-stars i');
-                stars.forEach((star, starIndex) => {
-                    setTimeout(() => {
-                        star.style.animation = `testimonialStarGlow 2s ease-in-out infinite`;
+                // Animate current testimonial
+                setTimeout(() => {
+                    if (content) {
+                        content.style.animation = 'elegantTestimonialFadeIn 0.6s ease forwards';
+                    }
+                    
+                    // Animate stars
+                    stars.forEach((star, starIndex) => {
+                        star.style.setProperty('--star-index', starIndex);
+                        star.style.animation = `elegantStarGlow 2s ease-in-out infinite`;
                         star.style.animationDelay = `${starIndex * 0.1}s`;
-                    }, 300);
-                });
-                
-                // Animate text appearance
-                const content = card.querySelector('.testimonial-content');
-                if (content) {
-                    content.style.animation = 'testimonialContentFadeIn 0.6s ease forwards';
-                }
-            } else {
-                card.classList.remove('active');
+                    });
+                }, 200);
             }
         });
     }
@@ -2250,70 +2287,190 @@ class TestimonialsCarousel {
         }
     }
     
-    handleMouseEnter() {
-        this.isHovering = true;
-        this.pauseAutoPlay();
+    setupInstagramFeed() {
+        this.monitorElfsightLoad();
+        this.setupInstagramInteractions();
     }
     
-    handleMouseLeave() {
-        this.isHovering = false;
-        if (this.isPlaying) {
-            this.startAutoPlay();
+    monitorElfsightLoad() {
+        const checkElfsightLoad = () => {
+            const elfsightWidget = this.section.querySelector('.elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278');
+            
+            if (elfsightWidget && elfsightWidget.children.length > 0) {
+                // Widget has loaded
+                if (this.instagramLoading) {
+                    this.instagramLoading.style.opacity = '0';
+                    this.instagramLoading.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        this.instagramLoading.style.display = 'none';
+                    }, 300);
+                }
+                
+                // Animate the loaded feed
+                elfsightWidget.style.opacity = '0';
+                elfsightWidget.style.transform = 'translateY(20px)';
+                elfsightWidget.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                
+                setTimeout(() => {
+                    elfsightWidget.style.opacity = '1';
+                    elfsightWidget.style.transform = 'translateY(0)';
+                }, 100);
+                
+                console.log('Instagram feed loaded successfully');
+            } else {
+                // Check again in 500ms
+                setTimeout(checkElfsightLoad, 500);
+            }
+        };
+        
+        // Start monitoring after a delay
+        setTimeout(checkElfsightLoad, 1000);
+    }
+    
+    setupInstagramInteractions() {
+        // Instagram follow button
+        if (this.instagramFollowBtn) {
+            this.instagramFollowBtn.addEventListener('mouseenter', () => {
+                this.instagramFollowBtn.style.transform = 'translateY(-2px) scale(1.05)';
+                this.instagramFollowBtn.style.boxShadow = '0 15px 35px rgba(131, 58, 180, 0.4)';
+            });
+            
+            this.instagramFollowBtn.addEventListener('mouseleave', () => {
+                this.instagramFollowBtn.style.transform = '';
+                this.instagramFollowBtn.style.boxShadow = '';
+            });
+            
+            this.instagramFollowBtn.addEventListener('click', (e) => {
+                this.createRippleEffect(e, this.instagramFollowBtn);
+            });
+        }
+        
+        // Instagram highlights
+        const highlightItems = this.section.querySelectorAll('.elegant-highlight-item');
+        highlightItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const icon = item.querySelector('i');
+                if (icon) {
+                    icon.style.animation = 'elegantIconBounce 0.6s ease';
+                }
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                const icon = item.querySelector('i');
+                if (icon) {
+                    icon.style.animation = '';
+                }
+            });
+        });
+    }
+    
+    setupButtonInteractions() {
+        // CTA buttons
+        this.ctaButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.createRippleEffect(e, button);
+            });
+            
+            button.addEventListener('mouseenter', () => {
+                const icon = button.querySelector('i');
+                if (icon) {
+                    icon.style.animation = 'elegantIconBounce 0.6s ease';
+                }
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                const icon = button.querySelector('i');
+                if (icon) {
+                    icon.style.animation = '';
+                }
+            });
+        });
+        
+        // Google reviews link
+        if (this.googleReviewsLink) {
+            this.googleReviewsLink.addEventListener('mouseenter', () => {
+                this.googleReviewsLink.style.transform = 'translateY(-2px)';
+                const arrow = this.googleReviewsLink.querySelector('i[class*="external"]');
+                if (arrow) {
+                    arrow.style.transform = 'scale(1.2)';
+                }
+            });
+            
+            this.googleReviewsLink.addEventListener('mouseleave', () => {
+                this.googleReviewsLink.style.transform = '';
+                const arrow = this.googleReviewsLink.querySelector('i[class*="external"]');
+                if (arrow) {
+                    arrow.style.transform = '';
+                }
+            });
         }
     }
     
-    // Animation Methods
-    animateEntrance() {
-        // Animate section header
-        const header = this.section.querySelector('.testimonials-section-header');
-        if (header) {
-            header.style.animation = 'testimonialsFadeInUp 0.8s ease';
-        }
-        
-        // Animate carousel wrapper
-        const wrapper = this.section.querySelector('.testimonials-carousel-wrapper');
-        if (wrapper) {
-            setTimeout(() => {
-                wrapper.style.animation = 'testimonialsFadeInUp 0.8s ease';
-            }, 200);
-        }
-        
-        // Animate Instagram wrapper
-        const instagramWrapper = this.section.querySelector('.instagram-wrapper');
-        if (instagramWrapper) {
-            setTimeout(() => {
-                instagramWrapper.style.animation = 'testimonialsFadeInUp 0.8s ease';
-            }, 400);
-        }
-        
-        // Animate current card
-        this.animateCurrentCard();
+    setupStarAnimations() {
+        // Set CSS custom properties for star animation delays
+        this.testimonialCards.forEach(card => {
+            const stars = card.querySelectorAll('.elegant-rating-stars i');
+            stars.forEach((star, index) => {
+                star.style.setProperty('--star-index', index);
+            });
+        });
     }
     
-    enhanceCardHover(card) {
-        const author = card.querySelector('.testimonial-author');
-        if (author) {
-            author.style.transform = 'translateY(-2px)';
+    setupAccessibility() {
+        // Add ARIA labels and keyboard support
+        this.indicators.forEach((indicator, index) => {
+            indicator.setAttribute('role', 'button');
+            indicator.setAttribute('aria-label', `Go to testimonial ${index + 1}`);
+            indicator.setAttribute('tabindex', '0');
+            
+            indicator.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.goToSlide(index);
+                }
+            });
+        });
+        
+        // Navigation buttons accessibility
+        if (this.prevBtn) {
+            this.prevBtn.setAttribute('aria-label', 'Previous testimonial');
         }
         
-        const verified = card.querySelector('.google-verified');
-        if (verified) {
-            verified.style.transform = 'scale(1.05)';
-            verified.style.background = 'rgba(0, 216, 132, 0.1)';
+        if (this.nextBtn) {
+            this.nextBtn.setAttribute('aria-label', 'Next testimonial');
         }
     }
     
-    resetCardHover(card) {
-        const author = card.querySelector('.testimonial-author');
-        if (author) {
-            author.style.transform = '';
-        }
+    createRippleEffect(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
         
-        const verified = card.querySelector('.google-verified');
-        if (verified) {
-            verified.style.transform = '';
-            verified.style.background = '';
-        }
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: elegantRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
     }
     
     isElementInViewport() {
@@ -2328,290 +2485,158 @@ class TestimonialsCarousel {
         );
     }
     
-    // Cleanup
+    // Public methods for external control
+    getCurrentSlide() {
+        return this.currentIndex;
+    }
+    
+    getTotalSlides() {
+        return this.totalTestimonials;
+    }
+    
+    setAutoPlayDelay(delay) {
+        this.autoPlayDelay = delay;
+        this.resetAutoPlay();
+    }
+    
+    // Cleanup method
     destroy() {
         this.pauseAutoPlay();
+        this.animatedElements.clear();
+        this.isInitialized = false;
         
         // Remove event listeners
-        document.removeEventListener('keydown', this.setupKeyboardNavigation);
+        document.removeEventListener('keydown', this.setupCarouselControls);
         
-        console.log('Testimonials Carousel destroyed');
-    }
-}
-
-// Instagram Feed Enhancer
-class InstagramFeedEnhancer {
-    constructor() {
-        this.container = document.querySelector('.instagram-feed-container');
-        this.followBtn = document.querySelector('.instagram-follow-btn');
-        
-        this.init();
-    }
-    
-    init() {
-        this.setupInstagramInteractions();
-        this.monitorElfsightLoad();
-    }
-    
-    setupInstagramInteractions() {
-        // Enhanced follow button
-        if (this.followBtn) {
-            this.followBtn.addEventListener('click', (e) => {
-                this.createRipple(e, this.followBtn);
-            });
-            
-            this.followBtn.addEventListener('mouseenter', () => {
-                this.followBtn.style.transform = 'translateY(-2px) scale(1.05)';
-            });
-            
-            this.followBtn.addEventListener('mouseleave', () => {
-                this.followBtn.style.transform = '';
-            });
-        }
-    }
-    
-    monitorElfsightLoad() {
-        // Monitor when Elfsight widget loads
-        const checkElfsightLoad = () => {
-            const elfsightWidget = document.querySelector('.elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278');
-            
-            if (elfsightWidget && elfsightWidget.children.length > 0) {
-                // Widget has loaded
-                if (this.container) {
-                    this.container.style.background = 'transparent';
-                }
-                
-                // Add loaded class for additional styling
-                elfsightWidget.classList.add('elfsight-loaded');
-                
-                console.log('Instagram feed loaded successfully');
-            } else {
-                // Check again in 500ms
-                setTimeout(checkElfsightLoad, 500);
-            }
-        };
-        
-        // Start monitoring
-        setTimeout(checkElfsightLoad, 1000);
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: testimonialsRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
-    }
-}
-
-// CTA Button Enhancer
-class TestimonialsCTAEnhancer {
-    constructor() {
-        this.ctaButtons = document.querySelectorAll('.cta-btn');
-        this.init();
-    }
-    
-    init() {
-        this.setupCTAInteractions();
-    }
-    
-    setupCTAInteractions() {
-        this.ctaButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.createRipple(e, button);
-            });
-            
-            button.addEventListener('mouseenter', () => {
-                const icon = button.querySelector('i');
-                if (icon) {
-                    icon.style.animation = 'testimonialsIconBounce 0.5s ease';
-                }
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                const icon = button.querySelector('i');
-                if (icon) {
-                    icon.style.animation = '';
-                }
-            });
-        });
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: testimonialsRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
+        console.log('Elegant Reviews & Instagram Section destroyed');
     }
 }
 
 // Add required CSS animations
-const testimonialsStyles = `
-@keyframes testimonialsRipple {
+const elegantReviewsStyles = `
+@keyframes elegantRipple {
     to {
         transform: scale(4);
         opacity: 0;
     }
 }
 
-@keyframes testimonialContentFadeIn {
+@keyframes elegantTestimonialFadeIn {
     from {
         opacity: 0.7;
-        transform: translateY(10px);
+        transform: translateY(10px) scale(0.98);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-@keyframes testimonialsIconBounce {
+@keyframes elegantIconBounce {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.1); }
+    50% { transform: translateY(-4px) scale(1.1); }
 }
 
-.testimonials-track {
+.elegant-testimonials-track {
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.testimonial-content {
+.elegant-testimonial-content {
     transition: all 0.3s ease !important;
 }
 
-.testimonials-nav-btn {
+.elegant-nav-btn {
     transition: all 0.3s ease !important;
 }
 
-.testimonials-dot {
+.elegant-indicator {
     transition: all 0.3s ease !important;
 }
 
-.instagram-follow-btn {
+.elegant-cta-btn {
     transition: all 0.3s ease !important;
 }
 
-.cta-btn {
+.elegant-instagram-follow-btn {
     transition: all 0.3s ease !important;
 }
 
-.google-verified {
+.elegant-google-reviews-link {
     transition: all 0.3s ease !important;
 }
 
-.testimonial-author {
+.elegant-highlight-item {
     transition: all 0.3s ease !important;
 }
 
-/* Elfsight widget enhancements */
-.elfsight-loaded {
-    animation: testimonialContentFadeIn 0.8s ease !important;
+.elegant-highlight-item i {
+    transition: all 0.3s ease !important;
+}
+
+.elegant-instagram-loading {
+    transition: all 0.3s ease !important;
+}
+
+.elegant-testimonials-wrapper,
+.elegant-instagram-wrapper {
+    transition: all 0.4s ease !important;
+}
+
+.elegant-section-header,
+.elegant-bottom-cta {
+    transition: all 0.8s ease !important;
 }
 `;
 
 // Add styles if not already present
-if (!document.getElementById('testimonials-styles')) {
+if (!document.getElementById('elegant-reviews-styles')) {
     const styleSheet = document.createElement('style');
-    styleSheet.id = 'testimonials-styles';
-    styleSheet.textContent = testimonialsStyles;
+    styleSheet.id = 'elegant-reviews-styles';
+    styleSheet.textContent = elegantReviewsStyles;
     document.head.appendChild(styleSheet);
 }
 
 // Initialize when ready
-let testimonialsCarouselInstance = null;
-let instagramEnhancerInstance = null;
-let ctaEnhancerInstance = null;
+let elegantReviewsInstance = null;
 
-function initTestimonialsSection() {
-    if (!testimonialsCarouselInstance && document.querySelector('.testimonials-instagram-section')) {
-        testimonialsCarouselInstance = new TestimonialsCarousel();
-        instagramEnhancerInstance = new InstagramFeedEnhancer();
-        ctaEnhancerInstance = new TestimonialsCTAEnhancer();
+function initElegantReviewsInstagram() {
+    if (!elegantReviewsInstance && document.querySelector('.elegant-reviews-instagram-section')) {
+        elegantReviewsInstance = new ElegantReviewsInstagramSection();
         
-        // Store instances for debugging
-        window.testimonialsCarousel = testimonialsCarouselInstance;
-        window.instagramEnhancer = instagramEnhancerInstance;
-        window.ctaEnhancer = ctaEnhancerInstance;
+        // Store instance for debugging
+        window.elegantReviewsInstagram = elegantReviewsInstance;
     }
 }
 
 // Multiple initialization methods
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTestimonialsSection);
+    document.addEventListener('DOMContentLoaded', initElegantReviewsInstagram);
 } else {
-    initTestimonialsSection();
+    initElegantReviewsInstagram();
 }
 
 // Backup initialization
-setTimeout(initTestimonialsSection, 100);
+setTimeout(initElegantReviewsInstagram, 100);
 
 // Handle page visibility changes
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden && testimonialsCarouselInstance) {
-        testimonialsCarouselInstance.pauseAutoPlay();
-    } else if (!document.hidden && testimonialsCarouselInstance) {
-        testimonialsCarouselInstance.startAutoPlay();
+    if (document.hidden && elegantReviewsInstance) {
+        elegantReviewsInstance.pauseAutoPlay();
+    } else if (!document.hidden && elegantReviewsInstance) {
+        elegantReviewsInstance.startAutoPlay();
     }
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (testimonialsCarouselInstance) {
-        testimonialsCarouselInstance.destroy();
+    if (elegantReviewsInstance) {
+        elegantReviewsInstance.destroy();
     }
 });
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TestimonialsCarousel, InstagramFeedEnhancer, TestimonialsCTAEnhancer };
+    module.exports = ElegantReviewsInstagramSection;
 }
 
 /* ==========================================================================
