@@ -1551,101 +1551,6 @@ section {
     50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
 }
 
-/* CTA Section */
-.services-cta {
-    text-align: center;
-    padding: 60px 40px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
-    border: 1px solid rgba(0, 216, 132, 0.1);
-    border-radius: 30px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-.services-cta::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(0, 216, 132, 0.03) 0%, transparent 60%);
-    animation: rotateSlow 30s linear infinite;
-}
-
-@keyframes rotateSlow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.cta-content {
-    position: relative;
-    z-index: 1;
-}
-
-.cta-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #000000;
-    margin-bottom: 12px;
-}
-
-cta-subtitle {
-    font-size: 1rem;
-    color: #000000;
-    margin-bottom: 32px;
-}
-
-.cta-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 32px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.cta-btn i {
-    font-size: 1.125rem;
-}
-
-.cta-btn-primary {
-    background: linear-gradient(135deg, #00d884, #0ea5e9);
-    color: white;
-    box-shadow: 0 10px 30px rgba(0, 216, 132, 0.3);
-}
-
-.cta-btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(0, 216, 132, 0.4);
-}
-
-.cta-btn-secondary {
-    background: white;
-    color: #00d884;
-    border: 2px solid rgba(0, 216, 132, 0.3);
-}
-
-.cta-btn-secondary:hover {
-    background: rgba(0, 216, 132, 0.05);
-    border-color: #00d884;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 216, 132, 0.15);
-}
-
 /* Responsive Design */
 @media (max-width: 1200px) {
     .service-carousel-card {
@@ -1674,10 +1579,6 @@ cta-subtitle {
     
     .carousel-nav-next {
         right: -24px;
-    }
-    
-    .services-cta {
-        padding: 40px 30px;
     }
 }
 
@@ -1777,10 +1678,6 @@ cta-subtitle {
 
 /* ==========================================================================
    MODERN ABOUT US SECTION STYLES
-   ========================================================================== */
-
-/* ==========================================================================
-   COMPACT ABOUT US SECTION STYLES - WITH FIXED LEADER IMAGES
    ========================================================================== */
 
 .about-modern-compact {
