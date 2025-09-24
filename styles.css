@@ -741,17 +741,31 @@ section {
 }
 
 .glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-backdrop);
-    -webkit-backdrop-filter: var(--glass-backdrop);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: var(--radius-2xl);
     padding: var(--space-xl) var(--space-lg);
-    box-shadow: var(--shadow-glass);
+    box-shadow: 
+        0 8px 32px rgba(31, 38, 135, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
     position: relative;
     overflow: hidden;
     display: inline-block;
     max-width: 100%;
+}
+
+.glass-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-2xl);
+    z-index: -1;
 }
 
 .hero-title {
@@ -760,6 +774,10 @@ section {
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: var(--space-xl);
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #1f2937;
 }
 
 .title-line {
@@ -813,10 +831,27 @@ section {
     gap: var(--space-2xl);
     margin-top: var(--space-2xl);
     padding: var(--space-xl);
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-2xl);
+    box-shadow: 
+        0 8px 32px rgba(31, 38, 135, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    position: relative;
+}
+
+.signatures-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-2xl);
+    z-index: -1;
 }
 
 .signature-item {
@@ -832,20 +867,26 @@ section {
     color: var(--primary-green);
     margin-bottom: var(--space-sm);
     white-space: nowrap;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 1px 2px rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
 }
 
 .signature-title {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--gray-700);
+    color: #374151;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .signature-credentials {
     font-size: 0.8125rem;
-    color: var(--gray-600);
+    color: #4b5563;
     font-style: italic;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
 }
 
 .signature-divider {
