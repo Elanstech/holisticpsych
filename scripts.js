@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HOLISTIC PSYCHOLOGICAL SERVICES - CLEAN JAVASCRIPT
+   HOLISTIC PSYCHOLOGICAL SERVICES - COMPREHENSIVE JAVASCRIPT
    ========================================================================== */
 
 // Global App Controller
@@ -20,6 +20,7 @@ class App {
         this.reviews = new ElegantReviewsInstagramSection();
         this.contact = new HolisticContactSection();
         this.footer = new Footer();
+        this.popupSystem = new PopupModalSystem();
         
         // Global scroll handler
         this.initScrollHandling();
@@ -56,6 +57,893 @@ class App {
                 });
             });
         }
+    }
+}
+
+/* ==========================================================================
+   POPUP MODAL SYSTEM
+   ========================================================================== */
+class PopupModalSystem {
+    constructor() {
+        this.overlay = document.getElementById('popupOverlay');
+        this.modal = document.getElementById('popupModal');
+        this.content = document.getElementById('popupContent');
+        this.closeBtn = document.getElementById('popupClose');
+        this.isOpen = false;
+        this.activePopup = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.bindEvents();
+        this.createPopupContent();
+    }
+    
+    bindEvents() {
+        // Close button
+        if (this.closeBtn) {
+            this.closeBtn.addEventListener('click', () => this.closePopup());
+        }
+        
+        // Overlay click
+        if (this.overlay) {
+            this.overlay.addEventListener('click', (e) => {
+                if (e.target === this.overlay) {
+                    this.closePopup();
+                }
+            });
+        }
+        
+        // ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.closePopup();
+            }
+        });
+        
+        // Bind all popup triggers
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest('[data-popup]');
+            if (trigger) {
+                e.preventDefault();
+                const popupType = trigger.getAttribute('data-popup');
+                this.openPopup(popupType);
+            }
+        });
+    }
+    
+    openPopup(type) {
+        if (!this.overlay || !this.modal || !this.content) return;
+        
+        this.activePopup = type;
+        this.isOpen = true;
+        
+        // Show loading state
+        this.showLoading();
+        
+        // Show overlay
+        this.overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Load content after a small delay for smooth animation
+        setTimeout(() => {
+            this.loadPopupContent(type);
+        }, 200);
+    }
+    
+    closePopup() {
+        if (!this.overlay || !this.isOpen) return;
+        
+        this.isOpen = false;
+        this.activePopup = null;
+        
+        this.overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Clear content after animation
+        setTimeout(() => {
+            if (this.content) {
+                this.content.innerHTML = '';
+            }
+        }, 400);
+    }
+    
+    showLoading() {
+        if (!this.content) return;
+        
+        this.content.innerHTML = `
+            <div class="popup-loading">
+                <div class="popup-loading-spinner"></div>
+                <p class="popup-loading-text">Loading...</p>
+            </div>
+        `;
+    }
+    
+    loadPopupContent(type) {
+        if (!this.content) return;
+        
+        const contentData = this.getPopupContent(type);
+        if (!contentData) {
+            this.closePopup();
+            return;
+        }
+        
+        this.content.innerHTML = contentData.html;
+        this.content.className = `popup-content ${contentData.className || ''}`;
+        
+        // Bind any additional events for this popup
+        this.bindPopupSpecificEvents(type);
+    }
+    
+    bindPopupSpecificEvents(type) {
+        // Handle phone number clicks
+        const phoneLinks = this.content.querySelectorAll('a[href^="tel:"]');
+        phoneLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Track phone click analytics if needed
+                console.log('Phone number clicked from popup:', type);
+            });
+        });
+        
+        // Handle email clicks
+        const emailLinks = this.content.querySelectorAll('a[href^="mailto:"]');
+        emailLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Track email click analytics if needed
+                console.log('Email clicked from popup:', type);
+            });
+        });
+        
+        // Handle form submissions if any
+        const forms = this.content.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleFormSubmission(form, type);
+            });
+        });
+    }
+    
+    handleFormSubmission(form, type) {
+        // Handle form submission based on type
+        console.log('Form submitted from popup:', type);
+        
+        // Show success message
+        const formData = new FormData(form);
+        this.showSuccessMessage(type);
+    }
+    
+    showSuccessMessage(type) {
+        if (!this.content) return;
+        
+        this.content.innerHTML = `
+            <div class="popup-header">
+                <div class="popup-icon">
+                    <i class="ri-check-line"></i>
+                </div>
+                <h2 class="popup-title">Thank You!</h2>
+                <p class="popup-subtitle">We've received your message and will get back to you within 24 hours.</p>
+            </div>
+            <div class="popup-body">
+                <p>Our team at Holistic Psychological Services is committed to providing you with the best possible care. We look forward to helping you on your wellness journey.</p>
+            </div>
+            <div class="popup-actions">
+                <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.closePopup()">
+                    <i class="ri-close-line"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        `;
+    }
+    
+    getPopupContent(type) {
+        const contentMap = {
+            'consultation': {
+                className: 'popup-content-consultation',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-calendar-check-line"></i>
+                        </div>
+                        <h2 class="popup-title">Schedule Your Consultation</h2>
+                        <p class="popup-subtitle">Take the first step towards mental wellness</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>Ready to begin your journey to better mental health? Our experienced team is here to help you every step of the way.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">What to Expect:</h4>
+                            <ul>
+                                <li>Confidential and compassionate consultation</li>
+                                <li>Personalized treatment recommendations</li>
+                                <li>Flexible scheduling options</li>
+                                <li>Insurance and payment plan assistance</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">98%</span>
+                                <span class="popup-stat-label">Client Satisfaction</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">15+</span>
+                                <span class="popup-stat-label">Years Experience</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">5000+</span>
+                                <span class="popup-stat-label">Lives Helped</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-primary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call (646) 971-7325</span>
+                        </a>
+                        <a href="mailto:info@holisticpsychservices.com" class="popup-btn popup-btn-secondary">
+                            <i class="ri-mail-line"></i>
+                            <span>Email Us</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'profile-kristie': {
+                className: 'popup-content-profile',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-user-heart-line"></i>
+                        </div>
+                        <h2 class="popup-title">Dr. Kristie Doheny, PsyD</h2>
+                        <p class="popup-subtitle">Licensed Clinical Psychologist & Clinical Director</p>
+                    </div>
+                    <div class="popup-body">
+                        <p><strong>Dr. Kristie Doheny</strong> is a licensed clinical psychologist with over 15 years of experience specializing in comprehensive psychological evaluations and treatment for children, adolescents, and families.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Specializations:</h4>
+                            <ul>
+                                <li>Child and Adolescent Psychology</li>
+                                <li>Family Therapy and Counseling</li>
+                                <li>ADHD Assessment and Treatment</li>
+                                <li>Learning Disabilities Evaluation</li>
+                                <li>Behavioral and Emotional Disorders</li>
+                                <li>Trauma-Informed Care</li>
+                            </ul>
+                        </div>
+                        
+                        <p>Dr. Doheny believes in creating a safe, nurturing environment where individuals and families can explore their challenges and develop effective coping strategies. Her holistic approach combines evidence-based treatments with compassionate care.</p>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">15+</span>
+                                <span class="popup-stat-label">Years Experience</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">5000+</span>
+                                <span class="popup-stat-label">Families Helped</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">98%</span>
+                                <span class="popup-stat-label">Success Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-primary">
+                            <i class="ri-calendar-line"></i>
+                            <span>Schedule with Dr. Doheny</span>
+                        </a>
+                        <button class="popup-btn popup-btn-secondary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-question-line"></i>
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+                `
+            },
+            
+            'profile-doug': {
+                className: 'popup-content-profile',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-heart-pulse-line"></i>
+                        </div>
+                        <h2 class="popup-title">Dr. Douglas Uhlig, PhD</h2>
+                        <p class="popup-subtitle">Licensed Psychologist & Relationship Specialist</p>
+                    </div>
+                    <div class="popup-body">
+                        <p><strong>Dr. Douglas Uhlig</strong> brings over 20 years of expertise in couples therapy and addiction recovery. His evidence-based approach combined with genuine compassion has helped countless individuals and couples rebuild their lives.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Specializations:</h4>
+                            <ul>
+                                <li>Couples and Marriage Therapy</li>
+                                <li>Addiction Recovery and Treatment</li>
+                                <li>Trauma Recovery and PTSD</li>
+                                <li>Anxiety and Depression Treatment</li>
+                                <li>Relationship Counseling</li>
+                                <li>Cognitive Behavioral Therapy (CBT)</li>
+                            </ul>
+                        </div>
+                        
+                        <p>Dr. Uhlig's approach focuses on creating a non-judgmental space where clients can explore their challenges and develop practical solutions. He specializes in helping couples rebuild connection and individuals overcome addiction.</p>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">20+</span>
+                                <span class="popup-stat-label">Years Experience</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">3000+</span>
+                                <span class="popup-stat-label">Lives Transformed</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">95%</span>
+                                <span class="popup-stat-label">Success Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-primary">
+                            <i class="ri-calendar-line"></i>
+                            <span>Schedule with Dr. Uhlig</span>
+                        </a>
+                        <button class="popup-btn popup-btn-secondary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-question-line"></i>
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+                `
+            },
+            
+            'profile-liam': {
+                className: 'popup-content-profile',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-user-smile-line"></i>
+                        </div>
+                        <h2 class="popup-title">Liam Miller, MHC-LP</h2>
+                        <p class="popup-subtitle">Mental Health Counselor & Life Transition Specialist</p>
+                    </div>
+                    <div class="popup-body">
+                        <p><strong>Liam Miller (he/him)</strong> believes you are the expert on your own life. He provides empathy, compassion, and unconditional positive regard to help you live authentically and navigate life's challenges.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Specializations:</h4>
+                            <ul>
+                                <li>Life Transitions and Change</li>
+                                <li>Anxiety and Depression Treatment</li>
+                                <li>Personal Growth and Self-Discovery</li>
+                                <li>Young Adult Counseling</li>
+                                <li>Identity Exploration</li>
+                                <li>Mindfulness-Based Therapy</li>
+                            </ul>
+                        </div>
+                        
+                        <p>Liam's person-centered approach creates a safe space where you can explore your authentic self without judgment. He specializes in helping individuals navigate major life transitions and develop healthy coping strategies.</p>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">5+</span>
+                                <span class="popup-stat-label">Years Experience</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">500+</span>
+                                <span class="popup-stat-label">Clients Helped</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">96%</span>
+                                <span class="popup-stat-label">Satisfaction Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-primary">
+                            <i class="ri-calendar-line"></i>
+                            <span>Schedule with Liam</span>
+                        </a>
+                        <button class="popup-btn popup-btn-secondary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-question-line"></i>
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+                `
+            },
+            
+            'profile-kevin': {
+                className: 'popup-content-profile',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-rainbow-line"></i>
+                        </div>
+                        <h2 class="popup-title">Kevin Montiel, LMSW</h2>
+                        <p class="popup-subtitle">Licensed Master Social Worker & LGBTQIA+ Specialist</p>
+                    </div>
+                    <div class="popup-body">
+                        <p><strong>Kevin Montiel (he/him)</strong> is a bilingual Licensed Master Social Worker specializing in LGBTQIA+ individuals and racial/ethnic minorities. He promotes value-driven living and authentic self-expression.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Specializations:</h4>
+                            <ul>
+                                <li>LGBTQIA+ Affirming Therapy</li>
+                                <li>Bilingual Therapy (English/Spanish)</li>
+                                <li>Identity Development and Exploration</li>
+                                <li>Cultural and Minority Stress</li>
+                                <li>Coming Out Support</li>
+                                <li>Family and Relationship Counseling</li>
+                            </ul>
+                        </div>
+                        
+                        <p>Kevin creates an inclusive, culturally sensitive environment where individuals can explore their identity and overcome challenges related to discrimination, family dynamics, and social pressures.</p>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">7+</span>
+                                <span class="popup-stat-label">Years Experience</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">800+</span>
+                                <span class="popup-stat-label">Clients Served</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">97%</span>
+                                <span class="popup-stat-label">Satisfaction Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-primary">
+                            <i class="ri-calendar-line"></i>
+                            <span>Schedule with Kevin</span>
+                        </a>
+                        <button class="popup-btn popup-btn-secondary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-question-line"></i>
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+                `
+            },
+            
+            'service-depression': {
+                className: 'popup-content-service',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-mental-health-line"></i>
+                        </div>
+                        <h2 class="popup-title">Depression & Mood Disorders</h2>
+                        <p class="popup-subtitle">Evidence-based treatment for lasting relief</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>Our comprehensive approach to depression and mood disorders combines the latest evidence-based treatments with compassionate care to help you regain control of your emotional well-being.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Treatment Approaches:</h4>
+                            <ul>
+                                <li>Cognitive Behavioral Therapy (CBT)</li>
+                                <li>Dialectical Behavior Therapy (DBT)</li>
+                                <li>Interpersonal Therapy (IPT)</li>
+                                <li>Medication Management (when appropriate)</li>
+                                <li>Mindfulness-Based Interventions</li>
+                                <li>Family and Group Therapy Options</li>
+                            </ul>
+                        </div>
+                        
+                        <p>We treat major depression, bipolar disorder, seasonal affective disorder, and other mood-related challenges with personalized treatment plans designed for your unique needs.</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-calendar-check-line"></i>
+                            <span>Schedule Consultation</span>
+                        </button>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call Us</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'service-anxiety': {
+                className: 'popup-content-service',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-mind-map"></i>
+                        </div>
+                        <h2 class="popup-title">Anxiety Disorders</h2>
+                        <p class="popup-subtitle">Comprehensive treatment for all types of anxiety</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>Our anxiety treatment program addresses generalized anxiety, panic disorders, social anxiety, and specific phobias using proven therapeutic techniques.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Treatment Methods:</h4>
+                            <ul>
+                                <li>Exposure and Response Prevention Therapy</li>
+                                <li>Cognitive Behavioral Therapy (CBT)</li>
+                                <li>Mindfulness-Based Stress Reduction</li>
+                                <li>Relaxation and Breathing Techniques</li>
+                                <li>Systematic Desensitization</li>
+                                <li>EMDR for Trauma-Related Anxiety</li>
+                            </ul>
+                        </div>
+                        
+                        <p>We help you understand your anxiety triggers, develop effective coping strategies, and gradually overcome the fears that limit your daily life.</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-calendar-check-line"></i>
+                            <span>Schedule Consultation</span>
+                        </button>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call Us</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'team-portfolio': {
+                className: 'popup-content-portfolio',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-team-line"></i>
+                        </div>
+                        <h2 class="popup-title">Our Complete Team</h2>
+                        <p class="popup-subtitle">Meet all our mental health professionals</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>Our diverse team of licensed mental health professionals brings together decades of experience and specialized expertise to serve the Manhattan community.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Our Team Includes:</h4>
+                            <ul>
+                                <li>Dr. Kristie Doheny - Clinical Psychologist & Director</li>
+                                <li>Dr. Douglas Uhlig - Licensed Psychologist</li>
+                                <li>Liam Miller - Mental Health Counselor</li>
+                                <li>Kevin Montiel - Licensed Master Social Worker</li>
+                                <li>Specialized Therapy Associates</li>
+                                <li>Administrative Support Team</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">35+</span>
+                                <span class="popup-stat-label">Combined Years</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">8000+</span>
+                                <span class="popup-stat-label">Lives Helped</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">97%</span>
+                                <span class="popup-stat-label">Client Satisfaction</span>
+                            </div>
+                        </div>
+                        
+                        <p>Each team member brings unique specializations and approaches, ensuring we can match you with the right therapist for your specific needs.</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-user-search-line"></i>
+                            <span>Find Your Match</span>
+                        </button>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Speak to Our Team</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'careers': {
+                className: 'popup-content-consultation',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-briefcase-line"></i>
+                        </div>
+                        <h2 class="popup-title">Join Our Growing Practice</h2>
+                        <p class="popup-subtitle">Career opportunities in Manhattan's premier mental health practice</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>We're expanding our team of compassionate mental health professionals. Join us in providing exceptional care to the Manhattan community.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">What We Offer:</h4>
+                            <ul>
+                                <li>Competitive compensation packages</li>
+                                <li>Comprehensive benefits including health insurance</li>
+                                <li>Professional development opportunities</li>
+                                <li>Collaborative and supportive environment</li>
+                                <li>Flexible scheduling options</li>
+                                <li>Manhattan office location with modern facilities</li>
+                            </ul>
+                        </div>
+                        
+                        <p>We're currently seeking licensed therapists, social workers, and mental health counselors who share our commitment to holistic, inclusive care.</p>
+                        
+                        <div class="popup-stats">
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">15+</span>
+                                <span class="popup-stat-label">Years Established</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">100%</span>
+                                <span class="popup-stat-label">Team Retention</span>
+                            </div>
+                            <div class="popup-stat-item">
+                                <span class="popup-stat-number">5★</span>
+                                <span class="popup-stat-label">Workplace Rating</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <a href="mailto:careers@holisticpsychservices.com" class="popup-btn popup-btn-primary">
+                            <i class="ri-mail-send-line"></i>
+                            <span>Send Resume</span>
+                        </a>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Call to Discuss</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'virtual-sessions': {
+                className: 'popup-content-service',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-video-chat-line"></i>
+                        </div>
+                        <h2 class="popup-title">Virtual Therapy Sessions</h2>
+                        <p class="popup-subtitle">Professional therapy from the comfort of your home</p>
+                    </div>
+                    <div class="popup-body">
+                        <p>Our secure, HIPAA-compliant virtual therapy platform allows you to receive the same high-quality care from anywhere in New York State.</p>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Virtual Session Benefits:</h4>
+                            <ul>
+                                <li>Same quality care as in-person sessions</li>
+                                <li>No travel time or parking concerns</li>
+                                <li>Comfortable, private environment</li>
+                                <li>Flexible scheduling options</li>
+                                <li>HIPAA-compliant security</li>
+                                <li>Available throughout New York State</li>
+                            </ul>
+                        </div>
+                        
+                        <p>All our therapists are experienced in virtual care delivery and use evidence-based techniques adapted for online sessions.</p>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-video-line"></i>
+                            <span>Schedule Virtual Session</span>
+                        </button>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-question-line"></i>
+                            <span>Learn More</span>
+                        </a>
+                    </div>
+                `
+            },
+            
+            'faq': {
+                className: 'popup-content-portfolio',
+                html: `
+                    <div class="popup-header">
+                        <div class="popup-icon">
+                            <i class="ri-question-answer-line"></i>
+                        </div>
+                        <h2 class="popup-title">Frequently Asked Questions</h2>
+                        <p class="popup-subtitle">Common questions about our services</p>
+                    </div>
+                    <div class="popup-body">
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Insurance & Payment:</h4>
+                            <ul>
+                                <li>We accept most major insurance plans</li>
+                                <li>Sliding scale fees available for self-pay</li>
+                                <li>HSA/FSA accounts accepted</li>
+                                <li>Payment plans can be arranged</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Scheduling & Access:</h4>
+                            <ul>
+                                <li>Evening and weekend appointments available</li>
+                                <li>Both in-person and virtual sessions offered</li>
+                                <li>24-48 hour response time for new appointments</li>
+                                <li>Crisis support resources available</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="popup-highlight-box">
+                            <h4 style="margin-bottom: 12px; color: white;">Treatment Approach:</h4>
+                            <ul>
+                                <li>Evidence-based therapeutic methods</li>
+                                <li>Culturally sensitive and inclusive care</li>
+                                <li>LGBTQ+ affirming practice</li>
+                                <li>Holistic mind-body approach</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                            <i class="ri-calendar-check-line"></i>
+                            <span>Get Started</span>
+                        </button>
+                        <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                            <i class="ri-phone-line"></i>
+                            <span>Ask Questions</span>
+                        </a>
+                    </div>
+                `
+            }
+        };
+        
+        // Add more service popups
+        const serviceTypes = ['service-trauma', 'service-behavioral', 'service-adhd', 'service-family', 'service-school', 'service-wellness', 'service-grief'];
+        
+        serviceTypes.forEach(type => {
+            const serviceMap = {
+                'service-trauma': {
+                    icon: 'ri-shield-star-line',
+                    title: 'PTSD & Trauma Recovery',
+                    subtitle: 'Specialized trauma-informed care',
+                    description: 'Our trauma recovery program uses specialized techniques including EMDR and trauma-focused CBT to help you heal from injury, illness, abuse, and loss-related trauma.',
+                    methods: [
+                        'Eye Movement Desensitization and Reprocessing (EMDR)',
+                        'Trauma-Focused Cognitive Behavioral Therapy',
+                        'Somatic Experiencing',
+                        'Narrative Therapy',
+                        'Mindfulness-Based Trauma Recovery',
+                        'Group Trauma Recovery Sessions'
+                    ]
+                },
+                'service-behavioral': {
+                    icon: 'ri-user-settings-line',
+                    title: 'Behavioral Health',
+                    subtitle: 'Expert care for challenging behaviors',
+                    description: 'We provide comprehensive behavioral health services for ODD, conduct disorders, and challenging behavioral patterns using evidence-based interventions.',
+                    methods: [
+                        'Applied Behavior Analysis (ABA)',
+                        'Parent Management Training',
+                        'Behavioral Modification Programs',
+                        'Social Skills Training',
+                        'Anger Management Therapy',
+                        'Family Behavioral Intervention'
+                    ]
+                },
+                'service-adhd': {
+                    icon: 'ri-focus-2-line',
+                    title: 'ADHD & Attention Disorders',
+                    subtitle: 'Comprehensive assessment and treatment',
+                    description: 'Our ADHD program provides thorough assessment and evidence-based treatment for attention deficit disorders across all age groups.',
+                    methods: [
+                        'Comprehensive ADHD Assessment',
+                        'Cognitive Behavioral Therapy for ADHD',
+                        'Executive Function Training',
+                        'Medication Management Support',
+                        'Academic and Workplace Accommodations',
+                        'Family Education and Support'
+                    ]
+                },
+                'service-family': {
+                    icon: 'ri-home-heart-line',
+                    title: 'Family Crisis Support',
+                    subtitle: 'Supporting families through difficult times',
+                    description: 'We help families navigate separation, divorce, and relationship challenges with compassionate family systems therapy and mediation services.',
+                    methods: [
+                        'Family Systems Therapy',
+                        'Divorce and Separation Counseling',
+                        'Child Custody Support',
+                        'Blended Family Counseling',
+                        'Family Mediation Services',
+                        'Co-Parenting Support'
+                    ]
+                },
+                'service-school': {
+                    icon: 'ri-graduation-cap-line',
+                    title: 'School & Learning Support',
+                    subtitle: 'Helping students overcome academic challenges',
+                    description: 'Our educational support services help students overcome academic challenges, school anxiety, and learning difficulties.',
+                    methods: [
+                        'Academic Coaching and Study Skills',
+                        'School Anxiety Treatment',
+                        'IEP and 504 Plan Support',
+                        'Learning Disability Assessment',
+                        'Test Anxiety Management',
+                        'School Refusal Intervention'
+                    ]
+                },
+                'service-wellness': {
+                    icon: 'ri-moon-line',
+                    title: 'Sleep & Eating Wellness',
+                    subtitle: 'Specialized treatment for sleep and eating issues',
+                    description: 'We provide comprehensive treatment for sleep disorders and eating-related challenges using holistic, evidence-based approaches.',
+                    methods: [
+                        'Sleep Hygiene Education',
+                        'Cognitive Behavioral Therapy for Insomnia',
+                        'Eating Disorder Treatment',
+                        'Nutritional Counseling',
+                        'Body Image Therapy',
+                        'Mindful Eating Programs'
+                    ]
+                },
+                'service-grief': {
+                    icon: 'ri-heart-3-line',
+                    title: 'Grief & Loss Counseling',
+                    subtitle: 'Compassionate support for bereavement',
+                    description: 'Our grief counseling services provide compassionate support for all forms of loss, helping you process grief and find meaning in your journey.',
+                    methods: [
+                        'Individual Grief Counseling',
+                        'Complicated Grief Treatment',
+                        'Bereavement Support Groups',
+                        'Children\'s Grief Counseling',
+                        'Pet Loss Support',
+                        'Anniversary and Holiday Grief Support'
+                    ]
+                }
+            };
+            
+            const service = serviceMap[type];
+            if (service) {
+                contentMap[type] = {
+                    className: 'popup-content-service',
+                    html: `
+                        <div class="popup-header">
+                            <div class="popup-icon">
+                                <i class="${service.icon}"></i>
+                            </div>
+                            <h2 class="popup-title">${service.title}</h2>
+                            <p class="popup-subtitle">${service.subtitle}</p>
+                        </div>
+                        <div class="popup-body">
+                            <p>${service.description}</p>
+                            
+                            <div class="popup-highlight-box">
+                                <h4 style="margin-bottom: 12px; color: white;">Treatment Methods:</h4>
+                                <ul>
+                                    ${service.methods.map(method => `<li>${method}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <p>Our personalized approach ensures that treatment is tailored to your unique needs and goals for optimal outcomes.</p>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="popup-btn popup-btn-primary" onclick="window.popupSystem.openPopup('consultation')">
+                                <i class="ri-calendar-check-line"></i>
+                                <span>Schedule Consultation</span>
+                            </button>
+                            <a href="tel:(646)971-7325" class="popup-btn popup-btn-secondary">
+                                <i class="ri-phone-line"></i>
+                                <span>Call Us</span>
+                            </a>
+                        </div>
+                    `
+                };
+            }
+        });
+        
+        return contentMap[type] || null;
+    }
+    
+    createPopupContent() {
+        // Add any additional content creation logic here if needed
     }
 }
 
@@ -718,965 +1606,6 @@ class ServicesCarousel {
             this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
             this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
             
-            // Recreate pagination
-            this.createPaginationDots();
-            
-            // Update carousel
-            this.updateCarousel();
-        }
-    }
-    
-    setupIntersectionObserver() {
-        const options = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Animate section elements
-                    this.animateSectionEntrance();
-                    
-                    // Start auto-scroll when visible
-                    this.startAutoScroll();
-                } else {
-                    // Pause auto-scroll when not visible
-                    if (this.autoScrollInterval) {
-                        clearInterval(this.autoScrollInterval);
-                    }
-                }
-            });
-        }, options);
-        
-        if (this.section) {
-            observer.observe(this.section);
-        }
-    }
-    
-    animateSectionEntrance() {
-        // Animate header elements
-        const header = this.section.querySelector('.carousel-section-header');
-        if (header) {
-            header.style.animation = 'fadeInUp 0.8s ease';
-        }
-        
-        // Animate category tabs
-        this.categoryTabs.forEach((tab, index) => {
-            setTimeout(() => {
-                tab.style.animation = 'fadeInUp 0.5s ease backwards';
-            }, index * 50);
-        });
-        
-        // Animate visible cards
-        this.animateVisibleCards();
-    }
-    
-    isElementInViewport() {
-        if (!this.section) return false;
-        
-        const rect = this.section.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-    
-    setupResponsive() {
-        // Add responsive class to section based on viewport
-        const updateResponsiveClass = () => {
-            const width = window.innerWidth;
-            
-            if (width <= 767) {
-                this.section.classList.add('mobile-view');
-                this.section.classList.remove('tablet-view', 'desktop-view');
-            } else if (width <= 1200) {
-                this.section.classList.add('tablet-view');
-                this.section.classList.remove('mobile-view', 'desktop-view');
-            } else {
-                this.section.classList.add('desktop-view');
-                this.section.classList.remove('mobile-view', 'tablet-view');
-            }
-        };
-        
-        updateResponsiveClass();
-        window.addEventListener('resize', updateResponsiveClass);
-    }
-}
-
-// Initialize carousel when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const servicesCarousel = new ServicesCarousel();
-    
-    // Store instance globally for debugging
-    window.servicesCarousel = servicesCarousel;
-    
-    console.log('Services Carousel initialized');
-});
-
-/* ==========================================================================
-   ABOUT SECTION
-   ========================================================================== */
-
-class CompactAboutSection {
-    constructor() {
-        this.section = document.querySelector('.about-modern-compact');
-        this.isInitialized = false;
-        this.animatedElements = new Set();
-        
-        this.init();
-    }
-    
-    init() {
-        if (!this.section || this.isInitialized) return;
-        
-        // Wait for DOM to be fully ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setup());
-        } else {
-            this.setup();
-        }
-    }
-    
-    setup() {
-        // Ensure images are loaded first
-        this.preloadImages().then(() => {
-            this.setupIntersectionObserver();
-            this.setupInteractions();
-            this.setupCounters();
-            this.isInitialized = true;
-            console.log('Compact About Section initialized successfully');
-        });
-    }
-    
-    preloadImages() {
-        const images = this.section.querySelectorAll('img');
-        const imagePromises = Array.from(images).map(img => {
-            return new Promise((resolve) => {
-                if (img.complete) {
-                    resolve();
-                } else {
-                    img.addEventListener('load', resolve);
-                    img.addEventListener('error', resolve); // Resolve even on error
-                }
-            });
-        });
-        
-        return Promise.all(imagePromises);
-    }
-    
-    setupIntersectionObserver() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
-                    this.animateElement(entry.target);
-                    this.animatedElements.add(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '50px'
-        });
-        
-        // Observe elements
-        const elementsToObserve = [
-            '.about-header',
-            '.welcome-card',
-            '.leader-card-compact',
-            '.value-card',
-            '.about-cta'
-        ];
-        
-        elementsToObserve.forEach(selector => {
-            const elements = this.section.querySelectorAll(selector);
-            elements.forEach(element => observer.observe(element));
-        });
-    }
-    
-    animateElement(element) {
-        // Simple fade in animation
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        
-        // Trigger animation
-        requestAnimationFrame(() => {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        });
-        
-        // Handle counters
-        const counters = element.querySelectorAll('.stat-number, .stat-value');
-        counters.forEach(counter => {
-            setTimeout(() => this.animateCounter(counter), 300);
-        });
-    }
-    
-    animateCounter(element) {
-        if (element.dataset.animated) return;
-        
-        const text = element.textContent;
-        const numbers = text.match(/\d+/);
-        if (!numbers) return;
-        
-        const finalValue = parseInt(numbers[0]);
-        const suffix = text.replace(/\d+/, '');
-        const duration = 1500;
-        const steps = 60;
-        const increment = finalValue / steps;
-        
-        let current = 0;
-        let step = 0;
-        
-        element.dataset.animated = 'true';
-        
-        const timer = setInterval(() => {
-            current += increment;
-            step++;
-            
-            if (step >= steps) {
-                element.textContent = finalValue + suffix;
-                clearInterval(timer);
-            } else {
-                element.textContent = Math.floor(current) + suffix;
-            }
-        }, duration / steps);
-    }
-    
-    setupInteractions() {
-        // Leader card hover effects
-        const leaderCards = this.section.querySelectorAll('.leader-card-compact');
-        leaderCards.forEach(card => {
-            const image = card.querySelector('.leader-image');
-            const overlay = card.querySelector('.image-overlay');
-            
-            if (image && overlay) {
-                card.addEventListener('mouseenter', () => {
-                    overlay.style.opacity = '1';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    overlay.style.opacity = '0';
-                });
-            }
-        });
-        
-        // Feature item hover effects
-        const features = this.section.querySelectorAll('.feature-item');
-        features.forEach(feature => {
-            feature.addEventListener('mouseenter', () => {
-                const icon = feature.querySelector('i');
-                if (icon) {
-                    icon.style.transform = 'scale(1.1)';
-                    icon.style.transition = 'transform 0.3s ease';
-                }
-            });
-            
-            feature.addEventListener('mouseleave', () => {
-                const icon = feature.querySelector('i');
-                if (icon) {
-                    icon.style.transform = '';
-                }
-            });
-        });
-        
-        // Specialty tag hover effects
-        const tags = this.section.querySelectorAll('.specialty-tag');
-        tags.forEach(tag => {
-            tag.addEventListener('mouseenter', () => {
-                tag.style.transform = 'translateY(-2px)';
-                tag.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
-            });
-            
-            tag.addEventListener('mouseleave', () => {
-                tag.style.transform = '';
-                tag.style.boxShadow = '';
-            });
-        });
-        
-        // CTA button effects
-        const ctaButtons = this.section.querySelectorAll('.cta-button');
-        ctaButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.createRipple(e, button);
-            });
-        });
-    }
-    
-    createRipple(event, button) {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s ease-out;
-            pointer-events: none;
-        `;
-        
-        button.style.position = 'relative';
-        button.style.overflow = 'hidden';
-        button.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
-    }
-    
-    setupCounters() {
-        // Backup counter setup for any missed elements
-        const allCounters = this.section.querySelectorAll('.stat-number, .stat-value');
-        
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.dataset.animated) {
-                    setTimeout(() => this.animateCounter(entry.target), 500);
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        allCounters.forEach(counter => {
-            counterObserver.observe(counter);
-        });
-    }
-}
-
-// Add required CSS animations
-const requiredStyles = `
-@keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-.leader-image {
-    transition: transform 0.5s ease !important;
-}
-
-.image-overlay {
-    transition: opacity 0.3s ease !important;
-}
-
-.feature-item i {
-    transition: transform 0.3s ease !important;
-}
-
-.specialty-tag {
-    transition: all 0.3s ease !important;
-}
-
-.value-icon {
-    transition: all 0.3s ease !important;
-}
-
-.value-card:hover .value-icon {
-    transform: scale(1.1) !important;
-}
-
-.visual-container {
-    transition: transform 0.5s ease !important;
-}
-
-.welcome-card:hover .visual-container {
-    transform: perspective(1000px) rotateY(0deg) !important;
-}
-`;
-
-// Add styles if not already present
-if (!document.getElementById('compact-about-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'compact-about-styles';
-    styleSheet.textContent = requiredStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// Initialize when ready
-let aboutInstance = null;
-
-function initCompactAbout() {
-    if (!aboutInstance && document.querySelector('.about-modern-compact')) {
-        aboutInstance = new CompactAboutSection();
-        window.compactAbout = aboutInstance; // For debugging
-    }
-}
-
-// Multiple initialization methods to ensure it works
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCompactAbout);
-} else {
-    initCompactAbout();
-}
-
-// Backup initialization
-setTimeout(initCompactAbout, 100);
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !aboutInstance) {
-        initCompactAbout();
-    }
-});
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CompactAboutSection;
-}
-
-/* ==========================================================================
-   TEAM SECTION
-   ========================================================================== */
-class ModernTeamCarousel {
-    constructor() {
-        // DOM Elements
-        this.section = document.querySelector('.modern-team-section');
-        this.slider = document.querySelector('.team-carousel-slider');
-        this.cards = document.querySelectorAll('.modern-team-card');
-        this.prevBtn = document.querySelector('.team-prev-btn');
-        this.nextBtn = document.querySelector('.team-next-btn');
-        this.dots = document.querySelectorAll('.team-dot');
-        this.progressIndicator = document.querySelector('.team-progress-indicator');
-        this.viewport = document.querySelector('.team-carousel-viewport');
-        
-        // Carousel State
-        this.currentIndex = 0;
-        this.cardsPerView = this.getCardsPerView();
-        this.totalCards = this.cards.length;
-        this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
-        this.autoPlayInterval = null;
-        this.autoPlayDelay = 4000;
-        this.isPlaying = true;
-        this.isHovering = false;
-        
-        // Touch/Drag State
-        this.isDragging = false;
-        this.startX = 0;
-        this.currentX = 0;
-        this.threshold = 50;
-        this.initialTranslate = 0;
-        
-        // Initialize
-        this.init();
-    }
-    
-    init() {
-        if (!this.section || !this.slider || this.totalCards === 0) return;
-        
-        // Setup event listeners
-        this.setupEventListeners();
-        
-        // Setup intersection observer
-        this.setupIntersectionObserver();
-        
-        // Initialize carousel
-        this.updateCarousel();
-        
-        // Start auto-play
-        this.startAutoPlay();
-        
-        // Setup card interactions
-        this.setupCardInteractions();
-        
-        console.log('Modern Team Carousel initialized successfully');
-    }
-    
-    setupEventListeners() {
-        // Navigation buttons
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => this.slidePrev());
-        }
-        
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.slideNext());
-        }
-        
-        // Pagination dots
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.goToSlide(index));
-        });
-        
-        // Hover pause
-        if (this.viewport) {
-            this.viewport.addEventListener('mouseenter', () => this.handleMouseEnter());
-            this.viewport.addEventListener('mouseleave', () => this.handleMouseLeave());
-        }
-        
-        // Touch/Swipe events
-        this.setupTouchEvents();
-        
-        // Keyboard navigation
-        this.setupKeyboardNavigation();
-        
-        // Window resize
-        window.addEventListener('resize', () => this.handleResize());
-    }
-    
-    setupTouchEvents() {
-        if (!this.viewport) return;
-        
-        // Touch events
-        this.viewport.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        this.viewport.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
-        this.viewport.addEventListener('touchend', (e) => this.handleTouchEnd(e));
-        
-        // Mouse events for desktop dragging
-        this.viewport.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-        this.viewport.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-        this.viewport.addEventListener('mouseup', (e) => this.handleMouseUp(e));
-        this.viewport.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
-        
-        // Prevent context menu on long press
-        this.viewport.addEventListener('contextmenu', (e) => {
-            if (this.isDragging) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    setupKeyboardNavigation() {
-        document.addEventListener('keydown', (e) => {
-            if (!this.isElementInViewport()) return;
-            
-            switch (e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.slidePrev();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.slideNext();
-                    break;
-                case ' ':
-                    e.preventDefault();
-                    this.toggleAutoPlay();
-                    break;
-            }
-        });
-    }
-    
-    setupCardInteractions() {
-        this.cards.forEach((card, index) => {
-            // Prevent image dragging
-            const images = card.querySelectorAll('img');
-            images.forEach(img => {
-                img.addEventListener('dragstart', (e) => e.preventDefault());
-            });
-            
-            // Card click handling
-            card.addEventListener('click', (e) => {
-                // Don't trigger if dragging
-                if (Math.abs(this.startX - this.currentX) > 5) {
-                    e.preventDefault();
-                    return;
-                }
-            });
-            
-            // Enhanced hover effects
-            card.addEventListener('mouseenter', () => this.enhanceCardHover(card));
-            card.addEventListener('mouseleave', () => this.resetCardHover(card));
-            
-            // Specialty item interactions
-            const specialties = card.querySelectorAll('.specialty-item');
-            specialties.forEach(specialty => {
-                specialty.addEventListener('mouseenter', () => {
-                    specialty.style.transform = 'translateY(-2px) scale(1.05)';
-                    specialty.style.boxShadow = '0 6px 15px rgba(0, 216, 132, 0.2)';
-                });
-                
-                specialty.addEventListener('mouseleave', () => {
-                    specialty.style.transform = '';
-                    specialty.style.boxShadow = '';
-                });
-            });
-            
-            // Profile button interactions
-            const profileBtn = card.querySelector('.member-profile-btn, .join-team-btn');
-            if (profileBtn) {
-                profileBtn.addEventListener('click', (e) => {
-                    this.createRipple(e, profileBtn);
-                });
-            }
-        });
-    }
-    
-    setupIntersectionObserver() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateEntrance();
-                    this.startAutoPlay();
-                } else {
-                    this.pauseAutoPlay();
-                }
-            });
-        }, observerOptions);
-        
-        if (this.section) {
-            observer.observe(this.section);
-        }
-    }
-    
-    // Touch Handlers
-    handleTouchStart(e) {
-        this.startX = e.touches[0].clientX;
-        this.pauseAutoPlay();
-    }
-    
-    handleTouchMove(e) {
-        if (!this.startX) return;
-        
-        this.currentX = e.touches[0].clientX;
-        const diff = this.startX - this.currentX;
-        
-        // Prevent default if swiping horizontally
-        if (Math.abs(diff) > 10) {
-            e.preventDefault();
-        }
-    }
-    
-    handleTouchEnd(e) {
-        if (!this.startX) return;
-        
-        const diff = this.startX - this.currentX;
-        
-        if (Math.abs(diff) > this.threshold) {
-            if (diff > 0) {
-                this.slideNext();
-            } else {
-                this.slidePrev();
-            }
-        }
-        
-        this.startX = 0;
-        this.currentX = 0;
-        
-        if (!this.isHovering) {
-            this.startAutoPlay();
-        }
-    }
-    
-    // Mouse Drag Handlers
-    handleMouseDown(e) {
-        this.isDragging = true;
-        this.startX = e.clientX;
-        this.initialTranslate = this.getCurrentTranslate();
-        this.viewport.style.cursor = 'grabbing';
-        this.slider.style.transition = 'none';
-        this.pauseAutoPlay();
-    }
-    
-    handleMouseMove(e) {
-        if (!this.isDragging) return;
-        
-        e.preventDefault();
-        this.currentX = e.clientX;
-        const deltaX = this.currentX - this.startX;
-        const newTranslate = this.initialTranslate + deltaX;
-        
-        this.slider.style.transform = `translateX(${newTranslate}px)`;
-    }
-    
-    handleMouseUp(e) {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.viewport.style.cursor = '';
-        this.slider.style.transition = '';
-        
-        const diff = this.startX - this.currentX;
-        
-        if (Math.abs(diff) > this.threshold) {
-            if (diff > 0) {
-                this.slideNext();
-            } else {
-                this.slidePrev();
-            }
-        } else {
-            this.updateCarousel();
-        }
-        
-        this.startX = 0;
-        this.currentX = 0;
-        
-        if (!this.isHovering) {
-            this.startAutoPlay();
-        }
-    }
-    
-    getCurrentTranslate() {
-        const style = window.getComputedStyle(this.slider);
-        const matrix = style.transform;
-        
-        if (matrix === 'none') return 0;
-        
-        const values = matrix.split('(')[1].split(')')[0].split(',');
-        return parseInt(values[4]) || 0;
-    }
-    
-    // Navigation Methods
-    slidePrev() {
-        if (this.currentIndex > 0) {
-            this.currentIndex--;
-        } else {
-            this.currentIndex = this.maxIndex; // Loop to end
-        }
-        this.updateCarousel();
-        this.resetAutoPlay();
-    }
-    
-    slideNext() {
-        if (this.currentIndex < this.maxIndex) {
-            this.currentIndex++;
-        } else {
-            this.currentIndex = 0; // Loop to beginning
-        }
-        this.updateCarousel();
-        this.resetAutoPlay();
-    }
-    
-    goToSlide(index) {
-        this.currentIndex = Math.min(index, this.maxIndex);
-        this.updateCarousel();
-        this.resetAutoPlay();
-    }
-    
-    updateCarousel() {
-        if (!this.slider) return;
-        
-        // Calculate translation
-        const cardWidth = this.cards[0]?.offsetWidth || 0;
-        const gap = 30; // Gap between cards
-        const translateX = -(this.currentIndex * (cardWidth + gap));
-        
-        // Apply translation
-        this.slider.style.transform = `translateX(${translateX}px)`;
-        
-        // Update pagination
-        this.updatePagination();
-        
-        // Update progress bar
-        this.updateProgressBar();
-        
-        // Update navigation buttons
-        this.updateNavigationButtons();
-        
-        // Animate visible cards
-        this.animateVisibleCards();
-    }
-    
-    updatePagination() {
-        this.dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
-        });
-    }
-    
-    updateProgressBar() {
-        if (!this.progressIndicator) return;
-        
-        const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
-        this.progressIndicator.style.width = `${Math.min(100, Math.max(20, progress))}%`;
-    }
-    
-    updateNavigationButtons() {
-        // Enable all buttons for infinite scroll
-        if (this.prevBtn) this.prevBtn.disabled = false;
-        if (this.nextBtn) this.nextBtn.disabled = false;
-    }
-    
-    animateVisibleCards() {
-        const visibleStart = this.currentIndex;
-        const visibleEnd = Math.min(visibleStart + this.cardsPerView, this.totalCards);
-        
-        this.cards.forEach((card, index) => {
-            if (index >= visibleStart && index < visibleEnd) {
-                card.classList.add('in-view');
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, (index - visibleStart) * 100);
-            } else {
-                card.classList.remove('in-view');
-            }
-        });
-    }
-    
-    // Auto-play Methods
-    startAutoPlay() {
-        if (!this.isPlaying || this.autoPlayInterval) return;
-        
-        this.autoPlayInterval = setInterval(() => {
-            if (!this.isHovering && !this.isDragging) {
-                this.slideNext();
-            }
-        }, this.autoPlayDelay);
-    }
-    
-    pauseAutoPlay() {
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-            this.autoPlayInterval = null;
-        }
-    }
-    
-    resetAutoPlay() {
-        this.pauseAutoPlay();
-        if (!this.isHovering) {
-            this.startAutoPlay();
-        }
-    }
-    
-    toggleAutoPlay() {
-        this.isPlaying = !this.isPlaying;
-        if (this.isPlaying) {
-            this.startAutoPlay();
-        } else {
-            this.pauseAutoPlay();
-        }
-    }
-    
-    handleMouseEnter() {
-        this.isHovering = true;
-        this.pauseAutoPlay();
-    }
-    
-    handleMouseLeave() {
-        this.isHovering = false;
-        if (this.isPlaying) {
-            this.startAutoPlay();
-        }
-    }
-    
-    // Animation Methods
-    animateEntrance() {
-        // Animate header
-        const header = this.section.querySelector('.modern-team-header');
-        if (header) {
-            header.style.animation = 'teamHeaderFadeIn 0.8s ease';
-        }
-        
-        // Animate controls
-        const controls = this.section.querySelector('.team-carousel-controls');
-        if (controls) {
-            setTimeout(() => {
-                controls.style.animation = 'teamHeaderFadeIn 0.8s ease';
-            }, 200);
-        }
-        
-        // Animate visible cards with stagger
-        this.animateVisibleCards();
-    }
-    
-    enhanceCardHover(card) {
-        const photo = card.querySelector('.team-member-photo');
-        if (photo) {
-            photo.style.transform = 'scale(1.05)';
-        }
-        
-        const status = card.querySelector('.team-member-status');
-        if (status) {
-            status.style.transform = 'scale(1.05)';
-            status.style.background = 'rgba(0, 216, 132, 0.15)';
-        }
-        
-        const badges = card.querySelectorAll('.title-badge');
-        badges.forEach((badge, index) => {
-            setTimeout(() => {
-                badge.style.transform = 'translateY(-2px) scale(1.05)';
-            }, index * 50);
-        });
-    }
-    
-    resetCardHover(card) {
-        const photo = card.querySelector('.team-member-photo');
-        if (photo) {
-            photo.style.transform = '';
-        }
-        
-        const status = card.querySelector('.team-member-status');
-        if (status) {
-            status.style.transform = '';
-            status.style.background = '';
-        }
-        
-        const badges = card.querySelectorAll('.title-badge');
-        badges.forEach(badge => {
-            badge.style.transform = '';
-        });
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: teamRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
-    }
-    
-    // Responsive Methods
-    getCardsPerView() {
-        const width = window.innerWidth;
-        
-        if (width > 1200) {
-            return 3;
-        } else if (width > 767) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
-    
-    handleResize() {
-        const newCardsPerView = this.getCardsPerView();
-        
-        if (newCardsPerView !== this.cardsPerView) {
-            this.cardsPerView = newCardsPerView;
-            this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
-            this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
-            
             this.updateCarousel();
         }
     }
@@ -1705,195 +1634,9 @@ class ModernTeamCarousel {
     }
 }
 
-// CTA Button Enhancer
-class TeamCTAEnhancer {
-    constructor() {
-        this.ctaButton = document.querySelector('.team-cta-button');
-        this.init();
-    }
-    
-    init() {
-        this.setupCTAInteractions();
-    }
-    
-    setupCTAInteractions() {
-        if (this.ctaButton) {
-            this.ctaButton.addEventListener('click', (e) => {
-                this.createRipple(e, this.ctaButton);
-            });
-            
-            this.ctaButton.addEventListener('mouseenter', () => {
-                const icons = this.ctaButton.querySelectorAll('i');
-                icons.forEach((icon, index) => {
-                    setTimeout(() => {
-                        icon.style.animation = 'teamIconBounce 0.5s ease';
-                    }, index * 100);
-                });
-            });
-            
-            this.ctaButton.addEventListener('mouseleave', () => {
-                const icons = this.ctaButton.querySelectorAll('i');
-                icons.forEach(icon => {
-                    icon.style.animation = '';
-                });
-            });
-        }
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: teamRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
-    }
-}
-
-// Add required CSS animations
-const modernTeamStyles = `
-@keyframes teamRipple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-@keyframes teamIconBounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.1); }
-}
-
-.team-carousel-slider {
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.modern-team-card {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.team-member-photo {
-    transition: transform 0.3s ease !important;
-}
-
-.team-member-status {
-    transition: all 0.3s ease !important;
-}
-
-.title-badge {
-    transition: all 0.3s ease !important;
-}
-
-.specialty-item {
-    transition: all 0.3s ease !important;
-}
-
-.member-profile-btn {
-    transition: all 0.3s ease !important;
-}
-
-.team-control-btn {
-    transition: all 0.3s ease !important;
-}
-
-.team-dot {
-    transition: all 0.3s ease !important;
-}
-
-.team-progress-indicator {
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.team-cta-button {
-    transition: all 0.3s ease !important;
-}
-
-.join-team-btn {
-    transition: all 0.3s ease !important;
-}
-`;
-
-// Add styles if not already present
-if (!document.getElementById('modern-team-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'modern-team-styles';
-    styleSheet.textContent = modernTeamStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// Initialize when ready
-let modernTeamCarouselInstance = null;
-let teamCTAEnhancerInstance = null;
-
-function initModernTeamCarousel() {
-    if (!modernTeamCarouselInstance && document.querySelector('.modern-team-section')) {
-        modernTeamCarouselInstance = new ModernTeamCarousel();
-        teamCTAEnhancerInstance = new TeamCTAEnhancer();
-        
-        // Store instances for debugging
-        window.modernTeamCarousel = modernTeamCarouselInstance;
-        window.teamCTAEnhancer = teamCTAEnhancerInstance;
-    }
-}
-
-// Multiple initialization methods
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initModernTeamCarousel);
-} else {
-    initModernTeamCarousel();
-}
-
-// Backup initialization
-setTimeout(initModernTeamCarousel, 100);
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden && modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.pauseAutoPlay();
-    } else if (!document.hidden && modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.startAutoPlay();
-    }
-});
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.destroy();
-    }
-});
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ModernTeamCarousel, TeamCTAEnhancer };
-}
-
 /* ==========================================================================
-   REVIEWS SECTION
+   ELEGANT REVIEWS & INSTAGRAM SECTION
    ========================================================================== */
-
 class ElegantReviewsInstagramSection {
     constructor() {
         // DOM Elements
@@ -2512,135 +2255,8 @@ class ElegantReviewsInstagramSection {
     }
 }
 
-// Add required CSS animations
-const elegantReviewsStyles = `
-@keyframes elegantRipple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-@keyframes elegantTestimonialFadeIn {
-    from {
-        opacity: 0.7;
-        transform: translateY(10px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes elegantIconBounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.1); }
-}
-
-.elegant-testimonials-track {
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.elegant-testimonial-content {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-nav-btn {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-indicator {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-cta-btn {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-instagram-follow-btn {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-google-reviews-link {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-highlight-item {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-highlight-item i {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-instagram-loading {
-    transition: all 0.3s ease !important;
-}
-
-.elegant-testimonials-wrapper,
-.elegant-instagram-wrapper {
-    transition: all 0.4s ease !important;
-}
-
-.elegant-section-header,
-.elegant-bottom-cta {
-    transition: all 0.8s ease !important;
-}
-`;
-
-// Add styles if not already present
-if (!document.getElementById('elegant-reviews-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'elegant-reviews-styles';
-    styleSheet.textContent = elegantReviewsStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// Initialize when ready
-let elegantReviewsInstance = null;
-
-function initElegantReviewsInstagram() {
-    if (!elegantReviewsInstance && document.querySelector('.elegant-reviews-instagram-section')) {
-        elegantReviewsInstance = new ElegantReviewsInstagramSection();
-        
-        // Store instance for debugging
-        window.elegantReviewsInstagram = elegantReviewsInstance;
-    }
-}
-
-// Multiple initialization methods
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initElegantReviewsInstagram);
-} else {
-    initElegantReviewsInstagram();
-}
-
-// Backup initialization
-setTimeout(initElegantReviewsInstagram, 100);
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden && elegantReviewsInstance) {
-        elegantReviewsInstance.pauseAutoPlay();
-    } else if (!document.hidden && elegantReviewsInstance) {
-        elegantReviewsInstance.startAutoPlay();
-    }
-});
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (elegantReviewsInstance) {
-        elegantReviewsInstance.destroy();
-    }
-});
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ElegantReviewsInstagramSection;
-}
-
 /* ==========================================================================
-   CONTACT SECTION
+   HOLISTIC CONTACT SECTION
    ========================================================================== */
 class HolisticContactSection {
     constructor() {
@@ -3024,115 +2640,6 @@ class HolisticContactSection {
     }
 }
 
-// Add required CSS animations
-const holisticContactStyles = `
-@keyframes holisticIconBounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.1); }
-}
-
-.holistic-method-card {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-method-icon {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-method-link {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-option-card {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-option-icon {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-option-button {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-cta-button {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-emergency-button {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-option-title,
-.holistic-option-desc {
-    transition: all 0.3s ease !important;
-}
-
-.holistic-elfsight-loaded {
-    animation: holisticFormFadeIn 0.8s ease !important;
-}
-
-@keyframes holisticFormFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-`;
-
-// Add styles if not already present
-if (!document.getElementById('holistic-contact-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'holistic-contact-styles';
-    styleSheet.textContent = holisticContactStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// Initialize when ready
-let holisticContactInstance = null;
-
-function initHolisticContact() {
-    if (!holisticContactInstance && document.querySelector('.holistic-contact-section')) {
-        holisticContactInstance = new HolisticContactSection();
-        
-        // Store instance for debugging
-        window.holisticContact = holisticContactInstance;
-    }
-}
-
-// Multiple initialization methods
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHolisticContact);
-} else {
-    initHolisticContact();
-}
-
-// Backup initialization
-setTimeout(initHolisticContact, 100);
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !holisticContactInstance) {
-        initHolisticContact();
-    }
-});
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-    if (holisticContactInstance) {
-        holisticContactInstance.destroy();
-    }
-});
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = HolisticContactSection;
-}
-
 /* ==========================================================================
    FOOTER SECTION
    ========================================================================== */
@@ -3174,7 +2681,11 @@ class Footer {
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
     const app = new App();
-    console.log('App initialized');
+    
+    // Make popup system available globally
+    window.popupSystem = app.popupSystem;
+    
+    console.log('Holistic Psychological Services app initialized successfully');
     
     // Add animation keyframes
     const style = document.createElement('style');
@@ -3200,6 +2711,983 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: 0;
             }
         }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes holisticRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes holisticIconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.1); }
+        }
+        
+        @keyframes teamRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes teamIconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-3px) scale(1.1); }
+        }
+        
+        @keyframes teamHeaderFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes elegantRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes elegantTestimonialFadeIn {
+            from {
+                opacity: 0.7;
+                transform: translateY(10px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes elegantIconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.1); }
+        }
+        
+        @keyframes elegantStarGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        .visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d884, #0ea5e9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 8px 25px rgba(0, 216, 132, 0.3);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 216, 132, 0.4);
+        }
     `;
     document.head.appendChild(style);
 });
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+    
+    handleResize() {
+        const newCardsPerView = this.getCardsPerView();
+        
+        if (newCardsPerView !== this.cardsPerView) {
+            this.cardsPerView = newCardsPerView;
+            this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+            this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+            
+            // Recreate pagination
+            this.createPaginationDots();
+            
+            // Update carousel
+            this.updateCarousel();
+        }
+    }
+    
+    setupIntersectionObserver() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.3
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Animate section elements
+                    this.animateSectionEntrance();
+                    
+                    // Start auto-scroll when visible
+                    this.startAutoScroll();
+                } else {
+                    // Pause auto-scroll when not visible
+                    if (this.autoScrollInterval) {
+                        clearInterval(this.autoScrollInterval);
+                    }
+                }
+            });
+        }, options);
+        
+        if (this.section) {
+            observer.observe(this.section);
+        }
+    }
+    
+    animateSectionEntrance() {
+        // Animate header elements
+        const header = this.section.querySelector('.carousel-section-header');
+        if (header) {
+            header.style.animation = 'fadeInUp 0.8s ease';
+        }
+        
+        // Animate category tabs
+        this.categoryTabs.forEach((tab, index) => {
+            setTimeout(() => {
+                tab.style.animation = 'fadeInUp 0.5s ease backwards';
+            }, index * 50);
+        });
+        
+        // Animate visible cards
+        this.animateVisibleCards();
+    }
+    
+    isElementInViewport() {
+        if (!this.section) return false;
+        
+        const rect = this.section.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    
+    setupResponsive() {
+        // Add responsive class to section based on viewport
+        const updateResponsiveClass = () => {
+            const width = window.innerWidth;
+            
+            if (width <= 767) {
+                this.section.classList.add('mobile-view');
+                this.section.classList.remove('tablet-view', 'desktop-view');
+            } else if (width <= 1200) {
+                this.section.classList.add('tablet-view');
+                this.section.classList.remove('mobile-view', 'desktop-view');
+            } else {
+                this.section.classList.add('desktop-view');
+                this.section.classList.remove('mobile-view', 'tablet-view');
+            }
+        };
+        
+        updateResponsiveClass();
+        window.addEventListener('resize', updateResponsiveClass);
+    }
+}
+
+/* ==========================================================================
+   COMPACT ABOUT SECTION
+   ========================================================================== */
+class CompactAboutSection {
+    constructor() {
+        this.section = document.querySelector('.about-modern-compact');
+        this.isInitialized = false;
+        this.animatedElements = new Set();
+        
+        this.init();
+    }
+    
+    init() {
+        if (!this.section || this.isInitialized) return;
+        
+        // Wait for DOM to be fully ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            this.setup();
+        }
+    }
+    
+    setup() {
+        // Ensure images are loaded first
+        this.preloadImages().then(() => {
+            this.setupIntersectionObserver();
+            this.setupInteractions();
+            this.setupCounters();
+            this.isInitialized = true;
+            console.log('Compact About Section initialized successfully');
+        });
+    }
+    
+    preloadImages() {
+        const images = this.section.querySelectorAll('img');
+        const imagePromises = Array.from(images).map(img => {
+            return new Promise((resolve) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.addEventListener('load', resolve);
+                    img.addEventListener('error', resolve); // Resolve even on error
+                }
+            });
+        });
+        
+        return Promise.all(imagePromises);
+    }
+    
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElement(entry.target);
+                    this.animatedElements.add(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+        
+        // Observe elements
+        const elementsToObserve = [
+            '.about-header',
+            '.welcome-card',
+            '.leader-card-compact',
+            '.value-card',
+            '.about-cta'
+        ];
+        
+        elementsToObserve.forEach(selector => {
+            const elements = this.section.querySelectorAll(selector);
+            elements.forEach(element => observer.observe(element));
+        });
+    }
+    
+    animateElement(element) {
+        // Simple fade in animation
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        });
+        
+        // Handle counters
+        const counters = element.querySelectorAll('.stat-number, .stat-value');
+        counters.forEach(counter => {
+            setTimeout(() => this.animateCounter(counter), 300);
+        });
+    }
+    
+    animateCounter(element) {
+        if (element.dataset.animated) return;
+        
+        const text = element.textContent;
+        const numbers = text.match(/\d+/);
+        if (!numbers) return;
+        
+        const finalValue = parseInt(numbers[0]);
+        const suffix = text.replace(/\d+/, '');
+        const duration = 1500;
+        const steps = 60;
+        const increment = finalValue / steps;
+        
+        let current = 0;
+        let step = 0;
+        
+        element.dataset.animated = 'true';
+        
+        const timer = setInterval(() => {
+            current += increment;
+            step++;
+            
+            if (step >= steps) {
+                element.textContent = finalValue + suffix;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current) + suffix;
+            }
+        }, duration / steps);
+    }
+    
+    setupInteractions() {
+        // Leader card hover effects
+        const leaderCards = this.section.querySelectorAll('.leader-card-compact');
+        leaderCards.forEach(card => {
+            const image = card.querySelector('.leader-image');
+            const overlay = card.querySelector('.image-overlay');
+            
+            if (image && overlay) {
+                card.addEventListener('mouseenter', () => {
+                    overlay.style.opacity = '1';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    overlay.style.opacity = '0';
+                });
+            }
+        });
+        
+        // Feature item hover effects
+        const features = this.section.querySelectorAll('.feature-item');
+        features.forEach(feature => {
+            feature.addEventListener('mouseenter', () => {
+                const icon = feature.querySelector('i');
+                if (icon) {
+                    icon.style.transform = 'scale(1.1)';
+                    icon.style.transition = 'transform 0.3s ease';
+                }
+            });
+            
+            feature.addEventListener('mouseleave', () => {
+                const icon = feature.querySelector('i');
+                if (icon) {
+                    icon.style.transform = '';
+                }
+            });
+        });
+        
+        // Specialty tag hover effects
+        const tags = this.section.querySelectorAll('.specialty-tag');
+        tags.forEach(tag => {
+            tag.addEventListener('mouseenter', () => {
+                tag.style.transform = 'translateY(-2px)';
+                tag.style.boxShadow = '0 4px 12px rgba(0, 216, 132, 0.2)';
+            });
+            
+            tag.addEventListener('mouseleave', () => {
+                tag.style.transform = '';
+                tag.style.boxShadow = '';
+            });
+        });
+        
+        // CTA button effects
+        const ctaButtons = this.section.querySelectorAll('.cta-button');
+        ctaButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.createRipple(e, button);
+            });
+        });
+    }
+    
+    createRipple(event, button) {
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        `;
+        
+        button.style.position = 'relative';
+        button.style.overflow = 'hidden';
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
+    }
+    
+    setupCounters() {
+        // Backup counter setup for any missed elements
+        const allCounters = this.section.querySelectorAll('.stat-number, .stat-value');
+        
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    setTimeout(() => this.animateCounter(entry.target), 500);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        allCounters.forEach(counter => {
+            counterObserver.observe(counter);
+        });
+    }
+}
+
+/* ==========================================================================
+   MODERN TEAM CAROUSEL
+   ========================================================================== */
+class ModernTeamCarousel {
+    constructor() {
+        // DOM Elements
+        this.section = document.querySelector('.modern-team-section');
+        this.slider = document.querySelector('.team-carousel-slider');
+        this.cards = document.querySelectorAll('.modern-team-card');
+        this.prevBtn = document.querySelector('.team-prev-btn');
+        this.nextBtn = document.querySelector('.team-next-btn');
+        this.dots = document.querySelectorAll('.team-dot');
+        this.progressIndicator = document.querySelector('.team-progress-indicator');
+        this.viewport = document.querySelector('.team-carousel-viewport');
+        
+        // Carousel State
+        this.currentIndex = 0;
+        this.cardsPerView = this.getCardsPerView();
+        this.totalCards = this.cards.length;
+        this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+        this.autoPlayInterval = null;
+        this.autoPlayDelay = 4000;
+        this.isPlaying = true;
+        this.isHovering = false;
+        
+        // Touch/Drag State
+        this.isDragging = false;
+        this.startX = 0;
+        this.currentX = 0;
+        this.threshold = 50;
+        this.initialTranslate = 0;
+        
+        // Initialize
+        this.init();
+    }
+    
+    init() {
+        if (!this.section || !this.slider || this.totalCards === 0) return;
+        
+        // Setup event listeners
+        this.setupEventListeners();
+        
+        // Setup intersection observer
+        this.setupIntersectionObserver();
+        
+        // Initialize carousel
+        this.updateCarousel();
+        
+        // Start auto-play
+        this.startAutoPlay();
+        
+        // Setup card interactions
+        this.setupCardInteractions();
+        
+        console.log('Modern Team Carousel initialized successfully');
+    }
+    
+    setupEventListeners() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => this.slidePrev());
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => this.slideNext());
+        }
+        
+        // Pagination dots
+        this.dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+        });
+        
+        // Hover pause
+        if (this.viewport) {
+            this.viewport.addEventListener('mouseenter', () => this.handleMouseEnter());
+            this.viewport.addEventListener('mouseleave', () => this.handleMouseLeave());
+        }
+        
+        // Touch/Swipe events
+        this.setupTouchEvents();
+        
+        // Keyboard navigation
+        this.setupKeyboardNavigation();
+        
+        // Window resize
+        window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    setupTouchEvents() {
+        if (!this.viewport) return;
+        
+        // Touch events
+        this.viewport.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.viewport.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.viewport.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        
+        // Mouse events for desktop dragging
+        this.viewport.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+        this.viewport.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.viewport.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+        this.viewport.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
+        
+        // Prevent context menu on long press
+        this.viewport.addEventListener('contextmenu', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    setupKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.isElementInViewport()) return;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.slidePrev();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.slideNext();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    this.toggleAutoPlay();
+                    break;
+            }
+        });
+    }
+    
+    setupCardInteractions() {
+        this.cards.forEach((card, index) => {
+            // Prevent image dragging
+            const images = card.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('dragstart', (e) => e.preventDefault());
+            });
+            
+            // Card click handling
+            card.addEventListener('click', (e) => {
+                // Don't trigger if dragging
+                if (Math.abs(this.startX - this.currentX) > 5) {
+                    e.preventDefault();
+                    return;
+                }
+            });
+            
+            // Enhanced hover effects
+            card.addEventListener('mouseenter', () => this.enhanceCardHover(card));
+            card.addEventListener('mouseleave', () => this.resetCardHover(card));
+            
+            // Specialty item interactions
+            const specialties = card.querySelectorAll('.specialty-item');
+            specialties.forEach(specialty => {
+                specialty.addEventListener('mouseenter', () => {
+                    specialty.style.transform = 'translateY(-2px) scale(1.05)';
+                    specialty.style.boxShadow = '0 6px 15px rgba(0, 216, 132, 0.2)';
+                });
+                
+                specialty.addEventListener('mouseleave', () => {
+                    specialty.style.transform = '';
+                    specialty.style.boxShadow = '';
+                });
+            });
+            
+            // Profile button interactions
+            const profileBtn = card.querySelector('.member-profile-btn, .join-team-btn');
+            if (profileBtn) {
+                profileBtn.addEventListener('click', (e) => {
+                    this.createRipple(e, profileBtn);
+                });
+            }
+        });
+    }
+    
+    setupIntersectionObserver() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.2
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.animateEntrance();
+                    this.startAutoPlay();
+                } else {
+                    this.pauseAutoPlay();
+                }
+            });
+        }, observerOptions);
+        
+        if (this.section) {
+            observer.observe(this.section);
+        }
+    }
+    
+    // Touch Handlers
+    handleTouchStart(e) {
+        this.startX = e.touches[0].clientX;
+        this.pauseAutoPlay();
+    }
+    
+    handleTouchMove(e) {
+        if (!this.startX) return;
+        
+        this.currentX = e.touches[0].clientX;
+        const diff = this.startX - this.currentX;
+        
+        // Prevent default if swiping horizontally
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
+        }
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.startX) return;
+        
+        const diff = this.startX - this.currentX;
+        
+        if (Math.abs(diff) > this.threshold) {
+            if (diff > 0) {
+                this.slideNext();
+            } else {
+                this.slidePrev();
+            }
+        }
+        
+        this.startX = 0;
+        this.currentX = 0;
+        
+        if (!this.isHovering) {
+            this.startAutoPlay();
+        }
+    }
+    
+    // Mouse Drag Handlers
+    handleMouseDown(e) {
+        this.isDragging = true;
+        this.startX = e.clientX;
+        this.initialTranslate = this.getCurrentTranslate();
+        this.viewport.style.cursor = 'grabbing';
+        this.slider.style.transition = 'none';
+        this.pauseAutoPlay();
+    }
+    
+    handleMouseMove(e) {
+        if (!this.isDragging) return;
+        
+        e.preventDefault();
+        this.currentX = e.clientX;
+        const deltaX = this.currentX - this.startX;
+        const newTranslate = this.initialTranslate + deltaX;
+        
+        this.slider.style.transform = `translateX(${newTranslate}px)`;
+    }
+    
+    handleMouseUp(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.viewport.style.cursor = '';
+        this.slider.style.transition = '';
+        
+        const diff = this.startX - this.currentX;
+        
+        if (Math.abs(diff) > this.threshold) {
+            if (diff > 0) {
+                this.slideNext();
+            } else {
+                this.slidePrev();
+            }
+        } else {
+            this.updateCarousel();
+        }
+        
+        this.startX = 0;
+        this.currentX = 0;
+        
+        if (!this.isHovering) {
+            this.startAutoPlay();
+        }
+    }
+    
+    getCurrentTranslate() {
+        const style = window.getComputedStyle(this.slider);
+        const matrix = style.transform;
+        
+        if (matrix === 'none') return 0;
+        
+        const values = matrix.split('(')[1].split(')')[0].split(',');
+        return parseInt(values[4]) || 0;
+    }
+    
+    // Navigation Methods
+    slidePrev() {
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
+        } else {
+            this.currentIndex = this.maxIndex; // Loop to end
+        }
+        this.updateCarousel();
+        this.resetAutoPlay();
+    }
+    
+    slideNext() {
+        if (this.currentIndex < this.maxIndex) {
+            this.currentIndex++;
+        } else {
+            this.currentIndex = 0; // Loop to beginning
+        }
+        this.updateCarousel();
+        this.resetAutoPlay();
+    }
+    
+    goToSlide(index) {
+        this.currentIndex = Math.min(index, this.maxIndex);
+        this.updateCarousel();
+        this.resetAutoPlay();
+    }
+    
+    updateCarousel() {
+        if (!this.slider) return;
+        
+        // Calculate translation
+        const cardWidth = this.cards[0]?.offsetWidth || 0;
+        const gap = 30; // Gap between cards
+        const translateX = -(this.currentIndex * (cardWidth + gap));
+        
+        // Apply translation
+        this.slider.style.transform = `translateX(${translateX}px)`;
+        
+        // Update pagination
+        this.updatePagination();
+        
+        // Update progress bar
+        this.updateProgressBar();
+        
+        // Update navigation buttons
+        this.updateNavigationButtons();
+        
+        // Animate visible cards
+        this.animateVisibleCards();
+    }
+    
+    updatePagination() {
+        this.dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
+        });
+    }
+    
+    updateProgressBar() {
+        if (!this.progressIndicator) return;
+        
+        const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
+        this.progressIndicator.style.width = `${Math.min(100, Math.max(20, progress))}%`;
+    }
+    
+    updateNavigationButtons() {
+        // Enable all buttons for infinite scroll
+        if (this.prevBtn) this.prevBtn.disabled = false;
+        if (this.nextBtn) this.nextBtn.disabled = false;
+    }
+    
+    animateVisibleCards() {
+        const visibleStart = this.currentIndex;
+        const visibleEnd = Math.min(visibleStart + this.cardsPerView, this.totalCards);
+        
+        this.cards.forEach((card, index) => {
+            if (index >= visibleStart && index < visibleEnd) {
+                card.classList.add('in-view');
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, (index - visibleStart) * 100);
+            } else {
+                card.classList.remove('in-view');
+            }
+        });
+    }
+    
+    // Auto-play Methods
+    startAutoPlay() {
+        if (!this.isPlaying || this.autoPlayInterval) return;
+        
+        this.autoPlayInterval = setInterval(() => {
+            if (!this.isHovering && !this.isDragging) {
+                this.slideNext();
+            }
+        }, this.autoPlayDelay);
+    }
+    
+    pauseAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+    
+    resetAutoPlay() {
+        this.pauseAutoPlay();
+        if (!this.isHovering) {
+            this.startAutoPlay();
+        }
+    }
+    
+    toggleAutoPlay() {
+        this.isPlaying = !this.isPlaying;
+        if (this.isPlaying) {
+            this.startAutoPlay();
+        } else {
+            this.pauseAutoPlay();
+        }
+    }
+    
+    handleMouseEnter() {
+        this.isHovering = true;
+        this.pauseAutoPlay();
+    }
+    
+    handleMouseLeave() {
+        this.isHovering = false;
+        if (this.isPlaying) {
+            this.startAutoPlay();
+        }
+    }
+    
+    // Animation Methods
+    animateEntrance() {
+        // Animate header
+        const header = this.section.querySelector('.modern-team-header');
+        if (header) {
+            header.style.animation = 'teamHeaderFadeIn 0.8s ease';
+        }
+        
+        // Animate controls
+        const controls = this.section.querySelector('.team-carousel-controls');
+        if (controls) {
+            setTimeout(() => {
+                controls.style.animation = 'teamHeaderFadeIn 0.8s ease';
+            }, 200);
+        }
+        
+        // Animate visible cards with stagger
+        this.animateVisibleCards();
+    }
+    
+    enhanceCardHover(card) {
+        const photo = card.querySelector('.team-member-photo');
+        if (photo) {
+            photo.style.transform = 'scale(1.05)';
+        }
+        
+        const status = card.querySelector('.team-member-status');
+        if (status) {
+            status.style.transform = 'scale(1.05)';
+            status.style.background = 'rgba(0, 216, 132, 0.15)';
+        }
+        
+        const badges = card.querySelectorAll('.title-badge');
+        badges.forEach((badge, index) => {
+            setTimeout(() => {
+                badge.style.transform = 'translateY(-2px) scale(1.05)';
+            }, index * 50);
+        });
+    }
+    
+    resetCardHover(card) {
+        const photo = card.querySelector('.team-member-photo');
+        if (photo) {
+            photo.style.transform = '';
+        }
+        
+        const status = card.querySelector('.team-member-status');
+        if (status) {
+            status.style.transform = '';
+            status.style.background = '';
+        }
+        
+        const badges = card.querySelectorAll('.title-badge');
+        badges.forEach(badge => {
+            badge.style.transform = '';
+        });
+    }
+    
+    createRipple(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: teamRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
+    }
+    
+    // Responsive Methods
+    getCardsPerView() {
+        const width = window.innerWidth;
+        
+        if (width > 1200) {
+            return 3;
+        } else if (width > 767) {
