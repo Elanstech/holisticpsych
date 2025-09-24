@@ -831,6 +831,7 @@ section {
     font-weight: 600;
     color: var(--primary-green);
     margin-bottom: var(--space-sm);
+    white-space: nowrap;
 }
 
 .signature-title {
