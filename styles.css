@@ -1597,11 +1597,11 @@ section {
     }
     
     .carousel-nav-prev {
-        left: -24px;
+        left: -30px;
     }
     
     .carousel-nav-next {
-        right: -24px;
+        right: -30px;
     }
 }
 
@@ -1633,7 +1633,7 @@ section {
     }
     
     .carousel-track-container {
-        margin: 0 20px;
+        margin: 0 50px;
     }
     
     .service-carousel-card {
@@ -1645,14 +1645,15 @@ section {
         height: 44px;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     
     .carousel-nav-prev {
-        left: 10px;
+        left: -35px;
     }
     
     .carousel-nav-next {
-        right: 10px;
+        right: -35px;
     }
     
     .card-content {
@@ -1684,6 +1685,24 @@ section {
     
     .category-tab {
         padding: 10px 14px;
+    }
+    
+    .carousel-track-container {
+        margin: 0 55px;
+    }
+    
+    .carousel-nav-prev {
+        left: -40px;
+    }
+    
+    .carousel-nav-next {
+        right: -40px;
+    }
+    
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1.125rem;
     }
     
     .card-image-wrapper {
