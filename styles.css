@@ -1597,11 +1597,11 @@ section {
     }
     
     .carousel-nav-prev {
-        left: -30px;
+        left: -18px;
     }
     
     .carousel-nav-next {
-        right: -30px;
+        right: -18px;
     }
 }
 
@@ -1692,11 +1692,11 @@ section {
     }
     
     .carousel-nav-prev {
-        left: -40px;
+        left: -16px;
     }
     
     .carousel-nav-next {
-        right: -40px;
+        right: -16px;
     }
     
     .carousel-nav {
