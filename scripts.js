@@ -19,7 +19,7 @@ class App {
         this.team = new TeamPreviewCarousel();
         this.reviews = new ElegantReviewsInstagramSection();
         this.contact = new HolisticContactSection();
-        this.footer = new HolisticFooterController();
+        this.footer = new FinalFooterController();
         
         // Global scroll handler
         this.initScrollHandling();
@@ -3786,7 +3786,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
 // AMD support
 if (typeof define === 'function' && define.amd) {
-    define([], () => FinalFooterController);
+    define([], () => FinalController);
 }
 
 /* ==========================================================================
