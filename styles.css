@@ -184,6 +184,8 @@ section {
     box-shadow: var(--shadow-lg);
     padding: var(--space-md) var(--space-3xl);
     transition: var(--transition-medium);
+    position: relative;
+    overflow: visible;
 }
 
 .header.scrolled .header-island {
@@ -198,6 +200,8 @@ section {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3xl);
+    width: 100%;
+    position: relative;
 }
 
 .brand-text {
@@ -312,6 +316,9 @@ section {
     border: 1px solid rgba(0, 216, 132, 0.2);
     border-radius: var(--radius-lg);
     transition: var(--transition-medium);
+    position: static;
+    margin: 0;
+    flex-shrink: 0;
 }
 
 .toggle-line,
@@ -510,16 +517,28 @@ section {
 }
 
 @media (max-width: 1200px) {
+    .header-island {
+        padding: var(--space-md) var(--space-xl);
+    }
+    
+    .header-content {
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-lg);
+    }
+    
     .desktop-nav {
         display: none;
     }
     
     .mobile-menu-toggle {
         display: flex;
+        position: relative;
+        right: auto;
+        margin-left: 0;
     }
     
-    .header-actions .phone-btn,
-    .header-actions .btn-consultation {
+    .header-actions {
         display: none;
     }
 }
@@ -532,6 +551,10 @@ section {
     
     .header-island {
         padding: var(--space-sm) var(--space-lg);
+    }
+    
+    .header-content {
+        gap: var(--space-md);
     }
 }
 
