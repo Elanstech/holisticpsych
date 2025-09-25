@@ -6796,19 +6796,6 @@ section {
     }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .footer-social-link,
-    .footer-contact-item,
-    .footer-designer-credit {
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .footer-link:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-}
-
 //* ==========================================================================
    UTILITES
    ========================================================================== */
