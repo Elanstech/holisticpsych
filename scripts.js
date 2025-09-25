@@ -3195,481 +3195,443 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 /* ==========================================================================
-   HOLISTIC PSYCHOLOGY SERVICES - UNIQUE FOOTER JAVASCRIPT
+   FINAL FOOTER JAVASCRIPT - SIMPLE & RELIABLE
    ========================================================================== */
 
-class HolisticFooterController {
+class FinalFooterController {
     constructor() {
-        this.footerElement = document.getElementById('hpsFooterSection');
-        this.isInViewport = false;
-        this.animationTriggered = false;
-        this.scrollAnimations = new Set();
-        this.rippleEffects = [];
+        this.footer = document.getElementById('finalFooter');
+        this.isVisible = false;
+        this.animatedElements = new Set();
         
-        if (!this.footerElement) {
-            console.warn('HPS Footer: Footer section not found');
+        if (!this.footer) {
+            console.warn('Final Footer: Footer element not found');
             return;
         }
         
-        this.initialize();
+        this.init();
     }
     
-    initialize() {
-        this.setupCurrentYear();
-        this.setupViewportObserver();
-        this.setupSmoothNavigation();
-        this.setupSocialMediaHandlers();
-        this.setupContactInteractions();
-        this.setupDesignerCreditHandlers();
-        this.setupRippleEffects();
-        this.setupKeyboardAccessibility();
-        this.setupResponsiveHandlers();
-        this.setupAnimationTriggers();
-        this.setupHoverEffects();
+    init() {
+        console.log('Final Footer: Initializing...');
         
-        console.log('HPS Footer: Initialized successfully');
+        this.updateCurrentYear();
+        this.setupScrollAnimations();
+        this.setupSmoothScrolling();
+        this.setupSocialLinks();
+        this.setupContactLinks();
+        this.setupDesignerCredit();
+        this.setupHoverEffects();
+        this.setupKeyboardAccessibility();
+        this.setupResponsiveHandler();
+        
+        console.log('Final Footer: Initialized successfully');
     }
     
-    // Update current year dynamically
-    setupCurrentYear() {
+    // Update current year automatically
+    updateCurrentYear() {
         const currentYear = new Date().getFullYear();
-        const yearElements = this.footerElement.querySelectorAll('.hps-current-year');
+        const yearElements = this.footer.querySelectorAll('.current-year');
         
         yearElements.forEach(element => {
             element.textContent = currentYear;
         });
         
-        // Add special animation to year indicator
-        const yearIndicator = this.footerElement.querySelector('.hps-year-indicator');
-        if (yearIndicator) {
-            setTimeout(() => {
-                yearIndicator.style.animation = 'hpsYearPulse 3s ease-in-out infinite';
-            }, 1000);
+        console.log(`Final Footer: Year updated to ${currentYear}`);
+    }
+    
+    // Setup scroll-triggered animations
+    setupScrollAnimations() {
+        if (!('IntersectionObserver' in window)) {
+            // Fallback for older browsers
+            this.triggerAllAnimations();
+            return;
         }
-    }
-    
-    // Setup viewport observer for scroll animations
-    setupViewportObserver() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '100px 0px',
-            threshold: 0.1
-        };
         
-        const footerObserver = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                this.isInViewport = entry.isIntersecting;
-                
-                if (entry.isIntersecting && !this.animationTriggered) {
-                    this.triggerFooterAnimations();
-                    this.animationTriggered = true;
-                }
-            });
-        }, observerOptions);
-        
-        footerObserver.observe(this.footerElement);
-        
-        // Setup individual element observers
-        this.setupElementObservers();
-    }
-    
-    // Setup observers for individual elements
-    setupElementObservers() {
-        const elementsToObserve = [
-            '.hps-footer-col',
-            '.hps-contact-block',
-            '.hps-social-btn',
-            '.hps-designer-credit-section'
-        ];
-        
-        const elementObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !this.scrollAnimations.has(entry.target)) {
-                    this.animateElementEntry(entry.target);
-                    this.scrollAnimations.add(entry.target);
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElement(entry.target);
+                    this.animatedElements.add(entry.target);
                 }
             });
         }, {
             root: null,
             rootMargin: '50px 0px',
-            threshold: 0.3
+            threshold: 0.1
         });
         
-        elementsToObserve.forEach(selector => {
-            const elements = this.footerElement.querySelectorAll(selector);
-            elements.forEach(element => {
-                elementObserver.observe(element);
+        // Observe footer columns
+        const columns = this.footer.querySelectorAll('.footer-column');
+        columns.forEach(column => {
+            observer.observe(column);
+        });
+        
+        // Observe footer bottom
+        const footerBottom = this.footer.querySelector('.footer-bottom');
+        if (footerBottom) {
+            observer.observe(footerBottom);
+        }
+        
+        // Main footer visibility
+        const mainObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                this.isVisible = entry.isIntersecting;
+                if (this.isVisible) {
+                    this.startBackgroundAnimations();
+                }
             });
-        });
+        }, { threshold: 0.2 });
+        
+        mainObserver.observe(this.footer);
     }
     
-    // Trigger main footer animations
-    triggerFooterAnimations() {
-        // Animate floating orbs
-        const orbs = this.footerElement.querySelectorAll('.hps-orb');
-        orbs.forEach((orb, index) => {
+    // Animate element when it comes into view
+    animateElement(element) {
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
+        
+        // Animate child elements with delay
+        const children = element.querySelectorAll('.menu-link, .service-link, .contact-item');
+        children.forEach((child, index) => {
             setTimeout(() => {
-                orb.style.opacity = '0.5';
-                orb.style.animation = `hpsOrbFloat${index + 1} ${12 + index * 2}s ease-in-out infinite alternate`;
-            }, index * 300);
+                child.style.opacity = '1';
+                child.style.transform = 'translateX(0)';
+            }, index * 100);
         });
-        
-        // Animate background elements
-        const bgGradient = this.footerElement.querySelector('.hps-footer-bg-gradient');
-        const bgMesh = this.footerElement.querySelector('.hps-footer-bg-mesh');
-        
-        if (bgGradient) {
-            bgGradient.style.animation = 'hpsGradientShift 20s ease-in-out infinite';
-        }
-        
-        if (bgMesh) {
-            bgMesh.style.animation = 'hpsMeshMove 60s linear infinite';
-        }
-        
-        // Animate wave
-        this.animateWaveElements();
-        
-        // Trigger staggered column animations
-        this.triggerColumnAnimations();
     }
     
-    // Animate individual element entry
-    animateElementEntry(element) {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(40px)';
-        element.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-        
-        // Trigger animation
-        requestAnimationFrame(() => {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        });
-        
-        // Special handling for specific elements
-        if (element.classList.contains('hps-contact-block')) {
-            this.animateContactBlock(element);
-        } else if (element.classList.contains('hps-social-btn')) {
-            this.animateSocialButton(element);
-        } else if (element.classList.contains('hps-designer-credit-section')) {
-            this.animateDesignerCredit(element);
-        }
-    }
-    
-    // Animate column entry with stagger
-    triggerColumnAnimations() {
-        const columns = this.footerElement.querySelectorAll('.hps-footer-col');
-        
+    // Fallback animation trigger
+    triggerAllAnimations() {
+        const columns = this.footer.querySelectorAll('.footer-column');
         columns.forEach((column, index) => {
             setTimeout(() => {
-                column.style.animation = 'hpsColumnSlideUp 0.8s ease-out forwards';
+                this.animateElement(column);
             }, index * 200);
         });
+        
+        this.startBackgroundAnimations();
     }
     
-    // Animate wave elements
-    animateWaveElements() {
-        const waveLayers = this.footerElement.querySelectorAll('.hps-wave-layer-1, .hps-wave-layer-2, .hps-wave-layer-3');
-        
-        waveLayers.forEach((layer, index) => {
+    // Start background animations
+    startBackgroundAnimations() {
+        const particles = this.footer.querySelectorAll('.particle');
+        particles.forEach((particle, index) => {
             setTimeout(() => {
-                layer.style.animationPlayState = 'running';
+                particle.style.animationPlayState = 'running';
             }, index * 500);
         });
+        
+        const bgOverlay = this.footer.querySelector('.bg-gradient-overlay');
+        if (bgOverlay) {
+            bgOverlay.style.animationPlayState = 'running';
+        }
+        
+        const wave = this.footer.querySelector('.wave-path');
+        if (wave) {
+            wave.style.animationPlayState = 'running';
+        }
     }
     
-    // Setup smooth navigation for internal links
-    setupSmoothNavigation() {
-        const internalLinks = this.footerElement.querySelectorAll('a[href^="#"]');
+    // Setup smooth scrolling for internal links
+    setupSmoothScrolling() {
+        const internalLinks = this.footer.querySelectorAll('a[href^="#"]');
         
         internalLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault();
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
                 
                 const targetId = link.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
                 
                 if (targetElement) {
-                    this.createClickRipple(event, link);
+                    // Calculate scroll position with header offset
+                    const headerOffset = 100;
+                    const elementPosition = targetElement.offsetTop;
+                    const offsetPosition = elementPosition - headerOffset;
                     
-                    // Smooth scroll with offset for fixed header
-                    const headerOffset = 120;
-                    const elementTop = targetElement.offsetTop;
-                    const offsetTop = elementTop - headerOffset;
-                    
+                    // Smooth scroll
                     window.scrollTo({
-                        top: offsetTop,
+                        top: offsetPosition,
                         behavior: 'smooth'
                     });
                     
-                    // Update URL without jumping
+                    // Update URL
                     history.pushState(null, null, `#${targetId}`);
                     
                     // Track navigation
-                    this.trackFooterNavigation(targetId);
+                    this.trackEvent('navigation', targetId);
                     
-                    // Focus management for accessibility
-                    setTimeout(() => {
-                        targetElement.focus({ preventScroll: true });
-                    }, 1000);
+                    // Add visual feedback
+                    this.addClickFeedback(link);
                 }
             });
         });
     }
     
-    // Setup social media interaction handlers
-    setupSocialMediaHandlers() {
-        const socialButtons = this.footerElement.querySelectorAll('.hps-social-btn');
+    // Setup social media link interactions
+    setupSocialLinks() {
+        const socialLinks = this.footer.querySelectorAll('.social-link');
         
-        socialButtons.forEach(button => {
-            // Hover animations
-            button.addEventListener('mouseenter', () => {
-                this.animateSocialHover(button, 'enter');
+        socialLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const platform = this.getSocialPlatform(link);
+                this.trackEvent('social_click', platform);
+                this.addClickFeedback(link);
             });
             
-            button.addEventListener('mouseleave', () => {
-                this.animateSocialHover(button, 'leave');
+            link.addEventListener('mouseenter', () => {
+                this.animateSocialHover(link, true);
             });
             
-            // Click handling
-            button.addEventListener('click', (event) => {
-                this.createClickRipple(event, button);
-                
-                const platform = this.getSocialPlatform(button);
-                this.trackSocialInteraction(platform);
-                
-                // Add click animation
-                this.applySocialClickAnimation(button);
-            });
-            
-            // Touch support
-            button.addEventListener('touchstart', () => {
-                button.classList.add('hps-social-touch');
-            });
-            
-            button.addEventListener('touchend', () => {
-                setTimeout(() => {
-                    button.classList.remove('hps-social-touch');
-                }, 300);
+            link.addEventListener('mouseleave', () => {
+                this.animateSocialHover(link, false);
             });
         });
     }
     
-    // Animate social media button hover
-    animateSocialHover(button, action) {
-        const icon = button.querySelector('i');
-        const tooltip = button.querySelector('.hps-social-platform');
-        
-        if (action === 'enter') {
-            if (icon) {
-                icon.style.animation = 'hpsSocialIconBounce 0.6s ease';
-            }
-            
-            button.style.transform = 'translateY(-4px) scale(1.05)';
-            
-            if (tooltip) {
-                tooltip.style.opacity = '1';
-                tooltip.style.visibility = 'visible';
-                tooltip.style.bottom = '-32px';
-            }
-        } else {
-            if (icon) {
-                icon.style.animation = '';
-            }
-            
-            button.style.transform = '';
-            
-            if (tooltip) {
-                tooltip.style.opacity = '0';
-                tooltip.style.visibility = 'hidden';
-                tooltip.style.bottom = '-35px';
-            }
-        }
-    }
-    
-    // Apply click animation to social button
-    applySocialClickAnimation(button) {
-        button.style.transform = 'translateY(-2px) scale(0.95)';
-        
-        setTimeout(() => {
-            button.style.transform = 'translateY(-4px) scale(1.05)';
-        }, 150);
-    }
-    
-    // Get social media platform from button classes
-    getSocialPlatform(button) {
-        const classes = button.className;
-        if (classes.includes('instagram')) return 'instagram';
-        if (classes.includes('facebook')) return 'facebook';
-        if (classes.includes('linkedin')) return 'linkedin';
-        if (classes.includes('twitter')) return 'twitter';
+    // Get social platform from link class
+    getSocialPlatform(link) {
+        if (link.classList.contains('instagram')) return 'instagram';
+        if (link.classList.contains('facebook')) return 'facebook';
+        if (link.classList.contains('linkedin')) return 'linkedin';
+        if (link.classList.contains('twitter')) return 'twitter';
         return 'unknown';
     }
     
-    // Setup contact interaction handlers
-    setupContactInteractions() {
-        const contactLinks = this.footerElement.querySelectorAll('.hps-contact-clickable');
-        const contactBlocks = this.footerElement.querySelectorAll('.hps-contact-block');
-        
-        // Contact link interactions
-        contactLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                this.createClickRipple(event, link);
-                
-                const href = link.getAttribute('href');
-                if (href.startsWith('tel:')) {
-                    this.trackContactAction('phone_call', href);
-                } else if (href.startsWith('mailto:')) {
-                    this.trackContactAction('email', href);
-                }
-            });
-        });
-        
-        // Contact block hover effects
-        contactBlocks.forEach(block => {
-            block.addEventListener('mouseenter', () => {
-                this.animateContactBlockHover(block, true);
-            });
-            
-            block.addEventListener('mouseleave', () => {
-                this.animateContactBlockHover(block, false);
-            });
-        });
-        
-        // Appointment button
-        const appointmentBtn = this.footerElement.querySelector('.hps-appointment-btn');
-        if (appointmentBtn) {
-            appointmentBtn.addEventListener('click', (event) => {
-                this.createClickRipple(event, appointmentBtn);
-                this.trackContactAction('appointment_click', appointmentBtn.getAttribute('href'));
-            });
-        }
-    }
-    
-    // Animate contact block hover
-    animateContactBlockHover(block, isHover) {
-        const icon = block.querySelector('.hps-contact-icon-wrapper');
+    // Animate social media hover
+    animateSocialHover(link, isHover) {
+        const icon = link.querySelector('i');
         
         if (isHover) {
-            block.style.transform = 'translateY(-3px)';
-            block.style.boxShadow = '0 10px 25px rgba(0, 216, 132, 0.15)';
-            
+            link.style.transform = 'translateY(-3px) scale(1.05)';
             if (icon) {
-                icon.style.transform = 'scale(1.1)';
+                icon.style.animation = 'socialBounce 0.6s ease';
             }
         } else {
-            block.style.transform = '';
-            block.style.boxShadow = '';
-            
+            link.style.transform = '';
             if (icon) {
-                icon.style.transform = '';
+                icon.style.animation = '';
             }
         }
     }
     
-    // Setup designer credit interaction handlers
-    setupDesignerCreditHandlers() {
-        const designerSection = this.footerElement.querySelector('.hps-designer-credit-section');
-        const designerLink = this.footerElement.querySelector('.hps-designer-brand-link');
+    // Setup contact link interactions
+    setupContactLinks() {
+        const contactLinks = this.footer.querySelectorAll('.contact-link');
         
-        if (designerSection && designerLink) {
-            designerSection.addEventListener('mouseenter', () => {
-                this.animateDesignerHover(designerSection, true);
-            });
-            
-            designerSection.addEventListener('mouseleave', () => {
-                this.animateDesignerHover(designerSection, false);
-            });
-            
-            designerLink.addEventListener('click', (event) => {
-                this.createClickRipple(event, designerLink);
-                this.trackDesignerClick();
+        contactLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
                 
-                // Special click animation
-                this.applyDesignerClickAnimation(designerSection);
+                if (href.startsWith('tel:')) {
+                    this.trackEvent('contact_phone', href);
+                } else if (href.startsWith('mailto:')) {
+                    this.trackEvent('contact_email', href);
+                }
+                
+                this.addClickFeedback(link);
+            });
+        });
+        
+        // CTA button
+        const ctaButton = this.footer.querySelector('.cta-button');
+        if (ctaButton) {
+            ctaButton.addEventListener('click', (e) => {
+                this.trackEvent('cta_click', 'schedule_consultation');
+                this.addClickFeedback(ctaButton);
+            });
+        }
+    }
+    
+    // Setup designer credit interactions
+    setupDesignerCredit() {
+        const designerLink = this.footer.querySelector('.designer-link');
+        
+        if (designerLink) {
+            designerLink.addEventListener('click', (e) => {
+                this.trackEvent('designer_credit_click', 'elans_tech_world');
+                this.addClickFeedback(designerLink);
+            });
+            
+            designerLink.addEventListener('mouseenter', () => {
+                this.animateDesignerHover(true);
+            });
+            
+            designerLink.addEventListener('mouseleave', () => {
+                this.animateDesignerHover(false);
             });
         }
     }
     
     // Animate designer credit hover
-    animateDesignerHover(section, isHover) {
-        const logo = section.querySelector('.hps-designer-logo-box');
-        const shine = section.querySelector('.hps-designer-link-shine');
-        const icon = section.querySelector('.hps-external-link-icon');
+    animateDesignerHover(isHover) {
+        const designerCredit = this.footer.querySelector('.designer-credit');
+        const logo = this.footer.querySelector('.designer-logo');
+        const arrow = this.footer.querySelector('.designer-arrow');
         
         if (isHover) {
-            section.style.transform = 'translateY(-3px)';
-            section.style.boxShadow = '0 12px 35px rgba(0, 216, 132, 0.25)';
+            if (designerCredit) {
+                designerCredit.style.transform = 'translateY(-2px)';
+                designerCredit.style.boxShadow = '0 8px 20px rgba(0, 216, 132, 0.2)';
+            }
             
             if (logo) {
                 logo.style.transform = 'scale(1.1) rotate(-5deg)';
             }
             
-            if (shine) {
-                shine.style.left = '100%';
-            }
-            
-            if (icon) {
-                icon.style.transform = 'translateX(4px) translateY(-4px)';
+            if (arrow) {
+                arrow.style.transform = 'translateX(3px) translateY(-3px)';
             }
         } else {
-            section.style.transform = '';
-            section.style.boxShadow = '';
+            if (designerCredit) {
+                designerCredit.style.transform = '';
+                designerCredit.style.boxShadow = '';
+            }
             
             if (logo) {
                 logo.style.transform = '';
             }
             
-            if (shine) {
-                shine.style.left = '-100%';
-            }
-            
-            if (icon) {
-                icon.style.transform = '';
+            if (arrow) {
+                arrow.style.transform = '';
             }
         }
     }
     
-    // Apply designer click animation
-    applyDesignerClickAnimation(section) {
-        section.style.transform = 'translateY(-1px) scale(0.98)';
+    // Setup general hover effects
+    setupHoverEffects() {
+        // Menu links
+        const menuLinks = this.footer.querySelectorAll('.menu-link, .service-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                link.style.transform = 'translateX(8px)';
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = '';
+            });
+        });
         
-        setTimeout(() => {
-            section.style.transform = 'translateY(-3px) scale(1)';
-        }, 150);
-    }
-    
-    // Setup ripple effects for clickable elements
-    setupRippleEffects() {
-        const rippleElements = this.footerElement.querySelectorAll(
-            '.hps-nav-item, .hps-service-item, .hps-legal-link, .hps-credential-badge'
-        );
+        // Contact items
+        const contactItems = this.footer.querySelectorAll('.contact-item');
+        contactItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateY(-2px)';
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = '';
+            });
+        });
         
-        rippleElements.forEach(element => {
-            element.addEventListener('click', (event) => {
-                this.createClickRipple(event, element);
+        // Legal links
+        const legalLinks = this.footer.querySelectorAll('.legal-link');
+        legalLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                link.style.transform = 'translateY(-1px)';
+            });
+            
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = '';
             });
         });
     }
     
-    // Create click ripple effect
-    createClickRipple(event, element) {
+    // Setup keyboard accessibility
+    setupKeyboardAccessibility() {
+        const focusableElements = this.footer.querySelectorAll(
+            'a, button, [tabindex]:not([tabindex="-1"])'
+        );
+        
+        focusableElements.forEach(element => {
+            element.addEventListener('focus', () => {
+                element.style.outline = '2px solid #00d884';
+                element.style.outlineOffset = '2px';
+            });
+            
+            element.addEventListener('blur', () => {
+                element.style.outline = '';
+                element.style.outlineOffset = '';
+            });
+            
+            element.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    if (element.tagName === 'A') {
+                        // Let default behavior handle the click
+                        this.addClickFeedback(element);
+                    }
+                }
+            });
+        });
+    }
+    
+    // Setup responsive handler
+    setupResponsiveHandler() {
+        let resizeTimer;
+        
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                this.handleResponsiveChanges();
+            }, 250);
+        });
+        
+        // Initial check
+        this.handleResponsiveChanges();
+    }
+    
+    // Handle responsive layout changes
+    handleResponsiveChanges() {
+        const viewport = window.innerWidth;
+        
+        // Add responsive classes
+        this.footer.classList.toggle('mobile', viewport <= 767);
+        this.footer.classList.toggle('tablet', viewport > 767 && viewport <= 991);
+        this.footer.classList.toggle('desktop', viewport > 991);
+        
+        // Adjust animations for mobile
+        if (viewport <= 480) {
+            this.adjustMobileAnimations();
+        }
+    }
+    
+    // Adjust animations for mobile devices
+    adjustMobileAnimations() {
+        const particles = this.footer.querySelectorAll('.particle');
+        particles.forEach((particle, index) => {
+            particle.style.animationDuration = `${25 + index * 5}s`;
+        });
+    }
+    
+    // Add visual click feedback
+    addClickFeedback(element) {
+        element.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+            element.style.transform = '';
+        }, 150);
+        
+        // Create ripple effect
+        this.createRipple(element);
+    }
+    
+    // Create ripple effect
+    createRipple(element) {
         const ripple = document.createElement('span');
         const rect = element.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
         
-        ripple.classList.add('hps-ripple-effect');
         ripple.style.cssText = `
             position: absolute;
             width: ${size}px;
             height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
+            left: 50%;
+            top: 50%;
+            background: rgba(0, 216, 132, 0.3);
             border-radius: 50%;
-            transform: scale(0);
-            animation: hpsRippleAnimation 0.6s ease-out;
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleEffect 0.6s ease-out;
             pointer-events: none;
             z-index: 100;
         `;
@@ -3683,540 +3645,148 @@ class HolisticFooterController {
         
         element.appendChild(ripple);
         
-        // Store ripple reference
-        this.rippleEffects.push(ripple);
-        
         // Remove ripple after animation
         setTimeout(() => {
             if (ripple.parentNode) {
                 ripple.parentNode.removeChild(ripple);
             }
-            
-            // Remove from tracking array
-            const index = this.rippleEffects.indexOf(ripple);
-            if (index > -1) {
-                this.rippleEffects.splice(index, 1);
-            }
         }, 600);
     }
     
-    // Setup keyboard accessibility
-    setupKeyboardAccessibility() {
-        const focusableElements = this.footerElement.querySelectorAll(
-            'a, button, [tabindex]:not([tabindex="-1"])'
-        );
+    // Track events (for analytics integration)
+    trackEvent(action, label) {
+        console.log(`Final Footer: ${action} - ${label}`);
         
-        focusableElements.forEach(element => {
-            // Focus styling
-            element.addEventListener('focus', () => {
-                element.style.outline = '3px solid #00d884';
-                element.style.outlineOffset = '3px';
-                element.style.borderRadius = '6px';
-            });
-            
-            element.addEventListener('blur', () => {
-                element.style.outline = '';
-                element.style.outlineOffset = '';
-            });
-            
-            // Keyboard navigation
-            element.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    
-                    // Create keyboard ripple effect
-                    this.createKeyboardRipple(element);
-                    
-                    // Trigger click
-                    setTimeout(() => {
-                        element.click();
-                    }, 100);
-                }
-            });
-        });
-        
-        // Skip link functionality
-        this.setupSkipLinks();
-    }
-    
-    // Create keyboard-triggered ripple effect
-    createKeyboardRipple(element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.min(rect.width, rect.height) * 0.8;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: rgba(0, 216, 132, 0.3);
-            border-radius: 50%;
-            animation: hpsKeyboardRipple 0.5s ease-out;
-            pointer-events: none;
-            z-index: 100;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 500);
-    }
-    
-    // Setup skip links for accessibility
-    setupSkipLinks() {
-        const skipToTop = document.createElement('a');
-        skipToTop.href = '#top';
-        skipToTop.className = 'hps-skip-link';
-        skipToTop.textContent = 'Skip to top';
-        skipToTop.style.cssText = `
-            position: absolute;
-            left: -9999px;
-            z-index: 10000;
-            padding: 12px 16px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-        `;
-        
-        skipToTop.addEventListener('focus', () => {
-            skipToTop.style.left = '20px';
-            skipToTop.style.top = '20px';
-        });
-        
-        skipToTop.addEventListener('blur', () => {
-            skipToTop.style.left = '-9999px';
-        });
-        
-        this.footerElement.insertBefore(skipToTop, this.footerElement.firstChild);
-    }
-    
-    // Setup responsive behavior handlers
-    setupResponsiveHandlers() {
-        let resizeTimer;
-        
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                this.handleResponsiveChanges();
-            }, 300);
-        });
-        
-        // Initial responsive setup
-        this.handleResponsiveChanges();
-    }
-    
-    // Handle responsive layout changes
-    handleResponsiveChanges() {
-        const viewport = window.innerWidth;
-        
-        // Update footer classes based on viewport
-        this.footerElement.classList.toggle('hps-footer-mobile', viewport <= 767);
-        this.footerElement.classList.toggle('hps-footer-tablet', viewport > 767 && viewport <= 991);
-        this.footerElement.classList.toggle('hps-footer-desktop', viewport > 991);
-        
-        // Adjust animations for mobile
-        if (viewport <= 480) {
-            this.adjustMobileAnimations();
-        } else {
-            this.resetDesktopAnimations();
-        }
-        
-        // Update social tooltips for small screens
-        if (viewport <= 767) {
-            this.hideSocialTooltips();
-        }
-    }
-    
-    // Adjust animations for mobile devices
-    adjustMobileAnimations() {
-        const orbs = this.footerElement.querySelectorAll('.hps-orb');
-        orbs.forEach((orb, index) => {
-            orb.style.animationDuration = `${18 + index * 3}s`;
-            orb.style.opacity = '0.3';
-        });
-        
-        const waves = this.footerElement.querySelectorAll('.hps-wave-layer-1, .hps-wave-layer-2, .hps-wave-layer-3');
-        waves.forEach(wave => {
-            wave.style.animationDuration = '20s';
-        });
-    }
-    
-    // Reset desktop animations
-    resetDesktopAnimations() {
-        const orbs = this.footerElement.querySelectorAll('.hps-orb');
-        orbs.forEach((orb, index) => {
-            orb.style.animationDuration = `${12 + index * 2}s`;
-            orb.style.opacity = '0.5';
-        });
-    }
-    
-    // Hide social tooltips on small screens
-    hideSocialTooltips() {
-        const tooltips = this.footerElement.querySelectorAll('.hps-social-platform');
-        tooltips.forEach(tooltip => {
-            tooltip.style.display = 'none';
-        });
-    }
-    
-    // Setup additional hover effects
-    setupHoverEffects() {
-        // Navigation items
-        const navItems = this.footerElement.querySelectorAll('.hps-nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                this.animateNavItemHover(item, true);
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                this.animateNavItemHover(item, false);
-            });
-        });
-        
-        // Service items
-        const serviceItems = this.footerElement.querySelectorAll('.hps-service-item');
-        serviceItems.forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                this.animateServiceItemHover(item, true);
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                this.animateServiceItemHover(item, false);
-            });
-        });
-        
-        // Legal links
-        const legalLinks = this.footerElement.querySelectorAll('.hps-legal-link');
-        legalLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                link.style.transform = 'translateY(-1px)';
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                link.style.transform = '';
-            });
-        });
-    }
-    
-    // Animate navigation item hover
-    animateNavItemHover(item, isHover) {
-        const icon = item.querySelector('i');
-        const hoverEffect = item.querySelector('.hps-nav-hover-effect');
-        
-        if (isHover) {
-            item.style.transform = 'translateX(10px)';
-            
-            if (icon) {
-                icon.style.transform = 'scale(1.1)';
-            }
-            
-            if (hoverEffect) {
-                hoverEffect.style.opacity = '1';
-            }
-        } else {
-            item.style.transform = '';
-            
-            if (icon) {
-                icon.style.transform = '';
-            }
-            
-            if (hoverEffect) {
-                hoverEffect.style.opacity = '0';
-            }
-        }
-    }
-    
-    // Animate service item hover
-    animateServiceItemHover(item, isHover) {
-        const icon = item.querySelector('i');
-        
-        if (isHover) {
-            item.style.transform = 'translateX(6px)';
-            
-            if (icon) {
-                icon.style.transform = 'scale(1.1) rotate(5deg)';
-            }
-        } else {
-            item.style.transform = '';
-            
-            if (icon) {
-                icon.style.transform = '';
-            }
-        }
-    }
-    
-    // Setup animation triggers based on scroll
-    setupAnimationTriggers() {
-        // Parallax effect for orbs based on scroll
-        let scrollTimer;
-        
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(() => {
-                if (this.isInViewport) {
-                    this.updateParallaxEffects();
-                }
-            }, 16); // ~60fps
-        });
-    }
-    
-    // Update parallax effects based on scroll position
-    updateParallaxEffects() {
-        const scrollY = window.scrollY;
-        const orbs = this.footerElement.querySelectorAll('.hps-orb');
-        
-        orbs.forEach((orb, index) => {
-            const speed = 0.5 + (index * 0.1);
-            const yPos = scrollY * speed;
-            orb.style.transform = `translateY(${yPos}px)`;
-        });
-    }
-    
-    // Animation helpers
-    animateContactBlock(block) {
-        const icon = block.querySelector('.hps-contact-icon-wrapper');
-        
-        setTimeout(() => {
-            if (icon) {
-                icon.style.animation = 'hpsIconBounce 0.6s ease';
-            }
-        }, 200);
-    }
-    
-    animateSocialButton(button) {
-        setTimeout(() => {
-            button.style.animation = 'hpsSocialSlideIn 0.5s ease';
-        }, 100);
-    }
-    
-    animateDesignerCredit(section) {
-        const logo = section.querySelector('.hps-designer-logo-box');
-        
-        setTimeout(() => {
-            if (logo) {
-                logo.style.animation = 'hpsLogoSpin 1s ease';
-            }
-        }, 300);
-    }
-    
-    // Analytics and tracking methods
-    trackFooterNavigation(targetId) {
-        console.log(`HPS Footer: Navigation to ${targetId}`);
-        
-        // Integration with analytics
+        // Integration with Google Analytics
         if (typeof gtag !== 'undefined') {
-            gtag('event', 'footer_navigation', {
+            gtag('event', action, {
                 'event_category': 'footer',
-                'event_label': targetId
+                'event_label': label
             });
         }
-    }
-    
-    trackSocialInteraction(platform) {
-        console.log(`HPS Footer: Social interaction - ${platform}`);
         
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'social_media_click', {
-                'event_category': 'footer',
-                'social_network': platform
-            });
-        }
-    }
-    
-    trackContactAction(action, target) {
-        console.log(`HPS Footer: Contact action - ${action} to ${target}`);
-        
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'contact_interaction', {
-                'event_category': 'footer',
-                'event_label': action,
-                'value': target
-            });
-        }
-    }
-    
-    trackDesignerClick() {
-        console.log('HPS Footer: Designer credit clicked - Elans Tech World');
-        
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'designer_credit_click', {
-                'event_category': 'footer',
-                'event_label': 'elans_tech_world',
-                'value': 1
+        // Integration with other analytics platforms
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'ViewContent', {
+                content_category: 'footer_interaction',
+                content_name: action
             });
         }
     }
     
     // Public methods for external control
-    refreshFooter() {
-        this.setupCurrentYear();
-        this.handleResponsiveChanges();
-        console.log('HPS Footer: Refreshed');
+    refresh() {
+        this.updateCurrentYear();
+        this.handleResponsiveChangations();
+        console.log('Final Footer: Refreshed');
+    }
+    
+    showFooter() {
+        this.footer.style.opacity = '1';
+        this.footer.style.visibility = 'visible';
+    }
+    
+    hideFooter() {
+        this.footer.style.opacity = '0';
+        this.footer.style.visibility = 'hidden';
     }
     
     triggerAnimations() {
-        if (!this.animationTriggered) {
-            this.triggerFooterAnimations();
-            this.animationTriggered = true;
-        }
-    }
-    
-    pauseAnimations() {
-        const animatedElements = this.footerElement.querySelectorAll('[style*="animation"]');
-        animatedElements.forEach(element => {
-            element.style.animationPlayState = 'paused';
-        });
-    }
-    
-    resumeAnimations() {
-        const animatedElements = this.footerElement.querySelectorAll('[style*="animation"]');
-        animatedElements.forEach(element => {
-            element.style.animationPlayState = 'running';
-        });
+        this.triggerAllAnimations();
+        console.log('Final Footer: Animations triggered');
     }
     
     // Cleanup method
-    destroyFooter() {
+    destroy() {
         // Remove event listeners
         window.removeEventListener('resize', this.handleResponsiveChanges);
-        window.removeEventListener('scroll', this.updateParallaxEffects);
         
-        // Clear ripple effects
-        this.rippleEffects.forEach(ripple => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        });
-        this.rippleEffects = [];
+        // Clear tracking
+        this.animatedElements.clear();
         
-        // Clear tracking sets
-        this.scrollAnimations.clear();
-        
-        console.log('HPS Footer: Destroyed');
+        console.log('Final Footer: Destroyed');
     }
 }
 
-// Required CSS animations
-const hpsFooterAnimationsCSS = `
-@keyframes hpsRippleAnimation {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-@keyframes hpsKeyboardRipple {
+// Add required CSS animations
+const footerAnimationsCSS = `
+@keyframes rippleEffect {
     to {
         transform: translate(-50%, -50%) scale(4);
         opacity: 0;
     }
 }
 
-@keyframes hpsSocialIconBounce {
+@keyframes socialBounce {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-5px) scale(1.1); }
+    50% { transform: translateY(-4px) scale(1.1); }
 }
 
-@keyframes hpsSocialSlideIn {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes hpsIconBounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-}
-
-@keyframes hpsLogoSpin {
-    from { transform: rotate(0deg) scale(1); }
-    to { transform: rotate(360deg) scale(1.1); }
-}
-
-.hps-skip-link:focus {
-    position: fixed !important;
-    left: 20px !important;
-    top: 20px !important;
-    z-index: 10000 !important;
-}
-
-.hps-social-touch {
-    transform: translateY(-2px) scale(0.95) !important;
-}
-
-.hps-ripple-effect {
-    pointer-events: none;
+/* Accessibility focus styles */
+.final-footer *:focus {
+    outline: 2px solid #00d884 !important;
+    outline-offset: 2px !important;
 }
 `;
 
-// Add CSS animations to document
-const addHPSFooterAnimations = () => {
-    const existingStyle = document.getElementById('hps-footer-animations');
-    if (!existingStyle) {
+// Add animations to document head
+const addFooterAnimations = () => {
+    if (!document.getElementById('final-footer-animations')) {
         const style = document.createElement('style');
-        style.id = 'hps-footer-animations';
-        style.textContent = hpsFooterAnimationsCSS;
+        style.id = 'final-footer-animations';
+        style.textContent = footerAnimationsCSS;
         document.head.appendChild(style);
     }
 };
 
-// Initialize footer controller
-const initializeHPSFooter = () => {
-    addHPSFooterAnimations();
+// Initialize footer
+const initializeFinalFooter = () => {
+    // Add animations
+    addFooterAnimations();
     
-    // Create footer controller instance
-    const footerController = new HolisticFooterController();
+    // Create controller instance
+    const controller = new FinalFooterController();
     
-    // Store globally for debugging and external access
-    window.hpsFooter = footerController;
+    // Store globally for external access
+    window.finalFooter = controller;
     
-    return footerController;
+    return controller;
 };
 
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeHPSFooter);
+    document.addEventListener('DOMContentLoaded', initializeFinalFooter);
 } else {
-    initializeHPSFooter();
+    initializeFinalFooter();
 }
 
-// Handle page visibility changes for performance
+// Handle page visibility for performance
 document.addEventListener('visibilitychange', () => {
-    if (window.hpsFooter) {
+    if (window.finalFooter) {
         if (document.hidden) {
-            window.hpsFooter.pauseAnimations();
-            console.log('HPS Footer: Animations paused (page hidden)');
+            console.log('Final Footer: Page hidden, pausing animations');
         } else {
-            window.hpsFooter.resumeAnimations();
-            window.hpsFooter.refreshFooter();
-            console.log('HPS Footer: Animations resumed (page visible)');
+            window.finalFooter.refresh();
+            console.log('Final Footer: Page visible, resuming');
         }
     }
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (window.hpsFooter) {
-        window.hpsFooter.destroyFooter();
+    if (window.finalFooter) {
+        window.finalFooter.destroy();
     }
 });
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = HolisticFooterController;
+    module.exports = FinalFooterController;
 }
 
 // AMD support
 if (typeof define === 'function' && define.amd) {
-    define([], () => HolisticFooterController);
+    define([], () => FinalFooterController);
 }
 
 /* ==========================================================================
