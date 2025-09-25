@@ -16,7 +16,7 @@ class App {
         this.hero = new Hero();
         this.services = new ServicesCarousel();
         this.about = new CompactAboutSection();
-        this.team = new ModernTeamCarousel();
+        this.team = new TeamPreviewCarousel();
         this.reviews = new ElegantReviewsInstagramSection();
         this.contact = new HolisticContactSection();
         this.footer = new Footer();
@@ -1140,248 +1140,423 @@ if (typeof module !== 'undefined' && module.exports) {
 /* ==========================================================================
    TEAM SECTION
    ========================================================================== */
-class ModernTeamCarousel {
+class TeamPreviewCarousel {
     constructor() {
-        // DOM Elements
-        this.section = document.querySelector('.modern-team-section');
+        // DOM Elements - Using unique selectors to avoid conflicts
+        this.section = document.querySelector('.team-preview-section');
         this.slider = document.querySelector('.team-carousel-slider');
-        this.cards = document.querySelectorAll('.modern-team-card');
-        this.prevBtn = document.querySelector('.team-prev-btn');
-        this.nextBtn = document.querySelector('.team-next-btn');
-        this.dots = document.querySelectorAll('.team-dot');
-        this.progressIndicator = document.querySelector('.team-progress-indicator');
+        this.slides = document.querySelectorAll('.team-member-slide');
         this.viewport = document.querySelector('.team-carousel-viewport');
+        this.prevBtn = document.querySelector('.team-nav-prev');
+        this.nextBtn = document.querySelector('.team-nav-next');
+        this.progressFill = document.querySelector('.team-progress-fill');
+        this.dotsContainer = document.querySelector('.team-carousel-dots');
+        this.filterTabs = document.querySelectorAll('.team-filter-tab');
+        this.ctaButtons = document.querySelectorAll('.team-cta-btn');
+        this.joinApplyBtn = document.querySelector('.join-apply-btn');
         
         // Carousel State
         this.currentIndex = 0;
-        this.cardsPerView = this.getCardsPerView();
-        this.totalCards = this.cards.length;
-        this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+        this.slidesPerView = this.getSlidesPerView();
+        this.totalSlides = this.slides.length;
+        this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+        this.isAnimating = false;
+        
+        // Auto-play State
         this.autoPlayInterval = null;
-        this.autoPlayDelay = 4000;
-        this.isPlaying = true;
+        this.autoPlayDelay = 5000;
+        this.isAutoPlaying = true;
         this.isHovering = false;
         
         // Touch/Drag State
         this.isDragging = false;
         this.startX = 0;
         this.currentX = 0;
-        this.threshold = 50;
-        this.initialTranslate = 0;
+        this.dragThreshold = 50;
         
-        // Initialize
+        // Animation State
+        this.animatedElements = new Set();
+        this.statsAnimated = new Set();
+        
         this.init();
     }
     
     init() {
-        if (!this.section || !this.slider || this.totalCards === 0) return;
+        if (!this.section || !this.slider) {
+            console.warn('Team Preview: Required elements not found');
+            return;
+        }
         
-        // Setup event listeners
+        // Setup all functionality
         this.setupEventListeners();
-        
-        // Setup intersection observer
+        this.setupFilterTabs();
+        this.setupCarouselDots();
         this.setupIntersectionObserver();
-        
-        // Initialize carousel
+        this.setupTouchEvents();
+        this.setupButtonInteractions();
         this.updateCarousel();
-        
-        // Start auto-play
         this.startAutoPlay();
         
-        // Setup card interactions
-        this.setupCardInteractions();
-        
-        console.log('Modern Team Carousel initialized successfully');
+        console.log('Team Preview Carousel initialized successfully');
     }
     
     setupEventListeners() {
         // Navigation buttons
         if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => this.slidePrev());
+            this.prevBtn.addEventListener('click', () => this.goToPrevious());
         }
         
         if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => this.slideNext());
+            this.nextBtn.addEventListener('click', () => this.goToNext());
         }
         
-        // Pagination dots
-        this.dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => this.goToSlide(index));
-        });
-        
-        // Hover pause
+        // Hover pause auto-play
         if (this.viewport) {
             this.viewport.addEventListener('mouseenter', () => this.handleMouseEnter());
             this.viewport.addEventListener('mouseleave', () => this.handleMouseLeave());
         }
         
-        // Touch/Swipe events
-        this.setupTouchEvents();
-        
         // Keyboard navigation
-        this.setupKeyboardNavigation();
+        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
         
         // Window resize
         window.addEventListener('resize', () => this.handleResize());
+        
+        // Prevent image dragging
+        this.slides.forEach(slide => {
+            const images = slide.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('dragstart', (e) => e.preventDefault());
+            });
+        });
+    }
+    
+    setupFilterTabs() {
+        this.filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const filter = tab.dataset.filter;
+                
+                // Update active tab
+                this.filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Filter slides
+                this.filterSlides(filter);
+                
+                // Add ripple effect
+                this.createRippleEffect(event, tab);
+            });
+        });
+    }
+    
+    filterSlides(filter) {
+        // Reset to first slide
+        this.currentIndex = 0;
+        
+        // Show/hide slides with animation
+        this.slides.forEach((slide, index) => {
+            const category = slide.dataset.category;
+            const shouldShow = filter === 'all' || category === filter;
+            
+            if (shouldShow) {
+                slide.style.display = '';
+                slide.style.opacity = '0';
+                slide.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    slide.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    slide.style.opacity = '';
+                    slide.style.transform = '';
+                }, index * 100);
+            } else {
+                slide.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                slide.style.opacity = '0';
+                slide.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    slide.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Update carousel after filter
+        setTimeout(() => {
+            this.updateVisibleSlides();
+            this.updateCarousel();
+            this.setupCarouselDots();
+        }, 400);
+    }
+    
+    updateVisibleSlides() {
+        const visibleSlides = Array.from(this.slides).filter(slide => 
+            slide.style.display !== 'none'
+        );
+        this.totalSlides = visibleSlides.length;
+        this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+        this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+    }
+    
+    setupCarouselDots() {
+        if (!this.dotsContainer) return;
+        
+        this.dotsContainer.innerHTML = '';
+        const totalPages = Math.ceil(this.totalSlides / this.slidesPerView);
+        
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'team-carousel-dot';
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            
+            if (i === 0) dot.classList.add('active');
+            
+            dot.addEventListener('click', () => {
+                this.currentIndex = i * this.slidesPerView;
+                this.updateCarousel();
+                this.resetAutoPlay();
+            });
+            
+            this.dotsContainer.appendChild(dot);
+        }
+    }
+    
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.animatedElements.has(entry.target)) {
+                    this.animateElementEntrance(entry.target);
+                    this.animatedElements.add(entry.target);
+                    
+                    if (entry.target === this.section) {
+                        this.startAutoPlay();
+                    }
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '50px'
+        });
+        
+        // Observe main elements
+        const elementsToObserve = [
+            '.team-preview-header',
+            '.team-filter-tabs',
+            '.team-preview-carousel',
+            '.team-preview-cta'
+        ];
+        
+        elementsToObserve.forEach(selector => {
+            const element = this.section.querySelector(selector);
+            if (element) observer.observe(element);
+        });
+        
+        // Observe individual slides for counter animation
+        this.slides.forEach(slide => {
+            observer.observe(slide);
+        });
+        
+        if (this.section) observer.observe(this.section);
+    }
+    
+    animateElementEntrance(element) {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        
+        requestAnimationFrame(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        });
+        
+        // Animate counters if this is a slide
+        if (element.classList.contains('team-member-slide')) {
+            const counters = element.querySelectorAll('.stat-value');
+            counters.forEach(counter => {
+                if (!this.statsAnimated.has(counter)) {
+                    setTimeout(() => this.animateCounter(counter), 800);
+                    this.statsAnimated.add(counter);
+                }
+            });
+        }
+    }
+    
+    animateCounter(element) {
+        const text = element.textContent;
+        const match = text.match(/(\d+)(\D*)/);
+        
+        if (!match) return;
+        
+        const finalValue = parseInt(match[1]);
+        const suffix = match[2];
+        const duration = 1500;
+        const steps = 50;
+        const increment = finalValue / steps;
+        
+        let current = 0;
+        let step = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            step++;
+            
+            if (step >= steps) {
+                element.textContent = finalValue + suffix;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current) + suffix;
+            }
+        }, duration / steps);
     }
     
     setupTouchEvents() {
         if (!this.viewport) return;
         
-        // Touch events
+        // Touch events for mobile
         this.viewport.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         this.viewport.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
         this.viewport.addEventListener('touchend', (e) => this.handleTouchEnd(e));
         
-        // Mouse events for desktop dragging
+        // Mouse drag events for desktop
         this.viewport.addEventListener('mousedown', (e) => this.handleMouseDown(e));
         this.viewport.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         this.viewport.addEventListener('mouseup', (e) => this.handleMouseUp(e));
         this.viewport.addEventListener('mouseleave', (e) => this.handleMouseUp(e));
+    }
+    
+    setupButtonInteractions() {
+        // CTA button interactions
+        this.ctaButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => this.createRippleEffect(e, btn));
+            
+            btn.addEventListener('mouseenter', () => {
+                const icons = btn.querySelectorAll('i');
+                icons.forEach((icon, index) => {
+                    setTimeout(() => {
+                        icon.style.animation = 'teamPreviewIconBounce 0.5s ease';
+                    }, index * 100);
+                });
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                const icons = btn.querySelectorAll('i');
+                icons.forEach(icon => {
+                    icon.style.animation = '';
+                });
+            });
+        });
         
-        // Prevent context menu on long press
-        this.viewport.addEventListener('contextmenu', (e) => {
-            if (this.isDragging) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    setupKeyboardNavigation() {
-        document.addEventListener('keydown', (e) => {
-            if (!this.isElementInViewport()) return;
-            
-            switch (e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    this.slidePrev();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    this.slideNext();
-                    break;
-                case ' ':
-                    e.preventDefault();
-                    this.toggleAutoPlay();
-                    break;
-            }
-        });
-    }
-    
-    setupCardInteractions() {
-        this.cards.forEach((card, index) => {
-            // Prevent image dragging
-            const images = card.querySelectorAll('img');
-            images.forEach(img => {
-                img.addEventListener('dragstart', (e) => e.preventDefault());
+        // Join apply button interaction
+        if (this.joinApplyBtn) {
+            this.joinApplyBtn.addEventListener('click', (e) => {
+                this.createRippleEffect(e, this.joinApplyBtn);
             });
-            
-            // Card click handling
-            card.addEventListener('click', (e) => {
-                // Don't trigger if dragging
-                if (Math.abs(this.startX - this.currentX) > 5) {
-                    e.preventDefault();
-                    return;
-                }
+        }
+        
+        // Profile link interactions
+        const profileLinks = this.section.querySelectorAll('.member-profile-link');
+        profileLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                this.createRippleEffect(e, link);
             });
-            
-            // Enhanced hover effects
-            card.addEventListener('mouseenter', () => this.enhanceCardHover(card));
-            card.addEventListener('mouseleave', () => this.resetCardHover(card));
-            
-            // Specialty item interactions
-            const specialties = card.querySelectorAll('.specialty-item');
-            specialties.forEach(specialty => {
-                specialty.addEventListener('mouseenter', () => {
-                    specialty.style.transform = 'translateY(-2px) scale(1.05)';
-                    specialty.style.boxShadow = '0 6px 15px rgba(0, 216, 132, 0.2)';
+        });
+        
+        // Navigation button ripples
+        [this.prevBtn, this.nextBtn].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('mousedown', (e) => {
+                    const ripple = btn.querySelector('.nav-ripple');
+                    if (ripple) {
+                        ripple.style.width = '60px';
+                        ripple.style.height = '60px';
+                        ripple.style.top = '50%';
+                        ripple.style.left = '50%';
+                    }
                 });
                 
-                specialty.addEventListener('mouseleave', () => {
-                    specialty.style.transform = '';
-                    specialty.style.boxShadow = '';
-                });
-            });
-            
-            // Profile button interactions
-            const profileBtn = card.querySelector('.member-profile-btn, .join-team-btn');
-            if (profileBtn) {
-                profileBtn.addEventListener('click', (e) => {
-                    this.createRipple(e, profileBtn);
+                btn.addEventListener('mouseup', () => {
+                    const ripple = btn.querySelector('.nav-ripple');
+                    if (ripple) {
+                        setTimeout(() => {
+                            ripple.style.width = '0';
+                            ripple.style.height = '0';
+                        }, 150);
+                    }
                 });
             }
         });
     }
     
-    setupIntersectionObserver() {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.2
-        };
+    createRippleEffect(event, element) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateEntrance();
-                    this.startAutoPlay();
-                } else {
-                    this.pauseAutoPlay();
-                }
-            });
-        }, observerOptions);
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: teamPreviewRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
         
-        if (this.section) {
-            observer.observe(this.section);
-        }
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
     }
     
-    // Touch Handlers
+    // Touch Event Handlers
     handleTouchStart(e) {
         this.startX = e.touches[0].clientX;
+        this.isDragging = true;
         this.pauseAutoPlay();
     }
     
     handleTouchMove(e) {
-        if (!this.startX) return;
+        if (!this.isDragging) return;
         
         this.currentX = e.touches[0].clientX;
         const diff = this.startX - this.currentX;
         
-        // Prevent default if swiping horizontally
+        // Prevent vertical scrolling when swiping horizontally
         if (Math.abs(diff) > 10) {
             e.preventDefault();
         }
     }
     
     handleTouchEnd(e) {
-        if (!this.startX) return;
+        if (!this.isDragging) return;
         
         const diff = this.startX - this.currentX;
         
-        if (Math.abs(diff) > this.threshold) {
+        if (Math.abs(diff) > this.dragThreshold) {
             if (diff > 0) {
-                this.slideNext();
+                this.goToNext();
             } else {
-                this.slidePrev();
+                this.goToPrevious();
             }
         }
         
-        this.startX = 0;
-        this.currentX = 0;
-        
-        if (!this.isHovering) {
-            this.startAutoPlay();
-        }
+        this.resetDragState();
     }
     
-    // Mouse Drag Handlers
+    // Mouse Drag Event Handlers
     handleMouseDown(e) {
-        this.isDragging = true;
         this.startX = e.clientX;
-        this.initialTranslate = this.getCurrentTranslate();
+        this.isDragging = true;
         this.viewport.style.cursor = 'grabbing';
-        this.slider.style.transition = 'none';
         this.pauseAutoPlay();
     }
     
@@ -1390,143 +1565,167 @@ class ModernTeamCarousel {
         
         e.preventDefault();
         this.currentX = e.clientX;
-        const deltaX = this.currentX - this.startX;
-        const newTranslate = this.initialTranslate + deltaX;
-        
-        this.slider.style.transform = `translateX(${newTranslate}px)`;
     }
     
     handleMouseUp(e) {
         if (!this.isDragging) return;
         
-        this.isDragging = false;
-        this.viewport.style.cursor = '';
-        this.slider.style.transition = '';
-        
         const diff = this.startX - this.currentX;
         
-        if (Math.abs(diff) > this.threshold) {
+        if (Math.abs(diff) > this.dragThreshold) {
             if (diff > 0) {
-                this.slideNext();
+                this.goToNext();
             } else {
-                this.slidePrev();
+                this.goToPrevious();
             }
-        } else {
-            this.updateCarousel();
         }
         
+        this.resetDragState();
+    }
+    
+    resetDragState() {
+        this.isDragging = false;
         this.startX = 0;
         this.currentX = 0;
+        this.viewport.style.cursor = '';
         
         if (!this.isHovering) {
             this.startAutoPlay();
         }
     }
     
-    getCurrentTranslate() {
-        const style = window.getComputedStyle(this.slider);
-        const matrix = style.transform;
+    // Keyboard Event Handler
+    handleKeyboard(e) {
+        if (!this.isElementInViewport()) return;
         
-        if (matrix === 'none') return 0;
-        
-        const values = matrix.split('(')[1].split(')')[0].split(',');
-        return parseInt(values[4]) || 0;
+        switch (e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.goToPrevious();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.goToNext();
+                break;
+            case ' ':
+                e.preventDefault();
+                this.toggleAutoPlay();
+                break;
+        }
     }
     
     // Navigation Methods
-    slidePrev() {
+    goToPrevious() {
+        if (this.isAnimating) return;
+        
         if (this.currentIndex > 0) {
             this.currentIndex--;
         } else {
             this.currentIndex = this.maxIndex; // Loop to end
         }
+        
         this.updateCarousel();
         this.resetAutoPlay();
     }
     
-    slideNext() {
+    goToNext() {
+        if (this.isAnimating) return;
+        
         if (this.currentIndex < this.maxIndex) {
             this.currentIndex++;
         } else {
             this.currentIndex = 0; // Loop to beginning
         }
+        
         this.updateCarousel();
         this.resetAutoPlay();
     }
     
     goToSlide(index) {
-        this.currentIndex = Math.min(index, this.maxIndex);
+        if (this.isAnimating) return;
+        
+        this.currentIndex = Math.max(0, Math.min(index, this.maxIndex));
         this.updateCarousel();
         this.resetAutoPlay();
     }
     
     updateCarousel() {
-        if (!this.slider) return;
+        if (!this.slider || this.isAnimating) return;
+        
+        this.isAnimating = true;
         
         // Calculate translation
-        const cardWidth = this.cards[0]?.offsetWidth || 0;
-        const gap = 30; // Gap between cards
-        const translateX = -(this.currentIndex * (cardWidth + gap));
+        const slideWidth = this.slides[0]?.offsetWidth || 0;
+        const gap = 30;
+        const translateX = -(this.currentIndex * (slideWidth + gap));
         
         // Apply translation
         this.slider.style.transform = `translateX(${translateX}px)`;
         
-        // Update pagination
-        this.updatePagination();
-        
-        // Update progress bar
+        // Update active states
+        this.updateSlideStates();
         this.updateProgressBar();
-        
-        // Update navigation buttons
+        this.updateDots();
         this.updateNavigationButtons();
         
-        // Animate visible cards
-        this.animateVisibleCards();
+        // Reset animation flag
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 600);
     }
     
-    updatePagination() {
-        this.dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
-        });
-    }
-    
-    updateProgressBar() {
-        if (!this.progressIndicator) return;
-        
-        const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
-        this.progressIndicator.style.width = `${Math.min(100, Math.max(20, progress))}%`;
-    }
-    
-    updateNavigationButtons() {
-        // Enable all buttons for infinite scroll
-        if (this.prevBtn) this.prevBtn.disabled = false;
-        if (this.nextBtn) this.nextBtn.disabled = false;
-    }
-    
-    animateVisibleCards() {
+    updateSlideStates() {
         const visibleStart = this.currentIndex;
-        const visibleEnd = Math.min(visibleStart + this.cardsPerView, this.totalCards);
+        const visibleEnd = Math.min(visibleStart + this.slidesPerView, this.totalSlides);
         
-        this.cards.forEach((card, index) => {
-            if (index >= visibleStart && index < visibleEnd) {
-                card.classList.add('in-view');
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, (index - visibleStart) * 100);
-            } else {
-                card.classList.remove('in-view');
+        this.slides.forEach((slide, index) => {
+            const isVisible = index >= visibleStart && index < visibleEnd;
+            const isActive = index === this.currentIndex;
+            
+            slide.classList.toggle('active', isActive);
+            
+            // Animate counters for visible slides
+            if (isVisible && !this.statsAnimated.has(slide)) {
+                const counters = slide.querySelectorAll('.stat-value');
+                counters.forEach(counter => {
+                    setTimeout(() => this.animateCounter(counter), 600);
+                });
+                this.statsAnimated.add(slide);
             }
         });
     }
     
+    updateProgressBar() {
+        if (!this.progressFill) return;
+        
+        const progress = ((this.currentIndex + 1) / (this.maxIndex + 1)) * 100;
+        this.progressFill.style.width = `${Math.min(100, Math.max(25, progress))}%`;
+    }
+    
+    updateDots() {
+        if (!this.dotsContainer) return;
+        
+        const dots = this.dotsContainer.querySelectorAll('.team-carousel-dot');
+        const currentPage = Math.floor(this.currentIndex / this.slidesPerView);
+        
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentPage);
+        });
+    }
+    
+    updateNavigationButtons() {
+        // Always enable buttons for infinite scroll
+        if (this.prevBtn) this.prevBtn.disabled = false;
+        if (this.nextBtn) this.nextBtn.disabled = false;
+    }
+    
     // Auto-play Methods
     startAutoPlay() {
-        if (!this.isPlaying || this.autoPlayInterval) return;
+        if (!this.isAutoPlaying || this.autoPlayInterval) return;
         
         this.autoPlayInterval = setInterval(() => {
             if (!this.isHovering && !this.isDragging) {
-                this.slideNext();
+                this.goToNext();
             }
         }, this.autoPlayDelay);
     }
@@ -1540,14 +1739,15 @@ class ModernTeamCarousel {
     
     resetAutoPlay() {
         this.pauseAutoPlay();
-        if (!this.isHovering) {
+        if (this.isAutoPlaying && !this.isHovering) {
             this.startAutoPlay();
         }
     }
     
     toggleAutoPlay() {
-        this.isPlaying = !this.isPlaying;
-        if (this.isPlaying) {
+        this.isAutoPlaying = !this.isAutoPlaying;
+        
+        if (this.isAutoPlaying) {
             this.startAutoPlay();
         } else {
             this.pauseAutoPlay();
@@ -1561,126 +1761,34 @@ class ModernTeamCarousel {
     
     handleMouseLeave() {
         this.isHovering = false;
-        if (this.isPlaying) {
+        if (this.isAutoPlaying) {
             this.startAutoPlay();
         }
     }
     
-    // Animation Methods
-    animateEntrance() {
-        // Animate header
-        const header = this.section.querySelector('.modern-team-header');
-        if (header) {
-            header.style.animation = 'teamHeaderFadeIn 0.8s ease';
-        }
-        
-        // Animate controls
-        const controls = this.section.querySelector('.team-carousel-controls');
-        if (controls) {
-            setTimeout(() => {
-                controls.style.animation = 'teamHeaderFadeIn 0.8s ease';
-            }, 200);
-        }
-        
-        // Animate visible cards with stagger
-        this.animateVisibleCards();
-    }
-    
-    enhanceCardHover(card) {
-        const photo = card.querySelector('.team-member-photo');
-        if (photo) {
-            photo.style.transform = 'scale(1.05)';
-        }
-        
-        const status = card.querySelector('.team-member-status');
-        if (status) {
-            status.style.transform = 'scale(1.05)';
-            status.style.background = 'rgba(0, 216, 132, 0.15)';
-        }
-        
-        const badges = card.querySelectorAll('.title-badge');
-        badges.forEach((badge, index) => {
-            setTimeout(() => {
-                badge.style.transform = 'translateY(-2px) scale(1.05)';
-            }, index * 50);
-        });
-    }
-    
-    resetCardHover(card) {
-        const photo = card.querySelector('.team-member-photo');
-        if (photo) {
-            photo.style.transform = '';
-        }
-        
-        const status = card.querySelector('.team-member-status');
-        if (status) {
-            status.style.transform = '';
-            status.style.background = '';
-        }
-        
-        const badges = card.querySelectorAll('.title-badge');
-        badges.forEach(badge => {
-            badge.style.transform = '';
-        });
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: teamRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
-    }
-    
     // Responsive Methods
-    getCardsPerView() {
+    getSlidesPerView() {
         const width = window.innerWidth;
         
-        if (width > 1200) {
-            return 3;
-        } else if (width > 767) {
-            return 2;
-        } else {
-            return 1;
-        }
+        if (width > 1200) return 3;
+        if (width > 767) return 2;
+        return 1;
     }
     
     handleResize() {
-        const newCardsPerView = this.getCardsPerView();
+        const newSlidesPerView = this.getSlidesPerView();
         
-        if (newCardsPerView !== this.cardsPerView) {
-            this.cardsPerView = newCardsPerView;
-            this.maxIndex = Math.max(0, this.totalCards - this.cardsPerView);
+        if (newSlidesPerView !== this.slidesPerView) {
+            this.slidesPerView = newSlidesPerView;
+            this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
             this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
             
+            this.setupCarouselDots();
             this.updateCarousel();
         }
     }
     
+    // Utility Methods
     isElementInViewport() {
         if (!this.section) return false;
         
@@ -1693,201 +1801,154 @@ class ModernTeamCarousel {
         );
     }
     
+    // Public API
+    getCurrentSlide() {
+        return this.currentIndex;
+    }
+    
+    getTotalSlides() {
+        return this.totalSlides;
+    }
+    
+    setAutoPlayDelay(delay) {
+        this.autoPlayDelay = delay;
+        this.resetAutoPlay();
+    }
+    
     // Cleanup
     destroy() {
         this.pauseAutoPlay();
         
         // Remove event listeners
         window.removeEventListener('resize', this.handleResize);
-        document.removeEventListener('keydown', this.setupKeyboardNavigation);
+        document.removeEventListener('keydown', this.handleKeyboard);
         
-        console.log('Modern Team Carousel destroyed');
-    }
-}
-
-// CTA Button Enhancer
-class TeamCTAEnhancer {
-    constructor() {
-        this.ctaButton = document.querySelector('.team-cta-button');
-        this.init();
-    }
-    
-    init() {
-        this.setupCTAInteractions();
-    }
-    
-    setupCTAInteractions() {
-        if (this.ctaButton) {
-            this.ctaButton.addEventListener('click', (e) => {
-                this.createRipple(e, this.ctaButton);
-            });
-            
-            this.ctaButton.addEventListener('mouseenter', () => {
-                const icons = this.ctaButton.querySelectorAll('i');
-                icons.forEach((icon, index) => {
-                    setTimeout(() => {
-                        icon.style.animation = 'teamIconBounce 0.5s ease';
-                    }, index * 100);
-                });
-            });
-            
-            this.ctaButton.addEventListener('mouseleave', () => {
-                const icons = this.ctaButton.querySelectorAll('i');
-                icons.forEach(icon => {
-                    icon.style.animation = '';
-                });
-            });
-        }
-    }
-    
-    createRipple(event, element) {
-        const ripple = document.createElement('span');
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
+        // Clear animated elements
+        this.animatedElements.clear();
+        this.statsAnimated.clear();
         
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: teamRipple 0.6s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        
-        setTimeout(() => {
-            if (ripple.parentNode) {
-                ripple.parentNode.removeChild(ripple);
-            }
-        }, 600);
+        console.log('Team Preview Carousel destroyed');
     }
 }
 
 // Add required CSS animations
-const modernTeamStyles = `
-@keyframes teamRipple {
+const teamPreviewStyles = `
+@keyframes teamPreviewRipple {
     to {
         transform: scale(4);
         opacity: 0;
     }
 }
 
-@keyframes teamIconBounce {
+@keyframes teamPreviewIconBounce {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-3px) scale(1.1); }
+    50% { transform: translateY(-4px) scale(1.1); }
 }
 
 .team-carousel-slider {
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.modern-team-card {
+.team-member-slide {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.team-member-photo {
-    transition: transform 0.3s ease !important;
+.team-nav-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.team-member-status {
+.team-carousel-dot {
     transition: all 0.3s ease !important;
 }
 
-.title-badge {
+.team-progress-fill {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.team-filter-tab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.team-cta-btn {
     transition: all 0.3s ease !important;
 }
 
-.specialty-item {
+.member-photo {
+    transition: transform 0.5s ease !important;
+}
+
+.degree-badge {
     transition: all 0.3s ease !important;
 }
 
-.member-profile-btn {
+.expertise-tag {
     transition: all 0.3s ease !important;
 }
 
-.team-control-btn {
+.member-profile-link {
     transition: all 0.3s ease !important;
 }
 
-.team-dot {
+.join-apply-btn {
     transition: all 0.3s ease !important;
 }
 
-.team-progress-indicator {
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.team-cta-button {
-    transition: all 0.3s ease !important;
-}
-
-.join-team-btn {
+.nav-ripple {
     transition: all 0.3s ease !important;
 }
 `;
 
-// Add styles if not already present
-if (!document.getElementById('modern-team-styles')) {
+// Add styles to head if not present
+if (!document.getElementById('team-preview-styles')) {
     const styleSheet = document.createElement('style');
-    styleSheet.id = 'modern-team-styles';
-    styleSheet.textContent = modernTeamStyles;
+    styleSheet.id = 'team-preview-styles';
+    styleSheet.textContent = teamPreviewStyles;
     document.head.appendChild(styleSheet);
 }
 
-// Initialize when ready
-let modernTeamCarouselInstance = null;
-let teamCTAEnhancerInstance = null;
+// Initialize Team Preview Carousel
+let teamPreviewInstance = null;
 
-function initModernTeamCarousel() {
-    if (!modernTeamCarouselInstance && document.querySelector('.modern-team-section')) {
-        modernTeamCarouselInstance = new ModernTeamCarousel();
-        teamCTAEnhancerInstance = new TeamCTAEnhancer();
+function initTeamPreview() {
+    if (!teamPreviewInstance && document.querySelector('.team-preview-section')) {
+        teamPreviewInstance = new TeamPreviewCarousel();
         
-        // Store instances for debugging
-        window.modernTeamCarousel = modernTeamCarouselInstance;
-        window.teamCTAEnhancer = teamCTAEnhancerInstance;
+        // Store globally for debugging
+        window.teamPreview = teamPreviewInstance;
+        
+        console.log('Team Preview Carousel initialized');
     }
 }
 
-// Multiple initialization methods
+// Multiple initialization methods to ensure it works
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initModernTeamCarousel);
+    document.addEventListener('DOMContentLoaded', initTeamPreview);
 } else {
-    initModernTeamCarousel();
+    initTeamPreview();
 }
 
 // Backup initialization
-setTimeout(initModernTeamCarousel, 100);
+setTimeout(initTeamPreview, 100);
 
-// Handle page visibility changes
+// Page visibility change handling
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden && modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.pauseAutoPlay();
-    } else if (!document.hidden && modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.startAutoPlay();
+    if (document.hidden && teamPreviewInstance) {
+        teamPreviewInstance.pauseAutoPlay();
+    } else if (!document.hidden && teamPreviewInstance && teamPreviewInstance.isAutoPlaying) {
+        teamPreviewInstance.startAutoPlay();
     }
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (modernTeamCarouselInstance) {
-        modernTeamCarouselInstance.destroy();
+    if (teamPreviewInstance) {
+        teamPreviewInstance.destroy();
     }
 });
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ModernTeamCarousel, TeamCTAEnhancer };
+    module.exports = TeamPreviewCarousel;
 }
 
 /* ==========================================================================
