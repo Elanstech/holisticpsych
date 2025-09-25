@@ -813,341 +813,378 @@
     </div>
 </section>
 
-<!-- Teams Carousel Section -->
-<section class="teams-carousel-section" id="teamsCarousel">
-    <div class="teams-carousel-container">
+<!-- Team Preview Section -->
+<section class="team-preview-section" id="teamPreview">
+    <div class="team-preview-container">
         
         <!-- Section Header -->
-        <div class="carousel-section-header">
-            <div class="carousel-badge">
-                <span class="badge-text">Our Expert Team</span>
-                <div class="badge-pulse"></div>
+        <div class="team-preview-header">
+            <div class="team-preview-badge">
+                <span class="team-badge-text">Meet Our Team</span>
+                <div class="team-badge-pulse"></div>
             </div>
-            <h2 class="carousel-title">
-                <span class="title-accent">Meet Our</span> Mental Health Professionals
+            <h2 class="team-preview-title">
+                <span class="team-title-accent">Expert</span> Mental Health Professionals
             </h2>
-            <p class="carousel-subtitle">
-                Compassionate experts dedicated to your mental wellness journey with proven results and personalized care
+            <p class="team-preview-subtitle">
+                Compassionate specialists dedicated to your wellness journey with personalized care approaches
             </p>
         </div>
 
-        <!-- Category Tabs -->
-        <div class="team-categories">
-            <button class="category-tab active" data-category="all">
-                <span class="tab-icon"><i class="ri-team-line"></i></span>
-                <span class="tab-text">All Team</span>
+        <!-- Category Filters -->
+        <div class="team-filter-tabs">
+            <button class="team-filter-tab active" data-filter="all">
+                <span class="filter-icon"><i class="ri-team-line"></i></span>
+                <span class="filter-text">All Team</span>
             </button>
-            <button class="category-tab" data-category="directors">
-                <span class="tab-icon"><i class="ri-star-line"></i></span>
-                <span class="tab-text">Clinical Directors</span>
+            <button class="team-filter-tab" data-filter="directors">
+                <span class="filter-icon"><i class="ri-star-line"></i></span>
+                <span class="filter-text">Directors</span>
             </button>
-            <button class="category-tab" data-category="licensed">
-                <span class="tab-icon"><i class="ri-user-heart-line"></i></span>
-                <span class="tab-text">Licensed Therapists</span>
+            <button class="team-filter-tab" data-filter="therapists">
+                <span class="filter-icon"><i class="ri-user-heart-line"></i></span>
+                <span class="filter-text">Therapists</span>
             </button>
-            <button class="category-tab" data-category="specialists">
-                <span class="tab-icon"><i class="ri-stethoscope-line"></i></span>
-                <span class="tab-text">Specialists</span>
+            <button class="team-filter-tab" data-filter="specialists">
+                <span class="filter-icon"><i class="ri-stethoscope-line"></i></span>
+                <span class="filter-text">Specialists</span>
             </button>
         </div>
 
         <!-- Carousel Wrapper -->
-        <div class="carousel-wrapper">
-            <!-- Progress Bar -->
-            <div class="carousel-progress">
-                <div class="progress-bar"></div>
+        <div class="team-preview-carousel">
+            <!-- Progress Indicator -->
+            <div class="team-progress-indicator">
+                <div class="team-progress-fill"></div>
             </div>
 
-            <!-- Navigation Buttons -->
-            <button class="carousel-nav carousel-nav-prev" aria-label="Previous team member">
+            <!-- Navigation Controls -->
+            <button class="team-nav-btn team-nav-prev" aria-label="Previous team member">
                 <i class="ri-arrow-left-s-line"></i>
+                <div class="nav-ripple"></div>
             </button>
-            <button class="carousel-nav carousel-nav-next" aria-label="Next team member">
+            <button class="team-nav-btn team-nav-next" aria-label="Next team member">
                 <i class="ri-arrow-right-s-line"></i>
+                <div class="nav-ripple"></div>
             </button>
 
-            <!-- Carousel Track -->
-            <div class="carousel-track-container">
-                <div class="carousel-track">
+            <!-- Carousel Track Container -->
+            <div class="team-carousel-viewport">
+                <div class="team-carousel-slider">
                     
                     <!-- Team Member 1 - Dr. Kristie Doheny -->
-                    <div class="team-carousel-card" data-category="directors">
-                        <div class="card-image-wrapper">
-                            <img src="krisite.png" alt="Dr. Kristie Doheny">
-                            <div class="card-image-overlay"></div>
-                            <div class="member-status-badge">
-                                <div class="status-dot"></div>
-                                <span class="status-text">Available</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. Kristie Doheny</h3>
-                                <div class="member-credentials">
-                                    <span class="credential-badge primary">PsyD</span>
-                                    <span class="credential-badge secondary">Clinical Director</span>
+                    <div class="team-member-slide" data-category="directors">
+                        <div class="team-member-card">
+                            <div class="member-photo-section">
+                                <div class="photo-wrapper">
+                                    <img src="krisite.png" alt="Dr. Kristie Doheny" class="member-photo">
+                                    <div class="photo-overlay"></div>
+                                </div>
+                                <div class="availability-badge">
+                                    <div class="availability-dot"></div>
+                                    <span class="availability-text">Available</span>
                                 </div>
                             </div>
                             
-                            <p class="member-description">
-                                Leading expert in comprehensive psychological evaluations and treatment for children, adolescents, and families with over 15 years of experience.
-                            </p>
-                            
-                            <div class="member-specialties">
-                                <div class="specialty-tags">
-                                    <span class="specialty-tag">Child Psychology</span>
-                                    <span class="specialty-tag">Family Therapy</span>
-                                    <span class="specialty-tag">ADHD Assessment</span>
-                                </div>
-                            </div>
-                            
-                            <div class="member-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">15+</span>
-                                    <span class="stat-label">Years Experience</span>
-                                </div>
-                                <div class="stat-divider"></div>
-                                <div class="stat-item">
-                                    <span class="stat-number">5000+</span>
-                                    <span class="stat-label">Families Helped</span>
-                                </div>
-                            </div>
-                            
-                            <a href="teams.html#kristie" class="card-link">
-                                <span>Learn More</span>
-                                <i class="ri-arrow-right-line"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 2 - Dr. Douglas Uhlig -->
-                    <div class="team-carousel-card" data-category="directors">
-                        <div class="card-image-wrapper">
-                            <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig">
-                            <div class="card-image-overlay"></div>
-                            <div class="member-status-badge">
-                                <div class="status-dot"></div>
-                                <span class="status-text">Available</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. Douglas Uhlig</h3>
-                                <div class="member-credentials">
-                                    <span class="credential-badge primary">PhD</span>
-                                    <span class="credential-badge secondary">Licensed Psychologist</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-description">
-                                Expert in couples therapy and addiction recovery with decades of experience. Uses evidence-based approaches to help individuals and couples rebuild their lives.
-                            </p>
-                            
-                            <div class="member-specialties">
-                                <div class="specialty-tags">
-                                    <span class="specialty-tag">Couples Therapy</span>
-                                    <span class="specialty-tag">Addiction Recovery</span>
-                                    <span class="specialty-tag">PTSD Treatment</span>
-                                </div>
-                            </div>
-                            
-                            <div class="member-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">20+</span>
-                                    <span class="stat-label">Years Experience</span>
-                                </div>
-                                <div class="stat-divider"></div>
-                                <div class="stat-item">
-                                    <span class="stat-number">3000+</span>
-                                    <span class="stat-label">Lives Transformed</span>
-                                </div>
-                            </div>
-                            
-                            <a href="teams.html#doug" class="card-link">
-                                <span>Learn More</span>
-                                <i class="ri-arrow-right-line"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 3 - Liam Miller -->
-                    <div class="team-carousel-card" data-category="licensed">
-                        <div class="card-image-wrapper">
-                            <img src="https://photos.psychologytoday.com/2cf6f0a5-a8ef-44fc-a5c9-ade0326127ee/1/320x400.jpeg" alt="Liam Miller">
-                            <div class="card-image-overlay"></div>
-                            <div class="member-status-badge">
-                                <div class="status-dot"></div>
-                                <span class="status-text">Available</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Liam Miller</h3>
-                                <div class="member-pronouns">(he/him)</div>
-                                <div class="member-credentials">
-                                    <span class="credential-badge primary">MHC-LP</span>
-                                    <span class="credential-badge secondary">MA, BS</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-description">
-                                Believes you are the expert on your own life. Provides empathy, compassion, and unconditional positive regard to help you live authentically.
-                            </p>
-                            
-                            <div class="member-specialties">
-                                <div class="specialty-tags">
-                                    <span class="specialty-tag">Life Transitions</span>
-                                    <span class="specialty-tag">Anxiety & Depression</span>
-                                    <span class="specialty-tag">Personal Growth</span>
-                                </div>
-                            </div>
-                            
-                            <div class="member-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">8+</span>
-                                    <span class="stat-label">Years Experience</span>
-                                </div>
-                                <div class="stat-divider"></div>
-                                <div class="stat-item">
-                                    <span class="stat-number">1200+</span>
-                                    <span class="stat-label">Clients Supported</span>
-                                </div>
-                            </div>
-                            
-                            <a href="teams.html#liam" class="card-link">
-                                <span>Learn More</span>
-                                <i class="ri-arrow-right-line"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 4 - Kevin Montiel -->
-                    <div class="team-carousel-card" data-category="specialists">
-                        <div class="card-image-wrapper">
-                            <img src="https://photos.psychologytoday.com/d0537f1b-7095-4236-8e6d-f4a82498f4a6/1/320x400.jpeg" alt="Kevin Montiel">
-                            <div class="card-image-overlay"></div>
-                            <div class="member-status-badge">
-                                <div class="status-dot"></div>
-                                <span class="status-text">Available</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Kevin Montiel</h3>
-                                <div class="member-pronouns">(he/him)</div>
-                                <div class="member-credentials">
-                                    <span class="credential-badge primary">LMSW</span>
-                                    <span class="credential-badge secondary">MS</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-description">
-                                Bilingual Licensed Master Social Worker specializing in LGBTQIA+ individuals and racial/ethnic minorities. Promotes value-driven living and authentic self-expression.
-                            </p>
-                            
-                            <div class="member-specialties">
-                                <div class="specialty-tags">
-                                    <span class="specialty-tag">LGBTQIA+ Affirming</span>
-                                    <span class="specialty-tag">Bilingual Therapy</span>
-                                    <span class="specialty-tag">Cultural Therapy</span>
-                                </div>
-                            </div>
-                            
-                            <div class="member-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">10+</span>
-                                    <span class="stat-label">Years Experience</span>
-                                </div>
-                                <div class="stat-divider"></div>
-                                <div class="stat-item">
-                                    <span class="stat-number">1500+</span>
-                                    <span class="stat-label">Clients Empowered</span>
-                                </div>
-                            </div>
-                            
-                            <a href="teams.html#kevin" class="card-link">
-                                <span>Learn More</span>
-                                <i class="ri-arrow-right-line"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Join Our Team Card -->
-                    <div class="team-carousel-card join-team-card" data-category="all">
-                        <div class="join-card-content">
-                            <div class="join-header">
-                                <div class="join-icon">
-                                    <i class="ri-team-line"></i>
-                                    <div class="join-icon-glow"></div>
-                                </div>
-                                <h3 class="join-title">Join Our Team</h3>
-                                <p class="join-subtitle">We're expanding our practice with passionate mental health professionals</p>
-                            </div>
-
-                            <div class="join-benefits">
-                                <div class="benefit-item">
-                                    <div class="benefit-icon">
-                                        <i class="ri-money-dollar-circle-line"></i>
+                            <div class="member-info-section">
+                                <div class="member-title">
+                                    <h3 class="member-name">Dr. Kristie Doheny</h3>
+                                    <div class="member-degrees">
+                                        <span class="degree-badge primary">PsyD</span>
+                                        <span class="degree-badge secondary">Clinical Director</span>
                                     </div>
-                                    <span class="benefit-text">Competitive Compensation</span>
                                 </div>
-                                <div class="benefit-item">
-                                    <div class="benefit-icon">
-                                        <i class="ri-graduation-cap-line"></i>
+                                
+                                <p class="member-bio">
+                                    Leading expert in comprehensive psychological evaluations and family therapy with over 15 years of experience in child and adolescent psychology.
+                                </p>
+                                
+                                <div class="member-expertise">
+                                    <div class="expertise-tags">
+                                        <span class="expertise-tag">Child Psychology</span>
+                                        <span class="expertise-tag">Family Therapy</span>
+                                        <span class="expertise-tag">ADHD Assessment</span>
                                     </div>
-                                    <span class="benefit-text">Professional Development</span>
                                 </div>
-                                <div class="benefit-item">
-                                    <div class="benefit-icon">
-                                        <i class="ri-team-line"></i>
+                                
+                                <div class="member-experience">
+                                    <div class="experience-stat">
+                                        <span class="stat-value">15+</span>
+                                        <span class="stat-unit">Years</span>
                                     </div>
-                                    <span class="benefit-text">Collaborative Environment</span>
-                                </div>
-                                <div class="benefit-item">
-                                    <div class="benefit-icon">
-                                        <i class="ri-heart-line"></i>
+                                    <div class="stat-separator"></div>
+                                    <div class="experience-stat">
+                                        <span class="stat-value">5000+</span>
+                                        <span class="stat-unit">Families</span>
                                     </div>
-                                    <span class="benefit-text">Meaningful Impact</span>
                                 </div>
-                            </div>
-
-                            <div class="join-action">
-                                <a href="contact.html" class="join-team-btn">
-                                    <span>Apply Today</span>
-                                    <i class="ri-send-plane-2-line"></i>
+                                
+                                <a href="teams.html#kristie" class="member-profile-link">
+                                    <span>View Full Profile</span>
+                                    <i class="ri-arrow-right-line"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Team Member 2 - Dr. Douglas Uhlig -->
+                    <div class="team-member-slide" data-category="directors">
+                        <div class="team-member-card">
+                            <div class="member-photo-section">
+                                <div class="photo-wrapper">
+                                    <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig" class="member-photo">
+                                    <div class="photo-overlay"></div>
+                                </div>
+                                <div class="availability-badge">
+                                    <div class="availability-dot"></div>
+                                    <span class="availability-text">Available</span>
+                                </div>
+                            </div>
+                            
+                            <div class="member-info-section">
+                                <div class="member-title">
+                                    <h3 class="member-name">Dr. Douglas Uhlig</h3>
+                                    <div class="member-degrees">
+                                        <span class="degree-badge primary">PhD</span>
+                                        <span class="degree-badge secondary">Licensed Psychologist</span>
+                                    </div>
+                                </div>
+                                
+                                <p class="member-bio">
+                                    Expert in couples therapy and addiction recovery with decades of experience using evidence-based approaches to transform lives.
+                                </p>
+                                
+                                <div class="member-expertise">
+                                    <div class="expertise-tags">
+                                        <span class="expertise-tag">Couples Therapy</span>
+                                        <span class="expertise-tag">Addiction Recovery</span>
+                                        <span class="expertise-tag">PTSD Treatment</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="member-experience">
+                                    <div class="experience-stat">
+                                        <span class="stat-value">20+</span>
+                                        <span class="stat-unit">Years</span>
+                                    </div>
+                                    <div class="stat-separator"></div>
+                                    <div class="experience-stat">
+                                        <span class="stat-value">3000+</span>
+                                        <span class="stat-unit">Lives</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="teams.html#douglas" class="member-profile-link">
+                                    <span>View Full Profile</span>
+                                    <i class="ri-arrow-right-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member 3 - Liam Miller -->
+                    <div class="team-member-slide" data-category="therapists">
+                        <div class="team-member-card">
+                            <div class="member-photo-section">
+                                <div class="photo-wrapper">
+                                    <img src="https://photos.psychologytoday.com/2cf6f0a5-a8ef-44fc-a5c9-ade0326127ee/1/320x400.jpeg" alt="Liam Miller" class="member-photo">
+                                    <div class="photo-overlay"></div>
+                                </div>
+                                <div class="availability-badge">
+                                    <div class="availability-dot"></div>
+                                    <span class="availability-text">Available</span>
+                                </div>
+                            </div>
+                            
+                            <div class="member-info-section">
+                                <div class="member-title">
+                                    <h3 class="member-name">Liam Miller</h3>
+                                    <div class="member-pronouns">(he/him)</div>
+                                    <div class="member-degrees">
+                                        <span class="degree-badge primary">MHC-LP</span>
+                                        <span class="degree-badge secondary">MA, BS</span>
+                                    </div>
+                                </div>
+                                
+                                <p class="member-bio">
+                                    Compassionate therapist who believes you are the expert on your own life, providing empathy and unconditional positive regard.
+                                </p>
+                                
+                                <div class="member-expertise">
+                                    <div class="expertise-tags">
+                                        <span class="expertise-tag">Life Transitions</span>
+                                        <span class="expertise-tag">Anxiety & Depression</span>
+                                        <span class="expertise-tag">Personal Growth</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="member-experience">
+                                    <div class="experience-stat">
+                                        <span class="stat-value">8+</span>
+                                        <span class="stat-unit">Years</span>
+                                    </div>
+                                    <div class="stat-separator"></div>
+                                    <div class="experience-stat">
+                                        <span class="stat-value">1200+</span>
+                                        <span class="stat-unit">Clients</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="teams.html#liam" class="member-profile-link">
+                                    <span>View Full Profile</span>
+                                    <i class="ri-arrow-right-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Member 4 - Kevin Montiel -->
+                    <div class="team-member-slide" data-category="specialists">
+                        <div class="team-member-card">
+                            <div class="member-photo-section">
+                                <div class="photo-wrapper">
+                                    <img src="https://photos.psychologytoday.com/d0537f1b-7095-4236-8e6d-f4a82498f4a6/1/320x400.jpeg" alt="Kevin Montiel" class="member-photo">
+                                    <div class="photo-overlay"></div>
+                                </div>
+                                <div class="availability-badge">
+                                    <div class="availability-dot"></div>
+                                    <span class="availability-text">Available</span>
+                                </div>
+                            </div>
+                            
+                            <div class="member-info-section">
+                                <div class="member-title">
+                                    <h3 class="member-name">Kevin Montiel</h3>
+                                    <div class="member-pronouns">(he/him)</div>
+                                    <div class="member-degrees">
+                                        <span class="degree-badge primary">LMSW</span>
+                                        <span class="degree-badge secondary">MS</span>
+                                    </div>
+                                </div>
+                                
+                                <p class="member-bio">
+                                    Bilingual Licensed Master Social Worker specializing in LGBTQIA+ affirming care and culturally responsive therapy.
+                                </p>
+                                
+                                <div class="member-expertise">
+                                    <div class="expertise-tags">
+                                        <span class="expertise-tag">LGBTQIA+ Affirming</span>
+                                        <span class="expertise-tag">Bilingual Therapy</span>
+                                        <span class="expertise-tag">Cultural Care</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="member-experience">
+                                    <div class="experience-stat">
+                                        <span class="stat-value">10+</span>
+                                        <span class="stat-unit">Years</span>
+                                    </div>
+                                    <div class="stat-separator"></div>
+                                    <div class="experience-stat">
+                                        <span class="stat-value">1500+</span>
+                                        <span class="stat-unit">Empowered</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="teams.html#kevin" class="member-profile-link">
+                                    <span>View Full Profile</span>
+                                    <i class="ri-arrow-right-line"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Join Our Team Slide -->
+                    <div class="team-member-slide join-team-slide" data-category="all">
+                        <div class="join-team-card">
+                            <div class="join-background">
+                                <div class="join-particle join-particle-1"></div>
+                                <div class="join-particle join-particle-2"></div>
+                                <div class="join-particle join-particle-3"></div>
+                            </div>
+                            
+                            <div class="join-content">
+                                <div class="join-icon-wrapper">
+                                    <div class="join-main-icon">
+                                        <i class="ri-team-line"></i>
+                                        <div class="icon-pulse"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="join-text-section">
+                                    <h3 class="join-title">Join Our Growing Practice</h3>
+                                    <p class="join-description">
+                                        We're expanding our team of passionate mental health professionals in Manhattan. Join us in making a meaningful difference.
+                                    </p>
+                                </div>
+                                
+                                <div class="join-benefits-grid">
+                                    <div class="join-benefit">
+                                        <div class="benefit-icon">
+                                            <i class="ri-money-dollar-circle-line"></i>
+                                        </div>
+                                        <span class="benefit-label">Competitive Pay</span>
+                                    </div>
+                                    <div class="join-benefit">
+                                        <div class="benefit-icon">
+                                            <i class="ri-graduation-cap-line"></i>
+                                        </div>
+                                        <span class="benefit-label">Growth Opportunities</span>
+                                    </div>
+                                    <div class="join-benefit">
+                                        <div class="benefit-icon">
+                                            <i class="ri-heart-line"></i>
+                                        </div>
+                                        <span class="benefit-label">Meaningful Work</span>
+                                    </div>
+                                    <div class="join-benefit">
+                                        <div class="benefit-icon">
+                                            <i class="ri-team-line"></i>
+                                        </div>
+                                        <span class="benefit-label">Supportive Team</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="join-action-section">
+                                    <a href="contact.html" class="join-apply-btn">
+                                        <span class="btn-text">Apply Today</span>
+                                        <i class="ri-send-plane-2-line"></i>
+                                        <div class="btn-shimmer"></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Pagination Dots -->
-            <div class="carousel-pagination"></div>
+            <!-- Carousel Indicators -->
+            <div class="team-carousel-dots">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
         </div>
 
-        <!-- Bottom CTA -->
-        <div class="teams-cta">
-            <div class="cta-background">
-                <div class="cta-particle cta-particle-1"></div>
-                <div class="cta-particle cta-particle-2"></div>
-                <div class="cta-particle cta-particle-3"></div>
+        <!-- Bottom CTA Section -->
+        <div class="team-preview-cta">
+            <div class="team-cta-background">
+                <div class="cta-glow cta-glow-1"></div>
+                <div class="cta-glow cta-glow-2"></div>
             </div>
-            <div class="cta-content">
-                <div class="cta-text-section">
-                    <h3 class="cta-title">Find Your Perfect Therapeutic Match</h3>
-                    <p class="cta-subtitle">
-                        Explore detailed profiles, specialties, and approaches to connect with the right mental health professional for your unique journey.
+            <div class="team-cta-content">
+                <div class="team-cta-text">
+                    <h3 class="team-cta-title">Find Your Perfect Therapeutic Match</h3>
+                    <p class="team-cta-subtitle">
+                        Explore detailed profiles and specialties to connect with the right mental health professional for your journey.
                     </p>
                 </div>
-                <div class="cta-actions">
-                    <a href="teams.html" class="cta-button primary">
+                <div class="team-cta-actions">
+                    <a href="teams.html" class="team-cta-btn primary">
                         <i class="ri-user-search-line"></i>
                         <span>Browse All Therapists</span>
                         <i class="ri-arrow-right-line"></i>
                     </a>
-                    <a href="contact.html" class="cta-button secondary">
+                    <a href="contact.html" class="team-cta-btn secondary">
                         <i class="ri-calendar-check-line"></i>
                         <span>Schedule Consultation</span>
                     </a>
