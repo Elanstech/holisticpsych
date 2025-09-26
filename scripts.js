@@ -12,7 +12,7 @@ class App {
     
     init() {
         // Initialize all sections
-        this.header = new ModernHeader();
+        this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
         this.about = new CompactAboutSection();
@@ -62,552 +62,144 @@ class App {
 /* ==========================================================================
    HEADER SECTION
    ========================================================================== */
-class ModernHeader {
+class Header {
     constructor() {
         this.header = document.getElementById('header');
-        this.mobileToggle = document.getElementById('mobile-toggle');
-        this.mobileNav = document.getElementById('mobile-nav');
-        this.mobileOverlay = document.getElementById('mobile-overlay');
-        this.cartCount = document.getElementById('cart-count');
-        this.mobileCartCount = document.getElementById('mobile-cart-count');
-        this.isMobileMenuOpen = false;
-        this.lastScrollY = 0;
+        this.mobileToggle = document.getElementById('mobileMenuToggle');
+        this.scrollHamburger = document.getElementById('scrollHamburgerToggle');
+        this.mobilePanel = document.getElementById('mobileMenuPanel');
+        this.mobileOverlay = document.getElementById('mobileMenuOverlay');
+        this.mobileClose = document.getElementById('mobileMenuClose');
+        this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+        this.isMenuOpen = false;
         
         this.init();
     }
-
+    
     init() {
-        this.setupEventListeners();
-        this.setupScrollEffects();
-        this.setupMobileDropdowns();
-        this.setupNavigation();
-        this.updateCartDisplay();
-        
-        console.log('🎯 Modern Header initialized');
+        this.bindEvents();
+        this.updateActiveNav();
     }
-
-    setupEventListeners() {
+    
+    bindEvents() {
         // Mobile menu toggle
         if (this.mobileToggle) {
-            this.mobileToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggleMobileMenu();
-            });
+            this.mobileToggle.addEventListener('click', () => this.toggleMobileMenu());
         }
-
-        // Mobile overlay
+        
+        // Scroll hamburger
+        if (this.scrollHamburger) {
+            this.scrollHamburger.addEventListener('click', () => this.toggleMobileMenu());
+        }
+        
+        // Close mobile menu
+        if (this.mobileClose) {
+            this.mobileClose.addEventListener('click', () => this.closeMobileMenu());
+        }
+        
+        // Overlay click
         if (this.mobileOverlay) {
-            this.mobileOverlay.addEventListener('click', () => {
-                this.closeMobileMenu();
-            });
+            this.mobileOverlay.addEventListener('click', () => this.closeMobileMenu());
         }
-
-        // Logo click
-        const logoSection = document.querySelector('.logo-section');
-        if (logoSection) {
-            logoSection.addEventListener('click', () => {
-                this.scrollToTop();
+        
+        // Nav links
+        this.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('href');
+                const section = document.querySelector(target);
+                
+                if (section) {
+                    // Close mobile menu if open
+                    if (this.isMenuOpen) {
+                        this.closeMobileMenu();
+                    }
+                    
+                    // Smooth scroll
+                    setTimeout(() => {
+                        const offset = 100;
+                        const top = section.offsetTop - offset;
+                        window.scrollTo({
+                            top: top,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+                
+                // Update active state
+                this.navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
             });
-        }
-
-        // Escape key to close mobile menu
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isMobileMenuOpen) {
-                this.closeMobileMenu();
-            }
         });
-
+        
         // Window resize
         window.addEventListener('resize', () => {
-            if (window.innerWidth > 768 && this.isMobileMenuOpen) {
+            if (window.innerWidth > 1200 && this.isMenuOpen) {
                 this.closeMobileMenu();
             }
         });
-
-        // Navigation links
-        this.setupNavigationLinks();
     }
-
-    setupScrollEffects() {
-        let ticking = false;
-
-        const updateHeader = () => {
-            const scrollY = window.pageYOffset;
-            
-            // Add scrolled class
-            if (scrollY > 50) {
-                this.header?.classList.add('scrolled');
-            } else {
-                this.header?.classList.remove('scrolled');
-            }
-
-            // Hide header on scroll down, show on scroll up
-            if (scrollY > this.lastScrollY && scrollY > 100) {
-                this.header?.style.setProperty('transform', 'translateY(-100%)');
-            } else {
-                this.header?.style.setProperty('transform', 'translateY(0)');
-            }
-
-            this.lastScrollY = scrollY;
-            ticking = false;
-        };
-
-        const onScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(updateHeader);
-                ticking = true;
-            }
-        };
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-    }
-
-    setupMobileDropdowns() {
-        const dropdownTriggers = document.querySelectorAll('.mobile-dropdown-trigger');
+    
+    handleScroll(scrolled) {
+        if (!this.header) return;
         
-        dropdownTriggers.forEach(trigger => {
-            trigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                const dropdown = trigger.closest('.mobile-dropdown');
-                this.toggleMobileDropdown(dropdown);
-            });
-        });
+        if (scrolled) {
+            this.header.classList.add('scrolled');
+        } else {
+            this.header.classList.remove('scrolled');
+        }
     }
-
-    setupNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                const href = link.getAttribute('href');
-                
-                // Handle hash links
-                if (href && href.startsWith('#') && href !== '#') {
-                    e.preventDefault();
-                    this.scrollToSection(href);
-                    this.setActiveLink(link);
-                }
-            });
-        });
-
-        // Set active link based on current section
-        this.updateActiveNavigation();
-        window.addEventListener('scroll', () => {
-            this.updateActiveNavigation();
-        }, { passive: true });
-    }
-
-    setupNavigationLinks() {
-        // Desktop navigation active states
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                this.animateNavLink(link, true);
-            });
-            
-            link.addEventListener('mouseleave', () => {
-                this.animateNavLink(link, false);
-            });
-        });
-
-        // Mobile navigation
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                this.closeMobileMenu();
-            });
-        });
-    }
-
+    
     toggleMobileMenu() {
-        if (this.isMobileMenuOpen) {
+        if (this.isMenuOpen) {
             this.closeMobileMenu();
         } else {
             this.openMobileMenu();
         }
     }
-
+    
     openMobileMenu() {
-        this.isMobileMenuOpen = true;
-        this.mobileToggle?.classList.add('active');
-        this.mobileNav?.classList.add('active');
-        this.mobileOverlay?.classList.add('active');
-        
-        // Prevent body scroll
+        this.isMenuOpen = true;
         document.body.style.overflow = 'hidden';
         
-        // Animate menu items
-        this.animateMobileMenuItems(true);
-        
-        console.log('📱 Mobile menu opened');
+        if (this.mobileToggle) this.mobileToggle.classList.add('active');
+        if (this.scrollHamburger) this.scrollHamburger.classList.add('active');
+        if (this.mobileOverlay) this.mobileOverlay.classList.add('active');
+        if (this.mobilePanel) this.mobilePanel.classList.add('active');
     }
-
+    
     closeMobileMenu() {
-        this.isMobileMenuOpen = false;
-        this.mobileToggle?.classList.remove('active');
-        this.mobileNav?.classList.remove('active');
-        this.mobileOverlay?.classList.remove('active');
-        
-        // Restore body scroll
+        this.isMenuOpen = false;
         document.body.style.overflow = '';
         
-        // Close all mobile dropdowns
-        const openDropdowns = document.querySelectorAll('.mobile-dropdown.active');
-        openDropdowns.forEach(dropdown => {
-            dropdown.classList.remove('active');
-        });
-        
-        console.log('📱 Mobile menu closed');
+        if (this.mobileToggle) this.mobileToggle.classList.remove('active');
+        if (this.scrollHamburger) this.scrollHamburger.classList.remove('active');
+        if (this.mobileOverlay) this.mobileOverlay.classList.remove('active');
+        if (this.mobilePanel) this.mobilePanel.classList.remove('active');
     }
-
-    toggleMobileDropdown(dropdown) {
-        const isActive = dropdown.classList.contains('active');
-        
-        // Close all other dropdowns
-        const allDropdowns = document.querySelectorAll('.mobile-dropdown');
-        allDropdowns.forEach(d => {
-            if (d !== dropdown) {
-                d.classList.remove('active');
-            }
-        });
-        
-        // Toggle current dropdown
-        if (isActive) {
-            dropdown.classList.remove('active');
-        } else {
-            dropdown.classList.add('active');
-        }
-    }
-
-    animateMobileMenuItems(show) {
-        const items = document.querySelectorAll('.mobile-link, .mobile-dropdown-trigger');
-        
-        items.forEach((item, index) => {
-            if (show) {
-                setTimeout(() => {
-                    item.style.animation = 'fadeInUp 0.4s ease forwards';
-                }, index * 50);
-            } else {
-                item.style.animation = '';
-            }
-        });
-    }
-
-    animateNavLink(link, hover) {
-        const underline = link.querySelector('.nav-underline');
-        if (!underline) return;
-
-        if (hover && !link.classList.contains('active')) {
-            underline.style.width = '100%';
-            underline.style.background = 'rgba(212, 175, 55, 0.5)';
-        } else if (!hover && !link.classList.contains('active')) {
-            underline.style.width = '0%';
-        }
-    }
-
-    scrollToSection(selector) {
-        const element = document.querySelector(selector);
-        if (!element) return;
-
-        const headerHeight = this.header?.offsetHeight || 85;
-        const elementPosition = element.offsetTop - headerHeight - 20;
-
-        window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-        });
-
-        console.log(`🎯 Scrolled to section: ${selector}`);
-    }
-
-    scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        
-        console.log('⬆️ Scrolled to top');
-    }
-
-    setActiveLink(activeLink) {
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            const underline = link.querySelector('.nav-underline');
-            if (underline && link !== activeLink) {
-                underline.style.width = '0%';
-            }
-        });
-        
-        activeLink.classList.add('active');
-        const activeUnderline = activeLink.querySelector('.nav-underline');
-        if (activeUnderline) {
-            activeUnderline.style.width = '100%';
-            activeUnderline.style.background = 'linear-gradient(90deg, #d4af37, #b8941f)';
-        }
-    }
-
-    updateActiveNavigation() {
-        const sections = ['home', 'brands', 'about', 'contact'];
-        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-        
-        let activeSection = 'home';
-        const scrollPosition = window.pageYOffset + 150;
-
-        sections.forEach(sectionId => {
-            const element = document.getElementById(sectionId);
-            if (element && scrollPosition >= element.offsetTop) {
-                activeSection = sectionId;
-            }
-        });
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === `#${activeSection}`) {
-                this.setActiveLink(link);
-            }
-        });
-    }
-
-    updateCartDisplay() {
-        // This would be called when cart is updated
-        const cartData = this.getCartData();
-        const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
-        
-        if (this.cartCount) {
-            this.cartCount.textContent = totalItems;
-            if (totalItems > 0) {
-                this.cartCount.classList.add('visible');
-            } else {
-                this.cartCount.classList.remove('visible');
-            }
-        }
-        
-        if (this.mobileCartCount) {
-            this.mobileCartCount.textContent = totalItems;
-        }
-    }
-
-    getCartData() {
-        // This would get cart data from localStorage or global variable
-        return window.cart || [];
-    }
-
-    animateCartIcon() {
-        const cartBtn = document.querySelector('.cart-btn');
-        if (!cartBtn) return;
-
-        cartBtn.style.transform = 'scale(1.1)';
-        cartBtn.style.color = '#d4af37';
-        
-        setTimeout(() => {
-            cartBtn.style.transform = '';
-            cartBtn.style.color = '';
-        }, 300);
-        
-        // Update cart display
-        this.updateCartDisplay();
-    }
-
-    showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `header-notification ${type}`;
-        notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: ${this.getNotificationColor(type)};
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 10001;
-            transform: translateX(100%);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-            max-width: 300px;
-            backdrop-filter: blur(10px);
-        `;
-        
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <i class="fas fa-${this.getNotificationIcon(type)}"></i>
-                <span>${message}</span>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 10);
-        
-        // Auto remove
-        setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 400);
-        }, 3000);
-    }
-
-    getNotificationColor(type) {
-        const colors = {
-            success: 'linear-gradient(135deg, #10b981, #059669)',
-            error: 'linear-gradient(135deg, #ef4444, #dc2626)',
-            warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
-            info: 'linear-gradient(135deg, #3b82f6, #2563eb)'
-        };
-        return colors[type] || colors.info;
-    }
-
-    getNotificationIcon(type) {
-        const icons = {
-            success: 'check-circle',
-            error: 'exclamation-circle',
-            warning: 'exclamation-triangle',
-            info: 'info-circle'
-        };
-        return icons[type] || icons.info;
-    }
-}
-
-// Global functions for compatibility
-window.openSearchModal = function() {
-    const searchModal = document.getElementById('search-modal');
-    if (searchModal) {
-        searchModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            setTimeout(() => searchInput.focus(), 300);
-        }
-    }
-    console.log('🔍 Search modal opened');
-};
-
-window.closeSearchModal = function() {
-    const searchModal = document.getElementById('search-modal');
-    if (searchModal) {
-        searchModal.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    console.log('🔍 Search modal closed');
-};
-
-window.showCart = function() {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification('Cart functionality ready!', 'info');
-    }
-    console.log('🛒 Cart clicked');
-};
-
-window.filterProducts = function(brand) {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification(`Loading ${brand} products...`, 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log(`🔍 Filtering products: ${brand}`);
-};
-
-window.filterByCategory = function(category) {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification(`Loading ${category}s...`, 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log(`🔍 Filtering by category: ${category}`);
-};
-
-window.showSpecials = function() {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification('Loading special offers...', 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log('🔥 Showing specials');
-};
-
-window.showAllProducts = function() {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification('Loading all products...', 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log('📦 Showing all products');
-};
-
-window.showNewArrivals = function() {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification('Loading new arrivals...', 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log('✨ Showing new arrivals');
-};
-
-window.showBestSellers = function() {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification('Loading best sellers...', 'info');
-        window.modernHeader.closeMobileMenu();
-    }
-    console.log('🏆 Showing best sellers');
-};
-
-window.scrollToTop = function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
-
-window.closeMobileMenu = function() {
-    if (window.modernHeader) {
-        window.modernHeader.closeMobileMenu();
-    }
-};
-
-window.handleSearchKeypress = function(event) {
-    if (event.key === 'Enter') {
-        const query = event.target.value.trim();
-        if (query) {
-            if (window.modernHeader) {
-                window.modernHeader.showNotification(`Searching for: ${query}`, 'info');
-            }
-            window.closeSearchModal();
-            console.log(`🔍 Search query: ${query}`);
-        }
-    }
-};
-
-window.performSearch = function(query) {
-    if (window.modernHeader) {
-        window.modernHeader.showNotification(`Searching for: ${query}`, 'info');
-    }
-    window.closeSearchModal();
-    console.log(`🔍 Performing search: ${query}`);
-};
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    window.modernHeader = new ModernHeader();
     
-    // Add smooth loading animation
-    setTimeout(() => {
-        document.querySelector('.modern-header')?.classList.add('loaded');
-    }, 100);
-    
-    console.log('🚀 Modern Header system initialized');
-});
-
-// Handle page load
-window.addEventListener('load', function() {
-    if (window.modernHeader) {
-        window.modernHeader.updateCartDisplay();
+    updateActiveNav() {
+        // Update active navigation on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            this.navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
     }
-    console.log('✅ Header fully loaded');
-});
-
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ModernHeader;
 }
 
 /* ==========================================================================
