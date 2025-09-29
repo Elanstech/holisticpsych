@@ -2002,40 +2002,76 @@ input, textarea, select {
     color: var(--gray-600);
 }
 
-/* Team Grid */
-.team-grid-new {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+/* Carousel Wrapper */
+.team-carousel-wrapper-new {
+    position: relative;
+    padding: 0 70px;
+    margin-bottom: var(--space-3xl);
+}
+
+/* Carousel Navigation Buttons */
+.team-carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-800);
+    font-size: 1.75rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.team-carousel-btn:hover {
+    background: var(--gradient-primary);
+    color: var(--white);
+    border-color: transparent;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 10px 25px rgba(0, 216, 132, 0.4);
+}
+
+.team-carousel-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.team-carousel-prev {
+    left: 0;
+}
+
+.team-carousel-next {
+    right: 0;
+}
+
+/* Carousel Viewport */
+.team-carousel-viewport {
+    overflow: hidden;
+    padding: var(--space-lg) 0 var(--space-xl);
+}
+
+.team-carousel-track {
+    display: flex;
     gap: var(--space-2xl);
-    margin-bottom: var(--space-4xl);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Team Card */
 .team-card-new {
+    min-width: calc(33.333% - (var(--space-2xl) * 2 / 3));
+    flex-shrink: 0;
     background: var(--white);
     border-radius: var(--radius-2xl);
     overflow: hidden;
     border: 1px solid var(--gray-200);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.6s ease forwards;
 }
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.team-card-new:nth-child(1) { animation-delay: 0.1s; }
-.team-card-new:nth-child(2) { animation-delay: 0.2s; }
-.team-card-new:nth-child(3) { animation-delay: 0.3s; }
-.team-card-new:nth-child(4) { animation-delay: 0.4s; }
-.team-card-new:nth-child(5) { animation-delay: 0.5s; }
-.team-card-new:nth-child(6) { animation-delay: 0.6s; }
-.team-card-new:nth-child(7) { animation-delay: 0.7s; }
 
 .team-card-new:hover {
     transform: translateY(-8px);
@@ -2353,6 +2389,34 @@ input, textarea, select {
     box-shadow: 0 15px 40px rgba(0, 216, 132, 0.5);
 }
 
+/* Pagination Dots */
+.team-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: var(--space-4xl);
+}
+
+.team-dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 216, 132, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.team-dot:hover {
+    background: rgba(0, 216, 132, 0.4);
+    transform: scale(1.2);
+}
+
+.team-dot.active {
+    width: 32px;
+    border-radius: var(--radius-full);
+    background: var(--gradient-primary);
+}
+
 /* Bottom CTA */
 .team-bottom-cta {
     background: var(--gradient-soft);
@@ -2400,9 +2464,8 @@ input, textarea, select {
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .team-grid-new {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: var(--space-xl);
+    .team-card-new {
+        min-width: calc(50% - var(--space-xl));
     }
 }
 
@@ -2415,12 +2478,18 @@ input, textarea, select {
         margin-bottom: var(--space-3xl);
     }
     
-    .team-card-image {
-        height: 380px;
+    .team-carousel-wrapper-new {
+        padding: 0 60px;
     }
     
-    .team-grid-new {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .team-carousel-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+    
+    .team-card-image {
+        height: 380px;
     }
 }
 
@@ -2437,9 +2506,18 @@ input, textarea, select {
         margin-bottom: var(--space-2xl);
     }
     
-    .team-grid-new {
-        grid-template-columns: 1fr;
-        gap: var(--space-xl);
+    .team-carousel-wrapper-new {
+        padding: 0 50px;
+    }
+    
+    .team-carousel-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.375rem;
+    }
+    
+    .team-card-new {
+        min-width: 100%;
     }
     
     .team-card-image {
@@ -2483,6 +2561,16 @@ input, textarea, select {
 }
 
 @media (max-width: 480px) {
+    .team-carousel-wrapper-new {
+        padding: 0 44px;
+    }
+    
+    .team-carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
     .team-card-image {
         height: 380px;
     }
