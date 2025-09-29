@@ -2435,20 +2435,7 @@ input, textarea, select {
 }
 
 @media (max-width: 991px) {
-    .hero {
-        min-height: auto;
-        padding: 120px 0 60px;
-    }
-    
-    .hero-title {
-        font-size: clamp(2rem, 5vw, 3rem);
-    }
-    
-    .hero-features {
-        flex-direction: column;
-        gap: var(--space-md);
-    }
-    
+
     .about-content {
         grid-template-columns: 1fr;
     }
@@ -2507,21 +2494,7 @@ input, textarea, select {
     .brand-subtitle {
         font-size: 0.6875rem;
     }
-    
-    .hero-logo-container {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .hero-title {
-        font-size: clamp(1.75rem, 7vw, 2.5rem);
-    }
-    
-    .hero-cta {
-        flex-direction: column;
-        width: 100%;
-    }
-    
+   
     .cta-button {
         width: 100%;
         justify-content: center;
