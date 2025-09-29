@@ -324,134 +324,343 @@
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section class="services-section" id="services">
-            <div class="services-container">
-                <div class="services-header">
-                    <div class="section-badge">
-                        <span class="badge-text">Our Expertise</span>
-                    </div>
-                    <h2 class="section-title">
-                        <span class="title-expert">Expert</span>
-                        <span class="title-mental-health">Mental Health Services</span>
-                    </h2>
-                    <p class="section-description">
-                        Comprehensive psychological care tailored to your unique needs. From individual therapy to specialized assessments, we're here to support your journey to wellness.
-                    </p>
-                </div>
+<!-- Services Carousel Section -->
+<section class="services-carousel-section" id="servicesCarousel">
+    <!-- Background Effects -->
+    <div class="services-background">
+        <div class="services-gradient"></div>
+        <div class="services-grain"></div>
+        <div class="float-shape shape-1"></div>
+        <div class="float-shape shape-2"></div>
+        <div class="float-shape shape-3"></div>
+    </div>
 
-                <div class="services-carousel">
-                    <button class="carousel-nav-btn prev-btn" aria-label="Previous service">
-                        <i class="ri-arrow-left-s-line"></i>
-                    </button>
+    <div class="services-carousel-container">
+        <!-- Section Header -->
+        <div class="carousel-header">
+            <div class="header-badge">
+                <span class="badge-dot"></span>
+                <span class="badge-text">Comprehensive Care</span>
+            </div>
+            <h2 class="carousel-main-title">
+                <span class="title-line">Expert Mental Health</span>
+                <span class="title-highlight">Services & Support</span>
+            </h2>
+            <p class="carousel-main-subtitle">
+                Personalized, evidence-based treatment for children, adolescents, and adults
+            </p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <button class="filter-btn active" data-filter="all">
+                <i class="ri-apps-2-line"></i>
+                <span>All Services</span>
+            </button>
+            <button class="filter-btn" data-filter="mood">
+                <i class="ri-emotion-line"></i>
+                <span>Mood & Anxiety</span>
+            </button>
+            <button class="filter-btn" data-filter="behavioral">
+                <i class="ri-user-heart-line"></i>
+                <span>Behavioral</span>
+            </button>
+            <button class="filter-btn" data-filter="family">
+                <i class="ri-group-line"></i>
+                <span>Family</span>
+            </button>
+            <button class="filter-btn" data-filter="specialized">
+                <i class="ri-stethoscope-line"></i>
+                <span>Specialized</span>
+            </button>
+        </div>
+
+        <!-- Carousel Container -->
+        <div class="carousel-container">
+            <button class="carousel-btn carousel-btn-prev" aria-label="Previous">
+                <i class="ri-arrow-left-s-line"></i>
+            </button>
+            
+            <div class="carousel-viewport">
+                <div class="carousel-slides">
                     
-                    <div class="services-track">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="ri-user-heart-line"></i>
-                            </div>
-                            <h3 class="service-title">Individual Therapy</h3>
-                            <p class="service-description">
-                                Personalized one-on-one sessions to address anxiety, depression, and life transitions with evidence-based approaches.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Anxiety & Depression</li>
-                                <li><i class="ri-check-line"></i> Trauma Recovery</li>
-                                <li><i class="ri-check-line"></i> Life Transitions</li>
-                                <li><i class="ri-check-line"></i> Stress Management</li>
-                            </ul>
+                    <!-- Card 1 -->
+                    <div class="service-card" data-category="mood">
+                        <div class="card-image">
+                            <img src="https://www.medcare.ae/fileadmin//user_upload/Depression1.jpg" alt="Depression Treatment">
+                            <div class="card-overlay"></div>
                         </div>
-
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="ri-parent-line"></i>
-                            </div>
-                            <h3 class="service-title">Couples Counseling</h3>
-                            <p class="service-description">
-                                Strengthen your relationship through effective communication strategies and conflict resolution techniques.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Communication Skills</li>
-                                <li><i class="ri-check-line"></i> Conflict Resolution</li>
-                                <li><i class="ri-check-line"></i> Trust Building</li>
-                                <li><i class="ri-check-line"></i> Pre-marital Counseling</li>
-                            </ul>
-                        </div>
-
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="ri-group-line"></i>
-                            </div>
-                            <h3 class="service-title">Family Therapy</h3>
-                            <p class="service-description">
-                                Improve family dynamics and create healthier relationships through collaborative therapeutic approaches.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Family Dynamics</li>
-                                <li><i class="ri-check-line"></i> Child Behavior Issues</li>
-                                <li><i class="ri-check-line"></i> Parenting Support</li>
-                                <li><i class="ri-check-line"></i> Blended Families</li>
-                            </ul>
-                        </div>
-
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="ri-brain-line"></i>
-                            </div>
-                            <h3 class="service-title">ADHD Assessment</h3>
-                            <p class="service-description">
-                                Comprehensive evaluations and personalized treatment plans for children and adults with attention difficulties.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Diagnostic Testing</li>
-                                <li><i class="ri-check-line"></i> Treatment Planning</li>
-                                <li><i class="ri-check-line"></i> Academic Support</li>
-                                <li><i class="ri-check-line"></i> Ongoing Monitoring</li>
-                            </ul>
-                        </div>
-
-                        <div class="service-card">
-                            <div class="service-icon">
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
                                 <i class="ri-mental-health-line"></i>
                             </div>
-                            <h3 class="service-title">Psychological Evaluations</h3>
-                            <p class="service-description">
-                                Thorough assessments for diagnostic clarity and treatment planning across various psychological conditions.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Comprehensive Testing</li>
-                                <li><i class="ri-check-line"></i> Learning Disabilities</li>
-                                <li><i class="ri-check-line"></i> Personality Assessment</li>
-                                <li><i class="ri-check-line"></i> Detailed Reports</li>
-                            </ul>
-                        </div>
-
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <i class="ri-scales-line"></i>
+                            <h3 class="card-title">Depression & Mood Disorders</h3>
+                            <p class="card-text">Evidence-based treatment for depression, bipolar disorder, and mood-related challenges.</p>
+                            <div class="card-tags">
+                                <span class="tag">CBT</span>
+                                <span class="tag">DBT</span>
+                                <span class="tag">Medication Support</span>
                             </div>
-                            <h3 class="service-title">Forensic Services</h3>
-                            <p class="service-description">
-                                Expert psychological evaluations and consultation for legal matters, custody cases, and court proceedings.
-                            </p>
-                            <ul class="service-features">
-                                <li><i class="ri-check-line"></i> Custody Evaluations</li>
-                                <li><i class="ri-check-line"></i> Expert Testimony</li>
-                                <li><i class="ri-check-line"></i> Risk Assessment</li>
-                                <li><i class="ri-check-line"></i> Legal Consultation</li>
-                            </ul>
+                            <a href="#depression" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <button class="carousel-nav-btn next-btn" aria-label="Next service">
-                        <i class="ri-arrow-right-s-line"></i>
-                    </button>
+                    <!-- Card 2 -->
+                    <div class="service-card" data-category="mood">
+                        <div class="card-image">
+                            <img src="https://i0.wp.com/davenportpsychology.com/wp-content/uploads/2021/10/individual-therapy.jpeg" alt="Anxiety Treatment">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-mind-map"></i>
+                            </div>
+                            <h3 class="card-title">Anxiety Disorders</h3>
+                            <p class="card-text">Comprehensive treatment for generalized anxiety, panic disorders, and social anxiety.</p>
+                            <div class="card-tags">
+                                <span class="tag">Exposure Therapy</span>
+                                <span class="tag">Mindfulness</span>
+                            </div>
+                            <a href="#anxiety" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="service-card" data-category="specialized">
+                        <div class="card-image">
+                            <img src="https://sa1s3optim.patientpop.com/assets/images/provider/photos/2461480.jpeg" alt="PTSD Treatment">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-shield-star-line"></i>
+                            </div>
+                            <h3 class="card-title">PTSD & Trauma Recovery</h3>
+                            <p class="card-text">Specialized trauma-informed care for injury, illness, abuse, and loss-related trauma.</p>
+                            <div class="card-tags">
+                                <span class="tag">EMDR</span>
+                                <span class="tag">Trauma-Focused CBT</span>
+                            </div>
+                            <a href="#trauma" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="service-card" data-category="behavioral">
+                        <div class="card-image">
+                            <img src="https://www.brainbalancecenters.com/hubfs/Imported_Blog_Media/how-learning-disorders-turn-into-behavioral-disorders.jpeg" alt="Behavioral Health">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-user-settings-line"></i>
+                            </div>
+                            <h3 class="card-title">Behavioral Health</h3>
+                            <p class="card-text">Expert care for ODD, conduct disorders, and challenging behavioral patterns.</p>
+                            <div class="card-tags">
+                                <span class="tag">Behavior Therapy</span>
+                                <span class="tag">Parent Training</span>
+                            </div>
+                            <a href="#behavioral" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="service-card" data-category="behavioral">
+                        <div class="card-image">
+                            <img src="https://images.everydayhealth.com/images/2025-gateway-illustrations/eh-adhd-gg-1440x810.png?sfvrsn=3347f7b_3" alt="ADHD Treatment">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-focus-2-line"></i>
+                            </div>
+                            <h3 class="card-title">ADHD & Attention Disorders</h3>
+                            <p class="card-text">Comprehensive assessment and treatment for attention deficit disorders in all ages.</p>
+                            <div class="card-tags">
+                                <span class="tag">Assessment</span>
+                                <span class="tag">Skills Training</span>
+                            </div>
+                            <a href="#adhd" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="service-card" data-category="family">
+                        <div class="card-image">
+                            <img src="https://familyresourcesinc.org/wp-content/uploads/2020/03/80342737_l-scaled-1200x801.jpg" alt="Family Therapy">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-home-heart-line"></i>
+                            </div>
+                            <h3 class="card-title">Family Crisis Support</h3>
+                            <p class="card-text">Supporting families through separation, divorce, and relationship challenges.</p>
+                            <div class="card-tags">
+                                <span class="tag">Family Systems</span>
+                                <span class="tag">Mediation</span>
+                            </div>
+                            <a href="#family" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 7 -->
+                    <div class="service-card" data-category="behavioral">
+                        <div class="card-image">
+                            <img src="https://southeastbehavioral.com/wp-content/uploads/2023/03/Adolescents-1.jpg" alt="School Support">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-graduation-cap-line"></i>
+                            </div>
+                            <h3 class="card-title">School & Learning Support</h3>
+                            <p class="card-text">Helping students overcome academic challenges and school-related anxiety.</p>
+                            <div class="card-tags">
+                                <span class="tag">Academic Coaching</span>
+                                <span class="tag">IEP Support</span>
+                            </div>
+                            <a href="#school" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 8 -->
+                    <div class="service-card" data-category="specialized">
+                        <div class="card-image">
+                            <img src="https://michiganpsychologicalcare.com/images/blog/2023/02/the-signs-of-an-eating-disorder.jpg" alt="Sleep & Eating">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-moon-line"></i>
+                            </div>
+                            <h3 class="card-title">Sleep & Eating Wellness</h3>
+                            <p class="card-text">Specialized treatment for sleep disorders and eating-related challenges.</p>
+                            <div class="card-tags">
+                                <span class="tag">Sleep Hygiene</span>
+                                <span class="tag">Nutritional Therapy</span>
+                            </div>
+                            <a href="#wellness" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 9 -->
+                    <div class="service-card" data-category="family">
+                        <div class="card-image">
+                            <img src="https://www.mindful.org/content/uploads/A-World-of-Grief.png" alt="Grief Counseling">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-heart-3-line"></i>
+                            </div>
+                            <h3 class="card-title">Grief & Loss Counseling</h3>
+                            <p class="card-text">Compassionate support for bereavement and all forms of loss.</p>
+                            <div class="card-tags">
+                                <span class="tag">Grief Processing</span>
+                                <span class="tag">Support Groups</span>
+                            </div>
+                            <a href="#grief" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 10 -->
+                    <div class="service-card" data-category="family">
+                        <div class="card-image">
+                            <img src="https://cdn.memiah.co.uk/uploads/hypnotherapy-directory.org.uk/image_gallery/self%20love-1656066274-hero.png" alt="Attachment Therapy">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-parent-line"></i>
+                            </div>
+                            <h3 class="card-title">Adoption & Attachment</h3>
+                            <p class="card-text">Specialized care for adopted children and foster care attachment challenges.</p>
+                            <div class="card-tags">
+                                <span class="tag">Attachment Therapy</span>
+                                <span class="tag">Family Integration</span>
+                            </div>
+                            <a href="#attachment" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card 11 -->
+                    <div class="service-card" data-category="specialized">
+                        <div class="card-image">
+                            <img src="https://neuro.wharton.upenn.edu/wp-content/uploads/2020/04/iStock-Blog2-e1585773724832.jpg" alt="Mindfulness">
+                            <div class="card-overlay"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-icon-wrapper">
+                                <i class="ri-leaf-line"></i>
+                            </div>
+                            <h3 class="card-title">Mindfulness & Meditation</h3>
+                            <p class="card-text">Learn powerful mindfulness techniques for stress reduction and emotional regulation.</p>
+                            <div class="card-tags">
+                                <span class="tag">MBSR</span>
+                                <span class="tag">Meditation Training</span>
+                            </div>
+                            <a href="#mindfulness" class="card-action">
+                                <span>Learn More</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="carousel-dots"></div>
             </div>
-        </section>
+            
+            <button class="carousel-btn carousel-btn-next" aria-label="Next">
+                <i class="ri-arrow-right-s-line"></i>
+            </button>
+        </div>
 
+        <!-- Pagination Dots -->
+        <div class="carousel-pagination" id="carouselDots"></div>
+
+        <!-- View All CTA -->
+        <div class="carousel-cta">
+            <p class="cta-text">Explore all our specialized services</p>
+            <a href="#services" class="cta-button">
+                <span>View All Services</span>
+                <i class="ri-arrow-right-line"></i>
+                <div class="btn-shimmer"></div>
+            </a>
+        </div>
+    </div>
+</section>
+        
         <!-- Team Section -->
         <section class="team-section" id="team">
             <div class="team-container">
