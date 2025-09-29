@@ -1393,16 +1393,15 @@ input, textarea, select {
 /* ==========================================================================
     SECTION
    ========================================================================== */
-
-.-carousel-section {
+.services-carousel-section {
     position: relative;
-    padding: 120px 0;
-    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 50%, #ffffff 100%);
+    padding: 80px 0 70px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
     overflow: hidden;
 }
 
 /* Background Effects */
-.-background {
+.services-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -1411,75 +1410,32 @@ input, textarea, select {
     z-index: 0;
 }
 
-.-gradient {
+.services-gradient {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 216, 132, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
-    animation: gradientShift 15s ease-in-out infinite;
+        radial-gradient(circle at 15% 20%, rgba(0, 216, 132, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.03) 0%, transparent 40%);
 }
 
-@keyframes gradientShift {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
-
-.-grain {
+.services-grain {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.02;
+    opacity: 0.015;
     pointer-events: none;
 }
 
-.float-shape {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 216, 132, 0.1) 0%, transparent 70%);
-    animation: floatShape 20s ease-in-out infinite;
-    pointer-events: none;
-}
-
-.float-shape.shape-1 {
-    top: -10%;
-    left: -5%;
-    animation-delay: 0s;
-}
-
-.float-shape.shape-2 {
-    top: 50%;
-    right: -10%;
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
-    animation-delay: 5s;
-}
-
-.float-shape.shape-3 {
-    bottom: -15%;
-    left: 40%;
-    width: 300px;
-    height: 300px;
-    animation-delay: 10s;
-}
-
-@keyframes floatShape {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.05); }
-    66% { transform: translate(-20px, 20px) scale(0.95); }
-}
-
-.-carousel-container {
-    max-width: 1400px;
+.services-carousel-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 40px;
     position: relative;
     z-index: 1;
 }
@@ -1487,14 +1443,14 @@ input, textarea, select {
 /* Header */
 .carousel-header {
     text-align: center;
-    margin-bottom: 60px;
-    animation: fadeInUp 0.8s ease;
+    margin-bottom: 48px;
+    animation: fadeInUp 0.7s ease;
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -1505,19 +1461,19 @@ input, textarea, select {
 .header-badge {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 20px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 216, 132, 0.2);
+    gap: 8px;
+    padding: 6px 18px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 216, 132, 0.15);
     border-radius: 50px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .badge-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: #00d884;
     border-radius: 50%;
     animation: pulseDot 2s ease-in-out infinite;
@@ -1525,24 +1481,24 @@ input, textarea, select {
 
 @keyframes pulseDot {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); opacity: 0.7; }
+    50% { transform: scale(1.3); opacity: 0.6; }
 }
 
 .badge-text {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #00d884;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
 }
 
 .carousel-main-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 4vw, 2.75rem);
     font-weight: 700;
     color: #1f2937;
     line-height: 1.2;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .title-line {
@@ -1559,9 +1515,9 @@ input, textarea, select {
 }
 
 .carousel-main-subtitle {
-    font-size: 1.125rem;
+    font-size: 1rem;
     color: #6b7280;
-    max-width: 600px;
+    max-width: 540px;
     margin: 0 auto;
     line-height: 1.6;
 }
@@ -1570,116 +1526,121 @@ input, textarea, select {
 .category-filter {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 60px;
+    gap: 10px;
+    margin-bottom: 48px;
     flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease 0.2s backwards;
+    animation: fadeInUp 0.7s ease 0.15s backwards;
 }
 
 .filter-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
+    gap: 6px;
+    padding: 10px 20px;
     background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 50px;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: #4b5563;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .filter-btn:hover {
     border-color: #00d884;
     color: #00d884;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 216, 132, 0.15);
+    box-shadow: 0 6px 16px rgba(0, 216, 132, 0.12);
 }
 
 .filter-btn.active {
     background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
     border-color: transparent;
     color: white;
-    box-shadow: 0 8px 25px rgba(0, 216, 132, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 216, 132, 0.25);
 }
 
 .filter-btn i {
-    font-size: 1.125rem;
+    font-size: 1rem;
 }
 
-/* Carousel Container */
+/* Carousel Wrapper */
+.carousel-wrapper {
+    position: relative;
+}
+
 .carousel-container {
     position: relative;
-    margin-bottom: 40px;
+    padding: 0 60px;
 }
 
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 56px;
-    height: 56px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #1f2937;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     cursor: pointer;
     z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .carousel-btn:hover {
     background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
     border-color: transparent;
     color: white;
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 8px 25px rgba(0, 216, 132, 0.3);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 216, 132, 0.25);
 }
 
 .carousel-btn-prev {
-    left: -28px;
+    left: 0;
 }
 
 .carousel-btn-next {
-    right: -28px;
+    right: 0;
 }
 
 .carousel-btn:disabled {
-    opacity: 0.3;
+    opacity: 0.25;
     cursor: not-allowed;
     pointer-events: none;
 }
 
 .carousel-viewport {
     overflow: hidden;
-    margin: 0 60px;
+    padding: 8px 0 20px;
 }
 
 .carousel-slides {
     display: flex;
-    gap: 30px;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Service Cards */
+/* Service Cards - Compact & Sleek */
 .service-card {
-    flex: 0 0 calc(33.333% - 20px);
+    flex: 0 0 calc(33.333% - 16px);
     background: white;
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 1;
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .service-card.hide {
@@ -1687,14 +1648,15 @@ input, textarea, select {
 }
 
 .service-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 216, 132, 0.1);
 }
 
 .card-image {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 180px;
     overflow: hidden;
 }
 
@@ -1702,80 +1664,88 @@ input, textarea, select {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease;
+    transition: transform 0.5s ease;
 }
 
 .service-card:hover .card-image img {
-    transform: scale(1.08);
+    transform: scale(1.05);
 }
 
-.card-overlay {
+.card-gradient {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    background: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0) 0%, 
+        rgba(0, 0, 0, 0.15) 70%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
     transition: opacity 0.3s ease;
 }
 
-.service-card:hover .card-overlay {
-    opacity: 0.6;
+.service-card:hover .card-gradient {
+    background: linear-gradient(180deg, 
+        rgba(0, 216, 132, 0.05) 0%, 
+        rgba(0, 216, 132, 0.15) 70%,
+        rgba(0, 216, 132, 0.3) 100%
+    );
 }
 
 .card-body {
-    padding: 32px;
+    padding: 24px;
 }
 
 .card-icon-wrapper {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, rgba(0, 216, 132, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
-    border-radius: 16px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.08) 0%, rgba(14, 165, 233, 0.08) 100%);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: #00d884;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     transition: all 0.3s ease;
 }
 
 .service-card:hover .card-icon-wrapper {
     background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
     color: white;
-    transform: scale(1.1) rotate(-8deg);
+    transform: scale(1.05) rotate(-5deg);
 }
 
 .card-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #1f2937;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     line-height: 1.3;
 }
 
 .card-text {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     color: #6b7280;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    line-height: 1.5;
+    margin-bottom: 16px;
 }
 
 .card-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 6px;
+    margin-bottom: 18px;
 }
 
 .tag {
-    padding: 6px 14px;
-    background: rgba(0, 216, 132, 0.08);
-    border: 1px solid rgba(0, 216, 132, 0.15);
+    padding: 4px 12px;
+    background: rgba(0, 216, 132, 0.06);
+    border: 1px solid rgba(0, 216, 132, 0.12);
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 500;
     color: #00d884;
     white-space: nowrap;
@@ -1784,170 +1754,122 @@ input, textarea, select {
 .card-action {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.9375rem;
+    gap: 6px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #00d884;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     position: relative;
 }
 
 .card-action::after {
     content: '';
     position: absolute;
-    bottom: -4px;
+    bottom: -3px;
     left: 0;
     width: 0;
-    height: 2px;
+    height: 1.5px;
     background: linear-gradient(90deg, #00d884 0%, #0ea5e9 100%);
-    transition: width 0.3s ease;
+    transition: width 0.25s ease;
 }
 
 .card-action:hover {
     color: #0ea5e9;
-    gap: 12px;
+    gap: 10px;
 }
 
 .card-action:hover::after {
-    width: calc(100% - 24px);
+    width: calc(100% - 18px);
 }
 
 /* Pagination */
 .carousel-pagination {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 60px;
+    gap: 8px;
+    margin-top: 32px;
 }
 
 .pagination-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     background: rgba(0, 216, 132, 0.2);
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .pagination-dot:hover {
-    background: rgba(0, 216, 132, 0.5);
-    transform: scale(1.2);
+    background: rgba(0, 216, 132, 0.4);
+    transform: scale(1.15);
 }
 
 .pagination-dot.active {
-    width: 32px;
+    width: 28px;
     border-radius: 50px;
     background: linear-gradient(90deg, #00d884 0%, #0ea5e9 100%);
-}
-
-/* CTA Section */
-.carousel-cta {
-    text-align: center;
-    animation: fadeInUp 0.8s ease 0.4s backwards;
-}
-
-.cta-text {
-    font-size: 1rem;
-    color: #6b7280;
-    margin-bottom: 20px;
-}
-
-.cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 36px;
-    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
-    color: white;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 8px 25px rgba(0, 216, 132, 0.25);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.cta-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 216, 132, 0.35);
-}
-
-.btn-shimmer {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
     .service-card {
-        flex: 0 0 calc(50% - 15px);
+        flex: 0 0 calc(50% - 12px);
     }
 }
 
 @media (max-width: 991px) {
-    .-carousel-section {
-        padding: 80px 0;
+    .services-carousel-section {
+        padding: 60px 0;
+    }
+
+    .services-carousel-container {
+        padding: 0 24px;
     }
 
     .carousel-header {
-        margin-bottom: 40px;
+        margin-bottom: 36px;
     }
 
     .category-filter {
-        margin-bottom: 40px;
+        margin-bottom: 36px;
+    }
+
+    .carousel-container {
+        padding: 0 50px;
     }
 
     .carousel-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.25rem;
-    }
-
-    .carousel-btn-prev {
-        left: -20px;
-    }
-
-    .carousel-btn-next {
-        right: -20px;
-    }
-
-    .carousel-viewport {
-        margin: 0 50px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.125rem;
     }
 }
 
 @media (max-width: 767px) {
-    .-carousel-section {
-        padding: 60px 0;
+    .services-carousel-section {
+        padding: 50px 0;
+    }
+
+    .services-carousel-container {
+        padding: 0 16px;
     }
 
     .carousel-main-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .carousel-main-subtitle {
-        font-size: 1rem;
+        font-size: 0.9375rem;
     }
 
     .category-filter {
         gap: 8px;
-        margin-bottom: 30px;
+        margin-bottom: 28px;
     }
 
     .filter-btn {
-        padding: 10px 18px;
-        font-size: 0.875rem;
+        padding: 8px 16px;
+        font-size: 0.8125rem;
     }
 
     .filter-btn span {
@@ -1955,22 +1877,21 @@ input, textarea, select {
     }
 
     .filter-btn i {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
     }
 
     .service-card {
         flex: 0 0 100%;
     }
 
-    .carousel-viewport {
-        margin: 0 60px;
+    .carousel-container {
+        padding: 0 48px;
     }
 
     .carousel-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 1.125rem;
-        background: rgba(255, 255, 255, 0.98);
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
     }
 
     .carousel-btn-prev {
@@ -1982,54 +1903,48 @@ input, textarea, select {
     }
 
     .card-body {
-        padding: 24px;
-    }
-
-    .card-image {
-        height: 180px;
-    }
-
-    .card-icon-wrapper {
-        width: 48px;
-        height: 48px;
-        font-size: 1.5rem;
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-    }
-
-    .carousel-cta {
-        margin-bottom: 20px;
-    }
-
-    .cta-button {
-        padding: 14px 28px;
-        font-size: 0.9375rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel-viewport {
-        margin: 0 50px;
-    }
-
-    .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-
-    .carousel-btn-prev {
-        left: -5px;
-    }
-
-    .carousel-btn-next {
-        right: -5px;
+        padding: 20px;
     }
 
     .card-image {
         height: 160px;
+    }
+
+    .card-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 1.375rem;
+    }
+
+    .card-title {
+        font-size: 1.125rem;
+    }
+
+    .card-text {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-carousel-container {
+        padding: 0 12px;
+    }
+
+    .carousel-container {
+        padding: 0 42px;
+    }
+
+    .carousel-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .card-image {
+        height: 140px;
+    }
+
+    .card-body {
+        padding: 18px;
     }
 }
 
