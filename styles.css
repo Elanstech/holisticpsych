@@ -2060,6 +2060,11 @@ input, textarea, select {
     display: flex;
     gap: var(--space-2xl);
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: grab;
+}
+
+.team-carousel-track:active {
+    cursor: grabbing;
 }
 
 /* Team Card */
@@ -2079,11 +2084,11 @@ input, textarea, select {
     border-color: rgba(0, 216, 132, 0.3);
 }
 
-/* Card Image */
+/* Card Image - FIXED TO SHOW FULL FACE */
 .team-card-image {
     position: relative;
     width: 100%;
-    height: 420px;
+    height: 380px;
     overflow: hidden;
     background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
 }
@@ -2092,7 +2097,7 @@ input, textarea, select {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2311,7 +2316,7 @@ input, textarea, select {
     text-align: center;
     padding: var(--space-4xl) var(--space-2xl);
     gap: var(--space-xl);
-    min-height: 420px;
+    min-height: 380px;
 }
 
 .join-icon-wrapper-new {
@@ -2487,10 +2492,6 @@ input, textarea, select {
         height: 48px;
         font-size: 1.5rem;
     }
-    
-    .team-card-image {
-        height: 380px;
-    }
 }
 
 @media (max-width: 767px) {
@@ -2545,6 +2546,7 @@ input, textarea, select {
     
     .join-card-content-new {
         padding: var(--space-3xl) var(--space-xl);
+        min-height: 420px;
     }
     
     .join-benefits-list {
@@ -2569,10 +2571,6 @@ input, textarea, select {
         width: 40px;
         height: 40px;
         font-size: 1.25rem;
-    }
-    
-    .team-card-image {
-        height: 380px;
     }
     
     .team-card-body {
