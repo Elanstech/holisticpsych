@@ -31,7 +31,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.team = new TeamCarouselNew();
+        this.team = new TeamCarouselV3();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
@@ -690,31 +690,26 @@ document.addEventListener('visibilitychange', () => {
 /* ==========================================================================
    TEAM CAROUSEL
    ========================================================================== */
-
-class TeamCarouselNew {
+class TeamCarouselV3 {
     constructor() {
-        this.track = document.querySelector('.team-carousel-track');
-        this.cards = document.querySelectorAll('.team-card-new');
-        this.prevBtn = document.querySelector('.team-carousel-prev');
-        this.nextBtn = document.querySelector('.team-carousel-next');
-        this.dotsContainer = document.getElementById('teamCarouselDots');
+        this.slides = document.querySelectorAll('.team-slide-v3');
+        this.track = document.querySelector('.team-carousel-slides-v3');
+        this.prevBtn = document.querySelector('.team-prev-v3');
+        this.nextBtn = document.querySelector('.team-next-v3');
+        this.dotsContainer = document.getElementById('teamDotsV3');
         
         this.currentIndex = 0;
-        this.cardsPerView = this.getCardsPerView();
+        this.slidesPerView = this.getSlidesPerView();
         this.isAnimating = false;
         this.autoplayInterval = null;
-        this.autoplayDelay = 5000;
         this.isHovered = false;
         
-        // Touch/drag variables
+        // Touch/drag
         this.touchStartX = 0;
         this.touchEndX = 0;
         this.isDragging = false;
-        this.startX = 0;
-        this.currentTranslate = 0;
-        this.prevTranslate = 0;
         
-        if (this.track && this.cards.length > 0) {
+        if (this.track && this.slides.length > 0) {
             this.init();
         }
     }
@@ -722,22 +717,21 @@ class TeamCarouselNew {
     init() {
         this.createDots();
         this.bindEvents();
-        this.updateView();
+        this.updateCarousel();
         this.startAutoplay();
         
-        // Handle window resize
         window.addEventListener('resize', this.debounce(() => {
-            const newCardsPerView = this.getCardsPerView();
-            if (newCardsPerView !== this.cardsPerView) {
-                this.cardsPerView = newCardsPerView;
+            const newSlidesPerView = this.getSlidesPerView();
+            if (newSlidesPerView !== this.slidesPerView) {
+                this.slidesPerView = newSlidesPerView;
                 this.currentIndex = Math.min(this.currentIndex, this.getMaxIndex());
-                this.updateView();
+                this.updateCarousel();
                 this.createDots();
             }
         }, 250));
     }
     
-    getCardsPerView() {
+    getSlidesPerView() {
         const width = window.innerWidth;
         if (width < 768) return 1;
         if (width < 1200) return 2;
@@ -745,11 +739,10 @@ class TeamCarouselNew {
     }
     
     getMaxIndex() {
-        return Math.max(0, this.cards.length - this.cardsPerView);
+        return Math.max(0, this.slides.length - this.slidesPerView);
     }
     
     bindEvents() {
-        // Navigation buttons
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', () => {
                 this.prev();
@@ -764,163 +757,52 @@ class TeamCarouselNew {
             });
         }
         
-        // Pause autoplay on hover
-        const wrapper = document.querySelector('.team-carousel-wrapper-new');
-        if (wrapper) {
-            wrapper.addEventListener('mouseenter', () => {
+        // Hover pause
+        const container = document.querySelector('.team-carousel-container-v3');
+        if (container) {
+            container.addEventListener('mouseenter', () => {
                 this.isHovered = true;
             });
-            
-            wrapper.addEventListener('mouseleave', () => {
+            container.addEventListener('mouseleave', () => {
                 this.isHovered = false;
             });
         }
         
         // Touch events
-        this.track.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
-        this.track.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
-        this.track.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        this.track.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.touches[0].clientX;
+            this.isDragging = true;
+        }, { passive: true });
         
-        // Mouse drag
-        this.track.addEventListener('mousedown', (e) => this.handleDragStart(e));
-        this.track.addEventListener('mousemove', (e) => this.handleDragMove(e));
-        this.track.addEventListener('mouseup', (e) => this.handleDragEnd(e));
-        this.track.addEventListener('mouseleave', (e) => this.handleDragEnd(e));
+        this.track.addEventListener('touchmove', (e) => {
+            if (!this.isDragging) return;
+            this.touchEndX = e.touches[0].clientX;
+        }, { passive: true });
         
-        // Prevent default drag on images
-        this.cards.forEach(card => {
-            card.addEventListener('dragstart', (e) => e.preventDefault());
+        this.track.addEventListener('touchend', () => {
+            if (!this.isDragging) return;
+            
+            const diff = this.touchStartX - this.touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    this.next();
+                } else {
+                    this.prev();
+                }
+                this.resetAutoplay();
+            }
+            
+            this.isDragging = false;
         });
         
-        // Book session button clicks
-        const bookBtns = document.querySelectorAll('.book-session-btn');
+        // Book buttons
+        const bookBtns = document.querySelectorAll('.book-btn-v3, .join-btn-v3, .cta-btn-v3');
         bookBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.smoothScrollToContact();
+                this.scrollToContact();
             });
         });
-        
-        // Join button click
-        const joinBtn = document.querySelector('.join-apply-btn');
-        if (joinBtn) {
-            joinBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.smoothScrollToContact();
-            });
-        }
-    }
-    
-    handleTouchStart(e) {
-        this.touchStartX = e.touches[0].clientX;
-        this.isDragging = true;
-        this.startX = this.touchStartX;
-        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
-        this.track.style.transition = 'none';
-    }
-    
-    handleTouchMove(e) {
-        if (!this.isDragging) return;
-        
-        this.touchEndX = e.touches[0].clientX;
-        const diff = this.touchEndX - this.startX;
-        
-        // Add resistance at edges
-        const maxIndex = this.getMaxIndex();
-        let resistance = 1;
-        
-        if (this.currentIndex === 0 && diff > 0) {
-            resistance = 0.3;
-        } else if (this.currentIndex === maxIndex && diff < 0) {
-            resistance = 0.3;
-        }
-        
-        this.currentTranslate = this.prevTranslate + (diff * resistance);
-        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
-        
-        // Prevent page scroll on horizontal swipe
-        if (Math.abs(diff) > 10) {
-            e.preventDefault();
-        }
-    }
-    
-    handleTouchEnd(e) {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        
-        const movedBy = this.touchEndX - this.touchStartX;
-        const threshold = 50;
-        
-        if (Math.abs(movedBy) > threshold) {
-            if (movedBy > 0) {
-                this.prev();
-            } else {
-                this.next();
-            }
-        } else {
-            this.updateView();
-        }
-    }
-    
-    handleDragStart(e) {
-        this.isDragging = true;
-        this.startX = e.clientX;
-        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
-        this.track.style.cursor = 'grabbing';
-        this.track.style.transition = 'none';
-        this.track.style.userSelect = 'none';
-        e.preventDefault();
-    }
-    
-    handleDragMove(e) {
-        if (!this.isDragging) return;
-        
-        e.preventDefault();
-        const currentX = e.clientX;
-        const diff = currentX - this.startX;
-        
-        const maxIndex = this.getMaxIndex();
-        let resistance = 1;
-        
-        if (this.currentIndex === 0 && diff > 0) {
-            resistance = 0.3;
-        } else if (this.currentIndex === maxIndex && diff < 0) {
-            resistance = 0.3;
-        }
-        
-        this.currentTranslate = this.prevTranslate + (diff * resistance);
-        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
-    }
-    
-    handleDragEnd(e) {
-        if (!this.isDragging) return;
-        
-        this.isDragging = false;
-        this.track.style.cursor = 'grab';
-        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        this.track.style.userSelect = '';
-        
-        const movedBy = this.currentTranslate - this.prevTranslate;
-        const threshold = 50;
-        
-        if (Math.abs(movedBy) > threshold) {
-            if (movedBy > 0) {
-                this.prev();
-            } else {
-                this.next();
-            }
-        } else {
-            this.updateView();
-        }
-    }
-    
-    getSlideWidth() {
-        if (this.cards.length === 0) return 0;
-        const cardWidth = this.cards[0].offsetWidth;
-        const gap = 32; // Must match CSS gap (2rem = 32px)
-        return cardWidth + gap;
     }
     
     prev() {
@@ -932,7 +814,7 @@ class TeamCarouselNew {
             this.currentIndex = this.getMaxIndex();
         }
         
-        this.updateView();
+        this.updateCarousel();
     }
     
     next() {
@@ -945,27 +827,28 @@ class TeamCarouselNew {
             this.currentIndex = 0;
         }
         
-        this.updateView();
+        this.updateCarousel();
     }
     
     goToSlide(index) {
         if (this.isAnimating) return;
         this.currentIndex = index;
-        this.updateView();
+        this.updateCarousel();
     }
     
-    updateView() {
+    updateCarousel() {
         this.isAnimating = true;
         
-        const slideWidth = this.getSlideWidth();
-        const offset = -this.currentIndex * slideWidth;
+        const slideWidth = this.slides[0].offsetWidth;
+        const gap = 28;
+        const offset = -(this.currentIndex * (slideWidth + gap));
         
         this.track.style.transform = `translateX(${offset}px)`;
         this.updateDots();
         
         setTimeout(() => {
             this.isAnimating = false;
-        }, 600);
+        }, 650);
     }
     
     createDots() {
@@ -977,7 +860,7 @@ class TeamCarouselNew {
         
         for (let i = 0; i < numDots; i++) {
             const dot = document.createElement('div');
-            dot.classList.add('team-dot');
+            dot.className = 'team-dot-v3';
             if (i === this.currentIndex) dot.classList.add('active');
             
             dot.addEventListener('click', () => {
@@ -992,9 +875,9 @@ class TeamCarouselNew {
     updateDots() {
         if (!this.dotsContainer) return;
         
-        const dots = this.dotsContainer.querySelectorAll('.team-dot');
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === this.currentIndex);
+        const dots = this.dotsContainer.querySelectorAll('.team-dot-v3');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.currentIndex);
         });
     }
     
@@ -1004,7 +887,7 @@ class TeamCarouselNew {
             if (!this.isHovered && !this.isDragging) {
                 this.next();
             }
-        }, this.autoplayDelay);
+        }, 5000);
     }
     
     stopAutoplay() {
@@ -1018,11 +901,11 @@ class TeamCarouselNew {
         this.startAutoplay();
     }
     
-    smoothScrollToContact() {
-        const contactSection = document.querySelector('#contact');
-        if (contactSection) {
+    scrollToContact() {
+        const contact = document.querySelector('#contact');
+        if (contact) {
             const headerOffset = 100;
-            const elementPosition = contactSection.getBoundingClientRect().top;
+            const elementPosition = contact.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
             
             window.scrollTo({
@@ -1034,7 +917,7 @@ class TeamCarouselNew {
     
     debounce(func, wait) {
         let timeout;
-        return function executedFunction(...args) {
+        return (...args) => {
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
@@ -1042,30 +925,28 @@ class TeamCarouselNew {
     
     destroy() {
         this.stopAutoplay();
-        console.log('Team carousel destroyed');
     }
 }
 
-// Initialize team carousel when DOM is ready
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    window.teamCarouselNew = new TeamCarouselNew();
-    console.log('Team carousel initialized successfully');
+    window.teamCarouselV3 = new TeamCarouselV3();
+    console.log('Team Carousel V3 initialized');
 });
 
-// Pause autoplay when page is hidden
+// Pause on page hide
 document.addEventListener('visibilitychange', () => {
-    if (window.teamCarouselNew) {
+    if (window.teamCarouselV3) {
         if (document.hidden) {
-            window.teamCarouselNew.stopAutoplay();
+            window.teamCarouselV3.stopAutoplay();
         } else {
-            window.teamCarouselNew.startAutoplay();
+            window.teamCarouselV3.startAutoplay();
         }
     }
 });
 
-// Export for potential external use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TeamCarouselNew };
+    module.exports = { TeamCarouselV3 };
 }
 
 /* ==========================================================================
