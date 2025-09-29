@@ -558,12 +558,12 @@ input, textarea, select {
 
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 110vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 140px 0 80px;
+    padding: 140px 0 100px;
 }
 
 .hero-background {
@@ -1006,7 +1006,7 @@ input, textarea, select {
 
 .scroll-indicator {
     position: absolute;
-    bottom: 40px;
+    bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -1087,14 +1087,20 @@ input, textarea, select {
 
 @media (max-width: 991px) {
     .hero {
-        padding: 120px 0 60px;
+        min-height: 105vh;
+        padding: 120px 0 80px;
     }
     
     .hero-logo-container {
         width: 320px;
         height: 320px;
     }
-    
+   
+    .hero-content {
+        padding-bottom: var(--space-3xl);
+
+    }
+       
     .hero-cta {
         flex-direction: column;
         width: 100%;
@@ -1126,11 +1132,24 @@ input, textarea, select {
         height: 40px;
         background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
     }
+   
+   .scroll-indicator {
+        bottom: 50px;
+    }
 }
 
 @media (max-width: 767px) {
     .hero {
-        padding: 100px 0 50px;
+        min-height: 100vh;
+        padding: 100px 0 70px;
+    }
+    
+    .hero-content {
+        padding-bottom: var(--space-2xl);
+    }
+    
+    .scroll-indicator {
+        bottom: 40px;
     }
     
     .hero-logo-container {
@@ -1149,6 +1168,19 @@ input, textarea, select {
 }
 
 @media (max-width: 480px) {
+   
+    .hero {
+        padding: 100px 0 60px;
+    }
+    
+    .scroll-indicator {
+        bottom: 30px;
+    }
+    
+    .hero-content {
+        padding-bottom: var(--space-xl);
+    }
+   
     .hero-container {
         padding: 0 var(--space-md);
     }
