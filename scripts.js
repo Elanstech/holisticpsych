@@ -31,7 +31,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.team = new TeamCarousel();
+        this.team = new TeamSectionNew();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
@@ -691,325 +691,360 @@ document.addEventListener('visibilitychange', () => {
    TEAM CAROUSEL
    ========================================================================== */
 
-class TeamCarousel {
+class TeamSectionNew {
     constructor() {
-        this.track = document.querySelector('.team-carousel-track');
-        this.cards = document.querySelectorAll('.team-card');
-        this.prevBtn = document.querySelector('.team-prev');
-        this.nextBtn = document.querySelector('.team-next');
-        this.dotsContainer = document.querySelector('.team-carousel-dots');
+        this.section = document.querySelector('.team-section-new');
+        this.cards = document.querySelectorAll('.team-card-new');
+        this.bookButtons = document.querySelectorAll('.book-session-btn');
+        this.joinButton = document.querySelector('.join-apply-btn');
+        this.ctaButton = document.querySelector('.cta-button-new');
         
-        this.currentIndex = 0;
-        this.cardWidth = 0;
-        this.gap = 32; // 2rem in pixels
-        this.autoplayInterval = null;
-        this.autoplayDelay = 5000; // 5 seconds
-        this.isAutoplayPaused = false;
-        
-        if (this.track && this.cards.length > 0) {
+        if (this.section) {
             this.init();
         }
     }
     
     init() {
-        this.createDots();
-        this.calculateDimensions();
-        this.bindEvents();
-        this.updateCarousel();
-        this.startAutoplay();
-        
-        // Handle window resize
-        window.addEventListener('resize', this.debounce(() => {
-            this.calculateDimensions();
-            this.updateCarousel();
-        }, 250));
+        this.initScrollAnimations();
+        this.initCardInteractions();
+        this.initButtonAnimations();
+        this.initParallaxEffect();
     }
     
-    calculateDimensions() {
-        if (this.cards.length > 0) {
-            const cardStyle = window.getComputedStyle(this.cards[0]);
-            this.cardWidth = this.cards[0].offsetWidth;
-            
-            // Get gap from computed style
-            const trackStyle = window.getComputedStyle(this.track);
-            const gapValue = trackStyle.gap || trackStyle.columnGap || '32px';
-            this.gap = parseInt(gapValue);
-        }
-    }
-    
-    createDots() {
-        if (!this.dotsContainer) return;
-        
-        this.dotsContainer.innerHTML = '';
-        
-        this.cards.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('team-dot');
-            if (index === 0) dot.classList.add('active');
-            
-            dot.addEventListener('click', () => {
-                this.goToSlide(index);
-                this.resetAutoplay();
-            });
-            
-            this.dotsContainer.appendChild(dot);
-        });
-        
-        this.dots = this.dotsContainer.querySelectorAll('.team-dot');
-    }
-    
-    bindEvents() {
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => {
-                this.prevSlide();
-                this.resetAutoplay();
-            });
-        }
-        
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => {
-                this.nextSlide();
-                this.resetAutoplay();
-            });
-        }
-        
-        // Touch events for mobile swipe
-        let touchStartX = 0;
-        let touchEndX = 0;
-        let touchStartY = 0;
-        let touchEndY = 0;
-        
-        this.track.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            this.isAutoplayPaused = true;
-        });
-        
-        this.track.addEventListener('touchmove', (e) => {
-            touchEndX = e.touches[0].clientX;
-            touchEndY = e.touches[0].clientY;
-        });
-        
-        this.track.addEventListener('touchend', () => {
-            const deltaX = touchStartX - touchEndX;
-            const deltaY = Math.abs(touchStartY - touchEndY);
-            
-            // Only trigger if horizontal swipe is more than vertical
-            if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > deltaY) {
-                if (deltaX > 0) {
-                    this.nextSlide();
-                } else {
-                    this.prevSlide();
-                }
-                this.resetAutoplay();
-            } else {
-                this.isAutoplayPaused = false;
-            }
-        });
-        
-        // Pause autoplay on hover
-        const carouselWrapper = document.querySelector('.team-carousel-wrapper');
-        if (carouselWrapper) {
-            carouselWrapper.addEventListener('mouseenter', () => {
-                this.isAutoplayPaused = true;
-            });
-            
-            carouselWrapper.addEventListener('mouseleave', () => {
-                this.isAutoplayPaused = false;
-            });
-        }
-        
-        // View details buttons
-        const viewDetailsBtns = document.querySelectorAll('.view-details-btn');
-        viewDetailsBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Add your modal or detail view logic here
-                const card = btn.closest('.team-card');
-                const memberName = card.querySelector('.member-name').textContent;
-                console.log(`View details for: ${memberName}`);
-                
-                // Example: scroll to contact section
-                const contactSection = document.querySelector('#contact');
-                if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    }
-    
-    prevSlide() {
-        this.currentIndex = (this.currentIndex - 1 + this.cards.length) % this.cards.length;
-        this.updateCarousel();
-    }
-    
-    nextSlide() {
-        this.currentIndex = (this.currentIndex + 1) % this.cards.length;
-        this.updateCarousel();
-    }
-    
-    goToSlide(index) {
-        this.currentIndex = index;
-        this.updateCarousel();
-    }
-    
-    updateCarousel() {
-        const offset = -(this.currentIndex * (this.cardWidth + this.gap));
-        this.track.style.transform = `translateX(${offset}px)`;
-        
-        // Update dots
-        if (this.dots) {
-            this.dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === this.currentIndex);
-            });
-        }
-        
-        // Update button states
-        this.updateButtonStates();
-    }
-    
-    updateButtonStates() {
-        // Optional: disable buttons at start/end if not looping
-        // For now, we're looping, so buttons are always enabled
-        if (this.prevBtn) {
-            this.prevBtn.style.opacity = '1';
-            this.prevBtn.style.cursor = 'pointer';
-        }
-        
-        if (this.nextBtn) {
-            this.nextBtn.style.opacity = '1';
-            this.nextBtn.style.cursor = 'pointer';
-        }
-    }
-    
-    startAutoplay() {
-        this.autoplayInterval = setInterval(() => {
-            if (!this.isAutoplayPaused) {
-                this.nextSlide();
-            }
-        }, this.autoplayDelay);
-    }
-    
-    resetAutoplay() {
-        if (this.autoplayInterval) {
-            clearInterval(this.autoplayInterval);
-        }
-        this.startAutoplay();
-    }
-    
-    destroy() {
-        if (this.autoplayInterval) {
-            clearInterval(this.autoplayInterval);
-        }
-    }
-    
-    // Utility function: debounce
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+    /**
+     * Initialize scroll-based animations using Intersection Observer
+     */
+    initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    
+                    // Trigger staggered animation for cards
+                    if (entry.target.classList.contains('team-card-new')) {
+                        const cards = Array.from(this.cards);
+                        const index = cards.indexOf(entry.target);
+                        entry.target.style.animationDelay = `${index * 0.1}s`;
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        // Observe team cards
+        this.cards.forEach(card => {
+            observer.observe(card);
+        });
+        
+        // Observe section header
+        const header = document.querySelector('.team-header-new');
+        if (header) {
+            observer.observe(header);
+        }
+        
+        // Observe CTA section
+        const cta = document.querySelector('.team-bottom-cta');
+        if (cta) {
+            observer.observe(cta);
+        }
     }
-}
-
-function initSmoothScroll() {
-    const scrollButtons = document.querySelectorAll('a[href^="#"]');
     
-    scrollButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const targetId = button.getAttribute('href');
-            if (targetId === '#') return;
+    /**
+     * Initialize card hover and interaction effects
+     */
+    initCardInteractions() {
+        this.cards.forEach(card => {
+            // Mouse move parallax effect on images
+            card.addEventListener('mousemove', (e) => {
+                this.handleCardMouseMove(e, card);
+            });
             
-            const targetElement = document.querySelector(targetId);
+            card.addEventListener('mouseleave', () => {
+                this.handleCardMouseLeave(card);
+            });
             
-            if (targetElement) {
+            // Click on card (excluding buttons) for smooth scroll to contact
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.book-session-btn') && 
+                    !e.target.closest('.join-apply-btn') &&
+                    !e.target.closest('.specialty-tag')) {
+                    this.handleCardClick(card);
+                }
+            });
+        });
+    }
+    
+    /**
+     * Handle mouse move for card parallax effect
+     */
+    handleCardMouseMove(e, card) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const deltaX = (x - centerX) / centerX;
+        const deltaY = (y - centerY) / centerY;
+        
+        const image = card.querySelector('.team-member-photo');
+        if (image) {
+            image.style.transform = `scale(1.08) translate(${deltaX * 5}px, ${deltaY * 5}px)`;
+        }
+    }
+    
+    /**
+     * Reset card transforms on mouse leave
+     */
+    handleCardMouseLeave(card) {
+        const image = card.querySelector('.team-member-photo');
+        if (image) {
+            image.style.transform = '';
+        }
+    }
+    
+    /**
+     * Handle card click for quick interaction
+     */
+    handleCardClick(card) {
+        // Add a subtle scale animation
+        card.style.transform = 'scale(0.98) translateY(-8px)';
+        setTimeout(() => {
+            card.style.transform = '';
+        }, 200);
+    }
+    
+    /**
+     * Initialize button animations and interactions
+     */
+    initButtonAnimations() {
+        // Book session buttons
+        this.bookButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
                 e.preventDefault();
-                
-                const headerOffset = 100; // Adjust based on your header height
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
+                this.handleBookSession(button);
+            });
         });
-    });
-}
-
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
-            }
+        
+        // Join button
+        if (this.joinButton) {
+            this.joinButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.smoothScrollToContact();
+            });
+        }
+        
+        // CTA button
+        if (this.ctaButton) {
+            this.ctaButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.smoothScrollToContact();
+            });
+        }
+        
+        // Specialty tag interactions
+        const specialtyTags = document.querySelectorAll('.specialty-tag');
+        specialtyTags.forEach(tag => {
+            tag.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleSpecialtyClick(tag);
+            });
         });
-    }, observerOptions);
+    }
     
-    // Observe team cards
-    const teamCards = document.querySelectorAll('.team-card');
-    teamCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
+    /**
+     * Handle book session button click
+     */
+    handleBookSession(button) {
+        // Add click animation
+        button.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            button.style.transform = '';
+        }, 150);
+        
+        // Show notification
+        this.showNotification('Redirecting to booking...', 'info');
+        
+        // Smooth scroll to contact section
+        setTimeout(() => {
+            this.smoothScrollToContact();
+        }, 300);
+    }
     
-    // Add animation class styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .team-card.animate-in {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize team carousel
-    const teamCarousel = new TeamCarousel();
+    /**
+     * Handle specialty tag click
+     */
+    handleSpecialtyClick(tag) {
+        const specialty = tag.textContent;
+        
+        // Visual feedback
+        tag.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            tag.style.transform = '';
+        }, 200);
+        
+        // Show info notification
+        this.showNotification(`Learn more about ${specialty}`, 'info');
+    }
     
-    // Initialize smooth scroll
-    initSmoothScroll();
-    
-    // Initialize scroll animations
-    initScrollAnimations();
-    
-    console.log('Team section initialized successfully');
-});
-
-document.addEventListener('visibilitychange', () => {
-    const teamCarousel = window.teamCarouselInstance;
-    
-    if (document.hidden) {
-        // Pause when tab is hidden
-        if (teamCarousel && teamCarousel.autoplayInterval) {
-            clearInterval(teamCarousel.autoplayInterval);
-        }
-    } else {
-        // Resume when tab is visible
-        if (teamCarousel) {
-            teamCarousel.startAutoplay();
+    /**
+     * Smooth scroll to contact section
+     */
+    smoothScrollToContact() {
+        const contactSection = document.querySelector('#contact');
+        if (contactSection) {
+            const headerOffset = 100;
+            const elementPosition = contactSection.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
     }
+    
+    /**
+     * Initialize subtle parallax effect on scroll
+     */
+    initParallaxEffect() {
+        let ticking = false;
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    this.updateParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    }
+    
+    /**
+     * Update parallax positions
+     */
+    updateParallax() {
+        if (!this.section) return;
+        
+        const scrolled = window.pageYOffset;
+        const sectionTop = this.section.offsetTop;
+        const sectionHeight = this.section.offsetHeight;
+        
+        // Only apply parallax when section is in view
+        if (scrolled > sectionTop - window.innerHeight && 
+            scrolled < sectionTop + sectionHeight) {
+            
+            const offset = (scrolled - sectionTop) * 0.3;
+            
+            // Apply subtle movement to cards
+            this.cards.forEach((card, index) => {
+                const factor = index % 2 === 0 ? 1 : -1;
+                card.style.transform = `translateY(${offset * factor * 0.05}px)`;
+            });
+        }
+    }
+    
+    /**
+     * Show notification message
+     */
+    showNotification(message, type = 'info') {
+        // Remove any existing notifications
+        const existing = document.querySelector('.team-notification');
+        if (existing) {
+            existing.remove();
+        }
+        
+        const notification = document.createElement('div');
+        notification.className = `team-notification team-notification-${type}`;
+        notification.textContent = message;
+        
+        // Style the notification
+        Object.assign(notification.style, {
+            position: 'fixed',
+            top: '100px',
+            right: '20px',
+            padding: '16px 24px',
+            borderRadius: '12px',
+            backgroundColor: type === 'info' ? '#0ea5e9' : '#00d884',
+            color: '#ffffff',
+            fontWeight: '600',
+            fontSize: '0.9375rem',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+            zIndex: '9999',
+            animation: 'slideInRight 0.3s ease',
+            maxWidth: '320px'
+        });
+        
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    /**
+     * Destroy and cleanup
+     */
+    destroy() {
+        // Remove event listeners if needed
+        console.log('Team section destroyed');
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const teamSectionNew = new TeamSectionNew();
+    console.log('New team section initialized');
 });
+
+// Add notification animation styles
+const teamNotificationStyles = document.createElement('style');
+teamNotificationStyles.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .team-card-new {
+        cursor: pointer;
+    }
+    
+    .team-card-new * {
+        transition: transform 0.3s ease;
+    }
+`;
+document.head.appendChild(teamNotificationStyles);
 
 // Export for potential external use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TeamCarousel };
+    module.exports = { TeamSectionNew };
 }
 
 /* ==========================================================================
