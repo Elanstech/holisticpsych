@@ -233,49 +233,113 @@ class Hero {
     constructor() {
         this.hero = document.querySelector('.hero');
         this.backgrounds = document.querySelectorAll('.hero-bg-image');
-        this.currentIndex = 0;
-        this.autoplayInterval = null;
+        this.typewriterText = document.getElementById('typewriterText');
+        this.scrollIndicator = document.getElementById('scrollIndicator');
+        this.currentBgIndex = 0;
+        this.typewriterIndex = 0;
+        this.currentTextIndex = 0;
+        this.isDeleting = false;
+        this.typewriterDelay = 100;
         
-        if (this.hero && this.backgrounds.length > 0) {
+        this.typewriterPhrases = [
+            'Expert Psychological Care',
+            'Compassionate Therapy',
+            'Evidence-Based Treatment',
+            'Your Mental Health Partner'
+        ];
+        
+        if (this.hero) {
             this.init();
         }
     }
     
     init() {
-        this.startAutoplay();
-        this.initLogoAnimation();
+        this.startBackgroundCarousel();
+        this.initTypewriter();
+        this.initScrollIndicator();
     }
     
-    startAutoplay() {
+    startBackgroundCarousel() {
         if (this.backgrounds.length <= 1) return;
         
-        this.autoplayInterval = setInterval(() => {
-            this.nextBackground();
+        setInterval(() => {
+            this.backgrounds[this.currentBgIndex].classList.remove('active');
+            this.currentBgIndex = (this.currentBgIndex + 1) % this.backgrounds.length;
+            this.backgrounds[this.currentBgIndex].classList.add('active');
         }, CONFIG.heroBackgroundInterval);
     }
     
-    nextBackground() {
-        this.backgrounds[this.currentIndex].classList.remove('active');
-        this.currentIndex = (this.currentIndex + 1) % this.backgrounds.length;
-        this.backgrounds[this.currentIndex].classList.add('active');
+    initTypewriter() {
+        if (!this.typewriterText) return;
+        
+        const type = () => {
+            const currentPhrase = this.typewriterPhrases[this.currentTextIndex];
+            
+            if (!this.isDeleting) {
+                // Typing
+                this.typewriterText.textContent = currentPhrase.substring(0, this.typewriterIndex + 1);
+                this.typewriterIndex++;
+                
+                if (this.typewriterIndex === currentPhrase.length) {
+                    // Finished typing, wait before deleting
+                    this.isDeleting = true;
+                    this.typewriterDelay = 2000;
+                } else {
+                    this.typewriterDelay = 100;
+                }
+            } else {
+                // Deleting
+                this.typewriterText.textContent = currentPhrase.substring(0, this.typewriterIndex - 1);
+                this.typewriterIndex--;
+                
+                if (this.typewriterIndex === 0) {
+                    // Finished deleting, move to next phrase
+                    this.isDeleting = false;
+                    this.currentTextIndex = (this.currentTextIndex + 1) % this.typewriterPhrases.length;
+                    this.typewriterDelay = 500;
+                } else {
+                    this.typewriterDelay = 50;
+                }
+            }
+            
+            setTimeout(type, this.typewriterDelay);
+        };
+        
+        // Start typewriter effect after a short delay
+        setTimeout(type, 1000);
     }
     
-    initLogoAnimation() {
-        const logoContainer = document.querySelector('.hero-logo-container');
-        if (logoContainer) {
-            logoContainer.addEventListener('click', () => {
-                logoContainer.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    logoContainer.style.transform = 'scale(1)';
-                }, 200);
-            });
-        }
+    initScrollIndicator() {
+        if (!this.scrollIndicator) return;
+        
+        this.scrollIndicator.addEventListener('click', () => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+                const headerOffset = 100;
+                const elementPosition = aboutSection.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        
+        // Hide scroll indicator when user scrolls
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                this.scrollIndicator.style.opacity = '0';
+                this.scrollIndicator.style.visibility = 'hidden';
+            } else {
+                this.scrollIndicator.style.opacity = '1';
+                this.scrollIndicator.style.visibility = 'visible';
+            }
+        });
     }
     
     destroy() {
-        if (this.autoplayInterval) {
-            clearInterval(this.autoplayInterval);
-        }
+        // Cleanup if needed
     }
 }
 
