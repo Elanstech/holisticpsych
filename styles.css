@@ -556,15 +556,6 @@ input, textarea, select {
    HERO SECTION
    ========================================================================== */
 
-/* ==========================================================================
-   HERO SECTION - COMPLETE WITH MOBILE FIXES
-   ========================================================================== */
-
-/* Add to your :root variables at the top of styles.css */
-:root {
-    --font-signature: 'Brush Script MT', cursive;
-}
-
 .hero {
     position: relative;
     min-height: 110vh;
@@ -603,11 +594,11 @@ input, textarea, select {
 }
 
 .hero-bg-2 {
-    background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1920');
+    background-image: url('https://bouve.northeastern.edu/wp-content/uploads/2023/05/how-to-become-a-counseling-psychologist-northeastern-graduate.webp');
 }
 
 .hero-bg-3 {
-    background-image: url('https://4kwallpapers.com/images/wallpapers/macos-big-sur-apple-layers-fluidic-colorful-wwdc-stock-5120x2880-1455.jpg');
+    background-image: url('https://www.careeraddict.com/uploads/article/56413/male-psychologist-female-patient.jpg');
 }
 
 .hero-bg-image.active {
