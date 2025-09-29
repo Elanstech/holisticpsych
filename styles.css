@@ -647,7 +647,7 @@ img {
     transform: scale(1.05);
 }
 
-/* Mobile Gradient Background */
+/* Mobile Gradient Background - Softer, Logo-Inspired Colors */
 .hero-mobile-gradient {
     position: absolute;
     top: 0;
@@ -655,14 +655,19 @@ img {
     width: 100%;
     height: 100%;
     background: linear-gradient(135deg, 
-        var(--primary-green) 0%, 
-        var(--primary-blue) 35%,
-        var(--primary-purple) 70%,
-        var(--primary-green) 100%);
+        #22c55e 0%,      /* Vibrant green (bottom of logo) */
+        #10b981 15%,     /* Green */
+        #14b8a6 30%,     /* Teal */
+        #06b6d4 45%,     /* Cyan */
+        #0ea5e9 60%,     /* Sky blue */
+        #3b82f6 75%,     /* Blue */
+        #6366f1 85%,     /* Indigo */
+        #8b5cf6 100%);   /* Purple (top of logo) */
     background-size: 400% 400%;
     opacity: 0;
     transition: opacity var(--transition-slow);
-    animation: gradientFlow 15s ease infinite;
+    animation: gradientFlow 20s ease infinite;
+    filter: blur(0px);
 }
 
 @keyframes gradientFlow {
@@ -678,9 +683,10 @@ img {
     width: 100%;
     height: 100%;
     background: linear-gradient(135deg, 
-        rgba(0, 216, 132, 0.25) 0%, 
-        rgba(14, 165, 233, 0.2) 50%,
-        rgba(139, 92, 246, 0.15) 100%);
+        rgba(34, 197, 94, 0.15) 0%,    /* Soft green overlay */
+        rgba(6, 182, 212, 0.12) 33%,   /* Soft cyan overlay */
+        rgba(59, 130, 246, 0.1) 66%,   /* Soft blue overlay */
+        rgba(139, 92, 246, 0.08) 100%); /* Soft purple overlay */
     z-index: 2;
 }
 
@@ -716,10 +722,10 @@ img {
 
 .float-element {
     position: absolute;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 50%;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .float-1 {
@@ -815,10 +821,10 @@ img {
     justify-content: center;
     padding: 16px;
     box-shadow: 
-        0 0 80px rgba(0, 216, 132, 0.3),
+        0 0 80px rgba(34, 197, 94, 0.25),
         0 20px 50px rgba(0, 0, 0, 0.2),
         inset 0 2px 20px rgba(255, 255, 255, 0.8);
-    border: 4px solid rgba(0, 216, 132, 0.3);
+    border: 4px solid rgba(34, 197, 94, 0.3);
     animation: logoFloat 6s ease-in-out infinite;
 }
 
@@ -837,7 +843,12 @@ img {
     bottom: -8px;
     border: 2px solid transparent;
     border-radius: 50%;
-    background: var(--gradient-primary) border-box;
+    background: linear-gradient(135deg, 
+        #22c55e 0%,
+        #14b8a6 25%,
+        #06b6d4 50%,
+        #3b82f6 75%,
+        #8b5cf6 100%) border-box;
     mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     -webkit-mask-composite: xor;
@@ -851,7 +862,7 @@ img {
     left: -15px;
     right: -15px;
     bottom: -15px;
-    background: radial-gradient(circle, rgba(0, 216, 132, 0.25) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%);
     border-radius: 50%;
     animation: logoGlow 4s ease-in-out infinite alternate;
 }
@@ -867,8 +878,8 @@ img {
 }
 
 @keyframes logoGlow {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
 }
 
 /* Text Container */
@@ -922,7 +933,12 @@ img {
 }
 
 .gradient-text {
-    background: var(--gradient-text);
+    background: linear-gradient(135deg, 
+        #22c55e 0%,
+        #14b8a6 25%,
+        #06b6d4 50%,
+        #3b82f6 75%,
+        #8b5cf6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -948,7 +964,7 @@ img {
 
 .typewriter-cursor {
     display: inline-block;
-    color: var(--primary-green);
+    color: #22c55e;
     animation: cursorBlink 1.5s infinite;
 }
 
@@ -964,7 +980,7 @@ img {
     padding: var(--space-md) var(--space-2xl);
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(0, 216, 132, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.3);
     border-radius: var(--radius-full);
     color: var(--gray-700);
     font-weight: 500;
@@ -981,7 +997,7 @@ img {
 
 .hero-location i {
     font-size: 1.25rem;
-    color: var(--primary-green);
+    color: #22c55e;
 }
 
 /* Signatures Section */
@@ -1025,7 +1041,7 @@ img {
     font-family: var(--font-signature);
     font-size: clamp(1.5rem, 3vw, 2.25rem);
     font-weight: 600;
-    color: var(--primary-green);
+    color: #22c55e;
     margin-bottom: var(--space-sm);
     white-space: nowrap;
     text-shadow: 
@@ -1061,11 +1077,11 @@ img {
 .divider-line {
     width: 40px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+    background: linear-gradient(90deg, transparent, #22c55e, transparent);
 }
 
 .divider-icon {
-    color: var(--primary-green);
+    color: #22c55e;
     font-size: 1.25rem;
     animation: iconPulse 2s ease-in-out infinite;
 }
@@ -1160,7 +1176,7 @@ img {
     .divider-line {
         width: 1px;
         height: 40px;
-        background: linear-gradient(180deg, transparent, var(--primary-green), transparent);
+        background: linear-gradient(180deg, transparent, #22c55e, transparent);
     }
 }
 
@@ -1176,18 +1192,18 @@ img {
     
     .hero-overlay {
         background: linear-gradient(135deg, 
-            rgba(0, 0, 0, 0.15) 0%, 
-            rgba(0, 0, 0, 0.1) 50%,
-            rgba(0, 0, 0, 0.15) 100%);
+            rgba(0, 0, 0, 0.08) 0%, 
+            rgba(0, 0, 0, 0.05) 50%,
+            rgba(0, 0, 0, 0.08) 100%);
     }
     
     .hero-grain {
-        opacity: 0.3;
+        opacity: 0.25;
     }
     
     .float-element {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     .hero {
@@ -1203,7 +1219,7 @@ img {
     .glass-panel {
         padding: var(--space-xl) var(--space-lg);
         border-radius: var(--radius-xl);
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.35);
     }
     
     .hero-title {
@@ -1218,9 +1234,34 @@ img {
         text-align: center;
     }
     
+    /* SMALLER SIGNATURE SECTION ON MOBILE */
     .signatures-container {
-        padding: var(--space-xl) var(--space-lg);
-        border-radius: var(--radius-xl);
+        padding: var(--space-lg) var(--space-md);
+        border-radius: var(--radius-lg);
+        gap: var(--space-md);
+        max-width: 90%;
+    }
+    
+    .signature-text {
+        font-size: 1.25rem;
+        margin-bottom: 4px;
+    }
+    
+    .signature-title {
+        font-size: 0.75rem;
+        margin-bottom: 2px;
+    }
+    
+    .signature-credentials {
+        font-size: 0.6875rem;
+    }
+    
+    .divider-icon {
+        font-size: 1rem;
+    }
+    
+    .divider-line {
+        height: 30px;
     }
     
     .scroll-indicator {
@@ -1243,21 +1284,38 @@ img {
     }
     
     .glass-panel {
-        padding: var(--space-xl) var(--space-lg);
+        padding: var(--space-lg) var(--space-md);
     }
     
     .hero-location {
         font-size: 0.8125rem;
-        padding: var(--space-md) var(--space-lg);
+        padding: var(--space-sm) var(--space-lg);
     }
     
+    /* EVEN SMALLER SIGNATURES ON SMALL MOBILE */
     .signatures-container {
-        gap: var(--space-lg);
-        padding: var(--space-lg) var(--space-md);
+        gap: var(--space-sm);
+        padding: var(--space-md) var(--space-sm);
     }
     
     .signature-text {
-        font-size: 1.5rem;
+        font-size: 1.125rem;
+    }
+    
+    .signature-title {
+        font-size: 0.6875rem;
+    }
+    
+    .signature-credentials {
+        font-size: 0.625rem;
+    }
+    
+    .divider-icon {
+        font-size: 0.875rem;
+    }
+    
+    .divider-line {
+        height: 25px;
     }
     
     .float-2, .float-3 {
