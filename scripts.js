@@ -285,6 +285,7 @@ class Hero {
 /* ==========================================================================
    SERVICES CAROUSEL
    ========================================================================== */
+
 class ServicesCarousel {
     constructor() {
         this.carousel = document.querySelector('.carousel-slides');
@@ -301,14 +302,13 @@ class ServicesCarousel {
         this.autoplayInterval = null;
         this.isAutoplayPaused = false;
         
-        // Touch handling
+        // Touch/drag handling
         this.touchStartX = 0;
         this.touchEndX = 0;
         this.isDragging = false;
-        this.startPos = 0;
+        this.startX = 0;
         this.currentTranslate = 0;
         this.prevTranslate = 0;
-        this.animationID = null;
         
         this.init();
     }
@@ -319,16 +319,16 @@ class ServicesCarousel {
         this.bindEvents();
         this.startAutoplay();
         
-        // Handle window resize
+        // Handle window resize with debounce
         window.addEventListener('resize', this.debounce(() => {
             const newCardsPerView = this.getCardsPerView();
             if (newCardsPerView !== this.cardsPerView) {
                 this.cardsPerView = newCardsPerView;
-                this.currentIndex = 0;
+                this.currentIndex = Math.min(this.currentIndex, this.getMaxIndex());
                 this.updateView();
                 this.createPagination();
             }
-        }, 250));
+        }, 200));
     }
     
     getCardsPerView() {
@@ -338,75 +338,115 @@ class ServicesCarousel {
         return 3;
     }
     
+    getMaxIndex() {
+        return Math.max(0, this.filteredCards.length - this.cardsPerView);
+    }
+    
     bindEvents() {
         // Navigation buttons
-        this.prevBtn?.addEventListener('click', () => this.prev());
-        this.nextBtn?.addEventListener('click', () => this.next());
+        this.prevBtn?.addEventListener('click', () => {
+            this.prev();
+            this.resetAutoplay();
+        });
+        
+        this.nextBtn?.addEventListener('click', () => {
+            this.next();
+            this.resetAutoplay();
+        });
         
         // Filter buttons
         this.filterBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const filter = e.currentTarget.dataset.filter;
                 this.applyFilter(filter);
+                this.resetAutoplay();
             });
         });
         
-        // Mouse events for autoplay pause
-        const container = document.querySelector('.carousel-container');
-        container.addEventListener('mouseenter', () => {
+        // Pause autoplay on hover
+        const wrapper = document.querySelector('.carousel-wrapper');
+        wrapper.addEventListener('mouseenter', () => {
             this.isAutoplayPaused = true;
         });
         
-        container.addEventListener('mouseleave', () => {
+        wrapper.addEventListener('mouseleave', () => {
             this.isAutoplayPaused = false;
         });
         
-        // Touch events for mobile
-        this.carousel.addEventListener('touchstart', (e) => this.touchStart(e), { passive: true });
-        this.carousel.addEventListener('touchmove', (e) => this.touchMove(e), { passive: true });
-        this.carousel.addEventListener('touchend', () => this.touchEnd());
+        // Touch events
+        this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.carousel.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e));
         
-        // Mouse drag events for desktop
-        this.carousel.addEventListener('mousedown', (e) => this.dragStart(e));
-        this.carousel.addEventListener('mousemove', (e) => this.dragMove(e));
-        this.carousel.addEventListener('mouseup', () => this.dragEnd());
-        this.carousel.addEventListener('mouseleave', () => this.dragEnd());
+        // Mouse drag
+        this.carousel.addEventListener('mousedown', (e) => this.handleDragStart(e));
+        this.carousel.addEventListener('mousemove', (e) => this.handleDragMove(e));
+        this.carousel.addEventListener('mouseup', (e) => this.handleDragEnd(e));
+        this.carousel.addEventListener('mouseleave', (e) => this.handleDragEnd(e));
         
-        // Prevent default link behavior during drag
+        // Prevent context menu on long press
+        this.carousel.addEventListener('contextmenu', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+            }
+        });
+        
+        // Prevent default drag on images
         this.cards.forEach(card => {
             card.addEventListener('dragstart', (e) => e.preventDefault());
+            
+            // Prevent click during drag
+            card.addEventListener('click', (e) => {
+                if (this.isDragging) {
+                    e.preventDefault();
+                }
+            });
         });
     }
     
-    touchStart(e) {
+    handleTouchStart(e) {
         this.touchStartX = e.touches[0].clientX;
         this.isDragging = true;
-        this.startPos = this.touchStartX;
-        this.prevTranslate = this.currentIndex * -this.getCardWidth();
-        
+        this.startX = this.touchStartX;
+        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
         this.carousel.style.transition = 'none';
     }
     
-    touchMove(e) {
+    handleTouchMove(e) {
         if (!this.isDragging) return;
         
         this.touchEndX = e.touches[0].clientX;
-        const diff = this.touchEndX - this.startPos;
-        this.currentTranslate = this.prevTranslate + diff;
+        const diff = this.touchEndX - this.startX;
         
+        // Add resistance at edges
+        const maxIndex = this.getMaxIndex();
+        let resistance = 1;
+        
+        if (this.currentIndex === 0 && diff > 0) {
+            resistance = 0.3;
+        } else if (this.currentIndex === maxIndex && diff < 0) {
+            resistance = 0.3;
+        }
+        
+        this.currentTranslate = this.prevTranslate + (diff * resistance);
         this.carousel.style.transform = `translateX(${this.currentTranslate}px)`;
+        
+        // Prevent page scroll on horizontal swipe
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
+        }
     }
     
-    touchEnd() {
+    handleTouchEnd(e) {
         if (!this.isDragging) return;
         
         this.isDragging = false;
+        this.carousel.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        
         const movedBy = this.touchEndX - this.touchStartX;
+        const threshold = 50;
         
-        this.carousel.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        
-        // Threshold for swipe
-        if (Math.abs(movedBy) > 50) {
+        if (Math.abs(movedBy) > threshold) {
             if (movedBy > 0) {
                 this.prev();
             } else {
@@ -415,37 +455,53 @@ class ServicesCarousel {
         } else {
             this.updateView();
         }
+        
+        this.resetAutoplay();
     }
     
-    dragStart(e) {
+    handleDragStart(e) {
         this.isDragging = true;
-        this.startPos = e.clientX;
-        this.prevTranslate = this.currentIndex * -this.getCardWidth();
+        this.startX = e.clientX;
+        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
         this.carousel.style.cursor = 'grabbing';
         this.carousel.style.transition = 'none';
+        this.carousel.style.userSelect = 'none';
+        e.preventDefault();
     }
     
-    dragMove(e) {
+    handleDragMove(e) {
         if (!this.isDragging) return;
         
         e.preventDefault();
-        const currentPosition = e.clientX;
-        const diff = currentPosition - this.startPos;
-        this.currentTranslate = this.prevTranslate + diff;
+        const currentX = e.clientX;
+        const diff = currentX - this.startX;
         
+        // Add resistance at edges
+        const maxIndex = this.getMaxIndex();
+        let resistance = 1;
+        
+        if (this.currentIndex === 0 && diff > 0) {
+            resistance = 0.3;
+        } else if (this.currentIndex === maxIndex && diff < 0) {
+            resistance = 0.3;
+        }
+        
+        this.currentTranslate = this.prevTranslate + (diff * resistance);
         this.carousel.style.transform = `translateX(${this.currentTranslate}px)`;
     }
     
-    dragEnd() {
+    handleDragEnd(e) {
         if (!this.isDragging) return;
         
         this.isDragging = false;
         this.carousel.style.cursor = 'grab';
-        this.carousel.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        this.carousel.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        this.carousel.style.userSelect = '';
         
         const movedBy = this.currentTranslate - this.prevTranslate;
+        const threshold = 50;
         
-        if (Math.abs(movedBy) > 50) {
+        if (Math.abs(movedBy) > threshold) {
             if (movedBy > 0) {
                 this.prev();
             } else {
@@ -454,14 +510,19 @@ class ServicesCarousel {
         } else {
             this.updateView();
         }
+        
+        this.resetAutoplay();
     }
     
-    getCardWidth() {
-        const card = this.filteredCards[0];
-        if (!card) return 0;
+    getSlideWidth() {
+        if (this.filteredCards.length === 0) return 0;
         
-        const cardWidth = card.offsetWidth;
-        const gap = 30;
+        // Get the first visible card
+        const visibleCard = this.filteredCards.find(card => !card.classList.contains('hide'));
+        if (!visibleCard) return 0;
+        
+        const cardWidth = visibleCard.offsetWidth;
+        const gap = 24; // Must match CSS gap
         return cardWidth + gap;
     }
     
@@ -473,14 +534,20 @@ class ServicesCarousel {
             btn.classList.toggle('active', btn.dataset.filter === filter);
         });
         
-        // Filter cards with animation
+        // Filter cards with staggered animation
         if (filter === 'all') {
             this.filteredCards = [...this.cards];
             this.cards.forEach((card, index) => {
                 setTimeout(() => {
                     card.classList.remove('hide');
-                    card.style.animation = 'fadeInUp 0.5s ease forwards';
-                }, index * 50);
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.4s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                }, index * 40);
             });
         } else {
             this.filteredCards = this.cards.filter(card => 
@@ -491,42 +558,45 @@ class ServicesCarousel {
                 if (card.dataset.category === filter) {
                     setTimeout(() => {
                         card.classList.remove('hide');
-                        card.style.animation = 'fadeInUp 0.5s ease forwards';
-                    }, index * 50);
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.transition = 'all 0.4s ease';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10);
+                    }, index * 40);
                 } else {
                     card.classList.add('hide');
                 }
             });
         }
         
-        // Reset carousel
+        // Reset carousel position
         this.currentIndex = 0;
-        this.updateView();
-        this.createPagination();
+        setTimeout(() => {
+            this.updateView();
+            this.createPagination();
+        }, 100);
     }
     
     prev() {
-        const maxIndex = Math.max(0, this.filteredCards.length - this.cardsPerView);
         if (this.currentIndex > 0) {
             this.currentIndex--;
-            this.updateView();
         } else {
-            // Loop to end
-            this.currentIndex = maxIndex;
-            this.updateView();
+            this.currentIndex = this.getMaxIndex();
         }
+        this.updateView();
     }
     
     next() {
-        const maxIndex = Math.max(0, this.filteredCards.length - this.cardsPerView);
+        const maxIndex = this.getMaxIndex();
         if (this.currentIndex < maxIndex) {
             this.currentIndex++;
-            this.updateView();
         } else {
-            // Loop to start
             this.currentIndex = 0;
-            this.updateView();
         }
+        this.updateView();
     }
     
     goToSlide(index) {
@@ -535,39 +605,29 @@ class ServicesCarousel {
     }
     
     updateView() {
-        const cardWidth = this.getCardWidth();
-        const offset = -this.currentIndex * cardWidth;
+        const slideWidth = this.getSlideWidth();
+        const offset = -this.currentIndex * slideWidth;
         
         this.carousel.style.transform = `translateX(${offset}px)`;
-        
-        // Update pagination
         this.updatePagination();
-        
-        // Update button states
-        const maxIndex = Math.max(0, this.filteredCards.length - this.cardsPerView);
-        
-        if (this.prevBtn) {
-            this.prevBtn.disabled = false; // Always enabled for loop
-        }
-        
-        if (this.nextBtn) {
-            this.nextBtn.disabled = false; // Always enabled for loop
-        }
     }
     
     createPagination() {
         if (!this.pagination) return;
         
         this.pagination.innerHTML = '';
-        
-        const numDots = Math.max(1, this.filteredCards.length - this.cardsPerView + 1);
+        const visibleCards = this.filteredCards.filter(card => !card.classList.contains('hide'));
+        const numDots = Math.max(1, visibleCards.length - this.cardsPerView + 1);
         
         for (let i = 0; i < numDots; i++) {
             const dot = document.createElement('div');
             dot.classList.add('pagination-dot');
             if (i === 0) dot.classList.add('active');
             
-            dot.addEventListener('click', () => this.goToSlide(i));
+            dot.addEventListener('click', () => {
+                this.goToSlide(i);
+                this.resetAutoplay();
+            });
             
             this.pagination.appendChild(dot);
         }
@@ -583,6 +643,7 @@ class ServicesCarousel {
     }
     
     startAutoplay() {
+        this.stopAutoplay();
         this.autoplayInterval = setInterval(() => {
             if (!this.isAutoplayPaused && !this.isDragging) {
                 this.next();
@@ -593,37 +654,38 @@ class ServicesCarousel {
     stopAutoplay() {
         if (this.autoplayInterval) {
             clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
         }
+    }
+    
+    resetAutoplay() {
+        this.startAutoplay();
     }
     
     debounce(func, wait) {
         let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
+        return (...args) => {
             clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
 }
 
-// Initialize carousel when DOM is ready
+// Initialize carousel
+let servicesCarouselInstance = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    const servicesCarousel = new ServicesCarousel();
-    
-    console.log('Services Carousel initialized');
+    servicesCarouselInstance = new ServicesCarousel();
+    console.log('Services Carousel initialized successfully');
 });
 
-// Handle visibility change for performance
+// Handle page visibility for performance
 document.addEventListener('visibilitychange', () => {
-    const carousel = window.servicesCarousel;
-    if (carousel) {
+    if (servicesCarouselInstance) {
         if (document.hidden) {
-            carousel.stopAutoplay();
+            servicesCarouselInstance.stopAutoplay();
         } else {
-            carousel.startAutoplay();
+            servicesCarouselInstance.startAutoplay();
         }
     }
 });
