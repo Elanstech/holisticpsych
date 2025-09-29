@@ -31,7 +31,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.team = new TeamSectionNew();
+        this.team = new TeamCarouselNew();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
@@ -691,210 +691,333 @@ document.addEventListener('visibilitychange', () => {
    TEAM CAROUSEL
    ========================================================================== */
 
-class TeamSectionNew {
+class TeamCarouselNew {
     constructor() {
-        this.section = document.querySelector('.team-section-new');
+        this.track = document.querySelector('.team-carousel-track');
         this.cards = document.querySelectorAll('.team-card-new');
-        this.bookButtons = document.querySelectorAll('.book-session-btn');
-        this.joinButton = document.querySelector('.join-apply-btn');
-        this.ctaButton = document.querySelector('.cta-button-new');
+        this.prevBtn = document.querySelector('.team-carousel-prev');
+        this.nextBtn = document.querySelector('.team-carousel-next');
+        this.dotsContainer = document.getElementById('teamCarouselDots');
         
-        if (this.section) {
+        this.currentIndex = 0;
+        this.cardsPerView = this.getCardsPerView();
+        this.isAnimating = false;
+        this.autoplayInterval = null;
+        this.autoplayDelay = 5000;
+        this.isHovered = false;
+        
+        // Touch/drag variables
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.startX = 0;
+        this.currentTranslate = 0;
+        this.prevTranslate = 0;
+        
+        if (this.track && this.cards.length > 0) {
             this.init();
         }
     }
     
     init() {
-        this.initScrollAnimations();
-        this.initCardInteractions();
-        this.initButtonAnimations();
-        this.initParallaxEffect();
+        this.createDots();
+        this.bindEvents();
+        this.updateView();
+        this.startAutoplay();
+        
+        // Handle window resize
+        window.addEventListener('resize', this.debounce(() => {
+            const newCardsPerView = this.getCardsPerView();
+            if (newCardsPerView !== this.cardsPerView) {
+                this.cardsPerView = newCardsPerView;
+                this.currentIndex = Math.min(this.currentIndex, this.getMaxIndex());
+                this.updateView();
+                this.createDots();
+            }
+        }, 250));
     }
     
-    /**
-     * Initialize scroll-based animations using Intersection Observer
-     */
-    initScrollAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    
-                    // Trigger staggered animation for cards
-                    if (entry.target.classList.contains('team-card-new')) {
-                        const cards = Array.from(this.cards);
-                        const index = cards.indexOf(entry.target);
-                        entry.target.style.animationDelay = `${index * 0.1}s`;
-                    }
-                }
+    getCardsPerView() {
+        const width = window.innerWidth;
+        if (width < 768) return 1;
+        if (width < 1200) return 2;
+        return 3;
+    }
+    
+    getMaxIndex() {
+        return Math.max(0, this.cards.length - this.cardsPerView);
+    }
+    
+    bindEvents() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => {
+                this.prev();
+                this.resetAutoplay();
             });
-        }, observerOptions);
-        
-        // Observe team cards
-        this.cards.forEach(card => {
-            observer.observe(card);
-        });
-        
-        // Observe section header
-        const header = document.querySelector('.team-header-new');
-        if (header) {
-            observer.observe(header);
         }
         
-        // Observe CTA section
-        const cta = document.querySelector('.team-bottom-cta');
-        if (cta) {
-            observer.observe(cta);
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => {
+                this.next();
+                this.resetAutoplay();
+            });
         }
-    }
-    
-    /**
-     * Initialize card hover and interaction effects
-     */
-    initCardInteractions() {
-        this.cards.forEach(card => {
-            // Mouse move parallax effect on images
-            card.addEventListener('mousemove', (e) => {
-                this.handleCardMouseMove(e, card);
+        
+        // Pause autoplay on hover
+        const wrapper = document.querySelector('.team-carousel-wrapper-new');
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', () => {
+                this.isHovered = true;
             });
             
-            card.addEventListener('mouseleave', () => {
-                this.handleCardMouseLeave(card);
+            wrapper.addEventListener('mouseleave', () => {
+                this.isHovered = false;
             });
-            
-            // Click on card (excluding buttons) for smooth scroll to contact
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('.book-session-btn') && 
-                    !e.target.closest('.join-apply-btn') &&
-                    !e.target.closest('.specialty-tag')) {
-                    this.handleCardClick(card);
-                }
-            });
+        }
+        
+        // Touch events
+        this.track.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+        this.track.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.track.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        
+        // Mouse drag
+        this.track.addEventListener('mousedown', (e) => this.handleDragStart(e));
+        this.track.addEventListener('mousemove', (e) => this.handleDragMove(e));
+        this.track.addEventListener('mouseup', (e) => this.handleDragEnd(e));
+        this.track.addEventListener('mouseleave', (e) => this.handleDragEnd(e));
+        
+        // Prevent default drag on images
+        this.cards.forEach(card => {
+            card.addEventListener('dragstart', (e) => e.preventDefault());
         });
-    }
-    
-    /**
-     * Handle mouse move for card parallax effect
-     */
-    handleCardMouseMove(e, card) {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
         
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const deltaX = (x - centerX) / centerX;
-        const deltaY = (y - centerY) / centerY;
-        
-        const image = card.querySelector('.team-member-photo');
-        if (image) {
-            image.style.transform = `scale(1.08) translate(${deltaX * 5}px, ${deltaY * 5}px)`;
-        }
-    }
-    
-    /**
-     * Reset card transforms on mouse leave
-     */
-    handleCardMouseLeave(card) {
-        const image = card.querySelector('.team-member-photo');
-        if (image) {
-            image.style.transform = '';
-        }
-    }
-    
-    /**
-     * Handle card click for quick interaction
-     */
-    handleCardClick(card) {
-        // Add a subtle scale animation
-        card.style.transform = 'scale(0.98) translateY(-8px)';
-        setTimeout(() => {
-            card.style.transform = '';
-        }, 200);
-    }
-    
-    /**
-     * Initialize button animations and interactions
-     */
-    initButtonAnimations() {
-        // Book session buttons
-        this.bookButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
+        // Book session button clicks
+        const bookBtns = document.querySelectorAll('.book-session-btn');
+        bookBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.handleBookSession(button);
+                this.smoothScrollToContact();
             });
         });
         
-        // Join button
-        if (this.joinButton) {
-            this.joinButton.addEventListener('click', (e) => {
+        // Join button click
+        const joinBtn = document.querySelector('.join-apply-btn');
+        if (joinBtn) {
+            joinBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.smoothScrollToContact();
             });
         }
+    }
+    
+    handleTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+        this.startX = this.touchStartX;
+        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
+        this.track.style.transition = 'none';
+    }
+    
+    handleTouchMove(e) {
+        if (!this.isDragging) return;
         
-        // CTA button
-        if (this.ctaButton) {
-            this.ctaButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.smoothScrollToContact();
-            });
+        this.touchEndX = e.touches[0].clientX;
+        const diff = this.touchEndX - this.startX;
+        
+        // Add resistance at edges
+        const maxIndex = this.getMaxIndex();
+        let resistance = 1;
+        
+        if (this.currentIndex === 0 && diff > 0) {
+            resistance = 0.3;
+        } else if (this.currentIndex === maxIndex && diff < 0) {
+            resistance = 0.3;
         }
         
-        // Specialty tag interactions
-        const specialtyTags = document.querySelectorAll('.specialty-tag');
-        specialtyTags.forEach(tag => {
-            tag.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.handleSpecialtyClick(tag);
+        this.currentTranslate = this.prevTranslate + (diff * resistance);
+        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
+        
+        // Prevent page scroll on horizontal swipe
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
+        }
+    }
+    
+    handleTouchEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        const movedBy = this.touchEndX - this.touchStartX;
+        const threshold = 50;
+        
+        if (Math.abs(movedBy) > threshold) {
+            if (movedBy > 0) {
+                this.prev();
+            } else {
+                this.next();
+            }
+        } else {
+            this.updateView();
+        }
+    }
+    
+    handleDragStart(e) {
+        this.isDragging = true;
+        this.startX = e.clientX;
+        this.prevTranslate = -this.currentIndex * this.getSlideWidth();
+        this.track.style.cursor = 'grabbing';
+        this.track.style.transition = 'none';
+        this.track.style.userSelect = 'none';
+        e.preventDefault();
+    }
+    
+    handleDragMove(e) {
+        if (!this.isDragging) return;
+        
+        e.preventDefault();
+        const currentX = e.clientX;
+        const diff = currentX - this.startX;
+        
+        const maxIndex = this.getMaxIndex();
+        let resistance = 1;
+        
+        if (this.currentIndex === 0 && diff > 0) {
+            resistance = 0.3;
+        } else if (this.currentIndex === maxIndex && diff < 0) {
+            resistance = 0.3;
+        }
+        
+        this.currentTranslate = this.prevTranslate + (diff * resistance);
+        this.track.style.transform = `translateX(${this.currentTranslate}px)`;
+    }
+    
+    handleDragEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.track.style.cursor = 'grab';
+        this.track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        this.track.style.userSelect = '';
+        
+        const movedBy = this.currentTranslate - this.prevTranslate;
+        const threshold = 50;
+        
+        if (Math.abs(movedBy) > threshold) {
+            if (movedBy > 0) {
+                this.prev();
+            } else {
+                this.next();
+            }
+        } else {
+            this.updateView();
+        }
+    }
+    
+    getSlideWidth() {
+        if (this.cards.length === 0) return 0;
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = 32; // Must match CSS gap (2rem = 32px)
+        return cardWidth + gap;
+    }
+    
+    prev() {
+        if (this.isAnimating) return;
+        
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
+        } else {
+            this.currentIndex = this.getMaxIndex();
+        }
+        
+        this.updateView();
+    }
+    
+    next() {
+        if (this.isAnimating) return;
+        
+        const maxIndex = this.getMaxIndex();
+        if (this.currentIndex < maxIndex) {
+            this.currentIndex++;
+        } else {
+            this.currentIndex = 0;
+        }
+        
+        this.updateView();
+    }
+    
+    goToSlide(index) {
+        if (this.isAnimating) return;
+        this.currentIndex = index;
+        this.updateView();
+    }
+    
+    updateView() {
+        this.isAnimating = true;
+        
+        const slideWidth = this.getSlideWidth();
+        const offset = -this.currentIndex * slideWidth;
+        
+        this.track.style.transform = `translateX(${offset}px)`;
+        this.updateDots();
+        
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 600);
+    }
+    
+    createDots() {
+        if (!this.dotsContainer) return;
+        
+        this.dotsContainer.innerHTML = '';
+        const maxIndex = this.getMaxIndex();
+        const numDots = maxIndex + 1;
+        
+        for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('team-dot');
+            if (i === this.currentIndex) dot.classList.add('active');
+            
+            dot.addEventListener('click', () => {
+                this.goToSlide(i);
+                this.resetAutoplay();
             });
+            
+            this.dotsContainer.appendChild(dot);
+        }
+    }
+    
+    updateDots() {
+        if (!this.dotsContainer) return;
+        
+        const dots = this.dotsContainer.querySelectorAll('.team-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === this.currentIndex);
         });
     }
     
-    /**
-     * Handle book session button click
-     */
-    handleBookSession(button) {
-        // Add click animation
-        button.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            button.style.transform = '';
-        }, 150);
-        
-        // Show notification
-        this.showNotification('Redirecting to booking...', 'info');
-        
-        // Smooth scroll to contact section
-        setTimeout(() => {
-            this.smoothScrollToContact();
-        }, 300);
+    startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayInterval = setInterval(() => {
+            if (!this.isHovered && !this.isDragging) {
+                this.next();
+            }
+        }, this.autoplayDelay);
     }
     
-    /**
-     * Handle specialty tag click
-     */
-    handleSpecialtyClick(tag) {
-        const specialty = tag.textContent;
-        
-        // Visual feedback
-        tag.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-            tag.style.transform = '';
-        }, 200);
-        
-        // Show info notification
-        this.showNotification(`Learn more about ${specialty}`, 'info');
+    stopAutoplay() {
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
+        }
     }
     
-    /**
-     * Smooth scroll to contact section
-     */
+    resetAutoplay() {
+        this.startAutoplay();
+    }
+    
     smoothScrollToContact() {
         const contactSection = document.querySelector('#contact');
         if (contactSection) {
@@ -909,142 +1032,40 @@ class TeamSectionNew {
         }
     }
     
-    /**
-     * Initialize subtle parallax effect on scroll
-     */
-    initParallaxEffect() {
-        let ticking = false;
-        
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    this.updateParallax();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
     }
     
-    /**
-     * Update parallax positions
-     */
-    updateParallax() {
-        if (!this.section) return;
-        
-        const scrolled = window.pageYOffset;
-        const sectionTop = this.section.offsetTop;
-        const sectionHeight = this.section.offsetHeight;
-        
-        // Only apply parallax when section is in view
-        if (scrolled > sectionTop - window.innerHeight && 
-            scrolled < sectionTop + sectionHeight) {
-            
-            const offset = (scrolled - sectionTop) * 0.3;
-            
-            // Apply subtle movement to cards
-            this.cards.forEach((card, index) => {
-                const factor = index % 2 === 0 ? 1 : -1;
-                card.style.transform = `translateY(${offset * factor * 0.05}px)`;
-            });
-        }
-    }
-    
-    /**
-     * Show notification message
-     */
-    showNotification(message, type = 'info') {
-        // Remove any existing notifications
-        const existing = document.querySelector('.team-notification');
-        if (existing) {
-            existing.remove();
-        }
-        
-        const notification = document.createElement('div');
-        notification.className = `team-notification team-notification-${type}`;
-        notification.textContent = message;
-        
-        // Style the notification
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '100px',
-            right: '20px',
-            padding: '16px 24px',
-            borderRadius: '12px',
-            backgroundColor: type === 'info' ? '#0ea5e9' : '#00d884',
-            color: '#ffffff',
-            fontWeight: '600',
-            fontSize: '0.9375rem',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-            zIndex: '9999',
-            animation: 'slideInRight 0.3s ease',
-            maxWidth: '320px'
-        });
-        
-        document.body.appendChild(notification);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
-    
-    /**
-     * Destroy and cleanup
-     */
     destroy() {
-        // Remove event listeners if needed
-        console.log('Team section destroyed');
+        this.stopAutoplay();
+        console.log('Team carousel destroyed');
     }
 }
 
-// Initialize when DOM is ready
+// Initialize team carousel when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const teamSectionNew = new TeamSectionNew();
-    console.log('New team section initialized');
+    window.teamCarouselNew = new TeamCarouselNew();
+    console.log('Team carousel initialized successfully');
 });
 
-// Add notification animation styles
-const teamNotificationStyles = document.createElement('style');
-teamNotificationStyles.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
+// Pause autoplay when page is hidden
+document.addEventListener('visibilitychange', () => {
+    if (window.teamCarouselNew) {
+        if (document.hidden) {
+            window.teamCarouselNew.stopAutoplay();
+        } else {
+            window.teamCarouselNew.startAutoplay();
         }
     }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .team-card-new {
-        cursor: pointer;
-    }
-    
-    .team-card-new * {
-        transition: transform 0.3s ease;
-    }
-`;
-document.head.appendChild(teamNotificationStyles);
+});
 
 // Export for potential external use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { TeamSectionNew };
+    module.exports = { TeamCarouselNew };
 }
 
 /* ==========================================================================
