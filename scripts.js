@@ -32,6 +32,7 @@ class App {
         this.hero = new Hero();
         this.services = new ServicesCarousel();
         this.team = new TeamCarouselV3();
+        this.team = new ReviewsCarouselV3();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
@@ -947,6 +948,310 @@ document.addEventListener('visibilitychange', () => {
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TeamCarouselV3 };
+}
+
+/* ==========================================================================
+   REVIEWS & INSTAGRAM SECTION
+   ========================================================================== */
+
+class ReviewsCarouselV3 {
+    constructor() {
+        this.reviews = document.querySelectorAll('.review-card-v3');
+        this.prevBtn = document.querySelector('.review-prev-v3');
+        this.nextBtn = document.querySelector('.review-next-v3');
+        this.dotsContainer = document.getElementById('reviewDotsV3');
+        
+        this.currentIndex = 0;
+        this.autoplayInterval = null;
+        this.autoplayDelay = 6000; // 6 seconds per review
+        this.isHovered = false;
+        this.isAnimating = false;
+        
+        if (this.reviews.length > 0) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.createDots();
+        this.showReview(0);
+        this.bindEvents();
+        this.startAutoplay();
+    }
+    
+    bindEvents() {
+        // Navigation buttons
+        if (this.prevBtn) {
+            this.prevBtn.addEventListener('click', () => {
+                this.prev();
+                this.resetAutoplay();
+            });
+        }
+        
+        if (this.nextBtn) {
+            this.nextBtn.addEventListener('click', () => {
+                this.next();
+                this.resetAutoplay();
+            });
+        }
+        
+        // Hover pause
+        const carousel = document.querySelector('.reviews-carousel-v3');
+        if (carousel) {
+            carousel.addEventListener('mouseenter', () => {
+                this.isHovered = true;
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                this.isHovered = false;
+            });
+        }
+        
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        const track = document.querySelector('.reviews-track-v3');
+        if (track) {
+            track.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            track.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        this.next();
+                    } else {
+                        this.prev();
+                    }
+                    this.resetAutoplay();
+                }
+            });
+        }
+    }
+    
+    createDots() {
+        if (!this.dotsContainer) return;
+        
+        this.dotsContainer.innerHTML = '';
+        
+        this.reviews.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'review-dot-v3';
+            if (index === 0) dot.classList.add('active');
+            
+            dot.addEventListener('click', () => {
+                this.goToReview(index);
+                this.resetAutoplay();
+            });
+            
+            this.dotsContainer.appendChild(dot);
+        });
+    }
+    
+    showReview(index) {
+        if (this.isAnimating) return;
+        
+        this.isAnimating = true;
+        
+        // Remove active class from all
+        this.reviews.forEach(review => {
+            review.classList.remove('active');
+        });
+        
+        // Add active class to current
+        this.reviews[index].classList.add('active');
+        
+        // Update dots
+        this.updateDots(index);
+        
+        // Update current index
+        this.currentIndex = index;
+        
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 500);
+    }
+    
+    updateDots(index) {
+        if (!this.dotsContainer) return;
+        
+        const dots = this.dotsContainer.querySelectorAll('.review-dot-v3');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+    
+    prev() {
+        if (this.isAnimating) return;
+        
+        const newIndex = this.currentIndex === 0 
+            ? this.reviews.length - 1 
+            : this.currentIndex - 1;
+        
+        this.showReview(newIndex);
+    }
+    
+    next() {
+        if (this.isAnimating) return;
+        
+        const newIndex = this.currentIndex === this.reviews.length - 1 
+            ? 0 
+            : this.currentIndex + 1;
+        
+        this.showReview(newIndex);
+    }
+    
+    goToReview(index) {
+        if (this.isAnimating || index === this.currentIndex) return;
+        this.showReview(index);
+    }
+    
+    startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayInterval = setInterval(() => {
+            if (!this.isHovered && !this.isAnimating) {
+                this.next();
+            }
+        }, this.autoplayDelay);
+    }
+    
+    stopAutoplay() {
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
+        }
+    }
+    
+    resetAutoplay() {
+        this.startAutoplay();
+    }
+    
+    destroy() {
+        this.stopAutoplay();
+    }
+}
+
+/**
+ * Scroll Animations for Reviews & Instagram Section
+ */
+class ReviewsInstaAnimations {
+    constructor() {
+        this.section = document.querySelector('.reviews-insta-v3');
+        
+        if (this.section) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.observeSection();
+    }
+    
+    observeSection() {
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    
+                    // Animate columns with stagger
+                    const columns = entry.target.querySelectorAll('.reviews-column-v3, .instagram-column-v3');
+                    columns.forEach((col, index) => {
+                        setTimeout(() => {
+                            col.style.opacity = '0';
+                            col.style.transform = 'translateY(30px)';
+                            col.style.transition = 'all 0.6s ease';
+                            
+                            setTimeout(() => {
+                                col.style.opacity = '1';
+                                col.style.transform = 'translateY(0)';
+                            }, 50);
+                        }, index * 150);
+                    });
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        observer.observe(this.section);
+    }
+}
+
+/**
+ * External Links Handler
+ */
+class ExternalLinksHandler {
+    constructor() {
+        this.googleBtn = document.querySelector('.google-review-btn-v3');
+        this.instaBtn = document.querySelector('.instagram-follow-btn-v3');
+        this.instaHandle = document.querySelector('.instagram-handle-v3');
+        
+        this.init();
+    }
+    
+    init() {
+        // Add click tracking/analytics here if needed
+        this.bindEvents();
+    }
+    
+    bindEvents() {
+        // Google Review button
+        if (this.googleBtn) {
+            this.googleBtn.addEventListener('click', (e) => {
+                // Add analytics tracking here
+                console.log('Google Review button clicked');
+            });
+        }
+        
+        // Instagram buttons
+        const instaButtons = [this.instaBtn, this.instaHandle];
+        instaButtons.forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    // Add analytics tracking here
+                    console.log('Instagram link clicked');
+                });
+            }
+        });
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.reviewsCarouselV3 = new ReviewsCarouselV3();
+    window.reviewsInstaAnimations = new ReviewsInstaAnimations();
+    window.externalLinksHandler = new ExternalLinksHandler();
+    
+    console.log('Reviews & Instagram Section V3 initialized');
+});
+
+// Pause autoplay when page is hidden
+document.addEventListener('visibilitychange', () => {
+    if (window.reviewsCarouselV3) {
+        if (document.hidden) {
+            window.reviewsCarouselV3.stopAutoplay();
+        } else {
+            window.reviewsCarouselV3.startAutoplay();
+        }
+    }
+});
+
+// Export for potential external use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        ReviewsCarouselV3, 
+        ReviewsInstaAnimations,
+        ExternalLinksHandler 
+    };
 }
 
 /* ==========================================================================
