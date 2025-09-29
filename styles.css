@@ -556,6 +556,15 @@ input, textarea, select {
    HERO SECTION
    ========================================================================== */
 
+/* ==========================================================================
+   HERO SECTION - COMPLETE WITH MOBILE FIXES
+   ========================================================================== */
+
+/* Add to your :root variables at the top of styles.css */
+:root {
+    --font-signature: 'Brush Script MT', cursive;
+}
+
 .hero {
     position: relative;
     min-height: 110vh;
@@ -697,6 +706,7 @@ input, textarea, select {
     align-items: center;
     text-align: center;
     gap: var(--space-2xl);
+    padding-bottom: var(--space-4xl);
 }
 
 .logo-showcase {
@@ -1085,22 +1095,25 @@ input, textarea, select {
     }
 }
 
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
 @media (max-width: 991px) {
     .hero {
         min-height: 105vh;
         padding: 120px 0 80px;
     }
     
-    .hero-logo-container {
-        width: 380px;
-        height: 380px;
-    }
-   
     .hero-content {
         padding-bottom: var(--space-3xl);
-
     }
-       
+    
+    .hero-logo-container {
+        width: 320px;
+        height: 320px;
+    }
+    
     .hero-cta {
         flex-direction: column;
         width: 100%;
@@ -1118,8 +1131,8 @@ input, textarea, select {
     
     .signatures-container {
         flex-direction: column;
-        gap: var(--space-xl);
-        padding: var(--space-xl) var(--space-2xl);
+        gap: var(--space-lg);
+        padding: var(--space-xl) var(--space-lg);
     }
     
     .signature-divider {
@@ -1129,11 +1142,11 @@ input, textarea, select {
     
     .divider-line {
         width: 1px;
-        height: 40px;
+        height: 30px;
         background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
     }
-   
-   .scroll-indicator {
+    
+    .scroll-indicator {
         bottom: 50px;
     }
 }
@@ -1146,48 +1159,69 @@ input, textarea, select {
     
     .hero-content {
         padding-bottom: var(--space-2xl);
+        gap: var(--space-xl);
+    }
+    
+    .hero-logo-container {
+        width: 300px;
+        height: 300px;
+        padding: 14px;
+    }
+    
+    .signatures-container {
+        padding: var(--space-lg) var(--space-md);
+        gap: var(--space-md);
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    .signatures-container::before {
+        background: transparent;
+    }
+    
+    .signature-text {
+        font-size: 1.5rem;
+        white-space: normal;
+    }
+    
+    .signature-title {
+        font-size: 0.75rem;
+    }
+    
+    .signature-credentials {
+        font-size: 0.75rem;
+    }
+    
+    .divider-line {
+        height: 25px;
+    }
+    
+    .divider-icon {
+        font-size: 1rem;
     }
     
     .scroll-indicator {
         bottom: 40px;
     }
-    
-    .hero-logo-container {
-        width: 350px;
-        height: 350px;
-        padding: 12px;
-    }
-    
-    .signatures-container {
-        padding: var(--space-xl) var(--space-lg);
-    }
-    
-    .signature-text {
-        font-size: 1.75rem;
-    }
 }
 
 @media (max-width: 480px) {
-   
     .hero {
         padding: 100px 0 60px;
     }
     
-    .scroll-indicator {
-        bottom: 30px;
+    .hero-container {
+        padding: 0 var(--space-md);
     }
     
     .hero-content {
         padding-bottom: var(--space-xl);
     }
-   
-    .hero-container {
-        padding: 0 var(--space-md);
-    }
     
     .hero-logo-container {
-        width: 240px;
-        height: 240px;
+        width: 280px;
+        height: 280px;
     }
     
     .hero-cta {
@@ -1200,12 +1234,30 @@ input, textarea, select {
     }
     
     .signatures-container {
-        gap: var(--space-lg);
-        padding: var(--space-lg) var(--space-md);
+        gap: var(--space-sm);
+        padding: var(--space-md);
     }
     
     .signature-text {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+        margin-bottom: 2px;
+    }
+    
+    .signature-title {
+        font-size: 0.6875rem;
+        margin-bottom: 1px;
+    }
+    
+    .signature-credentials {
+        font-size: 0.6875rem;
+    }
+    
+    .divider-line {
+        height: 20px;
+    }
+    
+    .scroll-indicator {
+        bottom: 30px;
     }
 }
 
