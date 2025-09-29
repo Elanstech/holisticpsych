@@ -155,92 +155,95 @@
     <main>
         
         <!-- Hero Section -->
-        <section class="hero" id="home">
-            <!-- Background System -->
-            <div class="hero-background">
-                <div class="hero-bg-image hero-bg-1 active"></div>
-                <div class="hero-bg-image hero-bg-2"></div>
-                <div class="hero-bg-image hero-bg-3"></div>
-                <div class="hero-overlay"></div>
-                <div class="hero-grain"></div>
-            </div>
+    <section class="hero" id="hero">
+        <!-- Background System -->
+        <div class="hero-background">
+            <div class="hero-bg-image hero-bg-1 active"></div>
+            <div class="hero-bg-image hero-bg-2"></div>
+            <div class="hero-bg-image hero-bg-3"></div>
+            <div class="hero-mobile-gradient"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-grain"></div>
+        </div>
 
-            <!-- Decorations -->
-            <div class="hero-decorations">
-                <div class="float-element float-1"></div>
-                <div class="float-element float-2"></div>
-                <div class="float-element float-3"></div>
-                <div class="float-element float-4"></div>
-            </div>
+        <!-- Decorative Elements -->
+        <div class="hero-decorations">
+            <div class="float-element float-1"></div>
+            <div class="float-element float-2"></div>
+            <div class="float-element float-3"></div>
+            <div class="float-element float-4"></div>
+        </div>
 
-            <!-- Content -->
-            <div class="container">
-                <div class="hero-content">
-                    <!-- Logo -->
-                    <div class="logo-showcase">
-                        <div class="hero-logo-container">
-                            <img src="logo copy.png" alt="Holistic Psychological Services" class="hero-logo">
-                            <div class="logo-ring"></div>
-                            <div class="logo-glow"></div>
-                        </div>
+        <!-- Content Container -->
+        <div class="hero-container">
+            <div class="hero-content">
+                
+                <!-- Logo Showcase -->
+                <div class="logo-showcase">
+                    <div class="hero-logo-container">
+                        <img src="logo copy.png" alt="Holistic Psychological Services" class="hero-logo">
+                        <div class="logo-ring"></div>
+                        <div class="logo-glow"></div>
                     </div>
+                </div>
 
-                    <!-- Text -->
-                    <div class="hero-text-container">
-                        <div class="glass-panel">
-                            <h1 class="hero-title">
-                                <span class="title-line">Your Journey to</span>
-                                <span class="title-line gradient-text">Mental Wellness</span>
-                                <span class="title-line">Begins Here</span>
-                            </h1>
-                            
-                            <div class="subtitle-container">
-                                <p class="hero-subtitle">
-                                    <span class="typewriter-text" id="typewriterText"></span>
-                                    <span class="typewriter-cursor">|</span>
-                                </p>
-                            </div>
-
-                            <div class="hero-location">
-                                <i class="ri-map-pin-2-line"></i>
-                                <span>274 Madison Ave, Suite 905 • New York, NY 10016</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Signatures -->
-                    <div class="signatures-container">
-                        <div class="signature-item signature-left">
-                            <div class="signature-text">Dr. Kristie Doheny</div>
-                            <div class="signature-title">PSYD</div>
-                            <div class="signature-credentials">Clinical Psychologist</div>
-                        </div>
+                <!-- Text Content -->
+                <div class="hero-text-container">
+                    <div class="glass-panel">
+                        <h1 class="hero-title">
+                            <span class="title-line fade-in-up" style="animation-delay: 0.2s;">Your Journey to</span>
+                            <span class="title-line gradient-text fade-in-up" style="animation-delay: 0.4s;">Mental Wellness</span>
+                            <span class="title-line fade-in-up" style="animation-delay: 0.6s;">Begins Here</span>
+                        </h1>
                         
-                        <div class="signature-divider">
-                            <div class="divider-line"></div>
-                            <div class="divider-icon">
-                                <i class="ri-heart-pulse-line"></i>
-                            </div>
-                            <div class="divider-line"></div>
+                        <div class="subtitle-container fade-in-up" style="animation-delay: 0.8s;">
+                            <p class="hero-subtitle">
+                                <span class="typewriter-text" id="typewriterText"></span>
+                                <span class="typewriter-cursor">|</span>
+                            </p>
                         </div>
-                        
-                        <div class="signature-item signature-right">
-                            <div class="signature-text">Dr. Douglas Uhlig</div>
-                            <div class="signature-title">PhD</div>
-                            <div class="signature-credentials">Licensed Psychologist</div>
+
+                        <div class="hero-location fade-in-up" style="animation-delay: 1s;">
+                            <i class="ri-map-pin-2-line"></i>
+                            <span>274 Madison Ave, Suite 905 • New York, NY 10016</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Scroll Indicator -->
-            <div class="scroll-indicator">
-                <div class="scroll-text">Scroll to explore</div>
-                <div class="scroll-arrow">
-                    <i class="ri-arrow-down-line"></i>
+                <!-- Signatures Section -->
+                <div class="signatures-container fade-in-up" style="animation-delay: 1.2s;">
+                    <div class="signature-item signature-left">
+                        <div class="signature-text">Dr. Kristie Doheny</div>
+                        <div class="signature-title">PSYD</div>
+                        <div class="signature-credentials">Clinical Psychologist</div>
+                    </div>
+                    
+                    <div class="signature-divider">
+                        <div class="divider-line"></div>
+                        <div class="divider-icon">
+                            <i class="ri-heart-pulse-line"></i>
+                        </div>
+                        <div class="divider-line"></div>
+                    </div>
+                    
+                    <div class="signature-item signature-right">
+                        <div class="signature-text">Dr. Douglas Uhlig</div>
+                        <div class="signature-title">PhD</div>
+                        <div class="signature-credentials">Licensed Psychologist</div>
+                    </div>
                 </div>
+
             </div>
-        </section>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" id="scrollIndicator">
+            <div class="scroll-text">Scroll to explore</div>
+            <div class="scroll-arrow">
+                <i class="ri-arrow-down-line"></i>
+            </div>
+        </div>
+    </section>
 
 <!-- Services Carousel Section -->
 <section class="services-carousel-section" id="servicesCarousel">
