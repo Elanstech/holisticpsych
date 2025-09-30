@@ -31,6 +31,7 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
+        this.team = new AboutSectionV3();
         this.team = new TeamCarouselV3();
         this.team = new ReviewsCarouselV3();
         this.contact = new ContactForm();
@@ -687,6 +688,387 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+
+/* ==========================================================================
+   ABOUT SECTION
+   ========================================================================== */
+
+class AboutSectionV3 {
+    constructor() {
+        this.section = document.querySelector('.about-section-v3');
+        this.valueItems = document.querySelectorAll('.value-item-v3');
+        this.stats = document.querySelectorAll('.stat-v3');
+        this.inclusiveStatement = document.querySelector('.inclusive-statement-v3');
+        this.foundersCard = document.querySelector('.founders-card-v3');
+        this.imageWrapper = document.querySelector('.image-wrapper-v3');
+        this.ctaButton = document.querySelector('.about-cta-v3');
+        
+        if (this.section) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.initScrollAnimations();
+        this.initCounterAnimations();
+        this.initInteractions();
+    }
+    
+    /**
+     * Initialize scroll-based animations
+     */
+    initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.animateElements();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        if (this.section) {
+            observer.observe(this.section);
+        }
+    }
+    
+    /**
+     * Animate all elements with stagger
+     */
+    animateElements() {
+        // Animate value items
+        this.valueItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                item.style.transition = 'all 0.6s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+        
+        // Animate inclusive statement
+        if (this.inclusiveStatement) {
+            this.inclusiveStatement.style.opacity = '0';
+            this.inclusiveStatement.style.transform = 'translateX(-30px)';
+            
+            setTimeout(() => {
+                this.inclusiveStatement.style.transition = 'all 0.7s ease';
+                this.inclusiveStatement.style.opacity = '1';
+                this.inclusiveStatement.style.transform = 'translateX(0)';
+            }, 400);
+        }
+        
+        // Animate stats
+        this.stats.forEach((stat, index) => {
+            stat.style.opacity = '0';
+            stat.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                stat.style.transition = 'all 0.5s ease';
+                stat.style.opacity = '1';
+                stat.style.transform = 'scale(1)';
+            }, 600 + (index * 80));
+        });
+        
+        // Animate founders card
+        if (this.foundersCard) {
+            this.foundersCard.style.opacity = '0';
+            this.foundersCard.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                this.foundersCard.style.transition = 'all 0.7s ease';
+                this.foundersCard.style.opacity = '1';
+                this.foundersCard.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    }
+    
+    /**
+     * Initialize counter animations for stats
+     */
+    initCounterAnimations() {
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const stat = entry.target;
+                    const numberEl = stat.querySelector('.stat-number-v3');
+                    if (numberEl && !numberEl.classList.contains('animated')) {
+                        this.animateCounter(numberEl);
+                        numberEl.classList.add('animated');
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        this.stats.forEach(stat => observer.observe(stat));
+    }
+    
+    /**
+     * Animate counter from 0 to target
+     */
+    animateCounter(element) {
+        const text = element.textContent;
+        const isPercent = text.includes('%');
+        const isPlus = text.includes('+');
+        const number = parseInt(text.replace(/[^\d]/g, ''));
+        
+        if (isNaN(number)) return;
+        
+        const duration = 2000;
+        const steps = 60;
+        const increment = number / steps;
+        const stepDuration = duration / steps;
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            
+            if (current >= number) {
+                current = number;
+                clearInterval(timer);
+            }
+            
+            let display = Math.floor(current).toString();
+            if (isPlus) display += '+';
+            if (isPercent) display += '%';
+            
+            element.textContent = display;
+        }, stepDuration);
+    }
+    
+    /**
+     * Initialize interactive elements
+     */
+    initInteractions() {
+        // Value items hover effect
+        this.valueItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                this.highlightValue(item);
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                this.unhighlightValue(item);
+            });
+        });
+        
+        // Stats hover effect
+        this.stats.forEach(stat => {
+            stat.addEventListener('mouseenter', () => {
+                this.pulseStat(stat);
+            });
+        });
+        
+        // CTA button click
+        if (this.ctaButton) {
+            this.ctaButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.scrollToContact();
+            });
+        }
+        
+        // Image parallax on scroll
+        if (this.imageWrapper) {
+            this.initImageParallax();
+        }
+    }
+    
+    /**
+     * Highlight value item
+     */
+    highlightValue(item) {
+        const icon = item.querySelector('.value-icon-v3');
+        if (icon) {
+            icon.style.transform = 'scale(1.1) rotate(-5deg)';
+        }
+    }
+    
+    /**
+     * Remove highlight from value item
+     */
+    unhighlightValue(item) {
+        const icon = item.querySelector('.value-icon-v3');
+        if (icon) {
+            icon.style.transform = '';
+        }
+    }
+    
+    /**
+     * Pulse stat on hover
+     */
+    pulseStat(stat) {
+        const number = stat.querySelector('.stat-number-v3');
+        if (number) {
+            number.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                number.style.transition = 'transform 0.3s ease';
+                number.style.transform = '';
+            }, 100);
+        }
+    }
+    
+    /**
+     * Scroll to contact section
+     */
+    scrollToContact() {
+        const contact = document.querySelector('#contact');
+        if (contact) {
+            const headerOffset = 100;
+            const elementPosition = contact.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    /**
+     * Initialize image parallax effect
+     */
+    initImageParallax() {
+        let ticking = false;
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    this.updateImageParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+    }
+    
+    /**
+     * Update image parallax position
+     */
+    updateImageParallax() {
+        if (!this.imageWrapper) return;
+        
+        const scrolled = window.pageYOffset;
+        const sectionTop = this.section.offsetTop;
+        const sectionHeight = this.section.offsetHeight;
+        
+        // Only apply parallax when section is in view
+        if (scrolled > sectionTop - window.innerHeight && 
+            scrolled < sectionTop + sectionHeight) {
+            
+            const offset = (scrolled - sectionTop) * 0.1;
+            const img = this.imageWrapper.querySelector('img');
+            
+            if (img) {
+                img.style.transform = `translateY(${offset}px) scale(1.05)`;
+            }
+        }
+    }
+}
+
+/**
+ * Founders Card Interactions
+ */
+class FoundersCardInteractions {
+    constructor() {
+        this.foundersCard = document.querySelector('.founders-card-v3');
+        this.founders = document.querySelectorAll('.founder-v3');
+        
+        if (this.foundersCard) {
+            this.init();
+        }
+    }
+    
+    init() {
+        this.bindEvents();
+    }
+    
+    bindEvents() {
+        // Hover effects on individual founders
+        this.founders.forEach(founder => {
+            founder.addEventListener('mouseenter', () => {
+                this.highlightFounder(founder);
+            });
+            
+            founder.addEventListener('mouseleave', () => {
+                this.unhighlightFounder(founder);
+            });
+        });
+    }
+    
+    highlightFounder(founder) {
+        const avatar = founder.querySelector('.founder-avatar-v3');
+        if (avatar) {
+            avatar.style.transform = 'scale(1.1)';
+            avatar.style.boxShadow = '0 6px 20px rgba(0, 216, 132, 0.5)';
+        }
+    }
+    
+    unhighlightFounder(founder) {
+        const avatar = founder.querySelector('.founder-avatar-v3');
+        if (avatar) {
+            avatar.style.transform = '';
+            avatar.style.boxShadow = '';
+        }
+    }
+}
+
+/**
+ * Inclusive Statement Animation
+ */
+class InclusiveStatementAnimation {
+    constructor() {
+        this.statement = document.querySelector('.inclusive-statement-v3');
+        
+        if (this.statement) {
+            this.init();
+        }
+    }
+    
+    init() {
+        // Add pulse animation to icon
+        const icon = this.statement.querySelector('.inclusive-icon-v3');
+        if (icon) {
+            setInterval(() => {
+                icon.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    icon.style.transition = 'transform 0.3s ease';
+                    icon.style.transform = 'scale(1)';
+                }, 300);
+            }, 3000);
+        }
+    }
+}
+
+/**
+ * Initialize About Section V3
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    window.aboutSectionV3 = new AboutSectionV3();
+    window.foundersCardInteractions = new FoundersCardInteractions();
+    window.inclusiveStatementAnimation = new InclusiveStatementAnimation();
+    
+    console.log('About Section V3 initialized');
+});
+
+// Export for potential external use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        AboutSectionV3,
+        FoundersCardInteractions,
+        InclusiveStatementAnimation
+    };
+}
 
 /* ==========================================================================
    TEAM CAROUSEL
