@@ -2923,480 +2923,745 @@ input, textarea, select {
    REVIEWS & INSTAGRAM SECTION
    ========================================================================== */
 
-.reviews-insta-v3 {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #f0fdf9 0%, #ffffff 50%, #eff6ff 100%);
+.reviews-instagram-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8fffe 0%, #ffffff 50%, #f0fdf9 100%);
     position: relative;
     overflow: hidden;
 }
 
-.reviews-insta-v3::before {
+.reviews-instagram-section::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(0, 216, 132, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+    top: -10%;
+    left: -5%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 216, 132, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
     pointer-events: none;
 }
 
-.reviews-insta-container-v3 {
+.reviews-instagram-section::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    right: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.reviews-instagram-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 var(--space-xl);
+    padding: 0 1.5rem;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
-/* Header */
-.reviews-insta-header-v3 {
+/* Section Header */
+.reviews-instagram-section .section-header {
     text-align: center;
-    max-width: 700px;
-    margin: 0 auto 80px;
+    margin-bottom: 4rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.reviews-insta-header-v3 .section-badge {
-    margin-bottom: var(--space-lg);
+.reviews-instagram-section .section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
+    border: 1px solid rgba(0, 216, 132, 0.2);
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #00d884;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
 }
 
-.reviews-insta-header-v3 .section-title {
-    margin-bottom: var(--space-lg);
+.reviews-instagram-section .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
 }
 
-.reviews-insta-header-v3 .section-description {
+.reviews-instagram-section .title-highlight {
+    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.reviews-instagram-section .section-description {
     font-size: 1.0625rem;
     line-height: 1.7;
-    color: var(--gray-600);
+    color: #6b7280;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
-/* Two Column Grid */
-.reviews-insta-grid-v3 {
+/* Grid Layout */
+.reviews-instagram-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 0;
 }
 
-/* Column Styles */
-.reviews-column-v3,
-.instagram-column-v3 {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 40px;
-    border: 1px solid var(--gray-200);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+/* Column Base Styles */
+.reviews-column,
+.instagram-column {
+    background: #ffffff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    min-height: 600px;
 }
 
-/* Column Headers */
-.column-header-v3 {
+.reviews-column:hover,
+.instagram-column:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 216, 132, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Column Header */
+.column-header {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--gray-100);
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #f3f4f6;
 }
 
-.icon-wrapper-v3 {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
+.header-icon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    color: var(--white);
+    font-size: 1.75rem;
+    color: #ffffff;
     flex-shrink: 0;
 }
 
-.reviews-icon-wrapper-v3 {
+.reviews-icon {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    box-shadow: 0 8px 24px rgba(251, 191, 36, 0.35);
+    box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
 }
 
-.instagram-icon-wrapper-v3 {
+.instagram-icon {
     background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-    box-shadow: 0 8px 24px rgba(131, 58, 180, 0.35);
+    box-shadow: 0 8px 20px rgba(131, 58, 180, 0.3);
 }
 
-.header-text-v3 {
+.header-content {
     flex: 1;
+    min-width: 0;
 }
 
-.column-title-v3 {
-    font-family: var(--font-heading);
-    font-size: 1.75rem;
+.column-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--gray-800);
-    margin-bottom: 8px;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
     line-height: 1.2;
 }
 
-.rating-display-v3 {
+/* Rating Summary */
+.rating-summary {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
     flex-wrap: wrap;
 }
 
-.stars-display-v3 {
+.stars {
     display: flex;
-    gap: 4px;
+    gap: 0.25rem;
     color: #fbbf24;
     font-size: 1.125rem;
 }
 
-.rating-number-v3 {
+.rating-number {
     font-weight: 700;
+    color: #1f2937;
     font-size: 1.125rem;
-    color: var(--gray-800);
 }
 
-.review-count-v3 {
-    color: var(--gray-600);
+.rating-count {
+    color: #6b7280;
     font-size: 0.9375rem;
 }
 
-.instagram-handle-v3 {
-    color: var(--primary-green);
+/* Instagram Handle */
+.instagram-handle {
+    color: #00d884;
     font-weight: 600;
     font-size: 1rem;
-    transition: color 0.3s ease;
+    transition: all 0.2s ease;
+    word-break: break-word;
 }
 
-.instagram-handle-v3:hover {
-    color: var(--primary-blue);
+.instagram-handle:hover {
+    color: #0ea5e9;
 }
 
-/* Reviews Carousel */
-.reviews-carousel-v3 {
+/* Widget Containers */
+.reviews-widget,
+.instagram-widget {
     flex: 1;
+    min-height: 400px;
     display: flex;
-    flex-direction: column;
-    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    background: #f9fafb;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    overflow: hidden;
 }
 
-.reviews-track-v3 {
-    position: relative;
-    min-height: 320px;
-}
-
-.review-card-v3 {
-    position: absolute;
-    top: 0;
-    left: 0;
+.reviews-widget > div,
+.instagram-widget > div {
     width: 100%;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.5s ease;
-    pointer-events: none;
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
-    border: 2px solid var(--gray-200);
-    border-radius: 20px;
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    height: 100%;
 }
 
-.review-card-v3.active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-    position: relative;
-}
-
-.review-stars-v3 {
-    display: flex;
-    gap: 4px;
-    color: #fbbf24;
-    font-size: 1.125rem;
-}
-
-.review-text-v3 {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: var(--gray-700);
-    font-style: italic;
-    flex: 1;
-}
-
-.reviewer-info-v3 {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding-top: 20px;
-    border-top: 1px solid var(--gray-200);
-}
-
-.reviewer-avatar-v3 {
-    width: 48px;
-    height: 48px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
+/* Action Buttons */
+.google-review-btn,
+.instagram-follow-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 0.875rem;
-    color: var(--white);
-    flex-shrink: 0;
-}
-
-.reviewer-details-v3 {
-    flex: 1;
-}
-
-.reviewer-name-v3 {
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
     font-weight: 600;
     font-size: 1rem;
-    color: var(--gray-800);
-    margin-bottom: 2px;
-}
-
-.review-date-v3 {
-    font-size: 0.875rem;
-    color: var(--gray-500);
-}
-
-/* Review Navigation */
-.reviews-nav-v3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-}
-
-.review-nav-btn-v3 {
-    width: 44px;
-    height: 44px;
-    background: var(--white);
-    border: 2px solid var(--gray-300);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-700);
-    font-size: 1.5rem;
-    cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.review-nav-btn-v3:hover {
-    background: var(--gradient-primary);
-    color: var(--white);
-    border-color: transparent;
-    transform: scale(1.1);
-}
-
-.review-dots-v3 {
-    display: flex;
-    gap: 8px;
-}
-
-.review-dot-v3 {
-    width: 8px;
-    height: 8px;
-    background: var(--gray-300);
-    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     cursor: pointer;
-    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.review-dot-v3:hover {
-    background: var(--gray-400);
-    transform: scale(1.2);
-}
-
-.review-dot-v3.active {
-    width: 24px;
-    border-radius: 100px;
-    background: var(--gradient-primary);
-}
-
-/* Google Review Button */
-.google-review-btn-v3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px 28px;
-    background: var(--white);
-    border: 2px solid #4285f4;
-    border-radius: 100px;
-    font-weight: 600;
-    font-size: 0.9375rem;
+.google-review-btn {
+    background: #ffffff;
     color: #4285f4;
-    transition: all 0.3s ease;
+    border: 2px solid #4285f4;
 }
 
-.google-review-btn-v3:hover {
+.google-review-btn:hover {
     background: #4285f4;
-    color: var(--white);
+    color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(66, 133, 244, 0.3);
 }
 
-.google-logo-v3 {
+.google-logo {
     width: 20px;
     height: 20px;
+    flex-shrink: 0;
 }
 
-/* Instagram Widget */
-.instagram-widget-v3 {
-    flex: 1;
-    min-height: 400px;
-    background: var(--gray-50);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.instagram-widget-v3 > div {
-    width: 100%;
-    height: 100%;
-}
-
-/* Instagram Follow Button */
-.instagram-follow-btn-v3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px 28px;
+.instagram-follow-btn {
     background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-    color: var(--white);
-    border-radius: 100px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(131, 58, 180, 0.3);
+    color: #ffffff;
+    border: 2px solid transparent;
 }
 
-.instagram-follow-btn-v3:hover {
+.instagram-follow-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(131, 58, 180, 0.4);
+    box-shadow: 0 10px 30px rgba(131, 58, 180, 0.4);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .reviews-insta-grid-v3 {
-        gap: 32px;
+.google-review-btn i,
+.instagram-follow-btn i {
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+/* Large Tablets and Small Desktops (1024px and below) */
+@media (max-width: 1024px) {
+    .reviews-instagram-section {
+        padding: 5rem 0;
     }
     
-    .reviews-column-v3,
-    .instagram-column-v3 {
-        padding: 32px;
+    .reviews-instagram-container {
+        padding: 0 1.25rem;
+    }
+    
+    .reviews-instagram-section .section-header {
+        margin-bottom: 3rem;
+    }
+    
+    .reviews-instagram-grid {
+        gap: 1.5rem;
+    }
+    
+    .reviews-column,
+    .instagram-column {
+        padding: 1.75rem;
+        min-height: 550px;
+    }
+    
+    .column-title {
+        font-size: 1.375rem;
+    }
+    
+    .reviews-widget,
+    .instagram-widget {
+        min-height: 350px;
+        padding: 1.25rem;
     }
 }
 
+/* Tablets (991px and below) */
 @media (max-width: 991px) {
-    .reviews-insta-v3 {
-        padding: 80px 0;
+    .reviews-instagram-section {
+        padding: 4rem 0;
     }
     
-    .reviews-insta-header-v3 {
-        margin-bottom: 60px;
+    .reviews-instagram-section .section-header {
+        margin-bottom: 2.5rem;
     }
     
-    .reviews-insta-grid-v3 {
+    .reviews-instagram-section .section-title {
+        font-size: 2rem;
+    }
+    
+    .reviews-instagram-section .section-description {
+        font-size: 1rem;
+    }
+    
+    .reviews-instagram-grid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 2rem;
+    }
+    
+    .reviews-column,
+    .instagram-column {
+        min-height: auto;
     }
 }
 
+/* Mobile Landscape (767px and below) */
 @media (max-width: 767px) {
-    .reviews-insta-v3 {
-        padding: 60px 0;
+    .reviews-instagram-section {
+        padding: 3rem 0;
     }
     
-    .reviews-insta-container-v3 {
-        padding: 0 var(--space-lg);
+    .reviews-instagram-container {
+        padding: 0 1rem;
     }
     
-    .reviews-insta-header-v3 {
-        margin-bottom: 50px;
+    .reviews-instagram-section .section-header {
+        margin-bottom: 2rem;
     }
     
-    .reviews-column-v3,
-    .instagram-column-v3 {
-        padding: 28px;
-        gap: 28px;
+    .reviews-instagram-section .section-badge {
+        padding: 0.375rem 1.25rem;
+        font-size: 0.8125rem;
+        margin-bottom: 1rem;
     }
     
-    .column-header-v3 {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
-    
-    .icon-wrapper-v3 {
-        width: 56px;
-        height: 56px;
+    .reviews-instagram-section .section-title {
         font-size: 1.75rem;
+        margin-bottom: 1rem;
     }
     
-    .column-title-v3 {
+    .reviews-instagram-section .section-description {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+    }
+    
+    .reviews-instagram-grid {
+        gap: 1.5rem;
+    }
+    
+    .reviews-column,
+    .instagram-column {
+        padding: 1.5rem;
+        border-radius: 1.25rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+    
+    .column-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        padding-bottom: 1.25rem;
+    }
+    
+    .header-icon {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
         font-size: 1.5rem;
+        border-radius: 0.875rem;
     }
     
-    .review-card-v3 {
-        padding: 24px;
+    .column-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.375rem;
+    }
+    
+    .rating-summary {
+        gap: 0.5rem;
+    }
+    
+    .stars {
+        font-size: 1rem;
+    }
+    
+    .rating-number {
+        font-size: 1rem;
+    }
+    
+    .rating-count {
+        font-size: 0.875rem;
+    }
+    
+    .instagram-handle {
+        font-size: 0.9375rem;
+    }
+    
+    .reviews-widget,
+    .instagram-widget {
+        min-height: 350px;
+        padding: 1rem;
+        border-radius: 0.875rem;
+    }
+    
+    .google-review-btn,
+    .instagram-follow-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9375rem;
+        gap: 0.625rem;
+    }
+    
+    .google-logo {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .google-review-btn i,
+    .instagram-follow-btn i {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile Portrait (640px and below) */
+@media (max-width: 640px) {
+    .reviews-instagram-section {
+        padding: 2.5rem 0;
+    }
+    
+    .reviews-instagram-section::before,
+    .reviews-instagram-section::after {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .reviews-instagram-container {
+        padding: 0 0.875rem;
+    }
+    
+    .reviews-instagram-section .section-header {
+        margin-bottom: 1.75rem;
+    }
+    
+    .reviews-instagram-section .section-title {
+        font-size: 1.625rem;
+    }
+    
+    .reviews-instagram-grid {
+        gap: 1.25rem;
+    }
+    
+    .reviews-column,
+    .instagram-column {
+        padding: 1.25rem;
+        border-radius: 1rem;
+    }
+    
+    .column-header {
+        gap: 0.875rem;
+        padding-bottom: 1rem;
+    }
+    
+    .header-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        font-size: 1.375rem;
+        border-radius: 0.75rem;
+    }
+    
+    .column-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .rating-summary {
+        gap: 0.375rem;
+    }
+    
+    .stars {
+        font-size: 0.9375rem;
+        gap: 0.1875rem;
+    }
+    
+    .rating-number {
+        font-size: 0.9375rem;
+    }
+    
+    .rating-count {
+        font-size: 0.8125rem;
+    }
+    
+    .instagram-handle {
+        font-size: 0.875rem;
+    }
+    
+    .reviews-widget,
+    .instagram-widget {
         min-height: 300px;
+        padding: 0.875rem;
+        border-radius: 0.75rem;
     }
     
-    .review-text-v3 {
+    .google-review-btn,
+    .instagram-follow-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+        gap: 0.5rem;
+    }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+    .reviews-instagram-section {
+        padding: 2rem 0;
+    }
+    
+    .reviews-instagram-container {
+        padding: 0 0.75rem;
+    }
+    
+    .reviews-instagram-section .section-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .reviews-instagram-section .section-badge {
+        padding: 0.3125rem 1rem;
+        font-size: 0.75rem;
+        margin-bottom: 0.875rem;
+    }
+    
+    .reviews-instagram-section .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.875rem;
+    }
+    
+    .reviews-instagram-section .section-description {
+        font-size: 0.875rem;
+    }
+    
+    .reviews-instagram-grid {
+        gap: 1rem;
+    }
+    
+    .reviews-column,
+    .instagram-column {
+        padding: 1rem;
+        border-radius: 0.875rem;
+    }
+    
+    .column-header {
+        gap: 0.75rem;
+        padding-bottom: 0.875rem;
+        border-bottom-width: 1.5px;
+    }
+    
+    .header-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 1.25rem;
+        border-radius: 0.625rem;
+    }
+    
+    .column-title {
+        font-size: 1rem;
+        margin-bottom: 0.1875rem;
+    }
+    
+    .rating-summary {
+        gap: 0.3125rem;
+        flex-wrap: wrap;
+    }
+    
+    .stars {
+        font-size: 0.875rem;
+        gap: 0.125rem;
+    }
+    
+    .rating-number {
+        font-size: 0.875rem;
+    }
+    
+    .rating-count {
+        font-size: 0.75rem;
+        width: 100%;
+        margin-top: 0.125rem;
+    }
+    
+    .instagram-handle {
+        font-size: 0.8125rem;
+    }
+    
+    .reviews-widget,
+    .instagram-widget {
+        min-height: 280px;
+        padding: 0.75rem;
+        border-radius: 0.625rem;
+    }
+    
+    .google-review-btn,
+    .instagram-follow-btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+        gap: 0.375rem;
+        flex-wrap: nowrap;
+    }
+    
+    .google-logo {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .google-review-btn i,
+    .instagram-follow-btn i {
         font-size: 0.9375rem;
     }
 }
 
-@media (max-width: 480px) {
-    .reviews-column-v3,
-    .instagram-column-v3 {
-        padding: 24px;
-        border-radius: 20px;
+/* Extra Small Mobile (360px and below) */
+@media (max-width: 360px) {
+    .reviews-instagram-section {
+        padding: 1.75rem 0;
     }
     
-    .column-header-v3 {
-        padding-bottom: 20px;
+    .reviews-instagram-container {
+        padding: 0 0.625rem;
     }
     
-    .review-card-v3 {
-        padding: 20px;
+    .reviews-column,
+    .instagram-column {
+        padding: 0.875rem;
     }
     
-    .reviewer-avatar-v3 {
-        width: 44px;
-        height: 44px;
-        font-size: 0.8125rem;
+    .column-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.625rem;
     }
     
-    .review-nav-btn-v3 {
-        width: 40px;
-        height: 40px;
-        font-size: 1.375rem;
+    .header-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 1.125rem;
     }
     
-    .google-review-btn-v3,
-    .instagram-follow-btn-v3 {
-        padding: 14px 24px;
-        font-size: 0.875rem;
+    .column-title {
+        font-size: 0.9375rem;
+    }
+    
+    .reviews-widget,
+    .instagram-widget {
+        min-height: 260px;
+        padding: 0.625rem;
+    }
+    
+    .google-review-btn,
+    .instagram-follow-btn {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.75rem;
     }
 }
 
+/* Loading State for Widgets */
+.reviews-widget:empty,
+.instagram-widget:empty {
+    position: relative;
+}
+
+.reviews-widget:empty::after,
+.instagram-widget:empty::after {
+    content: 'Loading...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #9ca3af;
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+/* Smooth Animations */
+@media (prefers-reduced-motion: no-preference) {
+    .reviews-column,
+    .instagram-column {
+        animation: fadeInUp 0.6s ease-out backwards;
+    }
+    
+    .reviews-column {
+        animation-delay: 0.1s;
+    }
+    
+    .instagram-column {
+        animation-delay: 0.2s;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
 /* ==========================================================================
    CONTACT SECTION
-   ========================================================================== */
-/* ==========================================================================
-   CONTACT SECTION V3 - UNIQUE DESIGN
-   Add this to your styles.css
    ========================================================================== */
 
 .contact-section-v3 {
