@@ -2920,7 +2920,7 @@ input, textarea, select {
 }
 
 /* ==========================================================================
-   REVIEWS & INSTAGRAM SECTION
+   REVIEWS & INSTAGRAM SECTION - FIXED OVERFLOW
    ========================================================================== */
 
 .reviews-insta-v3 {
@@ -3019,7 +3019,7 @@ input, textarea, select {
     margin-top: 0;
 }
 
-/* Column Base Styles */
+/* Column Base Styles - FIXED */
 .reviews-column-v3,
 .instagram-column-v3 {
     background: #ffffff;
@@ -3032,6 +3032,8 @@ input, textarea, select {
     gap: 1.5rem;
     transition: all 0.3s ease;
     min-height: 600px;
+    max-height: 600px; /* FIXED: Add max-height */
+    overflow: hidden; /* FIXED: Prevent overflow */
 }
 
 .reviews-column-v3:hover,
@@ -3048,6 +3050,7 @@ input, textarea, select {
     gap: 1.25rem;
     padding-bottom: 1.5rem;
     border-bottom: 2px solid #f3f4f6;
+    flex-shrink: 0; /* FIXED: Prevent header from shrinking */
 }
 
 .icon-wrapper-v3 {
@@ -3076,6 +3079,7 @@ input, textarea, select {
 .header-text-v3 {
     flex: 1;
     min-width: 0;
+    overflow: hidden; /* FIXED: Prevent text overflow */
 }
 
 .column-title-v3 {
@@ -3085,6 +3089,9 @@ input, textarea, select {
     color: #1f2937;
     margin-bottom: 0.5rem;
     line-height: 1.2;
+    white-space: nowrap; /* FIXED */
+    overflow: hidden; /* FIXED */
+    text-overflow: ellipsis; /* FIXED */
 }
 
 /* Rating Display */
@@ -3120,25 +3127,31 @@ input, textarea, select {
     font-size: 1rem;
     transition: all 0.2s ease;
     word-break: break-word;
+    display: block; /* FIXED */
+    overflow: hidden; /* FIXED */
+    text-overflow: ellipsis; /* FIXED */
 }
 
 .instagram-handle-v3:hover {
     color: #0ea5e9;
 }
 
-/* Reviews Carousel */
+/* Reviews Carousel - FIXED */
 .reviews-carousel-v3 {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    min-height: 0;
+    min-height: 0; /* FIXED: Allow proper flexbox shrinking */
+    overflow: hidden; /* FIXED: Prevent overflow */
 }
 
 .reviews-track-v3 {
     position: relative;
     flex: 1;
-    min-height: 400px;
+    min-height: 300px; /* FIXED: Set minimum height */
+    max-height: 380px; /* FIXED: Set maximum height */
+    overflow: hidden; /* FIXED: Prevent overflow */
 }
 
 .review-card-v3 {
@@ -3157,6 +3170,7 @@ input, textarea, select {
     visibility: hidden;
     transition: all 0.5s ease;
     transform: translateX(30px);
+    overflow: hidden; /* FIXED: Prevent card overflow */
 }
 
 .review-card-v3.active {
@@ -3170,6 +3184,7 @@ input, textarea, select {
     gap: 0.25rem;
     color: #fbbf24;
     font-size: 1.125rem;
+    flex-shrink: 0; /* FIXED */
 }
 
 .review-text-v3 {
@@ -3177,7 +3192,30 @@ input, textarea, select {
     font-size: 0.9375rem;
     line-height: 1.7;
     color: #4b5563;
-    overflow-y: auto;
+    overflow-y: auto; /* FIXED: Allow scrolling if needed */
+    overflow-x: hidden; /* FIXED: Prevent horizontal overflow */
+    word-wrap: break-word; /* FIXED: Break long words */
+    word-break: break-word; /* FIXED: Break long words */
+    max-height: 200px; /* FIXED: Limit height */
+    padding-right: 0.5rem; /* FIXED: Space for scrollbar */
+}
+
+/* Custom scrollbar for review text */
+.review-text-v3::-webkit-scrollbar {
+    width: 4px;
+}
+
+.review-text-v3::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.review-text-v3::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+}
+
+.review-text-v3::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
 }
 
 .reviewer-info-v3 {
@@ -3186,6 +3224,7 @@ input, textarea, select {
     gap: 0.875rem;
     padding-top: 1rem;
     border-top: 1px solid #e5e7eb;
+    flex-shrink: 0; /* FIXED: Prevent shrinking */
 }
 
 .reviewer-avatar-v3 {
@@ -3205,6 +3244,7 @@ input, textarea, select {
 .reviewer-details-v3 {
     flex: 1;
     min-width: 0;
+    overflow: hidden; /* FIXED */
 }
 
 .reviewer-name-v3 {
@@ -3212,6 +3252,9 @@ input, textarea, select {
     color: #1f2937;
     font-size: 0.9375rem;
     margin-bottom: 0.125rem;
+    white-space: nowrap; /* FIXED */
+    overflow: hidden; /* FIXED */
+    text-overflow: ellipsis; /* FIXED */
 }
 
 .review-date-v3 {
@@ -3225,6 +3268,7 @@ input, textarea, select {
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    flex-shrink: 0; /* FIXED: Prevent shrinking */
 }
 
 .review-nav-btn-v3 {
@@ -3274,22 +3318,24 @@ input, textarea, select {
     background: linear-gradient(90deg, #00d884 0%, #0ea5e9 100%);
 }
 
-/* Instagram Widget */
+/* Instagram Widget - FIXED */
 .instagram-widget-v3 {
     flex: 1;
-    min-height: 400px;
+    min-height: 300px; /* FIXED: Set minimum height */
+    max-height: 380px; /* FIXED: Set maximum height */
     display: flex;
     align-items: center;
     justify-content: center;
     background: #f9fafb;
     border-radius: 1rem;
     padding: 1.5rem;
-    overflow: hidden;
+    overflow: hidden; /* FIXED: Prevent overflow */
 }
 
 .instagram-widget-v3 > div {
     width: 100%;
     height: 100%;
+    overflow: hidden; /* FIXED */
 }
 
 /* Action Buttons */
@@ -3308,6 +3354,7 @@ input, textarea, select {
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
+    flex-shrink: 0; /* FIXED: Prevent shrinking */
 }
 
 .google-review-btn-v3 {
@@ -3372,6 +3419,7 @@ input, textarea, select {
     .instagram-column-v3 {
         padding: 1.75rem;
         min-height: 550px;
+        max-height: 550px; /* FIXED */
     }
     
     .column-title-v3 {
@@ -3379,11 +3427,13 @@ input, textarea, select {
     }
     
     .reviews-track-v3 {
-        min-height: 350px;
+        min-height: 280px; /* FIXED */
+        max-height: 330px; /* FIXED */
     }
     
     .instagram-widget-v3 {
-        min-height: 350px;
+        min-height: 280px; /* FIXED */
+        max-height: 330px; /* FIXED */
         padding: 1.25rem;
     }
 }
@@ -3414,6 +3464,12 @@ input, textarea, select {
     .reviews-column-v3,
     .instagram-column-v3 {
         min-height: auto;
+        max-height: none; /* FIXED: Remove height restriction on tablet */
+    }
+    
+    .reviews-track-v3,
+    .instagram-widget-v3 {
+        max-height: 400px; /* FIXED */
     }
 }
 
@@ -3456,6 +3512,7 @@ input, textarea, select {
         padding: 1.5rem;
         border-radius: 1.25rem;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        max-height: none; /* FIXED: Remove max-height on mobile */
     }
     
     .column-header-v3 {
@@ -3476,6 +3533,7 @@ input, textarea, select {
     .column-title-v3 {
         font-size: 1.25rem;
         margin-bottom: 0.375rem;
+        white-space: normal; /* FIXED: Allow wrapping on mobile */
     }
     
     .rating-display-v3 {
@@ -3496,14 +3554,21 @@ input, textarea, select {
     
     .instagram-handle-v3 {
         font-size: 0.9375rem;
+        white-space: normal; /* FIXED: Allow wrapping on mobile */
     }
     
     .reviews-track-v3 {
         min-height: 350px;
+        max-height: 450px; /* FIXED: Increase max-height on mobile */
+    }
+    
+    .review-text-v3 {
+        max-height: 220px; /* FIXED: Increase max-height on mobile */
     }
     
     .instagram-widget-v3 {
         min-height: 350px;
+        max-height: 450px; /* FIXED: Increase max-height on mobile */
         padding: 1rem;
         border-radius: 0.875rem;
     }
@@ -3601,14 +3666,21 @@ input, textarea, select {
     
     .reviews-track-v3 {
         min-height: 300px;
+        max-height: 400px; /* FIXED */
     }
     
     .review-card-v3 {
         padding: 1.25rem;
     }
     
+    .review-text-v3 {
+        max-height: 180px; /* FIXED */
+        font-size: 0.875rem;
+    }
+    
     .instagram-widget-v3 {
         min-height: 300px;
+        max-height: 400px; /* FIXED */
         padding: 0.875rem;
         border-radius: 0.75rem;
     }
@@ -3705,6 +3777,7 @@ input, textarea, select {
     
     .reviews-track-v3 {
         min-height: 280px;
+        max-height: 380px; /* FIXED */
     }
     
     .review-card-v3 {
@@ -3718,6 +3791,7 @@ input, textarea, select {
     
     .review-text-v3 {
         font-size: 0.875rem;
+        max-height: 160px; /* FIXED */
     }
     
     .reviewer-info-v3 {
@@ -3758,6 +3832,7 @@ input, textarea, select {
     
     .instagram-widget-v3 {
         min-height: 280px;
+        max-height: 380px; /* FIXED */
         padding: 0.75rem;
         border-radius: 0.625rem;
     }
@@ -3815,14 +3890,20 @@ input, textarea, select {
     
     .reviews-track-v3 {
         min-height: 260px;
+        max-height: 360px; /* FIXED */
     }
     
     .review-card-v3 {
         padding: 0.875rem;
     }
     
+    .review-text-v3 {
+        max-height: 140px; /* FIXED */
+    }
+    
     .instagram-widget-v3 {
         min-height: 260px;
+        max-height: 360px; /* FIXED */
         padding: 0.625rem;
     }
     
