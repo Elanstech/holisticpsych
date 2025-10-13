@@ -108,178 +108,173 @@ class App {
 /* ==========================================================================
    HEADER SECTION
    ========================================================================== */
+/* ==========================================================================
+   HEADER NAVIGATION - FIXED VERSION
+   ========================================================================== */
 class Header {
     constructor() {
         this.header = document.getElementById('header');
+        this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
         this.mobileToggle = document.getElementById('mobileMenuToggle');
         this.scrollHamburger = document.getElementById('scrollHamburgerToggle');
+        this.mobileClose = document.getElementById('mobileMenuClose');
         this.mobilePanel = document.getElementById('mobileMenuPanel');
         this.mobileOverlay = document.getElementById('mobileMenuOverlay');
-        this.mobileClose = document.getElementById('mobileMenuClose');
-        this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
         this.isMenuOpen = false;
         
         this.init();
     }
     
     init() {
-        this.bindEvents();
+        this.setupEventListeners();
+        this.handleScroll();
         this.updateActiveNav();
+        
+        // Handle scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY > 50;
+            this.handleScroll(scrolled);
+        });
     }
     
-    bindEvents() {
+    setupEventListeners() {
         // Mobile menu toggle
         if (this.mobileToggle) {
             this.mobileToggle.addEventListener('click', () => this.toggleMobileMenu());
         }
         
+        // Scroll hamburger
         if (this.scrollHamburger) {
             this.scrollHamburger.addEventListener('click', () => this.toggleMobileMenu());
         }
         
-        // Close buttons
+        // Close mobile menu
         if (this.mobileClose) {
             this.mobileClose.addEventListener('click', () => this.closeMobileMenu());
         }
         
+        // Overlay click
         if (this.mobileOverlay) {
             this.mobileOverlay.addEventListener('click', () => this.closeMobileMenu());
         }
         
-        // Nav links
+        // Nav links - FIXED VERSION
         this.navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const target = link.getAttribute('href');
-                this.navigateTo(target);
-                this.closeMobileMenu();
+                
+                // Only prevent default and smooth scroll for internal anchor links (starting with #)
+                if (target && target.startsWith('#')) {
+                    e.preventDefault();
+                    const section = document.querySelector(target);
+                    
+                    if (section) {
+                        // Close mobile menu if open
+                        if (this.isMenuOpen) {
+                            this.closeMobileMenu();
+                        }
+                        
+                        // Smooth scroll to section
+                        setTimeout(() => {
+                            const offset = 100;
+                            const top = section.offsetTop - offset;
+                            window.scrollTo({
+                                top: top,
+                                behavior: 'smooth'
+                            });
+                        }, 300);
+                    }
+                    
+                    // Update active state
+                    this.navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                } else {
+                    // For external page links (like about.html, services.html, etc.)
+                    // Just close the mobile menu if it's open, but allow normal navigation
+                    if (this.isMenuOpen) {
+                        this.closeMobileMenu();
+                    }
+                    // Don't call e.preventDefault() - let the browser navigate normally
+                }
             });
         });
         
-        // Update active nav on scroll
-        window.addEventListener('scroll', () => this.updateActiveNav());
-    }
-    
-    toggleMobileMenu() {
-        this.isMenuOpen = !this.isMenuOpen;
-        
-        if (this.isMenuOpen) {
-            this.openMobileMenu();
-        } else {
-            this.closeMobileMenu();
-        }
-    }
-    
-    openMobileMenu() {
-        this.mobilePanel.classList.add('active');
-        this.mobileOverlay.classList.add('active');
-        this.mobileToggle.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    closeMobileMenu() {
-        this.mobilePanel.classList.remove('active');
-        this.mobileOverlay.classList.remove('active');
-        this.mobileToggle.classList.remove('active');
-        document.body.style.overflow = '';
-        this.isMenuOpen = false;
-    }
-    
-    navigateTo(target) {
-        const element = document.querySelector(target);
-        if (element) {
-            const headerOffset = 100;
-            const elementPosition = element.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
-    
-    updateActiveNav() {
-        const sections = document.querySelectorAll('section[id]');
-        const scrollY = window.pageYOffset;
-        
-        sections.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 150;
-            const sectionId = section.getAttribute('id');
-            
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                this.navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.classList.add('active');
-                    }
-                });
+        // Window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1200 && this.isMenuOpen) {
+                this.closeMobileMenu();
             }
         });
     }
     
     handleScroll(scrolled) {
+        if (!this.header) return;
+        
         if (scrolled) {
             this.header.classList.add('scrolled');
         } else {
             this.header.classList.remove('scrolled');
         }
     }
+    
+    toggleMobileMenu() {
+        if (this.isMenuOpen) {
+            this.closeMobileMenu();
+        } else {
+            this.openMobileMenu();
+        }
+    }
+    
+    openMobileMenu() {
+        this.isMenuOpen = true;
+        document.body.style.overflow = 'hidden';
+        
+        if (this.mobileToggle) this.mobileToggle.classList.add('active');
+        if (this.scrollHamburger) this.scrollHamburger.classList.add('active');
+        if (this.mobileOverlay) this.mobileOverlay.classList.add('active');
+        if (this.mobilePanel) this.mobilePanel.classList.add('active');
+    }
+    
+    closeMobileMenu() {
+        this.isMenuOpen = false;
+        document.body.style.overflow = '';
+        
+        if (this.mobileToggle) this.mobileToggle.classList.remove('active');
+        if (this.scrollHamburger) this.scrollHamburger.classList.remove('active');
+        if (this.mobileOverlay) this.mobileOverlay.classList.remove('active');
+        if (this.mobilePanel) this.mobilePanel.classList.remove('active');
+    }
+    
+    updateActiveNav() {
+        // Update active navigation on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            this.navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                // Only add active class for hash links matching current section
+                if (href && href.startsWith('#') && href === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    }
 }
 
-/* ==========================================================================
-   HERO SECTION
-   ========================================================================== */
-class Hero {
-    constructor() {
-        this.hero = document.querySelector('.hero');
-        this.backgrounds = document.querySelectorAll('.hero-bg-image');
-        this.currentIndex = 0;
-        this.autoplayInterval = null;
-        
-        if (this.hero && this.backgrounds.length > 0) {
-            this.init();
-        }
-    }
-    
-    init() {
-        this.startAutoplay();
-        this.initLogoAnimation();
-    }
-    
-    startAutoplay() {
-        if (this.backgrounds.length <= 1) return;
-        
-        this.autoplayInterval = setInterval(() => {
-            this.nextBackground();
-        }, CONFIG.heroBackgroundInterval);
-    }
-    
-    nextBackground() {
-        this.backgrounds[this.currentIndex].classList.remove('active');
-        this.currentIndex = (this.currentIndex + 1) % this.backgrounds.length;
-        this.backgrounds[this.currentIndex].classList.add('active');
-    }
-    
-    initLogoAnimation() {
-        const logoContainer = document.querySelector('.hero-logo-container');
-        if (logoContainer) {
-            logoContainer.addEventListener('click', () => {
-                logoContainer.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    logoContainer.style.transform = '';
-                }, 200);
-            });
-        }
-    }
-    
-    destroy() {
-        if (this.autoplayInterval) {
-            clearInterval(this.autoplayInterval);
-        }
-    }
-}
+// Initialize Header when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new Header();
+});
 
 /* ==========================================================================
    SERVICES CAROUSEL
