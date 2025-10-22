@@ -1,6 +1,6 @@
 /* ========================================================================
-   SERVICES PAGE - HOLISTIC PSYCHOLOGICAL SERVICES
-   Sleek, Modern, Minimalistic Design
+   SERVICES PAGE - SPECIFIC STYLES ONLY
+   Extends styles.css - No duplicate root variables
    ======================================================================== */
 
 /* ========================================================================
@@ -46,6 +46,12 @@
     font-weight: 500;
     color: #6d5da6;
     animation: fadeIn 0.8s ease 0.2s both;
+    transition: all 0.3s ease;
+}
+
+.hero-badge:hover {
+    background: rgba(109, 93, 166, 0.15);
+    transform: translateY(-2px);
 }
 
 .hero-badge i {
@@ -64,7 +70,7 @@
 
 .services-hero-subtitle {
     font-size: 18px;
-    line-height: 1.6;
+    line-height: 1.7;
     color: #666;
     max-width: 700px;
     margin: 0 auto;
@@ -80,17 +86,27 @@
     animation: expandWidth 0.8s ease 0.6s both;
 }
 
+@keyframes expandWidth {
+    from { width: 0; }
+    to { width: 60px; }
+}
+
 /* ========================================================================
-   SERVICES NAVIGATION
+   SERVICES NAVIGATION (Sticky)
    ======================================================================== */
 .services-navigation {
-    padding: 40px 0;
+    padding: 20px 0;
     background: #fff;
     position: sticky;
     top: 80px;
     z-index: 100;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.services-navigation.scrolled {
+    padding: 15px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .services-nav-container {
@@ -100,117 +116,118 @@
     gap: 12px;
     padding: 0 20px;
     overflow-x: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(109, 93, 166, 0.3) transparent;
 }
 
 .services-nav-container::-webkit-scrollbar {
-    display: none;
+    height: 6px;
 }
 
-.service-nav-btn {
-    display: flex;
+.services-nav-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.services-nav-container::-webkit-scrollbar-thumb {
+    background: rgba(109, 93, 166, 0.3);
+    border-radius: 10px;
+}
+
+.service-nav-link {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: #f8f9fa;
-    border: 2px solid transparent;
-    border-radius: 50px;
+    padding: 10px 24px;
     font-size: 14px;
     font-weight: 500;
     color: #666;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background: #f8f9fa;
+    border-radius: 50px;
+    text-decoration: none;
     white-space: nowrap;
-    flex-shrink: 0;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
-.service-nav-btn i {
-    font-size: 18px;
-    transition: transform 0.3s ease;
-}
-
-.service-nav-btn:hover {
+.service-nav-link:hover {
     background: rgba(109, 93, 166, 0.1);
     color: #6d5da6;
     transform: translateY(-2px);
 }
 
-.service-nav-btn.active {
-    background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 4px 12px rgba(109, 93, 166, 0.3);
-}
-
-.service-nav-btn.active i {
-    transform: scale(1.1);
+.service-nav-link.active {
+    background: #6d5da6;
+    color: #fff;
+    border-color: #6d5da6;
 }
 
 /* ========================================================================
-   SERVICES CONTENT SECTION
+   SERVICES MAIN CONTENT
    ======================================================================== */
-.services-content {
+.services-main {
+    padding: 80px 0;
+    background: #fff;
+}
+
+.services-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 20px;
-}
-
-.service-detail-card {
-    background: white;
-    border-radius: 24px;
-    padding: 60px;
-    margin-bottom: 40px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.4s ease;
-}
-
-.service-detail-card.hidden {
-    display: none;
-}
-
-.service-detail-card.fade-out {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.service-detail-card.fade-in {
-    animation: fadeInUp 0.6s ease both;
+    padding: 0 20px;
 }
 
 /* ========================================================================
-   SERVICE CARD HEADER
+   INDIVIDUAL SERVICE SECTION
    ======================================================================== */
-.service-card-header {
+.service-section {
+    margin-bottom: 100px;
+    scroll-margin-top: 140px;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.service-section:nth-child(1) { animation-delay: 0.1s; }
+.service-section:nth-child(2) { animation-delay: 0.15s; }
+.service-section:nth-child(3) { animation-delay: 0.2s; }
+
+.service-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 60px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.service-content:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+/* Service Header */
+.service-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 24px;
     margin-bottom: 40px;
     padding-bottom: 30px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #f8f9fa;
 }
 
-.service-icon-large {
-    width: 80px;
-    height: 80px;
+.service-icon {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
     background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    border-radius: 20px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 8px 24px rgba(109, 93, 166, 0.25);
-    transition: transform 0.3s ease;
+    color: #fff;
+    font-size: 32px;
+    transition: all 0.4s ease;
 }
 
-.service-icon-large i {
-    font-size: 40px;
-    color: white;
-}
-
-.service-card-header:hover .service-icon-large {
-    transform: scale(1.05) rotate(5deg);
+.service-content:hover .service-icon {
+    transform: rotate(5deg) scale(1.05);
 }
 
 .service-header-text {
@@ -219,289 +236,179 @@
 
 .service-title {
     font-family: 'Playfair Display', serif;
-    font-size: 36px;
+    font-size: 42px;
     font-weight: 600;
     color: #1a1a2e;
     margin-bottom: 8px;
+    line-height: 1.2;
 }
 
-.service-tagline {
-    font-size: 16px;
-    color: #6d5da6;
-    font-weight: 500;
+.service-subtitle {
+    font-size: 18px;
+    color: #666;
+    font-weight: 400;
 }
 
-/* ========================================================================
-   SERVICE CARD BODY
-   ======================================================================== */
-.service-card-body {
+/* Service Body */
+.service-body {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 50px;
 }
 
-.service-intro {
-    font-size: 17px;
+.service-description {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.service-description p {
+    font-size: 16px;
     line-height: 1.8;
     color: #444;
 }
 
-/* ========================================================================
-   SERVICE FEATURES GRID
-   ======================================================================== */
-.service-features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+.service-description p:first-child {
+    font-size: 17px;
+    line-height: 1.9;
+    color: #333;
 }
 
-.feature-item {
-    display: flex;
-    gap: 16px;
-    padding: 24px;
-    background: #f8f9fa;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-}
-
-.feature-item:hover {
-    background: rgba(109, 93, 166, 0.05);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.feature-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.feature-icon i {
-    font-size: 20px;
-    color: white;
-}
-
-.feature-content h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin-bottom: 8px;
-}
-
-.feature-content p {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #666;
-}
-
-/* ========================================================================
-   SERVICE DETAILS SECTION
-   ======================================================================== */
-.service-details-section {
-    padding: 32px;
+/* Service Features */
+.service-features {
     background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    padding: 40px;
     border-radius: 16px;
-    border-left: 4px solid #6d5da6;
+    border: 1px solid rgba(109, 93, 166, 0.1);
 }
 
-.section-subtitle {
+.features-title {
     font-family: 'Playfair Display', serif;
     font-size: 24px;
     font-weight: 600;
     color: #1a1a2e;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-.details-content {
-    padding-left: 0;
-}
-
-.conditions-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
     gap: 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.conditions-list li {
-    position: relative;
-    padding-left: 28px;
-    font-size: 15px;
-    color: #444;
-    line-height: 1.8;
+.feature-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(109, 93, 166, 0.15);
+    border-color: rgba(109, 93, 166, 0.2);
 }
 
-.conditions-list li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
+.feature-item i {
+    font-size: 20px;
     color: #6d5da6;
-    font-weight: bold;
-    font-size: 18px;
+    flex-shrink: 0;
 }
 
-/* ========================================================================
-   SERVICE PROCESS
-   ======================================================================== */
+.feature-item span {
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Service Process */
 .service-process {
-    background: white;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    border-left: 4px solid #6d5da6;
+}
+
+.process-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 32px;
 }
 
 .process-steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
-    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
 .process-step {
+    display: flex;
+    gap: 24px;
     position: relative;
-    padding: 24px;
-    background: #f8f9fa;
-    border-radius: 16px;
-    transition: all 0.3s ease;
+    padding-left: 20px;
 }
 
-.process-step:hover {
-    background: rgba(109, 93, 166, 0.05);
-    transform: translateY(-4px);
+.process-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 42px;
+    top: 80px;
+    width: 2px;
+    height: calc(100% - 60px);
+    background: linear-gradient(to bottom, #6d5da6, rgba(109, 93, 166, 0.2));
 }
 
 .step-number {
-    width: 50px;
-    height: 50px;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
     background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    color: white;
-    border-radius: 12px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 16px;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(109, 93, 166, 0.3);
+    transition: all 0.3s ease;
 }
 
-.step-content h4 {
-    font-size: 18px;
+.process-step:hover .step-number {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(109, 93, 166, 0.4);
+}
+
+.step-content {
+    flex: 1;
+    padding-top: 8px;
+}
+
+.step-title {
+    font-size: 20px;
     font-weight: 600;
     color: #1a1a2e;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.step-content p {
-    font-size: 14px;
-    line-height: 1.6;
+.step-description {
+    font-size: 15px;
+    line-height: 1.7;
     color: #666;
 }
 
 /* ========================================================================
-   SERVICE APPROACH
-   ======================================================================== */
-.service-approach {
-    padding: 32px;
-    background: rgba(109, 93, 166, 0.05);
-    border-radius: 16px;
-}
-
-.service-approach p {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #444;
-}
-
-/* ========================================================================
-   SERVICE HIGHLIGHT
-   ======================================================================== */
-.service-highlight {
-    display: flex;
-    gap: 24px;
-    padding: 32px;
-    background: linear-gradient(135deg, rgba(109, 93, 166, 0.1), rgba(139, 125, 192, 0.05));
-    border-radius: 16px;
-    border: 2px solid rgba(109, 93, 166, 0.2);
-}
-
-.highlight-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.highlight-icon i {
-    font-size: 30px;
-    color: white;
-}
-
-.highlight-content h4 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin-bottom: 12px;
-}
-
-.highlight-content p {
-    font-size: 15px;
-    line-height: 1.7;
-    color: #444;
-}
-
-/* ========================================================================
-   SERVICE CTA
-   ======================================================================== */
-.service-cta {
-    text-align: center;
-    padding-top: 16px;
-}
-
-.service-cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 40px;
-    background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    box-shadow: 0 8px 24px rgba(109, 93, 166, 0.3);
-    transition: all 0.3s ease;
-}
-
-.service-cta-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(109, 93, 166, 0.4);
-}
-
-.service-cta-btn i {
-    font-size: 20px;
-    transition: transform 0.3s ease;
-}
-
-.service-cta-btn:hover i {
-    transform: translateX(4px);
-}
-
-/* ========================================================================
-   SERVICES CTA SECTION
+   CTA SECTION
    ======================================================================== */
 .services-cta-section {
+    padding: 100px 0;
     background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    padding: 80px 20px;
-    margin: 40px 20px;
-    border-radius: 24px;
     position: relative;
     overflow: hidden;
 }
@@ -509,325 +416,284 @@
 .services-cta-section::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    animation: float 20s ease-in-out infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="1" fill="white" opacity="0.1"/></svg>');
+    opacity: 0.4;
 }
 
-.cta-section-content {
-    max-width: 800px;
+.cta-container {
+    max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
+    padding: 0 20px;
     position: relative;
     z-index: 1;
 }
 
-.cta-icon {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 24px;
+.cta-content {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
-.cta-icon i {
-    font-size: 40px;
-    color: white;
-}
-
-.cta-section-title {
+.cta-title {
     font-family: 'Playfair Display', serif;
     font-size: 42px;
     font-weight: 600;
-    color: white;
-    margin-bottom: 16px;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
 }
 
-.cta-section-text {
+.cta-description {
     font-size: 18px;
-    line-height: 1.6;
+    line-height: 1.7;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
-.cta-buttons-group {
+.cta-buttons {
     display: flex;
-    justify-content: center;
     gap: 16px;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
-.cta-primary-btn {
+.cta-button {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 40px;
-    background: white;
+    gap: 10px;
+    padding: 16px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cta-button.primary {
+    background: #fff;
     color: #6d5da6;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
 }
 
-.cta-primary-btn:hover {
+.cta-button.primary:hover {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-.cta-secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 40px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
+.cta-button.secondary {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
 }
 
-.cta-secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
+.cta-button.secondary:hover {
+    background: #fff;
+    color: #6d5da6;
     transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* ========================================================================
-   BACK TO TOP BUTTON
-   ======================================================================== */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #6d5da6, #8b7dc0);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 4px 16px rgba(109, 93, 166, 0.3);
-}
-
-.back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-.back-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(109, 93, 166, 0.4);
-}
-
-.back-to-top i {
-    font-size: 24px;
-}
-
-/* ========================================================================
-   ANIMATIONS
-   ======================================================================== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes expandWidth {
-    from {
-        width: 0;
-    }
-    to {
-        width: 60px;
-    }
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    25% {
-        transform: translate(10px, -10px) rotate(5deg);
-    }
-    50% {
-        transform: translate(-5px, 10px) rotate(-5deg);
-    }
-    75% {
-        transform: translate(-10px, -5px) rotate(3deg);
-    }
+.cta-button i {
+    font-size: 20px;
 }
 
 /* ========================================================================
    RESPONSIVE DESIGN
    ======================================================================== */
-@media (max-width: 1024px) {
-    .services-hero-title {
-        font-size: 48px;
-    }
-    
-    .service-detail-card {
-        padding: 40px;
-    }
-    
-    .service-title {
-        font-size: 32px;
-    }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .services-hero {
         padding: 120px 0 60px;
     }
-    
+
     .services-hero-title {
-        font-size: 36px;
+        font-size: 44px;
     }
-    
+
     .services-hero-subtitle {
         font-size: 16px;
     }
-    
+
+    .service-content {
+        padding: 40px;
+    }
+
+    .service-title {
+        font-size: 36px;
+    }
+
+    .service-subtitle {
+        font-size: 16px;
+    }
+
+    .cta-title {
+        font-size: 36px;
+    }
+
+    .cta-description {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-hero {
+        padding: 100px 0 50px;
+    }
+
+    .services-hero-title {
+        font-size: 36px;
+    }
+
+    .services-hero-subtitle {
+        font-size: 15px;
+    }
+
     .services-navigation {
         top: 70px;
-        padding: 20px 0;
+        padding: 15px 0;
     }
-    
+
     .services-nav-container {
-        gap: 8px;
+        padding: 0 15px;
     }
-    
-    .service-nav-btn {
-        padding: 10px 20px;
+
+    .service-nav-link {
+        padding: 8px 18px;
         font-size: 13px;
     }
-    
-    .services-content {
-        padding: 40px 20px;
+
+    .service-section {
+        margin-bottom: 60px;
+        scroll-margin-top: 120px;
     }
-    
-    .service-detail-card {
+
+    .service-content {
         padding: 30px 20px;
-        margin-bottom: 30px;
+        border-radius: 16px;
     }
-    
-    .service-card-header {
+
+    .service-header {
         flex-direction: column;
-        align-items: flex-start;
         gap: 16px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
     }
-    
-    .service-icon-large {
-        width: 70px;
-        height: 70px;
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
     }
-    
-    .service-icon-large i {
-        font-size: 35px;
-    }
-    
+
     .service-title {
         font-size: 28px;
     }
-    
-    .service-features-grid {
-        grid-template-columns: 1fr;
+
+    .service-subtitle {
+        font-size: 15px;
     }
-    
+
+    .service-body {
+        gap: 35px;
+    }
+
+    .service-features {
+        padding: 25px 20px;
+    }
+
+    .features-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .service-process {
+        padding: 25px 20px;
+    }
+
+    .process-title {
+        font-size: 20px;
+        margin-bottom: 24px;
+    }
+
     .process-steps {
-        grid-template-columns: 1fr;
+        gap: 24px;
     }
-    
-    .service-highlight {
+
+    .process-step {
+        padding-left: 10px;
+        gap: 16px;
+    }
+
+    .process-step:not(:last-child)::before {
+        left: 34px;
+        top: 70px;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .step-title {
+        font-size: 18px;
+    }
+
+    .step-description {
+        font-size: 14px;
+    }
+
+    .services-cta-section {
+        padding: 60px 0;
+    }
+
+    .cta-title {
+        font-size: 28px;
+    }
+
+    .cta-description {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+
+    .cta-buttons {
         flex-direction: column;
+        gap: 12px;
     }
-    
-    .cta-section-title {
-        font-size: 32px;
-    }
-    
-    .cta-buttons-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .cta-primary-btn,
-    .cta-secondary-btn {
+
+    .cta-button {
         width: 100%;
         justify-content: center;
+        padding: 14px 28px;
+        font-size: 15px;
     }
 }
 
 @media (max-width: 480px) {
     .services-hero-title {
-        font-size: 32px;
+        font-size: 30px;
     }
-    
+
+    .service-content {
+        padding: 25px 15px;
+    }
+
     .service-title {
         font-size: 24px;
     }
-    
-    .service-detail-card {
-        padding: 24px 16px;
-        border-radius: 16px;
-    }
-    
-    .service-card-body {
-        gap: 32px;
-    }
-    
-    .service-intro {
-        font-size: 15px;
-    }
-    
-    .feature-item {
-        padding: 20px;
-    }
-    
-    .service-details-section,
-    .service-approach,
-    .service-highlight {
-        padding: 24px;
-    }
-    
-    .conditions-list {
-        grid-template-columns: 1fr;
-    }
-    
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
+
+    .cta-title {
+        font-size: 24px;
     }
 }
