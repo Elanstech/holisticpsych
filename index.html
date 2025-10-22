@@ -3,1556 +3,1045 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holistic Psychological Services PLLC - Manhattan Mental Health</title>
-    <meta name="description" content="Professional psychological services in Manhattan. Dr. Kristie Doheny and Dr. Doug Uhlig providing compassionate mental health care.">
+    <title>Laura's Beauty Touch - Natural Luxury Spa</title>
     
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="logo copy.png" as="image">
+    <!-- Preload critical videos -->
+    <link rel="preload" href="https://github.com/Elanstech/laurasbeauty/releases/download/video/scrub.mp4" as="video" type="video/mp4">
+    <link rel="preload" href="https://github.com/Elanstech/laurasbeauty/releases/download/video/facial.mp4" as="video" type="video/mp4">
     
-    <!-- Fonts -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
-    <!-- Elfsight -->
-    <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Styles -->
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo copy.png">
 </head>
 <body>
-    
-    <!-- Header -->
-    <header class="header" id="header">
-        <div class="header-island">
-            <div class="header-content">
-                <div class="brand-text">
-                    <div class="brand-name">Holistic Psychological Services</div>
-                    <div class="brand-subtitle">Manhattan, NY</div>
-                </div>
-                
-                <nav class="nav-menu desktop-nav">
-                    <a href="index.html" class="nav-link active">Home</a>
-                    <a href="about.html" class="nav-link">About</a>
-                    <a href="services.html" class="nav-link">Services</a>
-                    <a href="teams.html" class="nav-link">Team</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
-                </nav>
-                
-                <div class="header-actions">
-                    <a href="tel:+12125551234" class="header-btn btn-call">
-                        <i class="ri-phone-line"></i>
-                        <span>Call Now</span>
-                    </a>
-                    <a href="#contact" class="header-btn btn-book">
-                        <i class="ri-calendar-check-line"></i>
-                        <span>Book Consultation</span>
-                    </a>
-                </div>
-                
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                
-                <button class="scroll-hamburger-toggle" id="scrollHamburgerToggle" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+
+    <!-- ELEGANT PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="loader-ring"></div>
+            <div class="loader-logo">
+                <img src="images/logo1.png" alt="Laura's Beauty Touch">
             </div>
+        </div>
+    </div>
+
+    <!-- PREMIUM HEADER -->
+    <header class="premium-header">
+        <div class="header-container">
+            <div class="header-logo-wrapper">
+                <img src="images/logo1.png" alt="Laura's Beauty Touch Logo" class="header-logo">
+            </div>
+
+            <nav class="desktop-navigation">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
+                    <li class="nav-item"><a href="#gallery" class="nav-link">Gallery</a></li>
+                    <li class="nav-item"><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <a href="#contact" class="header-cta-btn">Book Now</a>
+
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+            </button>
         </div>
     </header>
 
-    <!-- Mobile Menu Panel -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-    <div class="mobile-menu-panel" id="mobileMenuPanel">
-        <div class="mobile-menu-header">
-            <div class="mobile-brand">
-                <img src="logo copy.png" alt="Logo" class="mobile-logo">
-                <div class="mobile-brand-text">
-                    <div class="mobile-brand-name">Holistic Psychological</div>
-                    <div class="mobile-brand-location">Manhattan, NY</div>
-                </div>
+    <!-- MOBILE MENU -->
+    <div class="mobile-drawer">
+        <div class="drawer-content">
+            <div class="drawer-header">
+                <img src="images/logo1.png" alt="Laura's Beauty Touch Logo" class="drawer-logo">
             </div>
-            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
-                <i class="ri-close-line"></i>
-            </button>
+            <nav class="mobile-navigation">
+                <ul class="mobile-menu">
+                    <li class="mobile-item"><a href="#home" class="mobile-link">Home</a></li>
+                    <li class="mobile-item"><a href="#about" class="mobile-link">About</a></li>
+                    <li class="mobile-item"><a href="#services" class="mobile-link">Services</a></li>
+                    <li class="mobile-item"><a href="#gallery" class="mobile-link">Gallery</a></li>
+                    <li class="mobile-item"><a href="#testimonials" class="mobile-link">Testimonials</a></li>
+                    <li class="mobile-item"><a href="#contact" class="mobile-link">Contact</a></li>
+                </ul>
+            </nav>
         </div>
+    </div>
+    <div class="mobile-overlay"></div>
+
+    <!-- HERO SECTION WITH VIDEO COLLAGE -->
+    <section class="hero-section" id="home">
         
-        <nav class="mobile-nav">
-            <a href="index.html" class="mobile-nav-link">
-                <div class="nav-link-content">
-                    <i class="ri-home-4-line"></i>
-                    <span>Home</span>
-                </div>
-                <i class="ri-arrow-right-s-line nav-arrow"></i>
-            </a>
-            <a href="about.html" class="mobile-nav-link">
-                <div class="nav-link-content">
-                    <i class="ri-information-line"></i>
-                    <span>About</span>
-                </div>
-                <i class="ri-arrow-right-s-line nav-arrow"></i>
-            </a>
-            <a href="services.html" class="mobile-nav-link">
-                <div class="nav-link-content">
-                    <i class="ri-service-line"></i>
-                    <span>Services</span>
-                </div>
-                <i class="ri-arrow-right-s-line nav-arrow"></i>
-            </a>
-            <a href="team.html" class="mobile-nav-link">
-                <div class="nav-link-content">
-                    <i class="ri-team-line"></i>
-                    <span>Team</span>
-                </div>
-                <i class="ri-arrow-right-s-line nav-arrow"></i>
-            </a>
-            <a href="contact.html" class="mobile-nav-link">
-                <div class="nav-link-content">
-                    <i class="ri-mail-line"></i>
-                    <span>Contact</span>
-                </div>
-                <i class="ri-arrow-right-s-line nav-arrow"></i>
-            </a>
-        </nav>
-        
-        <div class="mobile-menu-footer">
-            <div class="mobile-contact-info">
-                <a href="tel:+16469717325" class="mobile-contact-item">
-                    <div class="contact-icon">
-                        <i class="ri-phone-line"></i>
-                    </div>
-                    <div class="contact-details">
-                        <span class="contact-label">Call Us</span>
-                        <span class="contact-value">(646) 971-7325</span>
-                    </div>
-                </a>
-                <a href="mailto:info@holisticpsych.com" class="mobile-contact-item">
-                    <div class="contact-icon">
-                        <i class="ri-mail-line"></i>
-                    </div>
-                    <div class="contact-details">
-                        <span class="contact-label">Email Us</span>
-                        <span class="contact-value">Get In Touch</span>
-                    </div>
-                </a>
+        <!-- Simple 3-Video Collage Grid -->
+        <div class="video-collage-container">
+            <div class="video-item video-left">
+                <video class="hero-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+                    <source src="https://github.com/Elanstech/laurasbeauty/releases/download/video/scrub.mp4" type="video/mp4">
+                </video>
+                <div class="video-gradient-overlay"></div>
             </div>
             
-            <div class="mobile-cta">
-                <a href="#contact" class="mobile-cta-btn">
-                    <i class="ri-calendar-check-line"></i>
-                    <span>Schedule Consultation</span>
-                    <div class="btn-shimmer"></div>
-                </a>
+            <div class="video-item video-center">
+                <video class="hero-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+                    <source src="https://github.com/Elanstech/laurasbeauty/releases/download/video/laser.mp4" type="video/mp4">
+                </video>
+                <div class="video-gradient-overlay"></div>
             </div>
             
-            <div class="mobile-social">
-                <a href="https://www.instagram.com/psychologicalservicespllc/" class="mobile-social-link" target="_blank">
-                    <i class="ri-instagram-line"></i>
-                </a>
+            <div class="video-item video-right">
+                <video class="hero-video" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+                    <source src="https://github.com/Elanstech/laurasbeauty/releases/download/video/facial.mp4" type="video/mp4">
+                </video>
+                <div class="video-gradient-overlay"></div>
             </div>
         </div>
-    </div>
-        
-    <!-- Main Content -->
-    <main class="main">
-        
-<!-- Hero Section -->
-<section class="hero" id="home">
-    <div class="hero-background">
-        <div class="hero-bg-image hero-bg-1 active"></div>
-        <div class="hero-bg-image hero-bg-2"></div>
-        <div class="hero-bg-image hero-bg-3"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-grain"></div>
-    </div>
 
-    <div class="hero-decorations">
-        <div class="float-element float-1"></div>
-        <div class="float-element float-2"></div>
-        <div class="float-element float-3"></div>
-        <div class="float-element float-4"></div>
-    </div>
+        <!-- Full Overlay for Better Text Contrast -->
+        <div class="hero-master-overlay"></div>
 
-    <div class="hero-container">
-        <div class="hero-content">
-            <div class="logo-showcase">
-                <div class="hero-logo-container">
-                    <img src="logo copy.png" alt="Holistic Psychological Services Logo" class="hero-logo">
-                    <div class="logo-ring"></div>
-                    <div class="logo-glow"></div>
-                </div>
-            </div>
-
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    <span class="title-line">Your Journey to</span>
-                    <span class="title-highlight">Mental Wellness Begins Here</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Expert psychological services in the heart of Manhattan. Evidence-based therapy for individuals, couples, and families.
-                </p>
-            </div>
-
-            <div class="hero-cta">
-                <a href="#contact" class="cta-button primary">
-                    <span>Schedule Consultation</span>
-                    <i class="ri-arrow-right-line"></i>
-                    <div class="btn-shimmer"></div>
-                </a>
-                <a href="#services" class="cta-button secondary">
-                    <span>Explore Services</span>
-                    <i class="ri-service-line"></i>
-                </a>
-            </div>
-
-            <div class="hero-features">
-                <div class="feature-badge">
-                    <i class="ri-shield-check-line"></i>
-                    <span>Licensed Professionals</span>
-                </div>
-                <div class="feature-badge">
-                    <i class="ri-calendar-check-line"></i>
-                    <span>Flexible Scheduling</span>
-                </div>
-                <div class="feature-badge">
-                    <i class="ri-lock-line"></i>
-                    <span>Confidential Care</span>
-                </div>
-            </div>
-
-            <div class="signatures-container">
-                <div class="signature-item">
-                    <div class="signature-text">Dr. Kristie Doheny</div>
-                    <div class="signature-title">PSYD</div>
-                    <div class="signature-credentials">Clinical Psychologist</div>
-                </div>
+        <!-- Hero Content -->
+        <div class="hero-content-wrapper">
+            <div class="hero-text-container">
                 
-                <div class="signature-divider">
-                    <div class="divider-line"></div>
-                    <div class="divider-icon">
-                    </div>
-                    <div class="divider-line"></div>
+                <!-- Slide 1 -->
+                <div class="hero-slide active" data-slide="1">
+                    <div class="hero-eyebrow">Welcome to Tranquility</div>
+                    <h1 class="hero-title">
+                        <span class="title-line">Laura's Beauty</span>
+                        <span class="title-line title-accent">Touch</span>
+                    </h1>
+                    <p class="hero-description">Where natural luxury meets personalized care</p>
+                    <a href="#contact" class="hero-cta-btn">
+                        <span>Begin Your Journey</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                
-                <div class="signature-item">
-                    <div class="signature-text">Dr. Douglas Uhlig</div>
-                    <div class="signature-title">PhD</div>
-                    <div class="signature-credentials">Licensed Psychologist</div>
+
+                <!-- Slide 2 -->
+                <div class="hero-slide" data-slide="2">
+                    <div class="hero-eyebrow">Signature Treatments</div>
+                    <h1 class="hero-title">
+                        <span class="title-line">Experience the Art</span>
+                        <span class="title-line title-accent">of Wellness</span>
+                    </h1>
+                    <p class="hero-description">Customized wellness rituals for body and soul</p>
+                    <a href="#services" class="hero-cta-btn">
+                        <span>Explore Services</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
+
+                <!-- Slide 3 -->
+                <div class="hero-slide" data-slide="3">
+                    <div class="hero-eyebrow">NYC's Premier Spa</div>
+                    <h1 class="hero-title">
+                        <span class="title-line">Reveal Your</span>
+                        <span class="title-line title-accent">Natural Glow</span>
+                    </h1>
+                    <p class="hero-description">Organic luxury in the heart of New York</p>
+                    <a href="#gallery" class="hero-cta-btn">
+                        <span>View Gallery</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Slide Navigation Dots -->
+            <div class="hero-navigation-dots">
+                <button class="dot active" data-slide="1" aria-label="Slide 1"></button>
+                <button class="dot" data-slide="2" aria-label="Slide 2"></button>
+                <button class="dot" data-slide="3" aria-label="Slide 3"></button>
             </div>
         </div>
-    </div>
 
-    <div class="scroll-indicator">
-        <div class="scroll-mouse">
-            <div class="scroll-wheel"></div>
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-text">Discover More</div>
+            <div class="scroll-line"></div>
         </div>
-        <span class="scroll-text">Discover More</span>
-    </div>
-</section>
-        
-<!-- ABOUT SECTION V3 - Replace existing about section -->
-<section class="about-section-v3" id="about">
-    <div class="about-container-v3">
+    </section>
+
+    <!-- NOTE: OLD SPECIALS CAROUSEL SECTION HAS BEEN REMOVED -->
+    <!-- New floating button and modals are at the bottom of this file -->
+    
+<!-- ABOUT LAURA & THE SPA SECTION -->
+<section id="about" class="about-laura-section">
+    <div class="about-container">
         
         <!-- Section Header -->
-        <div class="about-header-v3">
-            <div class="section-badge">
-                <span class="badge-text">About Us</span>
-            </div>
-            <h2 class="section-title">
-                Dedicated to Your
-                <span class="title-highlight">Mental Wellness</span>
-            </h2>
-        </div>
-
-        <!-- Main Content -->
-        <div class="about-content-v3">
-            
-            <!-- Text Content -->
-            <div class="about-text-v3">
-                <p class="about-intro-v3">
-                    At Holistic Psychological Services, we believe in treating the whole person. Our team of experienced psychologists provides compassionate, evidence-based care in a welcoming Manhattan office.
-                </p>
-                
-                <p class="about-description-v3">
-                    Founded by <strong>Dr. Kristie Doheny</strong> and <strong>Dr. Douglas Uhlig</strong>, our practice specializes in creating personalized treatment plans that address your unique needs, combining traditional therapeutic approaches with innovative techniques to help you achieve lasting wellness.
-                </p>
-
-                <!-- Values Grid -->
-                <div class="values-grid-v3">
-                    <div class="value-item-v3">
-                        <div class="value-icon-v3">
-                            <i class="ri-heart-line"></i>
-                        </div>
-                        <h4 class="value-title-v3">Compassionate Care</h4>
-                        <p class="value-text-v3">Evidence-based therapy delivered with empathy and understanding</p>
-                    </div>
-                    
-                    <div class="value-item-v3">
-                        <div class="value-icon-v3">
-                            <i class="ri-shield-check-line"></i>
-                        </div>
-                        <h4 class="value-title-v3">Safe & Confidential</h4>
-                        <p class="value-text-v3">HIPAA-compliant practice with complete confidentiality</p>
-                    </div>
-                    
-                    <div class="value-item-v3">
-                        <div class="value-icon-v3">
-                            <i class="ri-group-line"></i>
-                        </div>
-                        <h4 class="value-title-v3">All Are Welcome</h4>
-                        <p class="value-text-v3">LGBTQ+ affirming, culturally sensitive, judgment-free space</p>
-                    </div>
-                    
-                    <div class="value-item-v3">
-                        <div class="value-icon-v3">
-                            <i class="ri-user-star-line"></i>
-                        </div>
-                        <h4 class="value-title-v3">Personalized Approach</h4>
-                        <p class="value-text-v3">Treatment plans tailored to your individual goals and needs</p>
-                    </div>
-                </div>
-
-                <!-- Inclusive Statement -->
-                <div class="inclusive-statement-v3">
-                    <div class="inclusive-icon-v3">
-                        <i class="ri-heart-3-fill"></i>
-                    </div>
-                    <div class="inclusive-content-v3">
-                        <h4 class="inclusive-title-v3">A Welcoming Space for Everyone</h4>
-                        <p class="inclusive-text-v3">
-                            We proudly serve individuals and families of all backgrounds, identities, and orientations. Our practice is LGBTQ+ affirming, and we celebrate diversity in all its forms. Whether you're seeking support for yourself, your relationship, or your family, you'll find a safe, respectful, and inclusive environment here.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="about-stats-v3">
-                    <div class="stat-v3">
-                        <div class="stat-number-v3">15+</div>
-                        <div class="stat-label-v3">Years Experience</div>
-                    </div>
-                    <div class="stat-v3">
-                        <div class="stat-number-v3">500+</div>
-                        <div class="stat-label-v3">Clients Helped</div>
-                    </div>
-                    <div class="stat-v3">
-                        <div class="stat-number-v3">98%</div>
-                        <div class="stat-label-v3">Satisfaction Rate</div>
-                    </div>
-                    <div class="stat-v3">
-                        <div class="stat-number-v3">6</div>
-                        <div class="stat-label-v3">Expert Clinicians</div>
-                    </div>
-                </div>
-
-                <!-- CTA -->
-                <a href="#contact" class="about-cta-v3">
-                    <span>Get Started Today</span>
-                    <i class="ri-arrow-right-line"></i>
-                </a>
-            </div>
-
-            <!-- Image Content -->
-            <div class="about-image-v3">
-                <div class="image-wrapper-v3">
-                    <img src="images/aboutsection.png" alt="Therapy session at Holistic Psychological Services">
-                    <div class="image-decoration-v3"></div>
-                </div>
-                
-                <!-- Founders Card -->
-                <div class="founders-card-v3">
-                    <div class="founders-header-v3">
-                        <i class="ri-team-line"></i>
-                        <span>Founded By</span>
-                    </div>
-                    <div class="founders-list-v3">
-                        <div class="founder-v3">
-                            <div class="founder-avatar-v3">
-                                <img src="https://photos.psychologytoday.com/3dbf8360-46cd-11ea-a6ad-06142c356176/3/320x400.jpeg" alt="Dr. Kristie Doheny">
-                            </div>
-                            <div class="founder-info-v3">
-                                <div class="founder-name-v3">Dr. Kristie Doheny</div>
-                                <div class="founder-title-v3">PsyD, Licensed Clinical Psychologist</div>
-                            </div>
-                        </div>
-                        <div class="founder-divider-v3"></div>
-                        <div class="founder-v3">
-                            <div class="founder-avatar-v3">
-                                <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig">
-                            </div>
-                            <div class="founder-info-v3">
-                                <div class="founder-name-v3">Dr. Douglas Uhlig</div> 
-                                <div class="founder-title-v3">PhD, Licensed Clinical Psychologist</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-        
-<!-- Services Carousel Section -->
-<section class="services-carousel-section" id="servicesCarousel">
-    <!-- Background Effects -->
-    <div class="services-background">
-        <div class="services-gradient"></div>
-        <div class="services-grain"></div>
-    </div>
-
-    <div class="services-carousel-container">
-        <!-- Section Header -->
-        <div class="carousel-header">
-            <div class="header-badge">
-                <span class="badge-dot"></span>
-                <span class="badge-text">Comprehensive Care</span>
-            </div>
-            <h2 class="carousel-main-title">
-                <span class="title-line">Expert Mental Health</span>
-                <span class="title-highlight">Services & Support</span>
-            </h2>
-            <p class="carousel-main-subtitle">
-                Personalized, evidence-based treatment for children, adolescents, and adults
+        <div class="about-header" data-aos="fade-up">
+            <div class="section-eyebrow">Our Story</div>
+            <h2 class="section-title">Where Beauty Meets Nature</h2>
+            <div class="title-divider"></div>
+            <p class="section-subtitle">
+                A sanctuary of natural luxury in the heart of New York City, 
+                where every guest is welcomed like family
             </p>
         </div>
 
-        <!-- Category Filter -->
-        <div class="category-filter">
-            <button class="filter-btn active" data-filter="all">
-                <i class="ri-apps-2-line"></i>
-                <span>All Services</span>
-            </button>
-            <button class="filter-btn" data-filter="mood">
-                <i class="ri-emotion-line"></i>
-                <span>Mood & Anxiety</span>
-            </button>
-            <button class="filter-btn" data-filter="behavioral">
-                <i class="ri-user-heart-line"></i>
-                <span>Behavioral</span>
-            </button>
-            <button class="filter-btn" data-filter="family">
-                <i class="ri-group-line"></i>
-                <span>Family</span>
-            </button>
-            <button class="filter-btn" data-filter="specialized">
-                <i class="ri-stethoscope-line"></i>
-                <span>Specialized</span>
-            </button>
-        </div>
-
-        <!-- Carousel Container -->
-        <div class="carousel-wrapper">
-            <div class="carousel-container">
-                <button class="carousel-btn carousel-btn-prev" aria-label="Previous">
-                    <i class="ri-arrow-left-s-line"></i>
-                </button>
-                
-                <div class="carousel-viewport">
-                    <div class="carousel-slides">
-                        
-                        <!-- Card 1 -->
-                        <div class="service-card" data-category="mood">
-                            <div class="card-image">
-                                <img src="https://www.medcare.ae/fileadmin//user_upload/Depression1.jpg" alt="Depression Treatment">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-mental-health-line"></i>
-                                </div>
-                                <h3 class="card-title">Depression & Mood Disorders</h3>
-                                <p class="card-text">Evidence-based treatment for depression, bipolar disorder, and mood challenges.</p>
-                                <div class="card-tags">
-                                    <span class="tag">CBT</span>
-                                    <span class="tag">DBT</span>
-                                    <span class="tag">Medication</span>
-                                </div>
-                                <a href="#depression" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div class="service-card" data-category="mood">
-                            <div class="card-image">
-                                <img src="https://i0.wp.com/davenportpsychology.com/wp-content/uploads/2021/10/individual-therapy.jpeg" alt="Anxiety Treatment">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-mind-map"></i>
-                                </div>
-                                <h3 class="card-title">Anxiety Disorders</h3>
-                                <p class="card-text">Comprehensive treatment for generalized anxiety, panic, and social anxiety.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Exposure Therapy</span>
-                                    <span class="tag">Mindfulness</span>
-                                </div>
-                                <a href="#anxiety" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="service-card" data-category="specialized">
-                            <div class="card-image">
-                                <img src="https://sa1s3optim.patientpop.com/assets/images/provider/photos/2461480.jpeg" alt="PTSD Treatment">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-shield-star-line"></i>
-                                </div>
-                                <h3 class="card-title">PTSD & Trauma Recovery</h3>
-                                <p class="card-text">Specialized trauma-informed care for injury, abuse, and loss-related trauma.</p>
-                                <div class="card-tags">
-                                    <span class="tag">EMDR</span>
-                                    <span class="tag">Trauma-Focused CBT</span>
-                                </div>
-                                <a href="#trauma" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div class="service-card" data-category="behavioral">
-                            <div class="card-image">
-                                <img src="https://www.brainbalancecenters.com/hubfs/Imported_Blog_Media/how-learning-disorders-turn-into-behavioral-disorders.jpeg" alt="Behavioral Health">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-user-settings-line"></i>
-                                </div>
-                                <h3 class="card-title">Behavioral Health</h3>
-                                <p class="card-text">Expert care for ODD, conduct disorders, and challenging behavioral patterns.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Behavior Therapy</span>
-                                    <span class="tag">Parent Training</span>
-                                </div>
-                                <a href="#behavioral" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 5 -->
-                        <div class="service-card" data-category="behavioral">
-                            <div class="card-image">
-                                <img src="https://images.everydayhealth.com/images/2025-gateway-illustrations/eh-adhd-gg-1440x810.png?sfvrsn=3347f7b_3" alt="ADHD Treatment">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-focus-2-line"></i>
-                                </div>
-                                <h3 class="card-title">ADHD & Attention Disorders</h3>
-                                <p class="card-text">Comprehensive assessment and treatment for attention disorders in all ages.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Assessment</span>
-                                    <span class="tag">Skills Training</span>
-                                </div>
-                                <a href="#adhd" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 6 -->
-                        <div class="service-card" data-category="family">
-                            <div class="card-image">
-                                <img src="https://familyresourcesinc.org/wp-content/uploads/2020/03/80342737_l-scaled-1200x801.jpg" alt="Family Therapy">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-home-heart-line"></i>
-                                </div>
-                                <h3 class="card-title">Family Crisis Support</h3>
-                                <p class="card-text">Supporting families through separation, divorce, and relationship challenges.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Family Systems</span>
-                                    <span class="tag">Mediation</span>
-                                </div>
-                                <a href="#family" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 7 -->
-                        <div class="service-card" data-category="behavioral">
-                            <div class="card-image">
-                                <img src="https://southeastbehavioral.com/wp-content/uploads/2023/03/Adolescents-1.jpg" alt="School Support">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-graduation-cap-line"></i>
-                                </div>
-                                <h3 class="card-title">School & Learning Support</h3>
-                                <p class="card-text">Helping students overcome academic challenges and school-related anxiety.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Academic Coaching</span>
-                                    <span class="tag">IEP Support</span>
-                                </div>
-                                <a href="#school" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 8 -->
-                        <div class="service-card" data-category="specialized">
-                            <div class="card-image">
-                                <img src="https://michiganpsychologicalcare.com/images/blog/2023/02/the-signs-of-an-eating-disorder.jpg" alt="Sleep & Eating">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-moon-line"></i>
-                                </div>
-                                <h3 class="card-title">Sleep & Eating Wellness</h3>
-                                <p class="card-text">Specialized treatment for sleep disorders and eating-related challenges.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Sleep Hygiene</span>
-                                    <span class="tag">Nutritional Therapy</span>
-                                </div>
-                                <a href="#wellness" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 9 -->
-                        <div class="service-card" data-category="family">
-                            <div class="card-image">
-                                <img src="https://www.mindful.org/content/uploads/A-World-of-Grief.png" alt="Grief Counseling">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-heart-3-line"></i>
-                                </div>
-                                <h3 class="card-title">Grief & Loss Counseling</h3>
-                                <p class="card-text">Compassionate support for bereavement and all forms of loss.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Grief Processing</span>
-                                    <span class="tag">Support Groups</span>
-                                </div>
-                                <a href="#grief" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 10 -->
-                        <div class="service-card" data-category="family">
-                            <div class="card-image">
-                                <img src="https://cdn.memiah.co.uk/uploads/hypnotherapy-directory.org.uk/image_gallery/self%20love-1656066274-hero.png" alt="Attachment Therapy">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-parent-line"></i>
-                                </div>
-                                <h3 class="card-title">Adoption & Attachment</h3>
-                                <p class="card-text">Specialized care for adopted children and foster care attachment challenges.</p>
-                                <div class="card-tags">
-                                    <span class="tag">Attachment Therapy</span>
-                                    <span class="tag">Family Integration</span>
-                                </div>
-                                <a href="#attachment" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Card 11 -->
-                        <div class="service-card" data-category="specialized">
-                            <div class="card-image">
-                                <img src="https://neuro.wharton.upenn.edu/wp-content/uploads/2020/04/iStock-Blog2-e1585773724832.jpg" alt="Mindfulness">
-                                <div class="card-gradient"></div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-icon-wrapper">
-                                    <i class="ri-leaf-line"></i>
-                                </div>
-                                <h3 class="card-title">Mindfulness & Meditation</h3>
-                                <p class="card-text">Learn mindfulness techniques for stress reduction and emotional regulation.</p>
-                                <div class="card-tags">
-                                    <span class="tag">MBSR</span>
-                                    <span class="tag">Meditation</span>
-                                </div>
-                                <a href="#mindfulness" class="card-action">
-                                    <span>Learn More</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                
-                <button class="carousel-btn carousel-btn-next" aria-label="Next">
-                    <i class="ri-arrow-right-s-line"></i>
-                </button>
-            </div>
-
-            <!-- Pagination Dots -->
-            <div class="carousel-pagination" id="carouselDots"></div>
-        </div>
-    </div>
-</section>
-        
-<!-- TEAM SECTION CAROUSEL V3 - Replace entire team section -->
-<section class="team-section-v3" id="team">
-    <div class="team-container-v3">
-        
-        <!-- Section Header -->
-        <div class="team-header-v3">
-            <div class="section-badge">
-                <span class="badge-text">Meet Our Team</span>
-            </div>
-            <h2 class="section-title">
-                Expert Care from
-                <span class="title-highlight">Dedicated Professionals</span>
-            </h2>
-            <p class="section-description">
-                Our team of licensed psychologists and therapists brings decades of combined experience in mental health care, each committed to your wellness journey.
-            </p>
-        </div>
-
-        <!-- Carousel Wrapper -->
-        <div class="team-carousel-container-v3">
-            <button class="team-nav-btn-v3 team-prev-v3" aria-label="Previous">
-                <i class="ri-arrow-left-s-line"></i>
-            </button>
+        <!-- Laura's Story Grid -->
+        <div class="laura-story-grid">
             
-            <div class="team-carousel-viewport-v3">
-                <div class="team-carousel-slides-v3">
-                    
-                    <!-- Dr. Kristie Doheny -->
-                    <div class="team-slide-v3">
-                        <div class="team-card-v3">
-                            <div class="card-image-v3">
-                                <img src="https://photos.psychologytoday.com/3dbf8360-46cd-11ea-a6ad-06142c356176/3/320x400.jpeg" alt="Dr. Kristie Doheny">
-                                <div class="image-overlay-v3"></div>
-                                <div class="available-badge-v3">
-                                    <div class="pulse-dot-v3"></div>
-                                    <span>Available</span>
-                                </div>
-                            </div>
-                            <div class="card-content-v3">
-                                <h3 class="member-name-v3">Dr. Kristie Doheny</h3>
-                                <div class="credentials-v3">
-                                    <span class="cred-badge primary">PsyD</span>
-                                    <span class="cred-badge secondary">Licensed Clinical Psychologist</span>
-                                </div>
-                                <p class="member-bio-v3">
-                                    Leading expert in comprehensive psychological evaluations and family therapy with over 15 years of experience.
-                                </p>
-                                <div class="specialties-v3">
-                                    <span class="spec-tag">Family Therapy</span>
-                                    <span class="spec-tag">Child Psychology</span>
-                                    <span class="spec-tag">ADHD</span>
-                                    <span class="spec-tag">Assessments</span>
-                                </div>
-                                <div class="card-footer-v3">
-                                    <div class="experience-v3">
-                                        <i class="ri-time-line"></i>
-                                        <span>15+ Years</span>
-                                    </div>
-                                    <a href="#contact" class="book-btn-v3">
-                                        <span>Book Session</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dr. Douglas Uhlig -->
-                    <div class="team-slide-v3">
-                        <div class="team-card-v3">
-                            <div class="card-image-v3">
-                                <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig">
-                                <div class="image-overlay-v3"></div>
-                                <div class="available-badge-v3">
-                                    <div class="pulse-dot-v3"></div>
-                                    <span>Available</span>
-                                </div>
-                            </div>
-                            <div class="card-content-v3">
-                                <h3 class="member-name-v3">Dr. Douglas Uhlig</h3>
-                                <div class="credentials-v3">
-                                    <span class="cred-badge primary">PhD</span>
-                                    <span class="cred-badge secondary">Licensed Clinical Psychologist</span>
-                                </div>
-                                <p class="member-bio-v3">
-                                    Specializes in cognitive-behavioral therapy, trauma recovery, and forensic psychology with compassionate care.
-                                </p>
-                                <div class="specialties-v3">
-                                    <span class="spec-tag">CBT</span>
-                                    <span class="spec-tag">Business Coaching</span>
-                                    <span class="spec-tag">Adults</span>
-                                    <span class="spec-tag">Couples</span>
-                                </div>
-                                <div class="card-footer-v3">
-                                    <div class="experience-v3">
-                                        <i class="ri-time-line"></i>
-                                        <span>12+ Years</span>
-                                    </div>
-                                    <a href="#contact" class="book-btn-v3">
-                                        <span>Book Session</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Liam Miller -->
-                    <div class="team-slide-v3">
-                        <div class="team-card-v3">
-                            <div class="card-image-v3">
-                                <img src="https://photos.psychologytoday.com/2cf6f0a5-a8ef-44fc-a5c9-ade0326127ee/1/320x400.jpeg" alt="Liam Miller">
-                                <div class="image-overlay-v3"></div>
-                                <div class="available-badge-v3">
-                                    <div class="pulse-dot-v3"></div>
-                                    <span>Available</span>
-                                </div>
-                            </div>
-                            <div class="card-content-v3">
-                                <h3 class="member-name-v3">Liam Miller</h3>
-                                <div class="credentials-v3">
-                                    <span class="cred-badge primary">MHC/LP</span>
-                                    <span class="cred-badge secondary">Mental Health Counselor</span>
-                                </div>
-                                <p class="member-bio-v3">
-                                    Experienced in adolescent therapy, anxiety disorders, and mindfulness-based interventions.
-                                </p>
-                                <div class="specialties-v3">
-                                    <span class="spec-tag">Adolescent Care</span>
-                                    <span class="spec-tag">Anxiety</span>
-                                    <span class="spec-tag">Mindfulness</span>
-                                </div>
-                                <div class="card-footer-v3">
-                                    <div class="experience-v3">
-                                        <i class="ri-time-line"></i>
-                                        <span>8+ Years</span>
-                                    </div>
-                                    <a href="#contact" class="book-btn-v3">
-                                        <span>Book Session</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cloè D'Arcangelo -->
-                    <div class="team-slide-v3">
-                        <div class="team-card-v3">
-                            <div class="card-image-v3">
-                                <img src="images/CloeDArcangelo.jpeg" alt="Cloè D'Arcangelo">
-                                <div class="image-overlay-v3"></div>
-                                <div class="available-badge-v3">
-                                    <div class="pulse-dot-v3"></div>
-                                    <span>Available</span>
-                                </div>
-                            </div>
-                            <div class="card-content-v3">
-                                <h3 class="member-name-v3">Cloè D'Arcangelo</h3>
-                                <div class="credentials-v3">
-                                    <span class="cred-badge primary">CFC</span>
-                                    <span class="cred-badge secondary">Certifed Life Coach</span>
-                                </div>
-                                <p class="member-bio-v3">
-                                    Expert in eating disorders, PTSD treatment, and stress management techniques.
-                                </p>
-                                <div class="specialties-v3">
-                                    <span class="spec-tag">Eating Disorders</span>
-                                    <span class="spec-tag">PTSD</span>
-                                    <span class="spec-tag">Stress Management</span>
-                                </div>
-                                <div class="card-footer-v3">
-                                    <div class="experience-v3">
-                                        <i class="ri-time-line"></i>
-                                        <span>7+ Years</span>
-                                    </div>
-                                    <a href="#contact" class="book-btn-v3">
-                                        <span>Book Session</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </a>
-                                </div>
-                            </div>
+            <!-- Left: Photo Gallery -->
+            <div class="laura-photos-section" data-aos="fade-right">
+                <div class="photos-stack">
+                    <!-- Main Featured Photo -->
+                    <div class="photo-main">
+                        <div class="photo-frame">
+                            <img src="images/laura1.jpeg" alt="Laura - Founder of Laura's Beauty Touch">
                         </div>
                     </div>
                     
-                    <!-- Join Our Team -->
-                    <div class="team-slide-v3">
-                        <div class="team-card-v3 join-card-v3">
-                            <div class="join-content-v3">
-                                <div class="join-icon-v3">
-                                    <i class="ri-team-line"></i>
-                                </div>
-                                <h3 class="join-title-v3">Join Our Team</h3>
-                                <p class="join-desc-v3">
-                                    We're seeking passionate mental health professionals to join our collaborative practice.
-                                </p>
-                                <div class="join-benefits-v3">
-                                    <div class="benefit-v3">
-                                        <i class="ri-check-double-line"></i>
-                                        <span>Competitive Benefits</span>
-                                    </div>
-                                    <div class="benefit-v3">
-                                        <i class="ri-check-double-line"></i>
-                                        <span>Flexible Schedule</span>
-                                    </div>
-                                    <div class="benefit-v3">
-                                        <i class="ri-check-double-line"></i>
-                                        <span>Professional Growth</span>
-                                    </div>
-                                    <div class="benefit-v3">
-                                        <i class="ri-check-double-line"></i>
-                                        <span>Supportive Culture</span>
-                                    </div>
-                                </div>
-                                <a href="#contact" class="join-btn-v3">
-                                    <span>Apply Now</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </a>
-                            </div>
+                    <!-- Small Gallery Grid -->
+                    <div class="photos-grid">
+                        <div class="photo-small">
+                            <img src="images/laura2.jpeg" alt="Laura's spa treatment">
                         </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <button class="team-nav-btn-v3 team-next-v3" aria-label="Next">
-                <i class="ri-arrow-right-s-line"></i>
-            </button>
-        </div>
-
-        <!-- Dots -->
-        <div class="team-dots-v3" id="teamDotsV3"></div>
-
-        <!-- CTA -->
-        <div class="team-cta-v3">
-            <h3 class="cta-title-v3">Ready to Begin Your Journey?</h3>
-            <p class="cta-desc-v3">Schedule a consultation with one of our expert clinicians today.</p>
-            <a href="#contact" class="cta-btn-v3">
-                <span>Book Consultation</span>
-                <i class="ri-calendar-check-line"></i>
-            </a>
-        </div>
-
-    </div>
-</section>
-        
-<!-- REVIEWS & INSTAGRAM SECTION V3 - Replace existing reviews section -->
-<section class="reviews-insta-v3" id="reviews">
-    <div class="reviews-insta-container-v3">
-        
-        <!-- Section Header -->
-        <div class="reviews-insta-header-v3">
-            <div class="section-badge">
-                <span class="badge-text">Client Stories & Community</span>
-            </div>
-            <h2 class="section-title">
-                Real Stories,
-                <span class="title-highlight">Real Impact</span>
-            </h2>
-            <p class="section-description">
-                Discover how our compassionate care transforms lives while staying connected with our community.
-            </p>
-        </div>
-
-        <!-- Two Column Layout -->
-        <div class="reviews-insta-grid-v3">
-            
-            <!-- Reviews Column -->
-            <div class="reviews-column-v3">
-                <div class="column-header-v3 reviews-header-v3">
-                    <div class="icon-wrapper-v3 reviews-icon-wrapper-v3">
-                        <i class="ri-star-fill"></i>
-                    </div>
-                    <div class="header-text-v3">
-                        <h3 class="column-title-v3">Client Reviews</h3>
-                        <div class="rating-display-v3">
-                            <div class="stars-display-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <span class="rating-number-v3">5.0</span>
-                            <span class="review-count-v3">150+ reviews</span>
+                        <div class="photo-small">
+                            <img src="images/laura3.jpeg" alt="Laura with client">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Reviews Carousel -->
-                <div class="reviews-carousel-v3">
-                    <div class="reviews-track-v3">
-                        
-                        <!-- Review 1 -->
-                        <div class="review-card-v3">
-                            <div class="review-stars-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <p class="review-text-v3">
-                                "Dr. Doheny has been instrumental in helping our family navigate some really difficult times. Her approach is warm yet professional, and she has this amazing ability to make everyone feel heard. Our son has made incredible progress with his ADHD management thanks to her guidance."
-                            </p>
-                            <div class="reviewer-info-v3">
-                                <div class="reviewer-avatar-v3">
-                                    <span>SM</span>
-                                </div>
-                                <div class="reviewer-details-v3">
-                                    <div class="reviewer-name-v3">Sarah M.</div>
-                                    <div class="review-date-v3">2 weeks ago</div>
-                                </div>
-                            </div>
+                        <div class="photo-small">
+                            <img src="images/laura4.jpeg" alt="Natural spa products">
                         </div>
-
-                        <!-- Review 2 -->
-                        <div class="review-card-v3">
-                            <div class="review-stars-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <p class="review-text-v3">
-                                "After struggling with anxiety for years, I finally found the right therapist in Liam. His mindfulness-based approach has genuinely changed my life. I feel equipped with actual tools I can use daily, not just talk therapy. The office is also conveniently located in Manhattan."
-                            </p>
-                            <div class="reviewer-info-v3">
-                                <div class="reviewer-avatar-v3">
-                                    <span>JC</span>
-                                </div>
-                                <div class="reviewer-details-v3">
-                                    <div class="reviewer-name-v3">Jennifer C.</div>
-                                    <div class="review-date-v3">1 month ago</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Review 3 -->
-                        <div class="review-card-v3">
-                            <div class="review-stars-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <p class="review-text-v3">
-                                "My wife and I worked with Erika during a really rough patch in our marriage. She helped us communicate better and understand each other's perspectives. We're in such a better place now. Highly recommend their couples counseling services."
-                            </p>
-                            <div class="reviewer-info-v3">
-                                <div class="reviewer-avatar-v3">
-                                    <span>MT</span>
-                                </div>
-                                <div class="reviewer-details-v3">
-                                    <div class="reviewer-name-v3">Michael T.</div>
-                                    <div class="review-date-v3">3 weeks ago</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Review 4 -->
-                        <div class="review-card-v3">
-                            <div class="review-stars-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <p class="review-text-v3">
-                                "Kevin has been wonderful in helping me process grief after losing my father. He creates such a safe, judgment-free space. The whole practice is very professional - scheduling is easy, and they're respectful of your time. Really grateful I found this practice."
-                            </p>
-                            <div class="reviewer-info-v3">
-                                <div class="reviewer-avatar-v3">
-                                    <span>AL</span>
-                                </div>
-                                <div class="reviewer-details-v3">
-                                    <div class="reviewer-name-v3">Amanda L.</div>
-                                    <div class="review-date-v3">2 months ago</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Review 5 -->
-                        <div class="review-card-v3">
-                            <div class="review-stars-v3">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <p class="review-text-v3">
-                                "Dr. Uhlig's expertise in trauma-focused therapy has been life-changing. His approach is evidence-based but still deeply empathetic. I've been seeing him for about 6 months and finally feel like I'm making real progress. Can't recommend this practice enough."
-                            </p>
-                            <div class="reviewer-info-v3">
-                                <div class="reviewer-avatar-v3">
-                                    <span>RP</span>
-                                </div>
-                                <div class="reviewer-details-v3">
-                                    <div class="reviewer-name-v3">Rachel P.</div>
-                                    <div class="review-date-v3">1 week ago</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    
-                    <!-- Review Navigation -->
-                    <div class="reviews-nav-v3">
-                        <button class="review-nav-btn-v3 review-prev-v3" aria-label="Previous review">
-                            <i class="ri-arrow-left-s-line"></i>
-                        </button>
-                        <div class="review-dots-v3" id="reviewDotsV3"></div>
-                        <button class="review-nav-btn-v3 review-next-v3" aria-label="Next review">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Google Review Button -->
-                <a href="https://share.google/XB3tHEmy8elcNdhNV" target="_blank" class="google-review-btn-v3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="google-logo-v3">
-                    <span>Leave a Review</span>
-                    <i class="ri-external-link-line"></i>
-                </a>
-            </div>
-
-            <!-- Instagram Column -->
-            <div class="instagram-column-v3">
-                <div class="column-header-v3 instagram-header-v3">
-                    <div class="icon-wrapper-v3 instagram-icon-wrapper-v3">
-                        <i class="ri-instagram-line"></i>
-                    </div>
-                    <div class="header-text-v3">
-                        <h3 class="column-title-v3">Follow Our Journey</h3>
-                        <a href="https://www.instagram.com/psychologicalservicespllc/" target="_blank" class="instagram-handle-v3">
-                            @psychologicalservicespllc
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Instagram Widget -->
-                <div class="instagram-widget-v3">
-                    <!-- Elfsight Instagram Feed -->
-                    <div class="elfsight-app-3e98e495-6739-43e0-8b40-1c3c1f597278" data-elfsight-app-lazy></div>
-                </div>
-
-                <!-- Instagram Follow Button -->
-                <a href="https://www.instagram.com/psychologicalservicespllc/" target="_blank" class="instagram-follow-btn-v3">
-                    <i class="ri-instagram-line"></i>
-                    <span>Follow on Instagram</span>
-                    <i class="ri-external-link-line"></i>
-                </a>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-        
-<!-- CONTACT SECTION -->
-<section class="contact-section-v3" id="contact">
-    <div class="contact-container-v3">
-        
-        <!-- Section Header -->
-        <div class="contact-header-v3">
-            <div class="section-badge">
-                <span class="badge-text">Get In Touch</span>
-            </div>
-            <h2 class="section-title">
-                Start Your Journey to
-                <span class="title-highlight">Better Mental Health</span>
-            </h2>
-            <p class="section-description">
-                Ready to take the first step? Contact us today to schedule your consultation. We're here to help you on your path to wellness.
-            </p>
-        </div>
-
-        <!-- Contact Content Grid -->
-        <div class="contact-grid-v3">
-            
-            <!-- Contact Info Column -->
-            <div class="contact-info-v3">
-                
-                <!-- Location Card -->
-                <div class="info-card-v3">
-                    <div class="info-icon-v3 location-icon-v3">
-                        <i class="ri-map-pin-line"></i>
-                    </div>
-                    <div class="info-content-v3">
-                        <h4 class="info-title-v3">Visit Our Office</h4>
-                        <p class="info-text-v3">274 Madison Ave <br>9th Floor Suite 905, New York, NY 10016</p>
-                        <a href="https://www.google.com/maps/place/Holistic+Psychological+Services/@40.7513953,-73.9806994,17z/data=!3m1!4b1!4m6!3m5!1s0x89c259a364133457:0x30ac06b0a60aeeb7!8m2!3d40.7513953!4d-73.9806994!16s%2Fg%2F11xvdydzc0?entry=ttu&g_ep=EgoyMDI1MDkyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="info-link-v3">
-                            <span>Get Directions</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Phone Card -->
-                <div class="info-card-v3">
-                    <div class="info-icon-v3 phone-icon-v3">
-                        <i class="ri-phone-line"></i>
-                    </div>
-                    <div class="info-content-v3">
-                        <h4 class="info-title-v3">Call Us</h4>
-                        <p class="info-text-v3">Available Monday - Sunday</p>
-                        <a href="tel:+16469717325" class="info-link-v3">
-                            <span>(646) 971-7325</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Email Card -->
-                <div class="info-card-v3">
-                    <div class="info-icon-v3 email-icon-v3">
-                        <i class="ri-mail-line"></i>
-                    </div>
-                    <div class="info-content-v3">
-                        <h4 class="info-title-v3">Email Us</h4>
-                        <p class="info-text-v3">Get a response within 24 hours</p>
-                        <a href="mailto:info@holisticpsych.com" class="info-link-v3">
-                            <span>info@holisticpsych.com</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Hours Card -->
-                <div class="info-card-v3">
-                    <div class="info-icon-v3 hours-icon-v3">
-                        <i class="ri-time-line"></i>
-                    </div>
-                    <div class="info-content-v3">
-                        <h4 class="info-title-v3">Office Hours</h4>
-                        <div class="hours-list-v3">
-                            <div class="hours-row-v3">
-                                <span class="day-v3">Monday - Sunday</span>
-                                <span class="time-v3">9:00 AM - 9:00 PM</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Info -->
-                <div class="quick-info-v3">
-                    <div class="quick-info-item-v3">
-                        <i class="ri-shield-check-line"></i>
-                        <span>HIPAA Compliant</span>
-                    </div>
-                    <div class="quick-info-item-v3">
-                        <i class="ri-health-book-line"></i>
-                        <span>Insurance Accepted</span>
-                    </div>
-                    <div class="quick-info-item-v3">
-                        <i class="ri-video-chat-line"></i>
-                        <span>Telehealth Available</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Contact Form Column -->
-            <div class="contact-form-v3">
-                <div class="form-wrapper-v3">
-                    <div class="form-header-v3">
-                        <h3 class="form-title-v3">Send Us a Message</h3>
-                        <p class="form-subtitle-v3">Fill out the form below and we'll get back to you shortly.</p>
-                    </div>
-                    
-                    <!-- Elfsight Contact Form -->
-                    <div class="elfsight-form-container-v3">
-                        <div class="elfsight-app-b3fedd1c-0470-46b1-b970-3fcc261b0bbb" data-elfsight-app-lazy></div>
-                    </div>
-
-                    <!-- Form Footer -->
-                    <div class="form-footer-v3">
-                        <div class="privacy-note-v3">
-                            <i class="ri-lock-line"></i>
-                            <span>Your information is secure and confidential</span>
+                        <div class="photo-small">
+                            <img src="images/laura5.jpeg" alt="Spa treatment room">
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
+            <!-- Right: Story Content -->
+            <div class="laura-story-content" data-aos="fade-left">
+                <div class="laura-intro">
+                    <h3 class="laura-name">Meet Laura</h3>
+                    <p class="laura-title">Founder & Lead Aesthetician</p>
+                </div>
 
-        <!-- Emergency Notice -->
-        <div class="emergency-notice-v3">
-            <div class="emergency-icon-v3">
-                <i class="ri-alert-line"></i>
-            </div>
-            <div class="emergency-content-v3">
-                <h4 class="emergency-title-v3">In Case of Emergency</h4>
-                <p class="emergency-text-v3">
-                    If you're experiencing a mental health crisis, please call <strong>911</strong> or the 
-                    <strong>National Suicide Prevention Lifeline</strong> at <a href="tel:988">988</a>. 
-                    For immediate support, visit your nearest emergency room.
-                </p>
-            </div>
-        </div>
-
-    </div>
-</section> 
-    </main>
-
-<!-- LUXURY PSYCHOLOGY FOOTER -->
-<footer class="luxury-footer" id="footer">
-    <!-- Top Wave Decoration -->
-    <div class="footer-wave">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M0,0 C150,60 350,0 600,30 C850,60 1050,0 1200,30 L1200,120 L0,120 Z" fill="currentColor"></path>
-        </svg>
-    </div>
-
-    <!-- Main Footer Content -->
-    <div class="footer-main">
-        <div class="footer-container">
-            
-            <!-- Footer Grid -->
-            <div class="footer-grid">
-                
-                <!-- Brand Column -->
-                <div class="footer-brand-column">
-                    <div class="footer-logo-wrapper">
-                        <img src="logo copy.png" alt="Holistic Psychological Services" class="footer-logo-img">
-                        <div class="logo-shine"></div>
-                    </div>
-                    <h3 class="footer-brand-name">Holistic Psychological Services</h3>
-                    <p class="footer-tagline">Your Partner in Mental Wellness</p>
-                    <p class="footer-description">
-                        Professional psychological services in Manhattan, offering compassionate, evidence-based care for individuals, couples, and families.
+                <div class="story-text">
+                    <p>
+                        For over <strong>15 years</strong>, I've dedicated my life to the art of natural beauty and holistic wellness. 
+                        What started as a passion for helping people feel confident in their own skin has grown into a sanctuary 
+                        where every treatment is a personalized journey to radiance.
                     </p>
-                    
-                    <!-- Social Links -->
-                    <div class="footer-social">
-                        <a href="https://www.instagram.com/psychologicalservicespllc/" class="social-link" target="_blank" aria-label="Instagram">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links Column -->
-                <div class="footer-links-column">
-                    <h4 class="footer-column-title">Quick Links</h4>
-                    <ul class="footer-links-list">
-                        <li><a href="index.html" class="footer-link-item">Home</a></li>
-                        <li><a href="about.html" class="footer-link-item">About Us</a></li>
-                        <li><a href="services.html" class="footer-link-item">Our Services</a></li>
-                        <li><a href="teams.html" class="footer-link-item">Meet Our Team</a></li>
-                        <li><a href="contact.html" class="footer-link-item">Contact Us</a></li>
-                    </ul>
-                </div>
-
-                <!-- Services Column -->
-                <div class="footer-links-column">
-                    <h4 class="footer-column-title">Our Services</h4>
-                    <ul class="footer-links-list">
-                        <li><a href="services.html" class="footer-link-item">Individual Therapy</a></li>
-                        <li><a href="services.html" class="footer-link-item">Couples Counseling</a></li>
-                        <li><a href="services.html" class="footer-link-item">Family Therapy</a></li>
-                        <li><a href="services.html" class="footer-link-item">Child Psychology</a></li>
-                        <li><a href="services.html" class="footer-link-item">ADHD Assessment</a></li>
-                        <li><a href="services.html" class="footer-link-item">Trauma Recovery</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Column -->
-                <div class="footer-contact-column">
-                    <h4 class="footer-column-title">Get in Touch</h4>
-                    
-                    <div class="footer-contact-item">
-                        <div class="contact-icon-wrapper">
-                            <i class="ri-map-pin-line"></i>
-                        </div>
-                        <div class="contact-text">
-                            <span>274 Madison Ave, Suite 905</span>
-                            <span>New York, NY 10016</span>
-                        </div>
-                    </div>
-
-                    <div class="footer-contact-item">
-                        <div class="contact-icon-wrapper">
-                            <i class="ri-phone-line"></i>
-                        </div>
-                        <div class="contact-text">
-                            <a href="tel:+16469717325">(646) 971-7325</a>
-                        </div>
-                    </div>
-
-                    <div class="footer-contact-item">
-                        <div class="contact-icon-wrapper">
-                            <i class="ri-mail-line"></i>
-                        </div>
-                        <div class="contact-text">
-                            <a href="mailto:info@holisticpsych.com">info@holisticpsych.com</a>
-                        </div>
-                    </div>
-
-                    <div class="footer-contact-item">
-                        <div class="contact-icon-wrapper">
-                            <i class="ri-time-line"></i>
-                        </div>
-                        <div class="contact-text">
-                            <span>Mon - Sun: 9:00 AM - 9:00 PM</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Payment & Insurance Section -->
-            <div class="footer-payment-section">
-                <div class="payment-info">
-                    <div class="payment-header">
-                        <i class="ri-shield-check-line"></i>
-                        <h4>Payment & Insurance</h4>
-                    </div>
-                    <p class="payment-description">
-                        We accept most major insurance plans and welcome self-pay clients. Multiple payment options available for your convenience.
+                    <p>
+                        My philosophy is simple: <em>true beauty comes from treating the whole person.</em> That's why every facial, 
+                        every waxing session, every service at Laura's Beauty Touch is customized to your unique needs, skin type, 
+                        and wellness goals.
+                    </p>
+                    <p>
+                        I believe in the power of organic, sustainable products that work <em>with</em> your skin, not against it. 
+                        Every product I use is carefully selected for its purity and effectiveness, because you deserve nothing less 
+                        than the best nature has to offer.
                     </p>
                 </div>
 
-                <div class="payment-methods">
-                    <div class="payment-badges">
-                        <div class="payment-badge">
-                            <i class="ri-bank-card-line"></i>
-                            <span>Credit Cards</span>
+                <!-- Credentials -->
+                <div class="credentials-list">
+                    <div class="credential-item">
+                        <div class="credential-icon">
+                            <i class="fas fa-certificate"></i>
                         </div>
-                        <div class="payment-badge">
-                            <i class="ri-money-dollar-circle-line"></i>
-                            <span>Cash</span>
-                        </div>
-                        <div class="payment-badge">
-                            <i class="ri-shield-cross-line"></i>
-                            <span>Insurance</span>
-                        </div>
-                        <div class="payment-badge">
-                            <i class="ri-bank-line"></i>
-                            <span>HSA/FSA</span>
+                        <div class="credential-text">
+                            <strong>Licensed Aesthetician</strong>
+                            <span>New York State Board Certified</span>
                         </div>
                     </div>
-
-                    <div class="partner-logos">
-                        <div class="partner-logo">
-                            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968880.png" alt="Psychology Today" class="logo-img">
-                            <span class="logo-label">Find us on<br>Psychology Today</span>
+                    <div class="credential-item">
+                        <div class="credential-icon">
+                            <i class="fas fa-award"></i>
                         </div>
-                        <div class="partner-logo">
-                            <img src="https://cdn.worldvectorlogo.com/logos/square-1.svg" alt="Square" class="logo-img">
-                            <span class="logo-label">Secure payments<br>powered by Square</span>
+                        <div class="credential-text">
+                            <strong>Advanced Training</strong>
+                            <span>Organic & Holistic Skincare Specialist</span>
+                        </div>
+                    </div>
+                    <div class="credential-item">
+                        <div class="credential-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="credential-text">
+                            <strong>5,000+ Happy Clients</strong>
+                            <span>Trusted by NYC's wellness community</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Credentials Banner -->
-            <div class="credentials-banner">
-                <div class="credential-item">
-                    <i class="ri-shield-check-line"></i>
-                    <span>HIPAA Compliant</span>
+        <!-- Philosophy Section -->
+        <div class="philosophy-section" data-aos="fade-up" data-aos-delay="300">
+            <div class="philosophy-content">
+                <div class="philosophy-icon">
+                    <i class="fas fa-spa"></i>
                 </div>
-                <div class="credential-divider"></div>
-                <div class="credential-item">
-                    <i class="ri-user-star-line"></i>
-                    <span>Licensed Professionals</span>
+                <h3>Our Philosophy</h3>
+                <p>
+                    At Laura's Beauty Touch, we believe that wellness is a journey, not a destination. 
+                    Every person who walks through our doors deserves to feel seen, heard, and valued. 
+                    We take the time to understand your skin, your concerns, and your goals — because 
+                    when you feel good in your skin, you radiate confidence from the inside out.
+                </p>
+                <p>
+                    We're not just about surface-level beauty. We're about creating a holistic experience 
+                    that nurtures your body, calms your mind, and lifts your spirit. That's the Laura's Beauty Touch difference.
+                </p>
+            </div>
+        </div>
+
+        <!-- Spa Atmosphere -->
+        <div class="atmosphere-section" data-aos="fade-up" data-aos-delay="400">
+            <h3 class="atmosphere-title">Your Sanctuary Awaits</h3>
+            <div class="atmosphere-gallery">
+                <div class="atmosphere-card">
+                    <div class="atmosphere-image">
+                        <img src="images/spa1.jpeg" alt="Relaxing treatment room">
+                    </div>
+                    <div class="atmosphere-text">
+                        <h4>Tranquil Spaces</h4>
+                        <p>Thoughtfully designed rooms for ultimate relaxation</p>
+                    </div>
                 </div>
-                <div class="credential-divider"></div>
-                <div class="credential-item">
-                    <i class="ri-award-line"></i>
-                    <span>Evidence-Based Care</span>
+                <div class="atmosphere-card">
+                    <div class="atmosphere-image">
+                        <img src="images/spa2.jpeg" alt="Organic spa products">
+                    </div>
+                    <div class="atmosphere-text">
+                        <h4>Premium Products</h4>
+                        <p>Only the purest organic and natural ingredients</p>
+                    </div>
                 </div>
-                <div class="credential-divider"></div>
-                <div class="credential-item">
-                    <i class="ri-heart-pulse-line"></i>
-                    <span>LGBTQ+ Affirming</span>
+                <div class="atmosphere-card">
+                    <div class="atmosphere-image">
+                        <img src="images/spa3.jpeg" alt="Peaceful spa environment">
+                    </div>
+                    <div class="atmosphere-text">
+                        <h4>Peaceful Ambiance</h4>
+                        <p>Escape the city in our calm, welcoming space</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
+        <!-- Everyone Welcome Banner -->
+        <div class="everyone-welcome-banner" data-aos="fade-up" data-aos-delay="500">
+            <div class="welcome-banner-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="welcome-banner-content">
+                <div class="welcome-badge">Everyone Is Welcome Here</div>
+                <h3>A Sanctuary for All</h3>
+                <p>
+                    Laura's Beauty Touch is a safe, inclusive space for people of all backgrounds, identities, and bodies. 
+                    We honor diversity and believe that every person deserves to feel beautiful, confident, and valued. 
+                    Whether this is your first visit or you're a longtime friend, you belong here. 
+                    Come as you are, and let us help you shine.
+                </p>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="core-values" data-aos="fade-up" data-aos-delay="600">
+            <h3 class="values-title">What We Stand For</h3>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h4>Personalized Care</h4>
+                    <p>Every treatment is customized to your unique skin type and wellness goals</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h4>Natural & Organic</h4>
+                    <p>We use only the purest organic products that are safe and sustainable</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h4>Holistic Wellness</h4>
+                    <p>Treating body, mind, and spirit for complete well-being</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Safe & Clean</h4>
+                    <p>Highest standards of hygiene and safety in every treatment</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h4>Inclusive Community</h4>
+                    <p>A welcoming space for all people and all bodies</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Expert Excellence</h4>
+                    <p>Over two decades of professional experience and continuing education</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="about-cta" data-aos="fade-up" data-aos-delay="700">
+            <h3>Ready to Experience Natural Luxury?</h3>
+            <p>
+                Book your appointment today and discover what personalized, organic wellness feels like. 
+                We can't wait to welcome you.
+            </p>
+            <div class="about-cta-buttons">
+                <a href="tel:7188419919" class="about-phone-btn">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>(718) 841-9919</span>
+                </a>
+                <a href="#contact" class="about-booking-btn">
+                    <span>Book Your Visit</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- Bottom Bar -->
-    <div class="footer-bottom">
-        <div class="footer-container">
-            <div class="footer-bottom-content">
+<!-- SERVICES SECTION -->
+<section id="services" class="services-carousel-section">
+    <div class="services-container">
+        
+        <!-- Section Header -->
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-eyebrow">Discover Our Treatments</div>
+            <h2 class="section-title">Signature Services</h2>
+            <div class="title-divider"></div>
+            <p class="section-subtitle">Explore our curated collection of natural luxury treatments designed for your well-being</p>
+        </div>
+
+        <!-- Services Carousel Wrapper -->
+        <div class="services-carousel-wrapper">
+            
+            <!-- Carousel Track -->
+            <div class="services-carousel-track" id="servicesCarouselTrack">
                 
-                <div class="footer-copyright">
-                    <p>&copy; <span class="current-year">2024</span> Holistic Psychological Services PLLC. All rights reserved.</p>
+                <!-- Service Card: Face Treatments -->
+                <div class="service-category-card" data-category="face-treatments">
+                    <a href="face-treatments.html" class="service-card-link">
+                        <div class="service-card-image">
+                            <div class="service-image-overlay"></div>
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                        </div>
+                        <div class="service-card-content">
+                            <h3 class="service-card-title">Face Treatments</h3>
+                            <p class="service-card-description">Rejuvenating facials and organic skincare rituals</p>
+                            <span class="service-card-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
                 </div>
 
-                <div class="footer-legal-links">
-                    <a href="privacy-policy.html" class="legal-link">Privacy Policy</a>
-                    <span class="legal-divider">•</span>
-                    <a href="terms-of-service.html" class="legal-link">Terms of Service</a>
-                    <span class="legal-divider">•</span>
-                    <a href="hipaa-notice.html" class="legal-link">HIPAA Notice</a>
+                <!-- Service Card: Add On's -->
+                <div class="service-category-card" data-category="add-ons">
+                    <a href="add-ons.html" class="service-card-link">
+                        <div class="service-card-image">
+                            <div class="service-image-overlay"></div>
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+                        <div class="service-card-content">
+                            <h3 class="service-card-title">Add On's</h3>
+                            <p class="service-card-description">Enhance your experience with specialty treatments</p>
+                            <span class="service-card-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
                 </div>
 
-                <div class="footer-designer-credit">
-                    <span>Designed by</span>
-                    <a href="https://elanstechworld.com" target="_blank" class="designer-link">
-                        <i class="ri-code-s-slash-line"></i>
-                        <span>Elan's Tech World</span>
+                <!-- Service Card: Body Treatments -->
+                <div class="service-category-card" data-category="body-treatments">
+                    <a href="body-treatments.html" class="service-card-link">
+                        <div class="service-card-image">
+                            <div class="service-image-overlay"></div>
+                            <div class="service-icon-wrapper">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                        </div>
+                        <div class="service-card-content">
+                            <h3 class="service-card-title">Body Treatments</h3>
+                            <p class="service-card-description">Full-body wellness and therapeutic massage</p>
+                            <span class="service-card-arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
                     </a>
                 </div>
 
             </div>
         </div>
+
     </div>
+</section>
+
+<!-- TEAM SHOWCASE SECTION -->
+<section id="team" class="team-showcase-section">
+  <div class="team-showcase-container">
+    
+    <!-- Decorative Elements -->
+    <div class="team-bg-pattern"></div>
+
+    <!-- Team Content Flex Container -->
+    <div class="team-content-wrapper">
+    <!-- Text Content -->
+    <div class="team-text-content">
+      <div class="team-eyebrow">Meet the Experts</div>
+      <h2 class="team-title">Our Passionate Team</h2>
+      <div class="team-divider"></div>
+      <p class="team-description">
+        Behind every luxurious treatment is a team of skilled, licensed professionals who share 
+        Laura's vision of natural beauty and holistic wellness. Each team member brings unique 
+        expertise and a genuine passion for helping you look and feel your absolute best.
+      </p>
+      <p class="team-description">
+        We believe in continuous education, staying current with the latest organic skincare 
+        innovations, and most importantly — treating every guest like family. When you visit 
+        Laura's Beauty Touch, you're not just getting a service; you're joining a community 
+        that truly cares about your well-being.
+      </p>
+    </div>
+
+    <!-- Team Image Container -->
+    <div class="team-image-wrapper">
+      <div class="team-image-frame">
+        <img src="images/team.jpeg" alt="Laura's Beauty Touch Team" class="team-photo">
+        <div class="image-overlay"></div>
+      </div>
+      
+      <!-- Floating Stats -->
+      <div class="team-stat team-stat-1">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      
+      <div class="team-stat team-stat-2">
+        <div class="stat-number">5,000+</div>
+        <div class="stat-label">Happy Clients</div>
+      </div>
+    </div>
+
+    <!-- CTA Content -->
+    <div class="team-cta-content">
+      <p class="team-tagline">
+        Every treatment is a collaboration between your vision and our expertise
+      </p>
+      <a href="about.html#team" class="btn-meet-team">
+        <span class="btn-text">Meet the Full Team</span>
+        <svg class="btn-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="team-decor team-decor-left"></div>
+    <div class="team-decor team-decor-right"></div>
+    
+  </div>
+</section>
+    
+<!-- GOOGLE REVIEWS SECTION -->
+<section id="testimonials" class="google-reviews-section">
+    <div class="reviews-container">
+        
+        <!-- Decorative Elements -->
+        <div class="reviews-bg-decoration">
+            <div class="floating-leaf leaf-1"><i class="fas fa-leaf"></i></div>
+            <div class="floating-leaf leaf-2"><i class="fas fa-spa"></i></div>
+            <div class="floating-leaf leaf-3"><i class="fas fa-heart"></i></div>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-eyebrow">Verified Reviews</div>
+            <h2 class="section-title">What Our Community Says</h2>
+            <div class="title-divider"></div>
+            <p class="section-subtitle">Real experiences from real people who trust Laura's Beauty Touch</p>
+        </div>
+
+        <!-- Google Reviews Widget Container -->
+        <div class="reviews-widget-wrapper" data-aos="fade-up" data-aos-delay="200">
+            <div class="widget-frame">
+                <!-- Elfsight Google Reviews Widget -->
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-924dde63-c142-47ca-9b78-d0b87cb821da" data-elfsight-app-lazy></div>
+            </div>
+        </div>
+
+        <!-- Google CTA -->
+        <div class="reviews-cta" data-aos="fade-up" data-aos-delay="400">
+            <div class="google-badge">
+                <i class="fab fa-google"></i>
+                <div class="badge-text">
+                    <span class="rating-stars">★★★★★</span>
+                    <span class="badge-label">Rated 4.6 on Google</span>
+                </div>
+            </div>
+            <a href="https://share.google/Ep7KmBUoyVOAJ1xJb" target="_blank" class="leave-review-btn">
+                <span>Leave Us a Review</span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- INSTAGRAM FEED SECTION -->
+<section id="gallery" class="instagram-section">
+    <div class="instagram-container">
+        
+        <!-- Decorative Background Pattern -->
+        <div class="instagram-bg-pattern"></div>
+
+        <!-- Section Header -->
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-eyebrow">Follow Our Journey</div>
+            <h2 class="section-title">
+                <span class="instagram-icon-wrapper">
+                    <i class="fab fa-instagram"></i>
+                </span>
+                @LaurasBeautyTouch
+            </h2>
+            <div class="title-divider"></div>
+            <p class="section-subtitle">Daily inspiration, behind-the-scenes moments, and transformation stories</p>
+        </div>
+
+        <!-- Instagram Feed Widget Container -->
+        <div class="instagram-widget-wrapper" data-aos="fade-up" data-aos-delay="200">
+            <div class="widget-frame">
+                <!-- Elfsight Instagram Feed Widget -->
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-b781d20e-e7f2-4b4a-a18d-15b4d798c967" data-elfsight-app-lazy></div>
+            </div>
+        </div>
+
+        <!-- Instagram CTA -->
+        <div class="instagram-cta" data-aos="fade-up" data-aos-delay="400">
+            <p class="cta-text">Join our community of wellness enthusiasts</p>
+            <a href="https://www.instagram.com/laurasbeautytouch/?hl=en" target="_blank" class="follow-instagram-btn">
+                <i class="fab fa-instagram"></i>
+                <span>Follow @LaurasBeautyTouch</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            <div class="hashtag-display">
+                <span class="hashtag">#LaurasBeautyTouch</span>
+                <span class="hashtag">#NaturalLuxury</span>
+                <span class="hashtag">#NYCWellness</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section" id="contact">
+  <div class="contact-container">
+    
+    <!-- Section Header -->
+    <div class="contact-header">
+      <span class="contact-label">Get In Touch</span>
+      <h2 class="contact-title">Have Questions?</h2>
+      <p class="contact-subtitle">
+        We'd love to hear from you! Fill out the form below and we'll get back to you as soon as possible.
+      </p>
+    </div>
+
+    <div class="contact-content">
+      
+      <!-- Left Side: Contact Form -->
+      <div class="contact-form-wrapper">
+        <div class="form-container">
+          <!-- Elfsight Contact Form -->
+          <script src="https://elfsightcdn.com/platform.js" async></script>
+          <div class="elfsight-app-fe993c2b-0507-434e-b016-7c10bd8c84e4" data-elfsight-app-lazy></div>
+        </div>
+      </div>
+
+      <!-- Right Side: Booking CTAs -->
+      <div class="contact-cta-wrapper">
+        
+        <div class="cta-card">
+          <div class="cta-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="cta-title">Ready to Book?</h3>
+          <p class="cta-description">
+            Schedule your appointment online and choose the perfect time that works for you.
+          </p>
+          <a href="https://link.squareup.com/u/PmZXxxQH?src=sheet" target="_blank" class="btn-book-now">
+            <span>Book Appointment</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="cta-card">
+          <div class="cta-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3 class="cta-title">Call Us Today</h3>
+          <p class="cta-description">
+            Speak with our friendly team to learn more about our services or schedule by phone.
+          </p>
+          <a href="tel:7188419919" class="btn-call-now">
+            <span>(718) 841-9919</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="contact-decor contact-decor-1"></div>
+    <div class="contact-decor contact-decor-2"></div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="super-footer">
+  <div class="footer-main">
+    <div class="footer-container">
+      
+      <!-- Column 1: Brand & Social -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <h3 class="footer-logo-text">
+            Laura's Beauty Touch
+            <span class="footer-tagline">Natural Luxury Spa</span>
+          </h3>
+        </div>
+        <p class="footer-description">
+          A sanctuary of organic beauty treatments in the heart of New York City. 
+          Where natural elegance meets personalized care.
+        </p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/laurasbeautytouch/?hl=en" target="_blank" class="social-link" aria-label="Instagram">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/laurasbeautytouch/" target="_blank" class="social-link" aria-label="Facebook">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="https://www.google.com/search?q=laura%27s+beauty+touch" target="_blank" class="social-link" aria-label="Google">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="https://www.yelp.com/biz/laurasbeautytouch" target="_blank" class="social-link" aria-label="Yelp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12.271 17.937l-3.107 2.359c-.192.146-.454.146-.646 0l-.969-.736c-.192-.146-.269-.407-.192-.63l2.138-6.181c.077-.223.3-.369.539-.369h.646c.238 0 .461.146.538.369l2.138 6.181c.077.223 0 .484-.192.63l-.969.736c-.192.146-.454.146-.646 0l-.278-.359zm6.35-3.874l-3.107-2.359c-.192-.146-.192-.407 0-.553l.969-.736c.192-.146.454-.146.646 0l5.569 4.234c.192.146.269.407.192.63l-.969 2.797c-.077.223-.3.369-.539.369h-6.834c-.238 0-.461-.146-.538-.369l-.969-2.797c-.077-.223 0-.484.192-.63l.969-.736c.192-.146.454-.146.646 0l3.107 2.359c.192.146.454.146.646 0l.969-.736c.192-.146.192-.407 0-.553l-.949-.92z" fill="currentColor"/>
+            </svg>
+          </a>
+          <a href="tel:7188419919" class="social-link" aria-label="Phone">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="currentColor"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Column 2: Quick Links -->
+      <div class="footer-column">
+        <h4 class="footer-title">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link">Home</a></li>
+          <li><a href="about.html" class="footer-link">About Us</a></li>
+          <li><a href="services.html" class="footer-link">Services</a></li>
+          <li><a href="gallery.html" class="footer-link">Gallery</a></li>
+          <li><a href="testimonials.html" class="footer-link">Testimonials</a></li>
+          <li><a href="contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+      
+      <!-- Column 3: Services -->
+      <div class="footer-column">
+        <h4 class="footer-title">Our Services</h4>
+        <ul class="footer-links">
+          <li><a href="facials.html" class="footer-link">Luxury Facials</a></li>
+          <li><a href="waxing.html" class="footer-link">Expert Waxing</a></li>
+          <li><a href="lashes.html" class="footer-link">Eyelash Extensions</a></li>
+          <li><a href="brows.html" class="footer-link">Brow Shaping</a></li>
+          <li><a href="makeup.html" class="footer-link">Makeup Services</a></li>
+        </ul>
+      </div>
+      
+      <!-- Column 4: Contact & Hours -->
+      <div class="footer-column footer-contact">
+        <h4 class="footer-title">Visit Us</h4>
+        
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <p class="contact-label">Address</p>
+            <a href="https://maps.google.com/?q=97-12+66th+Ave+Rego+Park+NY+11374" target="_blank" class="contact-value">
+              97-12 66th Ave<br>
+              Rego Park, NY 11374
+            </a>
+          </div>
+        </div>
+        
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <p class="contact-label">Phone</p>
+            <a href="tel:7188419919" class="contact-value">(718) 841-9919</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="contact-text">
+            <p class="contact-label">Hours</p>
+            <p class="contact-value">
+              Mon-Sat: 10am - 7pm<br>
+              Sun: Closed
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-container">
+      <div class="footer-bottom-content">
+        <p class="footer-copyright">
+          © 2025 Laura's Beauty Touch. All rights reserved.
+        </p>
+        <div class="footer-legal">
+          <a href="privacy.html" class="footer-legal-link">Privacy Policy</a>
+          <span class="footer-divider">•</span>
+          <a href="terms.html" class="footer-legal-link">Terms of Service</a>
+        </div>
+        <p class="footer-credit">
+          Crafted with <span class="heart">♥</span> by <a href="https://elanstechworld.com" class="credit-link">Elan's Tech World</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Decorative Elements -->
+  <div class="footer-decor footer-decor-left"></div>
+  <div class="footer-decor footer-decor-right"></div>
+  
 </footer>
     
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="ri-arrow-up-line"></i>
-    </button>
+     <!-- BACK TO TOP BUTTON -->
+<button class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+</button>
 
-    <!-- Scripts -->
-    <script src="scripts.js"></script>
+<!-- FLOATING ACTION BUTTON (FAB) -->
+<div class="fab-container" id="fabContainer">
+    <!-- Fan-out Options -->
+    <div class="fab-options" id="fabOptions">
+        <a href="tel:7188419919" class="fab-option fab-phone" data-tooltip="Call Us">
+            <i class="fas fa-phone-alt"></i>
+        </a>
+        <a href="mailto:laurasbeautytouch@gmail.com" class="fab-option fab-email" data-tooltip="Email Us">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://www.instagram.com/laurasbeautytouch/?hl=en" target="_blank" rel="noopener noreferrer" class="fab-option fab-instagram" data-tooltip="Our Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+    </div>
+    
+    <!-- Main FAB Button -->
+    <button class="fab-main" id="fabMain" aria-label="Contact options">
+        <i class="fas fa-comment-dots fab-icon-default"></i>
+        <i class="fas fa-times fab-icon-close"></i>
+    </button>
+</div>
+
+
+<!-- ==================================== -->
+<!-- NEW FLOATING SPECIALS BUTTON -->
+<!-- ==================================== -->
+<button class="specials-floating-btn" id="specialsBtn" aria-label="View current specials">
+    <div class="btn-content">
+        <div class="btn-icon">
+            <i class="fas fa-sparkles"></i>
+        </div>
+        <div class="btn-text">
+            <span class="btn-label">Current Specials</span>
+            <span class="btn-subtitle">Limited Time Offers</span>
+        </div>
+        <div class="specials-badge" id="specialsCount">0</div>
+    </div>
+    <div class="btn-shimmer"></div>
+</button>
+
+
+<!-- ==================================== -->
+<!-- SPECIALS GRID MODAL -->
+<!-- ==================================== -->
+<div class="specials-modal" id="specialsModal">
+    <div class="modal-overlay" id="specialsModalOverlay"></div>
+    
+    <div class="modal-container">
+        <!-- Close Button -->
+        <button class="modal-close" id="closeModalBtn" aria-label="Close specials">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="header-icon">
+                <i class="fas fa-spa"></i>
+            </div>
+            <h2 class="modal-title">Current Specials</h2>
+            <p class="modal-subtitle">Luxury treatments at exceptional value</p>
+        </div>
+
+        <!-- Specials Grid -->
+        <div class="specials-grid" id="specialsGrid">
+            <!-- Cards will be dynamically loaded from JSON -->
+        </div>
+
+        <!-- No Specials Message -->
+        <div class="no-specials" id="noSpecials" style="display: none;">
+            <div class="no-specials-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <h3>No Active Specials</h3>
+            <p>Check back soon for our latest luxury treatment offers</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ==================================== -->
+<!-- SPECIAL DETAIL MODAL (Nested) -->
+<!-- ==================================== -->
+<div class="detail-modal" id="detailModal">
+    <div class="modal-overlay" id="detailModalOverlay"></div>
+    
+    <div class="detail-container">
+        <!-- Close Button -->
+        <button class="detail-close" id="closeDetailBtn" aria-label="Close details">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <!-- Detail Image -->
+        <div class="detail-image-wrapper">
+            <img src="" alt="" class="detail-image" id="detailImage">
+            <div class="detail-badge" id="detailBadge" style="display: none;">
+                <span class="badge-text">SAVE</span>
+                <span class="badge-amount" id="detailSavings"></span>
+            </div>
+        </div>
+
+        <!-- Detail Content -->
+        <div class="detail-content">
+            <div class="detail-brand" id="detailBrand"></div>
+            <h3 class="detail-title" id="detailTitle"></h3>
+            <p class="detail-description" id="detailDescription"></p>
+
+            <!-- Price -->
+            <div class="detail-price-section">
+                <div class="price-wrapper">
+                    <span class="detail-current-price" id="detailCurrentPrice"></span>
+                    <span class="detail-original-price" id="detailOriginalPrice"></span>
+                </div>
+            </div>
+
+            <!-- What's Included -->
+            <div class="detail-includes">
+                <h4 class="includes-heading">
+                    <i class="fas fa-check-circle"></i>
+                    What's Included
+                </h4>
+                <ul class="includes-list" id="detailIncludesList">
+                    <!-- Dynamically populated -->
+                </ul>
+            </div>
+
+            <!-- Book Button -->
+            <div class="detail-actions">
+                <a href="#contact" class="detail-book-btn" id="detailBookBtn">
+                    <span>Book This Package</span>
+                    <i class="fas fa-calendar-check"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+
 </body>
 </html>
