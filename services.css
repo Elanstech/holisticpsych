@@ -449,7 +449,7 @@ section {
 }
 
 /* ==========================================================================
-   TREATMENT PROCESS SECTION
+   TREATMENT PROCESS SECTION - ACCORDION STYLE
    ========================================================================== */
 
 .treatment-process {
@@ -471,118 +471,212 @@ section {
 }
 
 .process-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 2rem;
     position: relative;
     z-index: 2;
 }
 
-.process-timeline {
+.process-accordion {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-    position: relative;
+    gap: 1rem;
 }
 
-.process-timeline::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, transparent, #00d884, transparent);
-    transform: translateX(-50%);
+.accordion-item {
+    background: #ffffff;
+    border: 2px solid rgba(0, 216, 132, 0.15);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.timeline-item {
-    display: grid;
-    grid-template-columns: 1fr 80px 1fr;
-    gap: 2rem;
+.accordion-item:hover {
+    border-color: rgba(0, 216, 132, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.1);
+}
+
+.accordion-item.active {
+    border-color: rgba(0, 216, 132, 0.4);
+    box-shadow: 0 12px 32px rgba(0, 216, 132, 0.15);
+}
+
+.accordion-header {
+    display: flex;
     align-items: center;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
 }
 
-/* Odd items (1, 3, 5) - content on left */
-.timeline-item:nth-child(odd) .timeline-number {
-    grid-column: 2;
+.accordion-header:hover {
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.03), rgba(14, 165, 233, 0.03));
 }
 
-.timeline-item:nth-child(odd) .timeline-content {
-    grid-column: 1;
-    justify-self: end;
+.accordion-item.active .accordion-header {
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.05), rgba(14, 165, 233, 0.05));
 }
 
-/* Even items (2, 4, 6) - content on right */
-.timeline-item:nth-child(even) .timeline-number {
-    grid-column: 2;
-}
-
-.timeline-item:nth-child(even) .timeline-content {
-    grid-column: 3;
-    justify-self: start;
-}
-
-.timeline-number {
-    width: 80px;
-    height: 80px;
+.accordion-number {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
     background: linear-gradient(135deg, #00d884, #0ea5e9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #ffffff;
-    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.3);
-    position: relative;
-    z-index: 2;
-}
-
-.timeline-content {
-    background: #ffffff;
-    border: 2px solid rgba(0, 216, 132, 0.15);
-    border-radius: 20px;
-    padding: 2rem;
-    display: flex;
-    gap: 1.5rem;
+    box-shadow: 0 6px 20px rgba(0, 216, 132, 0.25);
     transition: all 0.3s ease;
-    max-width: 500px;
-    width: 100%;
 }
 
-.timeline-content:hover {
-    border-color: rgba(0, 216, 132, 0.3);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 216, 132, 0.15);
+.accordion-item.active .accordion-number {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.35);
 }
 
-.timeline-icon {
-    width: 56px;
-    height: 56px;
-    min-width: 56px;
+.accordion-title-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.accordion-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
     background: linear-gradient(135deg, rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.1));
-    border-radius: 14px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #00d884;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
 }
 
-.timeline-title {
+.accordion-item.active .accordion-icon {
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.15), rgba(14, 165, 233, 0.15));
+    transform: scale(1.05);
+}
+
+.accordion-title {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.375rem;
     font-weight: 700;
     color: #1f2937;
-    margin-bottom: 0.75rem;
+    margin: 0;
 }
 
-.timeline-text {
+.accordion-toggle {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.1), rgba(14, 165, 233, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00d884;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.accordion-item.active .accordion-toggle {
+    background: linear-gradient(135deg, #00d884, #0ea5e9);
+    color: #ffffff;
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 500px;
+}
+
+.accordion-body {
+    padding: 0 2rem 2rem 8.5rem;
     font-size: 0.9375rem;
     line-height: 1.7;
     color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .accordion-header {
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+    
+    .accordion-number {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .accordion-title-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .accordion-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .accordion-title {
+        font-size: 1.125rem;
+    }
+    
+    .accordion-toggle {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 1.25rem;
+    }
+    
+    .accordion-body {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .accordion-header {
+        padding: 1.25rem;
+        flex-wrap: wrap;
+    }
+    
+    .accordion-number {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        font-size: 1.25rem;
+    }
+    
+    .accordion-title {
+        font-size: 1rem;
+    }
+    
+    .accordion-body {
+        padding: 0 1.25rem 1.25rem 1.25rem;
+        font-size: 0.875rem;
+    }
 }
 
 /* ==========================================================================
@@ -1045,31 +1139,6 @@ section {
         justify-content: center;
     }
     
-    .process-timeline::before {
-        left: 30px;
-    }
-    
-    .timeline-item {
-        grid-template-columns: 60px 1fr;
-        gap: 1.5rem;
-    }
-    
-    .timeline-item:nth-child(odd) .timeline-number,
-    .timeline-item:nth-child(even) .timeline-number {
-        grid-column: 1;
-        justify-self: start;
-    }
-    
-    .timeline-item:nth-child(odd) .timeline-content,
-    .timeline-item:nth-child(even) .timeline-content {
-        grid-column: 2;
-        justify-self: start;
-    }
-    
-    .timeline-content {
-        padding: 1.5rem;
-    }
-    
     .approaches-grid {
         grid-template-columns: 1fr;
     }
@@ -1132,21 +1201,6 @@ section {
         height: 56px;
         min-width: 56px;
         font-size: 1.75rem;
-    }
-    
-    .timeline-number {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-    }
-    
-    .timeline-content {
-        flex-direction: column;
-        padding: 1.25rem;
-    }
-    
-    .timeline-icon {
-        margin: 0 auto;
     }
     
     .approach-icon {
