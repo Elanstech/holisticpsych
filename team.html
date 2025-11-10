@@ -3,16 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <title>Our Team - Licensed Psychologists & Therapists in Manhattan, NY</title>
-    <meta name="description" content="Meet our experienced team of licensed psychologists and therapists in Manhattan. Expert mental health professionals specializing in therapy, counseling, and psychological services.">
-    <meta name="keywords" content="psychologists manhattan, therapists nyc, mental health team, licensed psychologists, therapy team, counseling professionals">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="Our Team - Holistic Psychological Services">
-    <meta property="og:description" content="Meet our experienced team of licensed mental health professionals">
-    <meta property="og:type" content="website">
+    <title>Our Team - Holistic Psychological Services</title>
+    <meta name="description" content="Meet our experienced team of mental health professionals in Manhattan. Expert psychologists and therapists dedicated to your wellness.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,15 +14,15 @@
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="teams.css">
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo copy.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="teams.css">
 </head>
 <body>
-    
+
     <!-- Header -->
     <header class="header" id="header">
         <div class="header-island">
@@ -42,9 +34,9 @@
                 
                 <nav class="nav-menu desktop-nav">
                     <a href="index.html" class="nav-link">Home</a>
-                    <a href="about.html" class="nav-link">About</a>
+                    <a href="about.html" class="nav-link active">About</a>
                     <a href="services.html" class="nav-link">Services</a>
-                    <a href="teams.html" class="nav-link active">Team</a>
+                    <a href="teams.html" class="nav-link">Team</a>
                     <a href="contact.html" class="nav-link">Contact</a>
                 </nav>
                 
@@ -74,7 +66,7 @@
         </div>
     </header>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu Panel -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu-panel" id="mobileMenuPanel">
         <div class="mobile-menu-header">
@@ -112,7 +104,7 @@
                 </div>
                 <i class="ri-arrow-right-s-line nav-arrow"></i>
             </a>
-            <a href="teams.html" class="mobile-nav-link active">
+            <a href="team.html" class="mobile-nav-link">
                 <div class="nav-link-content">
                     <i class="ri-team-line"></i>
                     <span>Team</span>
@@ -154,6 +146,7 @@
                 <a href="#contact" class="mobile-cta-btn">
                     <i class="ri-calendar-check-line"></i>
                     <span>Schedule Consultation</span>
+                    <div class="btn-shimmer"></div>
                 </a>
             </div>
             
@@ -163,592 +156,795 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div>    
 
-    <!-- Main Content -->
-    <main class="teams-main">
-        
-        <!-- Hero Section -->
-        <section class="teams-hero">
-            <div class="hero-background">
-                <div class="hero-gradient"></div>
-                <div class="hero-pattern"></div>
+    <!-- Hero Section -->
+    <section class="teams-hero-section">
+        <div class="container">
+            <div class="section-badge">
+                <i class="ri-team-line"></i>
+                <span>Our Expert Team</span>
             </div>
             
-            <div class="hero-content">
-                <div class="hero-badge" data-aos="fade-down">
-                    <div class="badge-dot"></div>
-                    <span>Meet Our Team</span>
+            <h1 class="hero-title">
+                Meet Our <span class="title-highlight">Professional Team</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Our dedicated team of licensed psychologists and therapists brings decades of combined experience in mental health care. Each member is committed to providing compassionate, evidence-based treatment tailored to your unique needs.
+            </p>
+        </div>
+    </section>
+
+    <!-- Team Grid -->
+    <section class="container">
+        <div class="team-grid">
+            
+            <!-- Dr. Kristie Doheny -->
+            <div class="team-card" data-member="kristie">
+                <div class="card-image-wrapper">
+                    <img src="https://photos.psychologytoday.com/3dbf8360-46cd-11ea-a6ad-06142c356176/3/320x400.jpeg" alt="Dr. Kristie Doheny" class="card-image">
+                    <div class="verified-badge">
+                        <i class="ri-verified-badge-fill"></i>
+                        <span>Verified</span>
+                    </div>
                 </div>
-                
-                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
-                    Expert Care From
-                    <span class="title-gradient">Compassionate Professionals</span>
-                </h1>
-                
-                <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
-                    Our team of licensed psychologists and therapists brings decades of combined experience, 
-                    offering specialized, evidence-based care tailored to your unique needs.
+                <div class="card-content">
+                    <h2 class="member-name">Dr. Kristie Doheny</h2>
+                    <div class="credentials">
+                        <span class="cred-badge primary">PsyD</span>
+                        <span class="cred-badge secondary">LMSW</span>
+                        <span class="cred-badge secondary">LMHC</span>
+                        <span class="cred-badge secondary">RPT-S</span>
+                    </div>
+                    <p class="member-bio">
+                        Licensed Psychologist with over 10 years of experience specializing in children, adolescents, adults, and families. Expert in person-centered therapy and psychological evaluations.
+                    </p>
+                    <div class="specialties">
+                        <span class="spec-tag">Family Therapy</span>
+                        <span class="spec-tag">Child Psychology</span>
+                        <span class="spec-tag">ADHD</span>
+                        <span class="spec-tag">Assessments</span>
+                    </div>
+                    <button class="learn-more-btn">
+                        <span>Learn More</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dr. Douglas Uhlig -->
+            <div class="team-card" data-member="douglas">
+                <div class="card-image-wrapper">
+                    <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig" class="card-image">
+                    <div class="verified-badge">
+                        <i class="ri-verified-badge-fill"></i>
+                        <span>Verified</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="member-name">Dr. Douglas Uhlig</h2>
+                    <div class="credentials">
+                        <span class="cred-badge primary">PhD</span>
+                        <span class="cred-badge secondary">MBA</span>
+                        <span class="cred-badge secondary">CASAC</span>
+                    </div>
+                    <p class="member-bio">
+                        Licensed Psychologist combining traditional Psychodynamic and Cognitive Behavioral Therapy with over 35 years of teaching meditation and Mindfulness.
+                    </p>
+                    <div class="specialties">
+                        <span class="spec-tag">CBT</span>
+                        <span class="spec-tag">Meditation</span>
+                        <span class="spec-tag">Marriage Counseling</span>
+                        <span class="spec-tag">Substance Abuse</span>
+                    </div>
+                    <button class="learn-more-btn">
+                        <span>Learn More</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Liam Miller -->
+            <div class="team-card" data-member="liam">
+                <div class="card-image-wrapper">
+                    <img src="https://photos.psychologytoday.com/2cf6f0a5-a8ef-44fc-a5c9-ade0326127ee/1/320x400.jpeg" alt="Liam Miller" class="card-image">
+                    <div class="verified-badge">
+                        <i class="ri-verified-badge-fill"></i>
+                        <span>Verified</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="member-name">Liam Miller</h2>
+                    <div class="credentials">
+                        <span class="cred-badge primary">MHC-LP</span>
+                        <span class="cred-badge secondary">MA</span>
+                        <span class="cred-badge secondary">BS</span>
+                    </div>
+                    <p class="member-bio">
+                        Mental Health Counselor providing empathetic, person-centered therapy with unconditional positive regard. Specializes in helping clients live authentically.
+                    </p>
+                    <div class="specialties">
+                        <span class="spec-tag">Anxiety</span>
+                        <span class="spec-tag">Depression</span>
+                        <span class="spec-tag">Identity Formation</span>
+                        <span class="spec-tag">Adolescent Care</span>
+                    </div>
+                    <button class="learn-more-btn">
+                        <span>Learn More</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cloè D'Arcangelo -->
+            <div class="team-card" data-member="cloe">
+                <div class="card-image-wrapper">
+                    <img src="images/CloeDArcangelo.jpeg" alt="Cloè D'Arcangelo" class="card-image">
+                    <div class="verified-badge">
+                        <i class="ri-star-fill"></i>
+                        <span>Certified</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="member-name">Cloè D'Arcangelo</h2>
+                    <div class="credentials">
+                        <span class="cred-badge primary">CFC</span>
+                        <span class="cred-badge secondary">Certified Life Coach</span>
+                    </div>
+                    <p class="member-bio">
+                        Certified Life Coach with specialized expertise in eating disorders, PTSD treatment, and stress management techniques.
+                    </p>
+                    <div class="specialties">
+                        <span class="spec-tag">Eating Disorders</span>
+                        <span class="spec-tag">PTSD</span>
+                        <span class="spec-tag">Stress Management</span>
+                    </div>
+                    <button class="learn-more-btn">
+                        <span>Learn More</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="container">
+        <div class="cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Begin Your Journey?</h2>
+                <p class="cta-text">
+                    Take the first step towards better mental health. Our experienced team is here to support you every step of the way.
                 </p>
-                
-                <div class="hero-stats" data-aos="fade-up" data-aos-delay="300">
-                    <div class="stat-item">
-                        <div class="stat-number">25+</div>
-                        <div class="stat-label">Years Combined Experience</div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-number">1000+</div>
-                        <div class="stat-label">Clients Helped</div>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Licensed Professionals</div>
-                    </div>
+                <div class="cta-buttons">
+                    <a href="index.html#contact" class="cta-btn primary">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Schedule Consultation</span>
+                    </a>
+                    <a href="tel:2038231015" class="cta-btn secondary">
+                        <i class="ri-phone-line"></i>
+                        <span>Call (203) 823-1015</span>
+                    </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Team Grid Section -->
-        <section class="team-grid-section">
-            <div class="team-container">
-                
-                <!-- Section Header -->
-                <div class="section-header" data-aos="fade-up">
-                    <h2 class="section-title">
-                        Our Team of
-                        <span class="text-gradient">Mental Health Experts</span>
-                    </h2>
-                    <p class="section-description">
-                        Meet the dedicated professionals who are committed to supporting your mental health journey with expertise, empathy, and evidence-based care.
-                    </p>
-                </div>
-
-                <!-- Team Members Grid -->
-                <div class="team-grid">
-                    
-                    <!-- Team Member 1: Dr. Sarah Mitchell -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg" alt="Dr. Sarah Mitchell" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="sarah-mitchell">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge">
-                                <div class="pulse-dot"></div>
-                                <span>Accepting New Clients</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. Sarah Mitchell</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">Ph.D.</span>
-                                    <span class="cred-badge secondary">Licensed</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">Clinical Psychologist & Anxiety Specialist</p>
-                            
-                            <p class="member-bio">
-                                Specializing in anxiety disorders and CBT, Dr. Mitchell brings over 12 years of experience helping clients overcome their fears and live more fulfilling lives.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">Anxiety Disorders</span>
-                                <span class="specialty-tag">Panic Attacks</span>
-                                <span class="specialty-tag">Social Anxiety</span>
-                                <span class="specialty-tag">CBT</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>12+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="sarah-mitchell">
-                                    <span>Book Session</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 2: Dr. Michael Chen -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="150">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg" alt="Dr. Michael Chen" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="michael-chen">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge">
-                                <div class="pulse-dot"></div>
-                                <span>Accepting New Clients</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. Michael Chen</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">Psy.D.</span>
-                                    <span class="cred-badge secondary">EMDR</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">Trauma Specialist & PTSD Expert</p>
-                            
-                            <p class="member-bio">
-                                Dr. Chen specializes in trauma recovery and PTSD treatment using EMDR and trauma-focused CBT, helping individuals heal from past experiences.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">PTSD Treatment</span>
-                                <span class="specialty-tag">Trauma Recovery</span>
-                                <span class="specialty-tag">EMDR</span>
-                                <span class="specialty-tag">Complex Trauma</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>10+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="michael-chen">
-                                    <span>Book Session</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 3: Emily Rodriguez -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/8500729/pexels-photo-8500729.jpeg" alt="Emily Rodriguez" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="emily-rodriguez">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge">
-                                <div class="pulse-dot"></div>
-                                <span>Accepting New Clients</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Emily Rodriguez</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">LCSW</span>
-                                    <span class="cred-badge secondary">DBT</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">Family Therapist & Adolescent Specialist</p>
-                            
-                            <p class="member-bio">
-                                Emily specializes in family systems therapy and adolescent counseling, helping families navigate challenges and strengthen their relationships.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">Family Therapy</span>
-                                <span class="specialty-tag">Teen Counseling</span>
-                                <span class="specialty-tag">DBT</span>
-                                <span class="specialty-tag">Parenting Support</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>8+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="emily-rodriguez">
-                                    <span>Book Session</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 4: Dr. James Williams -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="250">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/5327580/pexels-photo-5327580.jpeg" alt="Dr. James Williams" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="james-williams">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge waitlist">
-                                <i class="ri-time-line"></i>
-                                <span>Waitlist Available</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. James Williams</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">Ph.D.</span>
-                                    <span class="cred-badge secondary">ADHD</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">ADHD Specialist & Neuropsychologist</p>
-                            
-                            <p class="member-bio">
-                                Dr. Williams specializes in ADHD assessment and treatment for children and adults, providing comprehensive evaluations and behavioral interventions.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">ADHD Assessment</span>
-                                <span class="specialty-tag">Executive Function</span>
-                                <span class="specialty-tag">Neuropsych Testing</span>
-                                <span class="specialty-tag">Skills Training</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>15+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="james-williams">
-                                    <span>Join Waitlist</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 5: Dr. Lisa Thompson -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/4173239/pexels-photo-4173239.jpeg" alt="Dr. Lisa Thompson" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="lisa-thompson">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge">
-                                <div class="pulse-dot"></div>
-                                <span>Accepting New Clients</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Dr. Lisa Thompson</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">Ph.D.</span>
-                                    <span class="cred-badge secondary">EFT</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">Couples Therapist & Relationship Expert</p>
-                            
-                            <p class="member-bio">
-                                Dr. Thompson specializes in couples counseling using Gottman Method and EFT, helping partners build stronger, more fulfilling relationships.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">Couples Therapy</span>
-                                <span class="specialty-tag">Marriage Counseling</span>
-                                <span class="specialty-tag">Gottman Method</span>
-                                <span class="specialty-tag">EFT</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>14+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="lisa-thompson">
-                                    <span>Book Session</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 6: Marcus Johnson -->
-                    <div class="team-member-card" data-aos="fade-up" data-aos-delay="350">
-                        <div class="member-image-wrapper">
-                            <img src="https://images.pexels.com/photos/5327584/pexels-photo-5327584.jpeg" alt="Marcus Johnson" class="member-image" loading="lazy">
-                            <div class="image-overlay">
-                                <button class="view-profile-btn" data-member="marcus-johnson">
-                                    <span>View Full Profile</span>
-                                    <i class="ri-arrow-right-line"></i>
-                                </button>
-                            </div>
-                            <div class="status-badge">
-                                <div class="pulse-dot"></div>
-                                <span>Accepting New Clients</span>
-                            </div>
-                        </div>
-                        
-                        <div class="member-content">
-                            <div class="member-header">
-                                <h3 class="member-name">Marcus Johnson</h3>
-                                <div class="credentials">
-                                    <span class="cred-badge primary">LMHC</span>
-                                    <span class="cred-badge secondary">LGBTQ+</span>
-                                </div>
-                            </div>
-                            
-                            <p class="member-title">Depression Specialist & LGBTQ+ Affirming Therapist</p>
-                            
-                            <p class="member-bio">
-                                Marcus specializes in depression treatment and provides affirming therapy for LGBTQ+ individuals, creating a safe and supportive therapeutic space.
-                            </p>
-                            
-                            <div class="specialties">
-                                <span class="specialty-tag">Depression</span>
-                                <span class="specialty-tag">LGBTQ+ Affirming</span>
-                                <span class="specialty-tag">Identity Issues</span>
-                                <span class="specialty-tag">Mindfulness</span>
-                            </div>
-                            
-                            <div class="member-footer">
-                                <div class="experience">
-                                    <i class="ri-briefcase-line"></i>
-                                    <span>7+ Years</span>
-                                </div>
-                                <button class="book-session-btn" data-member="marcus-johnson">
-                                    <span>Book Session</span>
-                                    <i class="ri-calendar-check-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- Why Choose Our Team Section -->
-        <section class="why-choose-section">
-            <div class="why-choose-container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2 class="section-title">
-                        Why Choose
-                        <span class="text-gradient">Our Team</span>
-                    </h2>
-                    <p class="section-description">
-                        We're committed to providing exceptional care through our expertise, experience, and compassionate approach.
-                    </p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="feature-icon">
-                            <i class="ri-shield-star-line"></i>
-                        </div>
-                        <h3 class="feature-title">Licensed & Experienced</h3>
-                        <p class="feature-description">
-                            All our therapists are fully licensed professionals with advanced degrees and specialized training.
-                        </p>
-                    </div>
-
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="150">
-                        <div class="feature-icon">
-                            <i class="ri-heart-3-line"></i>
-                        </div>
-                        <h3 class="feature-title">Compassionate Care</h3>
-                        <p class="feature-description">
-                            We provide a safe, non-judgmental environment where you feel heard, valued, and supported.
-                        </p>
-                    </div>
-
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="feature-icon">
-                            <i class="ri-lightbulb-flash-line"></i>
-                        </div>
-                        <h3 class="feature-title">Evidence-Based Methods</h3>
-                        <p class="feature-description">
-                            We use proven, research-backed therapeutic approaches tailored to your specific needs.
-                        </p>
-                    </div>
-
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="250">
-                        <div class="feature-icon">
-                            <i class="ri-user-heart-line"></i>
-                        </div>
-                        <h3 class="feature-title">Personalized Treatment</h3>
-                        <p class="feature-description">
-                            Every treatment plan is customized to address your unique challenges and goals.
-                        </p>
-                    </div>
-
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="feature-icon">
-                            <i class="ri-group-line"></i>
-                        </div>
-                        <h3 class="feature-title">Diverse Specializations</h3>
-                        <p class="feature-description">
-                            Our team covers a wide range of specialties to meet various mental health needs.
-                        </p>
-                    </div>
-
-                    <div class="feature-card" data-aos="zoom-in" data-aos-delay="350">
-                        <div class="feature-icon">
-                            <i class="ri-calendar-check-line"></i>
-                        </div>
-                        <h3 class="feature-title">Flexible Scheduling</h3>
-                        <p class="feature-description">
-                            We offer convenient appointment times including evenings and weekends.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="team-cta-section">
-            <div class="cta-container" data-aos="fade-up">
-                <div class="cta-content">
-                    <h2 class="cta-title">Ready to Start Your Journey?</h2>
-                    <p class="cta-subtitle">
-                        Take the first step towards better mental health. Our team is here to support you every step of the way.
-                    </p>
-                    <div class="cta-buttons">
-                        <a href="contact.html" class="cta-btn primary">
-                            <span>Schedule Consultation</span>
-                            <i class="ri-calendar-check-line"></i>
-                        </a>
-                        <a href="tel:2038231015" class="cta-btn secondary">
-                            <i class="ri-phone-line"></i>
-                            <span>(203) 823-1015</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Team Member Modals -->
+    <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay"></div>
-    
-    <!-- Modal Container (dynamically populated) -->
-    <div class="team-modal" id="teamModal">
-        <!-- Modal content will be injected by JavaScript -->
+
+    <!-- Dr. Kristie Doheny Modal -->
+    <div class="modal" id="modal-kristie">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="https://photos.psychologytoday.com/3dbf8360-46cd-11ea-a6ad-06142c356176/3/320x400.jpeg" alt="Dr. Kristie Doheny" class="modal-image">
+                <button class="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Dr. Kristie Doheny</h2>
+                <div class="modal-credentials">
+                    <span class="cred-badge primary">PsyD</span>
+                    <span class="cred-badge secondary">LMSW</span>
+                    <span class="cred-badge secondary">LMHC</span>
+                    <span class="cred-badge secondary">RPT-S</span>
+                    <span class="cred-badge secondary">Licensed Clinical Psychologist</span>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-heart-pulse-line"></i>
+                        About Dr. Doheny
+                    </h3>
+                    <p class="modal-text">
+                        While we can't change difficult situations of the past, we can work together to better understand and resolve challenges in your life. By applying complementary therapy approaches and techniques, we will unearth long-standing behavior patterns or negative perceptions that may be holding you back from experiencing a more fulfilling and meaningful life.
+                    </p>
+                    <p class="modal-text">
+                        If you're looking for extra support and guidance through a challenging situation or you're just ready to move in a new direction in your life, I look forward to working with you to achieve your goals.
+                    </p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-graduation-cap-line"></i>
+                        Experience & Specialization
+                    </h3>
+                    <p class="modal-text">
+                        With over 10 years of experience working with children, adolescents, adults, and families, I specialize in person-centered therapy which enables me to create individualized treatment for each client I meet. Psychological evaluations are also offered to assess for ADHD, learning disabilities, autism spectrum disorder (ADOS-2), and developmental delays.
+                    </p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-tools-line"></i>
+                        Treatment Approaches
+                    </h3>
+                    <div class="modal-list">
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-gamepad-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Play & Expressive Therapy</div>
+                                <div class="list-text">Specialized techniques including play therapy, sandplay therapy, and expressive therapy for children and adolescents</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-brain-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Cognitive-Behavioral Therapy</div>
+                                <div class="list-text">Evidence-based CBT techniques to address thought patterns and behavioral challenges</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-line-chart-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Neurofeedback & Biofeedback</div>
+                                <div class="list-text">Advanced techniques for brain training and physiological regulation</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-user-heart-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Person-Centered Therapy</div>
+                                <div class="list-text">Humanistic approach tailored to each individual's unique needs and goals</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-cta">
+                    <a href="index.html#contact" class="modal-btn primary">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Book Session</span>
+                    </a>
+                    <a href="tel:2038231015" class="modal-btn secondary">
+                        <i class="ri-phone-line"></i>
+                        <span>Call Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="luxury-footer">
-        <div class="footer-main">
-            <div class="footer-container">
-                <div class="footer-grid">
-                    <div class="footer-brand-column">
-                        <div class="footer-logo-wrapper">
-                            <img src="logo copy.png" alt="Holistic Psychological Services" class="footer-logo-img">
-                            <div class="logo-shine"></div>
-                        </div>
-                        <h3 class="footer-brand-name">Holistic Psychological Services</h3>
-                        <p class="footer-tagline">Your Partner in Mental Wellness</p>
-                        <p class="footer-description">
-                            Professional psychological services in Manhattan, offering compassionate, evidence-based care.
-                        </p>
-                        <div class="footer-social">
-                            <a href="https://www.instagram.com/psychologicalservicespllc/" class="social-link" target="_blank">
-                                <i class="ri-instagram-line"></i>
-                            </a>
-                        </div>
-                    </div>
+    <!-- Dr. Douglas Uhlig Modal -->
+    <div class="modal" id="modal-douglas">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="https://dougpsychassociates.com/doug.jpeg" alt="Dr. Douglas Uhlig" class="modal-image">
+                <button class="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Dr. Douglas J. Uhlig</h2>
+                <div class="modal-credentials">
+                    <span class="cred-badge primary">PhD</span>
+                    <span class="cred-badge secondary">MBA</span>
+                    <span class="cred-badge secondary">CASAC</span>
+                    <span class="cred-badge secondary">Licensed Clinical Psychologist</span>
+                </div>
 
-                    <div class="footer-links-column">
-                        <h4 class="footer-column-title">Quick Links</h4>
-                        <ul class="footer-links-list">
-                            <li><a href="index.html" class="footer-link-item">Home</a></li>
-                            <li><a href="about.html" class="footer-link-item">About Us</a></li>
-                            <li><a href="services.html" class="footer-link-item">Services</a></li>
-                            <li><a href="teams.html" class="footer-link-item">Team</a></li>
-                            <li><a href="contact.html" class="footer-link-item">Contact</a></li>
-                        </ul>
-                    </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-heart-pulse-line"></i>
+                        Philosophy & Approach
+                    </h3>
+                    <p class="modal-text">
+                        Within each of us is a deeper or higher self we can contact. Through Meditation, Cognitive Behavioral Therapy, Hypnosis, and Gestalt Therapy, I help people contact this part of themselves, shed negative patterns of behavior, and realize their full potential.
+                    </p>
+                    <p class="modal-text">
+                        I am a psychologist and therapist who focuses on marriage counseling, ADHD, alcohol and substance abuse, identity formation and parenting issues. I address feelings of emptiness, difficulties in managing emotions, relationships, anger, anxiety and depression in order to increase your level of self-awareness which can be totally life changing.
+                    </p>
+                </div>
 
-                    <div class="footer-links-column">
-                        <h4 class="footer-column-title">Services</h4>
-                        <ul class="footer-links-list">
-                            <li><a href="services.html" class="footer-link-item">Individual Therapy</a></li>
-                            <li><a href="services.html" class="footer-link-item">Couples Counseling</a></li>
-                            <li><a href="services.html" class="footer-link-item">Family Therapy</a></li>
-                            <li><a href="services.html" class="footer-link-item">ADHD Assessment</a></li>
-                        </ul>
-                    </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-award-line"></i>
+                        Professional Background
+                    </h3>
+                    <p class="modal-text">
+                        I am a Licensed Psychologist (NYS 018462) who combines traditional Psychodynamic and Cognitive Behavioral Therapy with over 35 years of teaching meditation and Mindfulness. What I enjoy most about my work is that it changes people at a very deep level. By changing people's consciousness and awareness of themselves, I see a significant improvement in clients suffering from depression, anxiety, low self esteem, obesity and marital problems.
+                    </p>
+                </div>
 
-                    <div class="footer-contact-column">
-                        <h4 class="footer-column-title">Contact</h4>
-                        <div class="footer-contact-item">
-                            <div class="contact-icon-wrapper">
-                                <i class="ri-map-pin-line"></i>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-tools-line"></i>
+                        Treatment Modalities
+                    </h3>
+                    <div class="modal-list">
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-brain-line"></i>
                             </div>
-                            <div class="contact-text">
-                                <span>274 Madison Ave, Suite 905</span>
-                                <span>New York, NY 10016</span>
+                            <div class="list-content">
+                                <div class="list-title">Cognitive Behavioral Therapy</div>
+                                <div class="list-text">Evidence-based approach to address thought patterns and behavioral challenges</div>
                             </div>
                         </div>
-                        <div class="footer-contact-item">
-                            <div class="contact-icon-wrapper">
-                                <i class="ri-phone-line"></i>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-leaf-line"></i>
                             </div>
-                            <div class="contact-text">
-                                <a href="tel:2038231015">(203) 823-1015</a>
+                            <div class="list-content">
+                                <div class="list-title">Meditation & Mindfulness</div>
+                                <div class="list-text">35+ years of experience teaching Transcendental Meditation and mindfulness practices</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-eye-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Hypnosis</div>
+                                <div class="list-text">Clinical hypnotherapy for behavior change and deep psychological work</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-group-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Family & Gestalt Therapy</div>
+                                <div class="list-text">Holistic approaches for family dynamics and personal growth</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-file-list-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Psychological Evaluations</div>
+                                <div class="list-text">Comprehensive evaluations for court, custody, bariatric, and academic achievement</div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="modal-cta">
+                    <a href="index.html#contact" class="modal-btn primary">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Book Session</span>
+                    </a>
+                    <a href="tel:2038231015" class="modal-btn secondary">
+                        <i class="ri-phone-line"></i>
+                        <span>Call Now</span>
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer-bottom">
-            <div class="footer-container">
-                <div class="footer-bottom-content">
-                    <div class="footer-copyright">
-                        <p>&copy; <span class="current-year">2024</span> Holistic Psychological Services. All rights reserved.</p>
+    <!-- Liam Miller Modal -->
+    <div class="modal" id="modal-liam">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="https://photos.psychologytoday.com/2cf6f0a5-a8ef-44fc-a5c9-ade0326127ee/1/320x400.jpeg" alt="Liam Miller" class="modal-image">
+                <button class="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Liam Miller</h2>
+                <div class="modal-credentials">
+                    <span class="cred-badge primary">MHC-LP</span>
+                    <span class="cred-badge secondary">MA</span>
+                    <span class="cred-badge secondary">BS</span>
+                    <span class="cred-badge secondary">Mental Health Counselor</span>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-heart-pulse-line"></i>
+                        Therapeutic Philosophy
+                    </h3>
+                    <p class="modal-text">
+                        Sometimes, what once helped us cope no longer meets our present needs. This shift can bring anxiety, confusion, depression, and a sense of losing oneself—compounding the everyday challenges we already face. In these moments, it can feel hard to know where to turn.
+                    </p>
+                    <p class="modal-text">
+                        Rediscovering who we are now, exploring who we want to become, and understanding our past all require empathy, compassion, and unconditional positive regard. Therapy offers a space to receive that support and guidance while helping you live more authentically and find what truly fits for you.
+                    </p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-user-star-line"></i>
+                        My Approach
+                    </h3>
+                    <p class="modal-text">
+                        I believe you are the expert on your own life. For meaningful change to happen, trust and support are essential—and must be given without condition. I've worked with people from all walks of life to explore their goals, honor their experiences, and discover what truly works for them, always with empathy and unconditional positive regard.
+                    </p>
+                    <p class="modal-text">
+                        Choosing therapy is a brave step, especially when facing uncertainty. Your journey is unique and deserves a safe, caring, and nonjudgmental space. My role is to co-create that space with you, so we can uncover and nurture your true self together—free from expectations, pressure, or one-size-fits-all answers.
+                    </p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-tools-line"></i>
+                        Areas of Focus
+                    </h3>
+                    <div class="modal-list">
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-emotion-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Anxiety & Depression</div>
+                                <div class="list-text">Compassionate support for managing anxiety disorders and depressive episodes</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-user-search-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Identity Formation</div>
+                                <div class="list-text">Exploring who you are and who you want to become with unconditional support</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-team-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Adolescent Care</div>
+                                <div class="list-text">Specialized support for teenagers navigating life transitions and challenges</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-leaf-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Mindfulness</div>
+                                <div class="list-text">Incorporating mindfulness-based interventions for stress reduction and self-awareness</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="footer-designer-credit">
-                        <span>Designed by</span>
-                        <a href="https://elanstechworld.com" target="_blank" class="designer-link">
-                            <i class="ri-code-s-slash-line"></i>
-                            <span>Elan's Tech World</span>
+                </div>
+
+                <div class="modal-cta">
+                    <a href="index.html#contact" class="modal-btn primary">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Book Session</span>
+                    </a>
+                    <a href="tel:2038231015" class="modal-btn secondary">
+                        <i class="ri-phone-line"></i>
+                        <span>Call Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cloè D'Arcangelo Modal -->
+    <div class="modal" id="modal-cloe">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="images/CloeDArcangelo.jpeg" alt="Cloè D'Arcangelo" class="modal-image">
+                <button class="modal-close">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Cloè D'Arcangelo</h2>
+                <div class="modal-credentials">
+                    <span class="cred-badge primary">CFC</span>
+                    <span class="cred-badge secondary">Certified Life Coach</span>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-heart-pulse-line"></i>
+                        About Cloè
+                    </h3>
+                    <p class="modal-text">
+                        As a Certified Life Coach, I bring specialized expertise in supporting individuals through some of life's most challenging experiences. My practice focuses on creating a safe, compassionate environment where healing and personal growth can flourish.
+                    </p>
+                    <p class="modal-text">
+                        I believe in the power of personalized support and evidence-based techniques to help you overcome obstacles and build a healthier, more fulfilling life. Whether you're struggling with disordered eating, processing trauma, or managing stress, I'm here to guide and support you every step of the way.
+                    </p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-tools-line"></i>
+                        Areas of Expertise
+                    </h3>
+                    <div class="modal-list">
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-heart-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Eating Disorders</div>
+                                <div class="list-text">Specialized treatment for anorexia, bulimia, binge eating disorder, and related challenges with compassionate, non-judgmental support</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-shield-star-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">PTSD Treatment</div>
+                                <div class="list-text">Evidence-based approaches for processing trauma and developing healthy coping mechanisms for post-traumatic stress</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-mental-health-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Stress Management</div>
+                                <div class="list-text">Practical techniques and strategies for managing daily stress, building resilience, and improving overall well-being</div>
+                            </div>
+                        </div>
+                        <div class="modal-list-item">
+                            <div class="list-icon">
+                                <i class="ri-flashlight-line"></i>
+                            </div>
+                            <div class="list-content">
+                                <div class="list-title">Personal Growth</div>
+                                <div class="list-text">Life coaching to help you set and achieve meaningful goals, build confidence, and create lasting positive change</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="ri-user-heart-line"></i>
+                        My Approach
+                    </h3>
+                    <p class="modal-text">
+                        I work collaboratively with each client to develop personalized strategies that address their unique needs and goals. My approach combines evidence-based techniques with compassionate support, creating a therapeutic relationship built on trust, respect, and genuine care for your wellbeing.
+                    </p>
+                </div>
+
+                <div class="modal-cta">
+                    <a href="index.html#contact" class="modal-btn primary">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Book Session</span>
+                    </a>
+                    <a href="tel:2038231015" class="modal-btn secondary">
+                        <i class="ri-phone-line"></i>
+                        <span>Call Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer Content -->
+    <div class="footer-main">
+        <div class="footer-container">
+            
+            <!-- Footer Grid -->
+            <div class="footer-grid">
+                
+                <!-- Brand Column -->
+                <div class="footer-brand-column">
+                    <div class="footer-logo-wrapper">
+                        <img src="logo copy.png" alt="Holistic Psychological Services" class="footer-logo-img">
+                        <div class="logo-shine"></div>
+                    </div>
+                    <h3 class="footer-brand-name">Holistic Psychological Services</h3>
+                    <p class="footer-tagline">Your Partner in Mental Wellness</p>
+                    <p class="footer-description">
+                        Professional psychological services in Manhattan, offering compassionate, evidence-based care for individuals, couples, and families.
+                    </p>
+                    
+                    <!-- Social Links -->
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/psychologicalservicespllc/" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="ri-instagram-line"></i>
                         </a>
                     </div>
                 </div>
+
+                <!-- Quick Links Column -->
+                <div class="footer-links-column">
+                    <h4 class="footer-column-title">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="index.html" class="footer-link-item">Home</a></li>
+                        <li><a href="about.html" class="footer-link-item">About Us</a></li>
+                        <li><a href="services.html" class="footer-link-item">Our Services</a></li>
+                        <li><a href="teams.html" class="footer-link-item">Meet Our Team</a></li>
+                        <li><a href="contact.html" class="footer-link-item">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services Column -->
+                <div class="footer-links-column">
+                    <h4 class="footer-column-title">Our Services</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="services.html" class="footer-link-item">Individual Therapy</a></li>
+                        <li><a href="services.html" class="footer-link-item">Couples Counseling</a></li>
+                        <li><a href="services.html" class="footer-link-item">Family Therapy</a></li>
+                        <li><a href="services.html" class="footer-link-item">Child Psychology</a></li>
+                        <li><a href="services.html" class="footer-link-item">ADHD Assessment</a></li>
+                        <li><a href="services.html" class="footer-link-item">Trauma Recovery</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="footer-contact-column">
+                    <h4 class="footer-column-title">Get in Touch</h4>
+                    
+                    <div class="footer-contact-item">
+                        <div class="contact-icon-wrapper">
+                            <i class="ri-map-pin-line"></i>
+                        </div>
+                        <div class="contact-text">
+                            <span>274 Madison Ave, Suite 905</span>
+                            <span>New York, NY 10016</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-contact-item">
+                        <div class="contact-icon-wrapper">
+                            <i class="ri-phone-line"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="tel:2038231015">(203) 823-1015</a>
+                        </div>
+                    </div>
+
+                    <div class="footer-contact-item">
+                        <div class="contact-icon-wrapper">
+                            <i class="ri-mail-line"></i>
+                        </div>
+                        <div class="contact-text">
+                            <a href="mailto:info@holisticpsychservicesny.com">info@holisticpsychservicesny.com</a>
+                        </div>
+                    </div>
+
+                    <div class="footer-contact-item">
+                        <div class="contact-icon-wrapper">
+                            <i class="ri-time-line"></i>
+                        </div>
+                        <div class="contact-text">
+                            <span>Mon - Sun: 9:00 AM - 9:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Payment & Insurance Section -->
+            <div class="footer-payment-section">
+                <div class="payment-info">
+                    <div class="payment-header">
+                        <i class="ri-shield-check-line"></i>
+                        <h4>Payment & Insurance</h4>
+                    </div>
+                    <p class="payment-description">
+                        We accept most major insurance plans and welcome self-pay clients. Multiple payment options available for your convenience.
+                    </p>
+                </div>
+
+                <div class="payment-methods">
+                    <div class="payment-badges">
+                        <div class="payment-badge">
+                            <i class="ri-bank-card-line"></i>
+                            <span>Credit Cards</span>
+                        </div>
+                        <div class="payment-badge">
+                            <i class="ri-money-dollar-circle-line"></i>
+                            <span>Cash</span>
+                        </div>
+                        <div class="payment-badge">
+                            <i class="ri-shield-cross-line"></i>
+                            <span>Insurance</span>
+                        </div>
+                        <div class="payment-badge">
+                            <i class="ri-bank-line"></i>
+                            <span>HSA/FSA</span>
+                        </div>
+                    </div>
+
+                    <div class="partner-logos">
+                        <div class="partner-logo">
+                            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968880.png" alt="Psychology Today" class="logo-img">
+                            <span class="logo-label">Find us on<br>Psychology Today</span>
+                        </div>
+                        <div class="partner-logo">
+                            <img src="https://cdn.worldvectorlogo.com/logos/square-1.svg" alt="Square" class="logo-img">
+                            <span class="logo-label">Secure payments<br>powered by Square</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credentials Banner -->
+            <div class="credentials-banner">
+                <div class="credential-item">
+                    <i class="ri-shield-check-line"></i>
+                    <span>HIPAA Compliant</span>
+                </div>
+                <div class="credential-divider"></div>
+                <div class="credential-item">
+                    <i class="ri-user-star-line"></i>
+                    <span>Licensed Professionals</span>
+                </div>
+                <div class="credential-divider"></div>
+                <div class="credential-item">
+                    <i class="ri-award-line"></i>
+                    <span>Evidence-Based Care</span>
+                </div>
+                <div class="credential-divider"></div>
+                <div class="credential-item">
+                    <i class="ri-heart-pulse-line"></i>
+                    <span>LGBTQ+ Affirming</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+        <div class="footer-container">
+            <div class="footer-bottom-content">
+                
+                <div class="footer-copyright">
+                    <p>&copy; <span class="current-year">2024</span> Holistic Psychological Services PLLC. All rights reserved.</p>
+                </div>
+
+                <div class="footer-legal-links">
+                    <a href="privacy-policy.html" class="legal-link">Privacy Policy</a>
+                    <span class="legal-divider">•</span>
+                    <a href="terms-of-service.html" class="legal-link">Terms of Service</a>
+                    <span class="legal-divider">•</span>
+                    <a href="hipaa-notice.html" class="legal-link">HIPAA Notice</a>
+                </div>
+
+                <div class="footer-designer-credit">
+                    <span>Designed by</span>
+                    <a href="https://elanstechworld.com" target="_blank" class="designer-link">
+                        <i class="ri-code-s-slash-line"></i>
+                        <span>Elan's Tech World</span>
+                    </a>
+                </div>
+
             </div>
         </div>
-    </footer>
-
-    <!-- Back to Top -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="ri-arrow-up-line"></i>
-    </button>
+    </div>
+</footer>    
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="scripts.js"></script>
     <script src="teams.js"></script>
-    
-    <script>
-        AOS.init({
-            duration: 700,
-            easing: 'ease-out-cubic',
-            once: true,
-            offset: 80
-        });
-    </script>
 </body>
 </html>
