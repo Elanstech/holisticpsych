@@ -26,6 +26,7 @@ class ServicesPage {
     setup() {
         this.initCategoryFiltering();
         this.initFAQAccordion();
+        this.initProcessAccordion();
         this.initScrollEffects();
         this.initSmoothScrolling();
         this.initImageLazyLoading();
@@ -115,6 +116,38 @@ class ServicesPage {
     }
     
     /* ==========================================================================
+       PROCESS ACCORDION
+       ========================================================================== */
+    
+    initProcessAccordion() {
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        
+        if (accordionItems.length === 0) return;
+        
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            
+            header.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items (single-open behavior)
+                accordionItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                if (isActive) {
+                    item.classList.remove('active');
+                } else {
+                    item.classList.add('active');
+                }
+            });
+        });
+    }
+    
+    /* ==========================================================================
        SCROLL EFFECTS
        ========================================================================== */
     
@@ -134,7 +167,6 @@ class ServicesPage {
     
     handleScroll() {
         this.fadeInOnScroll();
-        this.parallaxTimeline();
     }
     
     fadeInOnScroll() {
@@ -148,23 +180,6 @@ class ServicesPage {
                 element.classList.add('visible');
             }
         });
-    }
-    
-    parallaxTimeline() {
-        const timeline = document.querySelector('.process-timeline');
-        if (!timeline) return;
-        
-        const rect = timeline.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        
-        if (rect.top < windowHeight && rect.bottom > 0) {
-            const scrollPercentage = (windowHeight - rect.top) / (windowHeight + rect.height);
-            const timelineLine = document.querySelector('.process-timeline::before');
-            
-            // This would need to be done via a data attribute or inline style
-            // For now, we'll use CSS variables
-            timeline.style.setProperty('--scroll-progress', scrollPercentage);
-        }
     }
     
     /* ==========================================================================
@@ -298,68 +313,6 @@ class ServiceCardsInteractions {
         card.style.transition = 'all 0.6s ease';
         
         observer.observe(card);
-    }
-}
-
-/* ==========================================================================
-   TIMELINE ANIMATIONS
-   ========================================================================== */
-
-class TimelineAnimations {
-    constructor() {
-        this.timeline = document.querySelector('.process-timeline');
-        this.items = document.querySelectorAll('.timeline-item');
-        this.init();
-    }
-    
-    init() {
-        if (!this.timeline || this.items.length === 0) return;
-        
-        this.animateTimelineOnScroll();
-    }
-    
-    animateTimelineOnScroll() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.animateItem(entry.target);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.2
-        });
-        
-        this.items.forEach(item => observer.observe(item));
-    }
-    
-    animateItem(item) {
-        const number = item.querySelector('.timeline-number');
-        const content = item.querySelector('.timeline-content');
-        
-        // Animate number
-        if (number) {
-            number.style.transform = 'scale(0)';
-            number.style.opacity = '0';
-            
-            setTimeout(() => {
-                number.style.transition = 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                number.style.transform = 'scale(1)';
-                number.style.opacity = '1';
-            }, 100);
-        }
-        
-        // Animate content
-        if (content) {
-            content.style.transform = 'translateX(30px)';
-            content.style.opacity = '0';
-            
-            setTimeout(() => {
-                content.style.transition = 'all 0.6s ease';
-                content.style.transform = 'translateX(0)';
-                content.style.opacity = '1';
-            }, 300);
-        }
     }
 }
 
@@ -621,7 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize component interactions
     window.serviceCards = new ServiceCardsInteractions();
-    window.timelineAnimations = new TimelineAnimations();
     window.approachCards = new ApproachCardsAnimations();
     window.ctaButtons = new CTAButtonInteractions();
     window.serviceSearch = new ServiceSearch();
@@ -693,7 +645,6 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         ServicesPage,
         ServiceCardsInteractions,
-        TimelineAnimations,
         ApproachCardsAnimations,
         CTAButtonInteractions,
         ServiceSearch,
