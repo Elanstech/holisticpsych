@@ -1,70 +1,170 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta name="description" content="Contact Holistic Psychological Services in Manhattan, NY. Schedule your consultation, visit our office, or reach out to our compassionate team.">
-
     <meta name="keywords" content="contact psychologist, Manhattan therapy, schedule consultation, mental health contact">
-
     <title>Contact Us - Holistic Psychological Services | Manhattan, NY</title>
-
- 
-
+    
     <!-- Preload Critical Resources -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
- 
-
     <!-- Google Fonts: Inter & Playfair Display -->
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-
- 
-
+    
     <!-- Remix Icon -->
-
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
- 
-
     <!-- Elfsight Platform -->
-
     <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-
- 
-
+    
     <!-- Stylesheets -->
-
     <link rel="stylesheet" href="styles.css">
-
     <link rel="stylesheet" href="contact.css">
-
- 
-
+    
     <!-- Favicon -->
-
     <link rel="icon" type="image/png" href="logo copy.png">
-
+    
 </head>
-
 <body>
+    
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-island">
+            <div class="header-content">
+                <div class="brand-text">
+                    <div class="brand-name">Holistic Psychological Services</div>
+                    <div class="brand-subtitle">Manhattan, NY</div>
+                </div>
+                
+                <nav class="nav-menu desktop-nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link active">All About Us</a>
+                    <a href="services.html" class="nav-link">View Our Services</a>
+                    <a href="team.html" class="nav-link">Meet Our Team</a>
+                    <a href="contact.html" class="nav-link">Contact Us</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <a href="tel:2038231015" class="header-btn btn-call">
+                        <i class="ri-phone-line"></i>
+                        <span>Call Now</span>
+                    </a>
+                    <a href="#contact" class="header-btn btn-book">
+                        <i class="ri-calendar-check-line"></i>
+                        <span>Book Consultation</span>
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <button class="scroll-hamburger-toggle" id="scrollHamburgerToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
 
- 
-
-    <!-- HEADER SPACE - User will add their header HTML here -->
-
- 
-
- 
+    <!-- Mobile Menu Panel -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu-panel" id="mobileMenuPanel">
+        <div class="mobile-menu-header">
+            <div class="mobile-brand">
+                <img src="logo copy.png" alt="Logo" class="mobile-logo">
+                <div class="mobile-brand-text">
+                    <div class="mobile-brand-name">Holistic Psychological</div>
+                    <div class="mobile-brand-location">Manhattan, NY</div>
+                </div>
+            </div>
+            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+        
+        <nav class="mobile-nav">
+            <a href="index.html" class="mobile-nav-link">
+                <div class="nav-link-content">
+                    <i class="ri-home-4-line"></i>
+                    <span>Home</span>
+                </div>
+                <i class="ri-arrow-right-s-line nav-arrow"></i>
+            </a>
+            <a href="about.html" class="mobile-nav-link">
+                <div class="nav-link-content">
+                    <i class="ri-information-line"></i>
+                    <span>All About Us</span>
+                </div>
+                <i class="ri-arrow-right-s-line nav-arrow"></i>
+            </a>
+            <a href="services.html" class="mobile-nav-link">
+                <div class="nav-link-content">
+                    <i class="ri-service-line"></i>
+                    <span>View Our Services</span>
+                </div>
+                <i class="ri-arrow-right-s-line nav-arrow"></i>
+            </a>
+            <a href="team.html" class="mobile-nav-link">
+                <div class="nav-link-content">
+                    <i class="ri-team-line"></i>
+                    <span>Meet Our Team</span>
+                </div>
+                <i class="ri-arrow-right-s-line nav-arrow"></i>
+            </a>
+            <a href="contact.html" class="mobile-nav-link">
+                <div class="nav-link-content">
+                    <i class="ri-mail-line"></i>
+                    <span>Contact Us</span>
+                </div>
+                <i class="ri-arrow-right-s-line nav-arrow"></i>
+            </a>
+        </nav>
+        
+        <div class="mobile-menu-footer">
+            <div class="mobile-contact-info">
+                <a href="tel:2038231015" class="mobile-contact-item">
+                    <div class="contact-icon">
+                        <i class="ri-phone-line"></i>
+                    </div>
+                    <div class="contact-details">
+                        <span class="contact-label">Call Us</span>
+                        <span class="contact-value">(203) 823-1015</span>
+                    </div>
+                </a>
+                <a href="mailto:info@holisticpsych.com" class="mobile-contact-item">
+                    <div class="contact-icon">
+                        <i class="ri-mail-line"></i>
+                    </div>
+                    <div class="contact-details">
+                        <span class="contact-label">Email Us</span>
+                        <span class="contact-value">Get In Touch</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="mobile-cta">
+                <a href="#contact" class="mobile-cta-btn">
+                    <i class="ri-calendar-check-line"></i>
+                    <span>Schedule Consultation</span>
+                    <div class="btn-shimmer"></div>
+                </a>
+            </div>
+            
+            <div class="mobile-social">
+                <a href="https://www.instagram.com/psychologicalservicespllc/" class="mobile-social-link" target="_blank">
+                    <i class="ri-instagram-line"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
 
