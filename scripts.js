@@ -1174,7 +1174,7 @@ class TeamCarouselV3 {
         });
         
         // Book buttons
-        const bookBtns = document.querySelectorAll('.book-btn-v3, .join-btn-v3, .cta-btn-v3');
+        const bookBtns = document.querySelectorAll('.join-btn-v3, .cta-btn-v3');
         bookBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
