@@ -1,6 +1,6 @@
 /* ==========================================================================
-   MODERN TEAM PAGE - JAVASCRIPT
-   Interactive functionality for team member cards and modals
+   MODERN TEAM PAGE - PROFESSIONAL JAVASCRIPT
+   Clean, Professional Interactions
    ========================================================================== */
 
 'use strict';
@@ -25,19 +25,6 @@ class ModernTeamModal {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const card = btn.closest('.team-member-card');
-                const memberId = card.getAttribute('data-member');
-                this.openModal(memberId);
-            });
-        });
-        
-        // Bind card clicks (fallback)
-        this.teamCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                // Don't open modal if clicking on book session button
-                if (e.target.closest('.book-session-btn')) {
-                    return;
-                }
-                
                 const memberId = card.getAttribute('data-member');
                 this.openModal(memberId);
             });
@@ -119,48 +106,11 @@ class ModernTeamModal {
             section.style.transform = 'translateY(20px)';
             
             setTimeout(() => {
-                section.style.transition = 'all 0.5s ease';
+                section.style.transition = 'all 0.4s ease';
                 section.style.opacity = '1';
                 section.style.transform = 'translateY(0)';
             }, 100 * index);
         });
-    }
-}
-
-/* ==========================================================================
-   BOOK SESSION HANDLER
-   ========================================================================== */
-class BookSessionHandler {
-    constructor() {
-        this.bookButtons = document.querySelectorAll('.book-session-btn');
-        this.init();
-    }
-    
-    init() {
-        this.bookButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.scrollToContact();
-            });
-        });
-    }
-    
-    scrollToContact() {
-        // If on the same page, scroll to contact
-        const contact = document.querySelector('#contact');
-        if (contact) {
-            const headerOffset = 100;
-            const elementPosition = contact.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        } else {
-            // If not on same page, navigate to index.html#contact
-            window.location.href = 'index.html#contact';
-        }
     }
 }
 
@@ -327,61 +277,6 @@ class CTAScrollHandler {
 }
 
 /* ==========================================================================
-   CREDENTIAL BADGE ANIMATIONS
-   ========================================================================== */
-class CredentialBadgeAnimations {
-    constructor() {
-        this.badges = document.querySelectorAll('.credential-badge, .expertise-tags .tag');
-        this.init();
-    }
-    
-    init() {
-        this.badges.forEach(badge => {
-            badge.addEventListener('mouseenter', () => {
-                this.animateBadge(badge);
-            });
-        });
-    }
-    
-    animateBadge(badge) {
-        badge.style.transform = 'translateY(-2px) scale(1.05)';
-        setTimeout(() => {
-            badge.style.transform = '';
-        }, 300);
-    }
-}
-
-/* ==========================================================================
-   FLOATING ORB ANIMATIONS
-   ========================================================================== */
-class FloatingOrbAnimations {
-    constructor() {
-        this.orbs = document.querySelectorAll('.gradient-orb');
-        this.init();
-    }
-    
-    init() {
-        // Add mouse parallax effect
-        document.addEventListener('mousemove', (e) => {
-            this.moveOrbs(e);
-        });
-    }
-    
-    moveOrbs(e) {
-        const mouseX = e.clientX / window.innerWidth;
-        const mouseY = e.clientY / window.innerHeight;
-        
-        this.orbs.forEach((orb, index) => {
-            const speed = (index + 1) * 20;
-            const x = (mouseX - 0.5) * speed;
-            const y = (mouseY - 0.5) * speed;
-            
-            orb.style.transform = `translate(${x}px, ${y}px)`;
-        });
-    }
-}
-
-/* ==========================================================================
    STATUS BADGE PULSE
    ========================================================================== */
 class StatusBadgePulse {
@@ -398,52 +293,6 @@ class StatusBadgePulse {
                 dot.style.animationDelay = `${index * 0.3}s`;
             }
         });
-    }
-}
-
-/* ==========================================================================
-   CARD TILT EFFECT (OPTIONAL - FOR EXTRA WOW FACTOR)
-   ========================================================================== */
-class CardTiltEffect {
-    constructor() {
-        this.cards = document.querySelectorAll('.team-member-card');
-        this.init();
-    }
-    
-    init() {
-        this.cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                this.tiltCard(card, e);
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                this.resetCard(card);
-            });
-        });
-    }
-    
-    tiltCard(card, e) {
-        const cardRect = card.getBoundingClientRect();
-        const cardCenterX = cardRect.left + cardRect.width / 2;
-        const cardCenterY = cardRect.top + cardRect.height / 2;
-        
-        const mouseX = e.clientX - cardCenterX;
-        const mouseY = e.clientY - cardCenterY;
-        
-        const rotateX = (mouseY / cardRect.height) * -10;
-        const rotateY = (mouseX / cardRect.width) * 10;
-        
-        const cardInner = card.querySelector('.card-inner');
-        if (cardInner) {
-            cardInner.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        }
-    }
-    
-    resetCard(card) {
-        const cardInner = card.querySelector('.card-inner');
-        if (cardInner) {
-            cardInner.style.transform = '';
-        }
     }
 }
 
@@ -481,59 +330,20 @@ class ImageLazyLoader {
 document.addEventListener('DOMContentLoaded', () => {
     // Core functionality
     const teamModal = new ModernTeamModal();
-    const bookSession = new BookSessionHandler();
     const ctaScroll = new CTAScrollHandler();
     
     // Animations
     const cardAnimations = new TeamCardAnimations();
     const statsCounter = new StatsCounter();
-    const badgeAnimations = new CredentialBadgeAnimations();
-    const orbAnimations = new FloatingOrbAnimations();
     const statusPulse = new StatusBadgePulse();
-    
-    // Optional effects (comment out if too much)
-    const cardTilt = new CardTiltEffect();
     const imageLazyLoader = new ImageLazyLoader();
     
-    console.log('🎉 Modern Team Page initialized successfully!');
+    console.log('✨ Professional Team Page initialized successfully!');
 });
-
-/* ==========================================================================
-   PERFORMANCE OPTIMIZATION
-   ========================================================================== */
-
-// Debounce function for performance
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Throttle function for performance
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
 
 /* ==========================================================================
    ACCESSIBILITY ENHANCEMENTS
    ========================================================================== */
-
-// Add keyboard navigation for cards
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.team-member-card');
     
@@ -545,9 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const memberId = card.getAttribute('data-member');
-                const modal = new ModernTeamModal();
-                modal.openModal(memberId);
+                const viewBtn = card.querySelector('.view-profile-btn');
+                if (viewBtn) {
+                    viewBtn.click();
+                }
             }
         });
     });
@@ -561,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         .view-profile-btn:focus,
-        .book-session-btn:focus,
         .modal-close:focus,
         .cta-btn:focus {
             outline: 3px solid var(--primary-green);
@@ -577,14 +387,10 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         ModernTeamModal,
-        BookSessionHandler,
         TeamCardAnimations,
         StatsCounter,
         CTAScrollHandler,
-        CredentialBadgeAnimations,
-        FloatingOrbAnimations,
         StatusBadgePulse,
-        CardTiltEffect,
         ImageLazyLoader
     };
 }
