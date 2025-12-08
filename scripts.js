@@ -34,6 +34,7 @@ class App {
         this.team = new AboutSectionV3();
         this.team = new TeamCarouselV3();
         this.team = new ReviewsCarouselV3();
+        this.team = new WomenGroupPromo();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
@@ -1629,6 +1630,96 @@ if (typeof module !== 'undefined' && module.exports) {
         ReviewsInstaAnimations,
         ExternalLinksHandler 
     };
+}
+
+/* ==========================================================================
+   PROMO
+   ========================================================================== */
+class WomenGroupPromo {
+    constructor() {
+        this.promoBtn = document.getElementById('promoBtn');
+        this.modal = document.getElementById('flyerModal');
+        this.overlay = document.getElementById('flyerOverlay');
+        this.closeBtn = document.getElementById('flyerClose');
+        this.contactBtn = document.getElementById('flyerContactBtn');
+        
+        if (this.promoBtn && this.modal) {
+            this.init();
+        }
+    }
+    
+    init() {
+        // Open modal
+        this.promoBtn.addEventListener('click', () => this.openModal());
+        
+        // Close modal
+        this.closeBtn.addEventListener('click', () => this.closeModal());
+        this.overlay.addEventListener('click', () => this.closeModal());
+        
+        // Contact button - close modal and scroll to contact
+        if (this.contactBtn) {
+            this.contactBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.closeModal();
+                
+                // Wait for modal to close, then scroll
+                setTimeout(() => {
+                    const contactSection = document.querySelector('#contact');
+                    if (contactSection) {
+                        const headerOffset = 100;
+                        const elementPosition = contactSection.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 300);
+            });
+        }
+        
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+                this.closeModal();
+            }
+        });
+        
+        // Prevent body scroll when modal is open
+        this.modal.addEventListener('transitionend', () => {
+            if (this.modal.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+    }
+    
+    openModal() {
+        this.modal.classList.add('active');
+        // Stop promo button animation when opened
+        this.promoBtn.style.animation = 'none';
+    }
+    
+    closeModal() {
+        this.modal.classList.remove('active');
+        // Resume promo button animation
+        setTimeout(() => {
+            this.promoBtn.style.animation = '';
+        }, 300);
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.womenGroupPromo = new WomenGroupPromo();
+    console.log('Women\'s Support Group promo initialized');
+});
+
+// Export for potential external use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { WomenGroupPromo };
 }
 
 /* ==========================================================================
