@@ -31,10 +31,10 @@ class App {
         this.header = new Header();
         this.hero = new Hero();
         this.services = new ServicesCarousel();
-        this.team = new AboutSectionV3();
+        this.about = new AboutSectionV3();
         this.team = new TeamCarouselV3();
-        this.team = new ReviewsCarouselV3();
-        this.team = new WomenGroupPromo();
+        this.reviews = new ReviewsCarouselV3();
+        this.promo = new WomenGroupPromo();
         this.contact = new ContactForm();
         this.footer = new Footer();
         
