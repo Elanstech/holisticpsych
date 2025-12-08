@@ -5196,6 +5196,401 @@ input, textarea, select {
 }
 
 /* ==========================================================================
+   FLOATING PROMO BUTTON
+   ========================================================================== */
+.floating-promo-btn {
+    position: fixed;
+    top: 140px;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 12px 12px;
+    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.4);
+    cursor: pointer;
+    z-index: 999;
+    transition: all 0.3s ease;
+    animation: floatIn 0.6s ease-out, bounce 3s ease-in-out 2s infinite;
+}
+
+.floating-promo-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 32px rgba(0, 216, 132, 0.5);
+}
+
+.floating-promo-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.promo-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00d884;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.promo-pulse {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.promo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #ffffff;
+    position: relative;
+    z-index: 2;
+}
+
+.promo-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.promo-subtitle {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.95;
+}
+
+/* Animations */
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ==========================================================================
+   FLYER MODAL
+   ========================================================================== */
+.flyer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.flyer-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.flyer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+}
+
+.flyer-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s ease;
+    overflow-y: auto;
+}
+
+.flyer-modal.active .flyer-content {
+    transform: scale(1) translateY(0);
+}
+
+.flyer-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 3;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.flyer-close:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+}
+
+.flyer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.flyer-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Flyer CTA */
+.flyer-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 216, 132, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+    border: 2px solid rgba(0, 216, 132, 0.2);
+    border-radius: 16px;
+}
+
+.flyer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
+    color: #ffffff;
+    border-radius: 100px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0, 216, 132, 0.3);
+    transition: all 0.3s ease;
+}
+
+.flyer-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 216, 132, 0.4);
+}
+
+.flyer-btn i {
+    font-size: 1.125rem;
+}
+
+.flyer-note {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-align: center;
+    margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+/* Tablets and below */
+@media (max-width: 991px) {
+    .floating-promo-btn {
+        top: 120px;
+        right: 1.5rem;
+        padding: 10px 16px 10px 10px;
+        gap: 10px;
+    }
+    
+    .promo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.375rem;
+    }
+    
+    .promo-pulse {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .promo-title {
+        font-size: 0.8125rem;
+    }
+    
+    .promo-subtitle {
+        font-size: 0.6875rem;
+    }
+}
+
+/* Mobile landscape and below */
+@media (max-width: 767px) {
+    .floating-promo-btn {
+        top: 110px;
+        right: 1rem;
+        padding: 8px 12px 8px 8px;
+        gap: 8px;
+    }
+    
+    .promo-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+    
+    .promo-pulse {
+        top: 8px;
+        left: 8px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .promo-title {
+        font-size: 0.75rem;
+    }
+    
+    .promo-subtitle {
+        font-size: 0.625rem;
+    }
+    
+    .flyer-content {
+        width: 95%;
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+    
+    .flyer-close {
+        width: 40px;
+        height: 40px;
+        font-size: 1.375rem;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+    
+    .flyer-cta {
+        padding: 1.25rem;
+    }
+    
+    .flyer-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 32px;
+        font-size: 1rem;
+    }
+}
+
+/* Mobile portrait */
+@media (max-width: 640px) {
+    .floating-promo-btn {
+        top: 100px;
+    }
+    
+    .promo-text {
+        display: none;
+    }
+    
+    .floating-promo-btn {
+        padding: 10px;
+        border-radius: 50%;
+    }
+    
+    .flyer-content {
+        width: 96%;
+        padding: 1rem;
+        max-height: 92vh;
+    }
+    
+    .flyer-container {
+        gap: 1.5rem;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .floating-promo-btn {
+        top: 95px;
+        right: 0.75rem;
+    }
+    
+    .promo-icon {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .flyer-close {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+    
+    .flyer-btn {
+        padding: 12px 24px;
+        font-size: 0.9375rem;
+    }
+}
+
+/* Adjust when header is scrolled */
+.header.scrolled ~ .floating-promo-btn {
+    top: 100px;
+}
+
+@media (max-width: 767px) {
+    .header.scrolled ~ .floating-promo-btn {
+        top: 90px;
+    }
+}
+
+/* ==========================================================================
    RESPONSIVE STYLES
    ========================================================================== */
 @media (max-width: 1200px) {
