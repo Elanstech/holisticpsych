@@ -689,6 +689,10 @@ document.addEventListener('visibilitychange', () => {
    ABOUT SECTION
    ========================================================================== */
 
+/* ==========================================================================
+   ABOUT SECTION V3 - UPDATED JAVASCRIPT
+   ========================================================================== */
+
 class AboutSectionV3 {
     constructor() {
         this.section = document.querySelector('.about-section-v3');
@@ -696,7 +700,6 @@ class AboutSectionV3 {
         this.stats = document.querySelectorAll('.stat-v3');
         this.inclusiveStatement = document.querySelector('.inclusive-statement-v3');
         this.foundersCard = document.querySelector('.founders-card-v3');
-        this.imageWrapper = document.querySelector('.image-wrapper-v3');
         this.ctaButton = document.querySelector('.about-cta-v3');
         
         if (this.section) {
@@ -773,17 +776,20 @@ class AboutSectionV3 {
             }, 600 + (index * 80));
         });
         
-        // Animate founders card
-        if (this.foundersCard) {
-            this.foundersCard.style.opacity = '0';
-            this.foundersCard.style.transform = 'translateY(30px)';
-            
-            setTimeout(() => {
-                this.foundersCard.style.transition = 'all 0.7s ease';
-                this.foundersCard.style.opacity = '1';
-                this.foundersCard.style.transform = 'translateY(0)';
-            }, 300);
-        }
+        // Animate founders card (both desktop and mobile versions)
+        const foundersCards = document.querySelectorAll('.founders-card-v3');
+        foundersCards.forEach((card, index) => {
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.7s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 300 + (index * 50));
+            }
+        });
     }
     
     /**
@@ -874,10 +880,8 @@ class AboutSectionV3 {
             });
         }
         
-        // Image parallax on scroll
-        if (this.imageWrapper) {
-            this.initImageParallax();
-        }
+        // REMOVED: Image parallax functionality
+        // Image parallax is no longer needed
     }
     
     /**
@@ -930,46 +934,6 @@ class AboutSectionV3 {
             });
         }
     }
-    
-    /**
-     * Initialize image parallax effect
-     */
-    initImageParallax() {
-        let ticking = false;
-        
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    this.updateImageParallax();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-    }
-    
-    /**
-     * Update image parallax position
-     */
-    updateImageParallax() {
-        if (!this.imageWrapper) return;
-        
-        const scrolled = window.pageYOffset;
-        const sectionTop = this.section.offsetTop;
-        const sectionHeight = this.section.offsetHeight;
-        
-        // Only apply parallax when section is in view
-        if (scrolled > sectionTop - window.innerHeight && 
-            scrolled < sectionTop + sectionHeight) {
-            
-            const offset = (scrolled - sectionTop) * 0.1;
-            const img = this.imageWrapper.querySelector('img');
-            
-            if (img) {
-                img.style.transform = `translateY(${offset}px) scale(1.05)`;
-            }
-        }
-    }
 }
 
 /**
@@ -977,10 +941,10 @@ class AboutSectionV3 {
  */
 class FoundersCardInteractions {
     constructor() {
-        this.foundersCard = document.querySelector('.founders-card-v3');
+        this.foundersCards = document.querySelectorAll('.founders-card-v3');
         this.founders = document.querySelectorAll('.founder-v3');
         
-        if (this.foundersCard) {
+        if (this.foundersCards.length > 0) {
             this.init();
         }
     }
@@ -1054,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.foundersCardInteractions = new FoundersCardInteractions();
     window.inclusiveStatementAnimation = new InclusiveStatementAnimation();
     
-    console.log('About Section V3 initialized');
+    console.log('About Section V3 initialized - Parallax removed, mobile image repositioned');
 });
 
 // Export for potential external use
