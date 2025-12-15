@@ -1366,7 +1366,7 @@ input, textarea, select {
 }
 
 /* ==========================================================================
-   ABOUT SECTION
+   ABOUT SECTION V3 - UPDATED
    ========================================================================== */
 
 .about-section-v3 {
@@ -1442,6 +1442,20 @@ input, textarea, select {
 .about-description-v3 strong {
     color: var(--gray-800);
     font-weight: 700;
+}
+
+/* Mobile Image - Hidden on Desktop */
+.about-image-mobile-v3 {
+    display: none;
+}
+
+/* Desktop Image - Visible on Desktop */
+.about-image-desktop-v3 {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 120px;
 }
 
 /* Values Grid */
@@ -1622,15 +1636,7 @@ input, textarea, select {
     box-shadow: 0 12px 32px rgba(0, 216, 132, 0.4);
 }
 
-/* Image Content */
-.about-image-v3 {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    position: sticky;
-    top: 120px;
-}
-
+/* Image Wrapper */
 .image-wrapper-v3 {
     position: relative;
     border-radius: 24px;
@@ -1642,12 +1648,13 @@ input, textarea, select {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.5s ease;
+    /* REMOVED: transition: transform 0.5s ease; */
 }
 
-.image-wrapper-v3:hover img {
+/* REMOVED: Hover transform effect */
+/* .image-wrapper-v3:hover img {
     transform: scale(1.05);
-}
+} */
 
 .image-decoration-v3 {
     position: absolute;
@@ -1781,9 +1788,53 @@ input, textarea, select {
         gap: 48px;
     }
     
-    .about-image-v3 {
-        position: relative;
-        top: 0;
+    /* Hide desktop image, show mobile image */
+    .about-image-desktop-v3 {
+        display: none;
+    }
+    
+    .about-image-mobile-v3 {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        order: 0; /* Ensure it appears after the paragraphs */
+    }
+    
+    /* Reorder text content for mobile */
+    .about-text-v3 {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Ensure paragraphs come first */
+    .about-intro-v3 {
+        order: -2;
+    }
+    
+    .about-description-v3 {
+        order: -1;
+    }
+    
+    /* Image appears after description */
+    .about-image-mobile-v3 {
+        order: 0;
+    }
+    
+    /* Everything else follows */
+    .values-grid-v3 {
+        order: 1;
+    }
+    
+    .inclusive-statement-v3 {
+        order: 2;
+    }
+    
+    .about-stats-v3 {
+        order: 3;
+    }
+    
+    .about-cta-v3 {
+        order: 4;
     }
     
     .values-grid-v3 {
