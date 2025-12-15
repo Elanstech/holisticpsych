@@ -553,7 +553,7 @@ input, textarea, select {
 }
 
 /* ==========================================================================
-   HERO SECTION
+   HERO SECTION - UPDATED WITH FOUNDERS CARD
    ========================================================================== */
 
 .hero {
@@ -688,7 +688,7 @@ input, textarea, select {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-xl);
+    padding: 0 2rem;
 }
 
 .hero-content {
@@ -696,8 +696,8 @@ input, textarea, select {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: var(--space-2xl);
-    padding-bottom: var(--space-4xl);
+    gap: 2rem;
+    padding-bottom: 4rem;
 }
 
 .logo-showcase {
@@ -792,12 +792,12 @@ input, textarea, select {
 }
 
 .hero-title {
-    font-family: var(--font-heading);
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 700;
-    color: var(--white);
+    color: #ffffff;
     line-height: 1.2;
-    margin-bottom: var(--space-lg);
+    margin-bottom: 1.5rem;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -807,7 +807,7 @@ input, textarea, select {
 
 .title-highlight {
     display: block;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -825,27 +825,27 @@ input, textarea, select {
 .hero-cta {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: 1.5rem;
     animation: fadeInUp 1s ease 0.4s both;
 }
 
 .cta-button {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-lg) var(--space-2xl);
-    border-radius: var(--radius-full);
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
     font-weight: 600;
     font-size: 1rem;
-    transition: var(--transition-medium);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
 .cta-button.primary {
-    background: var(--gradient-primary);
-    color: var(--white);
-    box-shadow: var(--shadow-xl);
+    background: linear-gradient(135deg, #00d884 0%, #0ea5e9 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 216, 132, 0.4);
 }
 
 .cta-button.primary:hover {
@@ -856,7 +856,7 @@ input, textarea, select {
 .cta-button.secondary {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    color: var(--white);
+    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -884,129 +884,121 @@ input, textarea, select {
     }
 }
 
-.hero-features {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xl);
-    animation: fadeInUp 1s ease 0.6s both;
-}
-
-.feature-badge {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--space-lg);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: var(--radius-full);
-    color: var(--white);
-    font-size: 0.875rem;
-    font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.feature-badge i {
-    font-size: 1.125rem;
-    color: var(--primary-green);
-}
-
-/* Signatures Section */
-.signatures-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2xl);
-    padding: var(--space-2xl) var(--space-3xl);
-    background: rgba(255, 255, 255, 0.15);
+/* NEW: Hero Founders Card */
+.hero-founders-card {
+    background: rgba(26, 26, 46, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: var(--radius-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem;
+    padding: 2rem;
     box-shadow: 
-        0 8px 32px rgba(31, 38, 135, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     position: relative;
-    max-width: 800px;
+    max-width: 700px;
     width: 100%;
     animation: fadeInUp 1s ease 0.8s both;
 }
 
-.signatures-container::before {
+.hero-founders-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-2xl);
-    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 50%, rgba(0, 216, 132, 0.1) 0%, transparent 70%);
+    border-radius: 1.5rem;
+    pointer-events: none;
 }
 
-.signature-item {
-    text-align: center;
-    flex: 1;
-}
-
-.signature-text {
-    font-family: var(--font-signature);
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 600;
-    color: var(--primary-green);
-    margin-bottom: var(--space-sm);
-    white-space: nowrap;
-    text-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        0 1px 2px rgba(255, 255, 255, 0.5);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.signature-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: var(--space-xs);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.signature-credentials {
-    font-size: 0.8125rem;
-    color: rgba(255, 255, 255, 0.85);
-    font-style: italic;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.signature-divider {
+.hero-founders-header {
     display: flex;
     align-items: center;
-    gap: var(--space-md);
-    opacity: 0.8;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
 }
 
-.divider-line {
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-}
-
-.divider-icon {
-    color: var(--primary-green);
-    font-size: 1.25rem;
-    animation: iconPulse 2s ease-in-out infinite;
+.hero-founders-header i {
+    font-size: 1.75rem;
+    color: #00d884;
     filter: drop-shadow(0 0 8px rgba(0, 216, 132, 0.5));
 }
 
-@keyframes iconPulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15);
-    }
+.hero-founders-header span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.hero-founders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-founder {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.hero-founder-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #00d884;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(0, 216, 132, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.hero-founder:hover .hero-founder-avatar {
+    transform: scale(1.08);
+}
+
+.hero-founder-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-founder-info {
+    flex: 1;
+}
+
+.hero-founder-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.375rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-founder-title {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero-founder-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+/* Scroll Indicator */
 .scroll-indicator {
     position: absolute;
     bottom: 60px;
@@ -1015,7 +1007,7 @@ input, textarea, select {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-md);
+    gap: 1rem;
     z-index: 5;
     animation: fadeIn 1s ease 1s both;
 }
@@ -1099,7 +1091,7 @@ input, textarea, select {
     }
     
     .hero-content {
-        padding-bottom: var(--space-3xl);
+        padding-bottom: 3rem;
     }
     
     .hero-logo-container {
@@ -1117,26 +1109,8 @@ input, textarea, select {
         justify-content: center;
     }
     
-    .hero-features {
-        flex-direction: column;
-        gap: var(--space-md);
-    }
-    
-    .signatures-container {
-        flex-direction: column;
-        gap: var(--space-lg);
-        padding: var(--space-xl) var(--space-lg);
-    }
-    
-    .signature-divider {
-        flex-direction: column;
-        gap: var(--space-sm);
-    }
-    
-    .divider-line {
-        width: 1px;
-        height: 30px;
-        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    .hero-founders-card {
+        padding: 1.75rem;
     }
     
     .scroll-indicator {
@@ -1150,9 +1124,13 @@ input, textarea, select {
         padding: 100px 0 70px;
     }
     
+    .hero-container {
+        padding: 0 1.5rem;
+    }
+    
     .hero-content {
-        padding-bottom: var(--space-2xl);
-        gap: var(--space-xl);
+        padding-bottom: 2rem;
+        gap: 1.5rem;
     }
     
     .hero-logo-container {
@@ -1161,37 +1139,43 @@ input, textarea, select {
         padding: 14px;
     }
     
-    .signatures-container {
-        padding: var(--space-lg) var(--space-md);
-        gap: var(--space-md);
-        border-radius: var(--radius-xl);
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+    .hero-founders-card {
+        padding: 1.5rem;
+        border-radius: 1.25rem;
     }
     
-    .signatures-container::before {
-        background: transparent;
+    .hero-founders-header {
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
     }
     
-    .signature-text {
+    .hero-founders-header i {
         font-size: 1.5rem;
-        white-space: normal;
     }
     
-    .signature-title {
-        font-size: 0.75rem;
+    .hero-founders-header span {
+        font-size: 0.9375rem;
     }
     
-    .signature-credentials {
-        font-size: 0.75rem;
+    .hero-founders-list {
+        gap: 1.25rem;
     }
     
-    .divider-line {
-        height: 25px;
+    .hero-founder {
+        gap: 1rem;
     }
     
-    .divider-icon {
-        font-size: 1rem;
+    .hero-founder-avatar {
+        width: 64px;
+        height: 64px;
+    }
+    
+    .hero-founder-name {
+        font-size: 1.25rem;
+    }
+    
+    .hero-founder-title {
+        font-size: 0.875rem;
     }
     
     .scroll-indicator {
@@ -1205,11 +1189,11 @@ input, textarea, select {
     }
     
     .hero-container {
-        padding: 0 var(--space-md);
+        padding: 0 1rem;
     }
     
     .hero-content {
-        padding-bottom: var(--space-xl);
+        padding-bottom: 1.5rem;
     }
     
     .hero-logo-container {
@@ -1222,31 +1206,49 @@ input, textarea, select {
     }
     
     .cta-button {
-        padding: var(--space-md) var(--space-xl);
+        padding: 0.875rem 1.5rem;
         font-size: 0.9375rem;
     }
     
-    .signatures-container {
-        gap: var(--space-sm);
-        padding: var(--space-md);
+    .hero-founders-card {
+        padding: 1.25rem;
+        border-radius: 1rem;
     }
     
-    .signature-text {
-        font-size: 1.25rem;
-        margin-bottom: 2px;
+    .hero-founders-header {
+        gap: 0.625rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.875rem;
     }
     
-    .signature-title {
-        font-size: 0.6875rem;
-        margin-bottom: 1px;
+    .hero-founders-header i {
+        font-size: 1.375rem;
     }
     
-    .signature-credentials {
-        font-size: 0.6875rem;
+    .hero-founders-header span {
+        font-size: 0.875rem;
     }
     
-    .divider-line {
-        height: 20px;
+    .hero-founders-list {
+        gap: 1rem;
+    }
+    
+    .hero-founder {
+        gap: 0.875rem;
+    }
+    
+    .hero-founder-avatar {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .hero-founder-name {
+        font-size: 1.125rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .hero-founder-title {
+        font-size: 0.8125rem;
     }
     
     .scroll-indicator {
